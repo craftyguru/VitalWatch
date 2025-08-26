@@ -50,7 +50,8 @@ import {
   Fingerprint,
   ScanLine,
   Waves,
-  Gauge
+  Gauge,
+  Plus
 } from "lucide-react";
 
 export default function AdvancedSafetyTools() {

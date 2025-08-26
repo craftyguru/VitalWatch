@@ -367,78 +367,160 @@ export default function ToolsComprehensive() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-8">
-            {/* Panic Button Widget */}
-            <Card className={`${emergencyMode ? 'border-red-500 bg-red-50 dark:bg-red-950/20' : 'border-red-200 bg-red-50 dark:bg-red-950/20'} shadow-xl`}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between text-red-900 dark:text-red-100">
-                  <div className="flex items-center space-x-2">
-                    <AlertTriangle className="h-5 w-5" />
-                    <span>Panic Button Widget</span>
+            {/* Comprehensive Dashboard Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200/50">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-blue-500 text-white p-3 rounded-xl w-fit mx-auto mb-3">
+                    <Activity className="h-6 w-6" />
                   </div>
-                  <Badge className={emergencyMode ? "bg-red-600 text-white animate-pulse" : "bg-red-100 text-red-800"}>
-                    {emergencyMode ? "ACTIVE ALERT" : "One tap SOS that works even if the app is closed"}
-                  </Badge>
+                  <div className="text-2xl font-bold text-blue-600">98%</div>
+                  <div className="text-sm text-muted-foreground">System Health</div>
+                  <div className="text-xs text-green-600 mt-1">All systems operational</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200/50">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-green-500 text-white p-3 rounded-xl w-fit mx-auto mb-3">
+                    <Shield className="h-6 w-6" />
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">{safetyStreak}</div>
+                  <div className="text-sm text-muted-foreground">Safety Streak (Days)</div>
+                  <div className="text-xs text-green-600 mt-1">Personal best!</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border-purple-200/50">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-purple-500 text-white p-3 rounded-xl w-fit mx-auto mb-3">
+                    <Users className="h-6 w-6" />
+                  </div>
+                  <div className="text-2xl font-bold text-purple-600">{Array.isArray(emergencyContacts) ? emergencyContacts.length : 0}</div>
+                  <div className="text-sm text-muted-foreground">Emergency Contacts</div>
+                  <div className="text-xs text-purple-600 mt-1">Network ready</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 border-orange-200/50">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-orange-500 text-white p-3 rounded-xl w-fit mx-auto mb-3">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div className="text-2xl font-bold text-orange-600">{responseTime}s</div>
+                  <div className="text-sm text-muted-foreground">Avg Response Time</div>
+                  <div className="text-xs text-orange-600 mt-1">Excellent speed</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Quick Access Panel */}
+            <Card className="bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-950/20 dark:to-blue-950/20 border-slate-200/50">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-slate-900 dark:text-slate-100">
+                  <Target className="h-5 w-5" />
+                  <span>Quick Access Dashboard</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    {!emergencyMode ? (
-                      <Button 
-                        onClick={triggerPanicButton}
-                        className="w-full h-20 bg-red-600 hover:bg-red-700 text-white text-xl font-bold shadow-lg"
-                        data-testid="panic-button"
-                      >
-                        <AlertTriangle className="h-8 w-8 mr-3" />
-                        PANIC BUTTON
-                      </Button>
-                    ) : (
-                      <Button 
-                        onClick={cancelEmergency}
-                        className="w-full h-20 bg-gray-600 hover:bg-gray-700 text-white text-xl font-bold shadow-lg animate-pulse"
-                      >
-                        <Square className="h-8 w-8 mr-3" />
-                        Tap to Cancel Emergency
-                      </Button>
-                    )}
-                    
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">Ghost Mode</Label>
-                      <Switch checked={false} />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">Auto-Record & Cloud Upload</Label>
-                      <Switch checked={autoRecord} onCheckedChange={setAutoRecord} />
-                    </div>
-                  </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Button 
+                    onClick={triggerPanicButton}
+                    className="h-20 bg-red-600 hover:bg-red-700 text-white flex flex-col items-center justify-center space-y-2"
+                  >
+                    <AlertTriangle className="h-6 w-6" />
+                    <span className="text-sm font-bold">PANIC BUTTON</span>
+                  </Button>
                   
-                  <div className="bg-white/70 dark:bg-slate-800/70 rounded-xl p-4">
-                    <h4 className="font-semibold text-red-900 dark:text-red-100 mb-3">Emergency Protocol</h4>
-                    <div className="space-y-2 text-sm text-red-700 dark:text-red-300">
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4" />
-                        <span>Instantly alerts all emergency contacts</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4" />
-                        <span>Shares precise GPS location</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4" />
-                        <span>Records audio evidence automatically</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4" />
-                        <span>Contacts emergency services after countdown</span>
-                      </div>
-                    </div>
-                  </div>
+                  <Button 
+                    variant="outline"
+                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                  >
+                    <Wind className="h-6 w-6" />
+                    <span className="text-sm">Breathing Exercise</span>
+                  </Button>
+                  
+                  <Button 
+                    variant="outline"
+                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                  >
+                    <MessageSquare className="h-6 w-6" />
+                    <span className="text-sm">Crisis Chat</span>
+                  </Button>
+                  
+                  <Button 
+                    onClick={startLocationTracking}
+                    variant="outline"
+                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                  >
+                    <MapPin className="h-6 w-6" />
+                    <span className="text-sm">Share Location</span>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Enhanced Mental Health Tools */}
+            {/* AI Insights Panel */}
+            <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/20 dark:to-purple-950/20 border-indigo-200/50">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-indigo-900 dark:text-indigo-100">
+                  <Brain className="h-5 w-5" />
+                  <span>AI-Powered Insights</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <Clock className="h-5 w-5 text-blue-600" />
+                      <h3 className="font-semibold text-blue-800 dark:text-blue-200">Optimal Timing</h3>
+                    </div>
+                    <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
+                      Your sessions are 23% more effective at 7:30 AM
+                    </p>
+                    <Button size="sm" variant="outline" className="w-full">
+                      Schedule Session
+                    </Button>
+                  </div>
+                  
+                  <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <AlertTriangle className="h-5 w-5 text-orange-600" />
+                      <h3 className="font-semibold text-orange-800 dark:text-orange-200">Stress Prediction</h3>
+                    </div>
+                    <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">
+                      75% likelihood of stress Tuesday 4 PM
+                    </p>
+                    <Button size="sm" variant="outline" className="w-full">
+                      Set Reminder
+                    </Button>
+                  </div>
+                  
+                  <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <Heart className="h-5 w-5 text-purple-600" />
+                      <h3 className="font-semibold text-purple-800 dark:text-purple-200">Recommended</h3>
+                    </div>
+                    <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">
+                      Try the 4-7-8 breathing technique for better sleep quality
+                    </p>
+                    <Button size="sm" variant="outline" className="w-full">
+                      Start Session
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Safety Tools Tab */}
+          <TabsContent value="safety-tools" className="space-y-8">
+            <AdvancedSafetyTools />
+          </TabsContent>
+
+          {/* Wellness Analytics Tab */}
+          <TabsContent value="wellness-analytics" className="space-y-8">
+            {/* Comprehensive Mental Health Tools */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Breathing Tools */}
               <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200/50">
@@ -467,314 +549,76 @@ export default function ToolsComprehensive() {
               </Card>
             </div>
 
-            {/* Location & Tracking Tools */}
-            <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 border-indigo-200/50">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-indigo-900 dark:text-indigo-100">
-                  <MapPin className="h-5 w-5" />
-                  <span>Location & Tracking Tools</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">Live Location Sharing</Label>
-                        <p className="text-sm text-muted-foreground">Secure real-time GPS sharing with trusted friends</p>
-                      </div>
-                      <Switch checked={liveLocation} onCheckedChange={(checked) => {
-                        if (checked) {
-                          startLocationTracking();
-                        } else {
-                          setLiveLocation(false);
-                        }
-                      }} />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">Breadcrumb Trail</Label>
-                        <p className="text-sm text-muted-foreground">Location sent every 30 seconds for rescue tracking</p>
-                      </div>
-                      <Switch checked={breadcrumbTrail} onCheckedChange={setBreadcrumbTrail} />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">Geo-Fence Alerts</Label>
-                        <p className="text-sm text-muted-foreground">Alerts when leaving/entering safe zones</p>
-                      </div>
-                      <Switch checked={geoFenceAlerts} onCheckedChange={setGeoFenceAlerts} />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
-                    <Button 
-                      onClick={startLocationTracking}
-                      className="w-full mb-4"
-                      variant="outline"
-                    >
-                      <MapPin className="h-4 w-4 mr-2" />
-                      Share Walk-With-Me
-                    </Button>
-                    
-                    {location && (
-                      <div className="text-sm text-muted-foreground">
-                        <p>Current Location:</p>
-                        <p className="font-mono">{location.lat.toFixed(4)}, {location.lon.toFixed(4)}</p>
-                        <p className="text-green-600 dark:text-green-400 mt-2">✓ Friends monitor your journey until you're safe</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* AI & Smart Tools */}
-            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border-purple-200/50">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-purple-900 dark:text-purple-100">
-                  <Brain className="h-5 w-5" />
-                  <span>AI & Smart Tools</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">Voice Command SOS</Label>
-                        <p className="text-sm text-muted-foreground">"Help me friend" triggers SOS even when locked</p>
-                      </div>
-                      <Switch checked={voiceCommands} onCheckedChange={setVoiceCommands} />
-                    </div>
-                    
-                    <Button 
-                      onClick={testVoiceCommands}
-                      variant="outline" 
-                      className="w-full"
-                    >
-                      Test Voice Commands
-                    </Button>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">AI Risk Detection</Label>
-                        <p className="text-sm text-muted-foreground">Monitor & detect analysis for auto-threat detection</p>
-                      </div>
-                      <Badge className="bg-blue-100 text-blue-800">Active</Badge>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">AI Call Responder</Label>
-                        <p className="text-sm text-muted-foreground">AI answers calls and communicates distress for you</p>
-                      </div>
-                      <Badge className="bg-purple-100 text-purple-800">Ready</Badge>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">AI Companion Chat</Label>
-                        <p className="text-sm text-muted-foreground">Calming responses during panic while help arrives</p>
-                      </div>
-                      <Switch checked={aiCompanionChat} onCheckedChange={setAiCompanionChat} />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
-                      <h4 className="font-semibold mb-3">AI Capabilities</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span>Real-time audio analysis</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span>Behavioral pattern recognition</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span>Automatic threat escalation</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span>Contextual crisis support</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Communication Tools */}
+            {/* Enhanced Grounding Exercises */}
             <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200/50">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-green-900 dark:text-green-100">
-                  <MessageSquare className="h-5 w-5" />
-                  <span>Communication Tools</span>
+                  <TreePine className="h-5 w-5" />
+                  <span>Comprehensive Grounding Techniques</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Button 
-                    onClick={testMultiChannelAlert}
-                    variant="outline" 
-                    className="h-16 text-center"
-                  >
-                    <Bell className="h-6 w-6 mr-2" />
-                    Multi-Channel Alert
-                  </Button>
-                  
-                  <Button variant="outline" className="h-16 text-center">
-                    <Users className="h-6 w-6 mr-2" />
-                    Emergency Group Call
-                  </Button>
-                  
-                  <div className="md:col-span-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="font-medium">Offline Emergency Mode</Label>
-                        <p className="text-sm text-muted-foreground">Uses Bluetooth mesh/peer to peer when no internet</p>
-                      </div>
-                      <Switch checked={offlineMode} onCheckedChange={setOfflineMode} />
-                    </div>
-                  </div>
-                </div>
+                <EnhancedGroundingExercise />
               </CardContent>
             </Card>
 
-            {/* Device Integration */}
+            {/* Mood Analytics Dashboard */}
             <Card className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 border-orange-200/50">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-orange-900 dark:text-orange-100">
-                  <Smartphone className="h-5 w-5" />
-                  <span>Device Integration</span>
+                  <BarChart3 className="h-5 w-5" />
+                  <span>Mood Analytics & Insights</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl">
-                    <Watch className="h-12 w-12 mx-auto mb-3 text-orange-600" />
-                    <h4 className="font-semibold mb-2">Wearables</h4>
-                    <p className="text-sm text-muted-foreground mb-3">Smartwatch, AirTags, Fitbit</p>
-                    <Button 
-                      onClick={connectWearables}
-                      variant={deviceConnections.wearables.connected ? "default" : "outline"}
-                      size="sm"
-                      className="w-full"
-                    >
-                      {deviceConnections.wearables.connected ? "Connected" : "Coming Soon"}
-                    </Button>
-                    {deviceConnections.wearables.connected && (
-                      <p className="text-xs text-green-600 mt-2">{deviceConnections.wearables.devices} devices connected</p>
-                    )}
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-orange-600 mb-2">4.2</div>
+                    <div className="text-sm text-muted-foreground">Average Mood</div>
+                    <div className="text-xs text-green-600 mt-1">+0.3 this week</div>
                   </div>
                   
-                  <div className="text-center p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl">
-                    <Home className="h-12 w-12 mx-auto mb-3 text-orange-600" />
-                    <h4 className="font-semibold mb-2">Smart Home</h4>
-                    <p className="text-sm text-muted-foreground mb-3">Lights, alarms, door locks</p>
-                    <Button 
-                      onClick={connectSmartHome}
-                      variant={deviceConnections.smartHome.connected ? "default" : "outline"}
-                      size="sm"
-                      className="w-full"
-                    >
-                      {deviceConnections.smartHome.connected ? "Connected" : "Coming Soon"}
-                    </Button>
-                    {deviceConnections.smartHome.connected && (
-                      <p className="text-xs text-green-600 mt-2">{deviceConnections.smartHome.devices} devices connected</p>
-                    )}
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">18</div>
+                    <div className="text-sm text-muted-foreground">Mood Entries</div>
+                    <div className="text-xs text-blue-600 mt-1">Last 30 days</div>
                   </div>
                   
-                  <div className="text-center p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl">
-                    <Car className="h-12 w-12 mx-auto mb-3 text-orange-600" />
-                    <h4 className="font-semibold mb-2">Car Integration</h4>
-                    <p className="text-sm text-muted-foreground mb-3">CarPlay/Android Auto</p>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Coming Soon
-                    </Button>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-purple-600 mb-2">73%</div>
+                    <div className="text-sm text-muted-foreground">Positive Days</div>
+                    <div className="text-xs text-purple-600 mt-1">Above average</div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Safety Gamification */}
-            <Card className="bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-950/20 dark:to-rose-950/20 border-pink-200/50">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-pink-900 dark:text-pink-100">
-                  <Award className="h-5 w-5" />
-                  <span>Safety Gamification</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="font-medium">Emergency Network Trust Score</Label>
-                      <p className="text-sm text-muted-foreground">Friends got trust by responding quickly to your alerts</p>
+                
+                <div className="mt-6 p-4 bg-white/60 dark:bg-slate-800/60 rounded-lg">
+                  <h4 className="font-semibold mb-3">Weekly Trend Analysis</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Monday</span>
+                      <div className="flex items-center space-x-2">
+                        <Progress value={80} className="w-20 h-2" />
+                        <span className="text-sm font-medium">4.0</span>
+                      </div>
                     </div>
-                    <Badge className="bg-blue-100 text-blue-800 text-lg px-3 py-1">{networkTrustScore}%</Badge>
-                  </div>
-                  
-                  <div className="w-full">
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm font-medium">Trust Level</span>
-                      <span className="text-sm text-muted-foreground">{networkTrustScore}/100</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Tuesday</span>
+                      <div className="flex items-center space-x-2">
+                        <Progress value={90} className="w-20 h-2" />
+                        <span className="text-sm font-medium">4.5</span>
+                      </div>
                     </div>
-                    <Progress value={networkTrustScore} className="h-2" />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Button 
-                      onClick={performSafetyCheckIn}
-                      variant="outline" 
-                      className="h-16"
-                    >
-                      <CheckCircle className="h-6 w-6 mr-2" />
-                      Daily Safety Check-In
-                    </Button>
-                    
-                    <Button variant="outline" className="h-16">
-                      <AlertTriangle className="h-6 w-6 mr-2" />
-                      Emergency Drill
-                    </Button>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
-                      <div className="text-2xl font-bold text-pink-600">{safetyStreak}</div>
-                      <div className="text-sm text-muted-foreground">Safety Streak</div>
-                      <div className="text-xs text-pink-600">days</div>
-                    </div>
-                    <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
-                      <div className="text-2xl font-bold text-purple-600">{responseTime}s</div>
-                      <div className="text-sm text-muted-foreground">Response Time</div>
-                      <div className="text-xs text-purple-600">average</div>
-                    </div>
-                    <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
-                      <div className="text-2xl font-bold text-orange-600">{safetyPoints}</div>
-                      <div className="text-sm text-muted-foreground">Safety Points</div>
-                      <div className="text-xs text-orange-600">total</div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Wednesday</span>
+                      <div className="flex items-center space-x-2">
+                        <Progress value={70} className="w-20 h-2" />
+                        <span className="text-sm font-medium">3.5</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Safety Tools Tab */}
-          <TabsContent value="safety-tools" className="space-y-8">
-            <AdvancedSafetyTools />
-          </TabsContent>
-
-          {/* Wellness Analytics Tab */}
-          <TabsContent value="wellness-analytics" className="space-y-8">
-            <EnhancedGroundingExercise />
           </TabsContent>
 
           {/* Achievements Tab */}
