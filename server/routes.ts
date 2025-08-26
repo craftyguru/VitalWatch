@@ -263,6 +263,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Emergency AI Analysis Route
+  app.post('/api/emergency-analysis', isAuthenticated, async (req: any, res) => {
+    try {
+      const { audio, location, timestamp } = req.body;
+      
+      if (!audio) {
+        return res.status(400).json({ message: "Audio data required" });
+      }
+
+      // Convert base64 audio to buffer for OpenAI Whisper
+      const audioBuffer = Buffer.from(audio, 'base64');
+      
+      // Transcribe audio using OpenAI Whisper
+      const transcription = await transcribeAudio(audioBuffer);
+      
+      // Analyze transcription for threats
+      const threatAnalysis = await analyzeThreatLevel(transcription, location);
+      
+      res.json({
+        transcription,
+        threatAnalysis: threatAnalysis.threatLevel !== 'low' ? threatAnalysis : null,
+        timestamp
+      });
+      
+    } catch (error) {
+      console.error("Error in emergency analysis:", error);
+      res.status(500).json({ message: "Failed to analyze emergency audio" });
+    }
+  });
+
   // Crisis chat routes
   app.post('/api/crisis-chat/start', isAuthenticated, async (req: any, res) => {
     try {
