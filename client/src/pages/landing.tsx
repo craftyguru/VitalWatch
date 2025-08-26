@@ -185,6 +185,38 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
+      {/* Navigation Header */}
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <nav className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-xl shadow-lg">
+                <Shield className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">VitalWatch</h1>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <Link href="/demo">
+                <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" data-testid="button-nav-demo">
+                  Try Demo
+                </Button>
+              </Link>
+              <Link href="/auth/login">
+                <Button variant="outline" size="sm" data-testid="button-nav-signin">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/login">
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white" data-testid="button-nav-signup">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          </nav>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>

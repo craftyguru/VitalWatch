@@ -14,6 +14,7 @@ import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
 import BillingPage from "@/pages/billing";
 import DemoPage from "@/pages/demo";
+import AuthPage from "@/pages/auth";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -21,6 +22,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/demo" component={DemoPage} />
+      <Route path="/auth/login" component={AuthPage} />
+      <Route path="/auth/signup" component={AuthPage} />
       {isLoading || !isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
