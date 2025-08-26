@@ -149,7 +149,7 @@ export default function AdvancedSafetyTools() {
           }
         );
         
-        return () => navigator.geolocation.clearWatch(watchId);
+        return watchId;
       }
     };
     
@@ -216,7 +216,9 @@ export default function AdvancedSafetyTools() {
       clearInterval(batteryUpdateInterval);
       clearInterval(sensorUpdateInterval);
       window.removeEventListener('devicemotion', handleDeviceMotion);
-      if (locationCleanup) locationCleanup();
+      if (locationCleanup && typeof locationCleanup === 'number') {
+        navigator.geolocation.clearWatch(locationCleanup);
+      }
     };
   }, [audioRecording, videoRecording, stressLevel]);
 
@@ -760,8 +762,8 @@ export default function AdvancedSafetyTools() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h3 className="font-semibold mb-3 flex items-center space-x-2">
-                <span>Real-Time Motion Detection</span>
-                <Badge className="bg-green-100 text-green-800 text-xs">DeviceMotionEvent</Badge>
+                <span>Motion Detection</span>
+                <Badge className="bg-green-100 text-green-800 text-xs">Live</Badge>
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -781,8 +783,8 @@ export default function AdvancedSafetyTools() {
 
             <div>
               <h3 className="font-semibold mb-3 flex items-center space-x-2">
-                <span>Device Environmental</span>
-                <Badge className="bg-blue-100 text-blue-800 text-xs">Sensor APIs</Badge>
+                <span>Environmental</span>
+                <Badge className="bg-blue-100 text-blue-800 text-xs">Sensors</Badge>
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -802,8 +804,8 @@ export default function AdvancedSafetyTools() {
 
             <div>
               <h3 className="font-semibold mb-3 flex items-center space-x-2">
-                <span>System Integration</span>
-                <Badge className="bg-purple-100 text-purple-800 text-xs">Web APIs</Badge>
+                <span>Integration</span>
+                <Badge className="bg-purple-100 text-purple-800 text-xs">APIs</Badge>
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
