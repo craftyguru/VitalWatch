@@ -320,8 +320,8 @@ export default function ToolsComprehensive() {
                   <Shield className="h-6 w-6" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Emergency Friend</h1>
-                  <p className="text-slate-600 dark:text-slate-400">AI-powered mental health companion with comprehensive crisis management</p>
+                  <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">VitalWatch</h1>
+                  <p className="text-slate-600 dark:text-slate-400">AI-powered vital signs monitoring with comprehensive crisis management</p>
                 </div>
               </div>
             </div>

@@ -20,8 +20,8 @@ export default function ToolsEnhanced() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Emergency Friend</h1>
-          <p className="text-muted-foreground">AI-powered mental health companion with comprehensive crisis management</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">VitalWatch</h1>
+          <p className="text-muted-foreground">AI-powered vital signs monitoring with comprehensive crisis management</p>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">

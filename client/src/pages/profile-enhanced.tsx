@@ -1027,7 +1027,7 @@ export default function ProfileEnhanced() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Info className="h-5 w-5" />
-                    <span>About Emergency Friend</span>
+                    <span>About VitalWatch</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1064,7 +1064,7 @@ export default function ProfileEnhanced() {
                   </div>
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
-                    Emergency Friend provides 24/7 crisis support and mental health resources. If you're in crisis, please call 988 immediately.
+                    VitalWatch provides 24/7 crisis support and mental health resources. If you're in crisis, please call 988 immediately.
                   </p>
                 </CardContent>
               </Card>

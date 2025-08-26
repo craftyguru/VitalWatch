@@ -194,12 +194,12 @@ export default function LandingPage() {
                 <Shield className="h-8 w-8 text-white" />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Emergency Friend
+                VitalWatch
               </h1>
             </div>
             
             <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white max-w-4xl mx-auto">
-              The World's First AI-Powered Emergency Companion That Never Sleeps
+              The World's First AI-Powered Vital Signs Monitoring That Never Sleeps
             </h2>
             
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -445,7 +445,7 @@ export default function LandingPage() {
             Your Safety Can't Wait
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join over 250,000 users who trust Emergency Friend to protect what matters most. 
+            Join over 250,000 users who trust VitalWatch to protect what matters most. 
             Start your free trial today - no credit card required.
           </p>
           

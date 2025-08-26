@@ -54,7 +54,7 @@ export class EmergencyService {
 
       // Get user info for notifications
       const user = await storage.getUser(alert.userId);
-      const userName = user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || "Emergency Friend User" : "Emergency Friend User";
+      const userName = user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || "VitalWatch User" : "VitalWatch User";
 
       // Get user notification preferences
       const settings = await storage.getUserSettings(alert.userId);

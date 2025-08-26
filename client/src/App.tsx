@@ -39,7 +39,7 @@ function Router() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="emergency-friend-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vitalwatch-theme">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />

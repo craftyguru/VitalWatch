@@ -137,7 +137,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">
-                  Emergency Friend
+                  VitalWatch
                 </h1>
                 <div className="flex items-center space-x-2">
                   <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
@@ -198,7 +198,7 @@ export default function Home() {
                   </div>
                 </div>
                 <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-100 mb-2">
-                  AI Emergency Friend & Mental Health Toolkit
+                  AI VitalWatch & Mental Health Toolkit
                 </h2>
                 <p className="text-blue-700 dark:text-blue-300 text-lg max-w-3xl mx-auto">
                   Complete therapeutic toolkit with advanced AI monitoring, real-time threat detection, and professional mental health tools

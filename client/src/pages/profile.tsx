@@ -670,7 +670,7 @@ export default function Profile() {
                     <Info className="h-5 w-5 text-blue-500" />
                     <div>
                       <div className="font-medium">App Guide</div>
-                      <div className="text-sm text-neutral-500">Learn how to use Emergency Friend</div>
+                      <div className="text-sm text-neutral-500">Learn how to use VitalWatch</div>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm">
@@ -709,7 +709,7 @@ export default function Profile() {
             {/* App Information */}
             <Card>
               <CardHeader>
-                <CardTitle>About Emergency Friend</CardTitle>
+                <CardTitle>About VitalWatch</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between text-sm">
@@ -722,7 +722,7 @@ export default function Profile() {
                 </div>
                 <Separator />
                 <p className="text-xs text-neutral-500 text-center">
-                  Emergency Friend provides 24/7 crisis support and mental health resources.
+                  VitalWatch provides 24/7 crisis support and mental health resources.
                   If you're in crisis, please call 988 or 911 immediately.
                 </p>
               </CardContent>

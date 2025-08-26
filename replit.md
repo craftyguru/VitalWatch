@@ -2,7 +2,9 @@
 
 ## Overview
 
-Emergency Friend is a comprehensive mental health support application built with a full-stack TypeScript architecture. It provides crisis detection, emergency alerts, mood tracking, coping tools, and emergency contact management. The application uses React with Vite for the frontend, Express.js for the backend, and Drizzle ORM with PostgreSQL for data persistence.
+VitalWatch is a comprehensive AI-powered vital signs monitoring and mental health support application built with a full-stack TypeScript architecture. It provides real-time crisis detection, emergency alerts, mood tracking, coping tools, and emergency contact management. The application uses React with Vite for the frontend, Express.js for the backend, and Drizzle ORM with PostgreSQL for data persistence.
+
+**Brand Identity**: VitalWatch represents continuous monitoring of vital signs and mental health patterns, providing users with comprehensive health awareness and emergency protection. The name emphasizes the "vital" importance of health monitoring and the "watch" concept of constant surveillance and protection.
 
 ## User Preferences
 
