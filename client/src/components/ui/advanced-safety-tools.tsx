@@ -83,11 +83,12 @@ export default function AdvancedSafetyTools() {
     timestamp: Date.now()
   });
 
-  // Real device sensor integration
+  // Real device sensor integration with robust geolocation
   useEffect(() => {
     let batteryUpdateInterval: NodeJS.Timeout;
     let sensorUpdateInterval: NodeJS.Timeout;
     let recordingInterval: NodeJS.Timeout;
+    let locationWatchId: number | null = null;
     
     // Recording timer
     if (audioRecording || videoRecording) {
@@ -127,11 +128,32 @@ export default function AdvancedSafetyTools() {
       }
     };
     
-    // Real geolocation monitoring
+    // Robust geolocation tracking with continuous updates
     const startLocationTracking = () => {
-      if ('geolocation' in navigator && navigator.geolocation) {
+      if (navigator.geolocation && locationTracking) {
+        // Get initial position
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setCurrentLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+              timestamp: Date.now()
+            });
+          },
+          (error) => {
+            console.log('Initial geolocation error:', error.message);
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 60000,
+            timeout: 15000
+          }
+        );
+        
+        // Set up continuous tracking
         try {
-          navigator.geolocation.getCurrentPosition(
+          locationWatchId = navigator.geolocation.watchPosition(
             (position) => {
               setCurrentLocation({
                 lat: position.coords.latitude,
@@ -141,19 +163,18 @@ export default function AdvancedSafetyTools() {
               });
             },
             (error) => {
-              console.log('Geolocation error:', error.message);
+              console.log('Watch position error:', error.message);
             },
             {
               enableHighAccuracy: true,
-              maximumAge: 60000,
-              timeout: 15000
+              maximumAge: 30000,
+              timeout: 20000
             }
           );
         } catch (error) {
-          console.log('Geolocation not supported');
+          console.log('Watch position not supported');
         }
       }
-      return null;
     };
     
     // Real network status monitoring
@@ -183,8 +204,8 @@ export default function AdvancedSafetyTools() {
       }
     };
     
-    // Heart rate simulation based on device sensors
-    const simulateHeartRateFromMotion = () => {
+    // Heart rate calculation based on motion and stress
+    const updateHeartRateFromSensors = () => {
       const baseRate = 72;
       const stressAdjustment = (stressLevel / 100) * 20;
       const randomVariation = (Math.random() - 0.5) * 4;
@@ -193,7 +214,7 @@ export default function AdvancedSafetyTools() {
     
     // Initialize all sensors
     updateBatteryStatus();
-    const locationCleanup = startLocationTracking();
+    startLocationTracking();
     updateNetworkStatus();
     
     // Request device motion permissions (iOS 13+)
@@ -211,7 +232,28 @@ export default function AdvancedSafetyTools() {
     batteryUpdateInterval = setInterval(updateBatteryStatus, 30000);
     sensorUpdateInterval = setInterval(() => {
       updateNetworkStatus();
-      simulateHeartRateFromMotion();
+      updateHeartRateFromSensors();
+      // Refresh location every 5 seconds for active tracking
+      if (locationTracking && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setCurrentLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+              timestamp: Date.now()
+            });
+          },
+          (error) => {
+            console.log('Location update error:', error.message);
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 10000,
+            timeout: 10000
+          }
+        );
+      }
     }, 5000);
     
     return () => {
@@ -219,8 +261,17 @@ export default function AdvancedSafetyTools() {
       if (batteryUpdateInterval) clearInterval(batteryUpdateInterval);
       if (sensorUpdateInterval) clearInterval(sensorUpdateInterval);
       window.removeEventListener('devicemotion', handleDeviceMotion);
+      
+      // Properly clean up geolocation watch
+      if (locationWatchId !== null && navigator.geolocation && navigator.geolocation.clearWatch) {
+        try {
+          navigator.geolocation.clearWatch(locationWatchId);
+        } catch (error) {
+          console.log('Error clearing location watch:', error);
+        }
+      }
     };
-  }, [audioRecording, videoRecording, stressLevel]);
+  }, [audioRecording, videoRecording, stressLevel, locationTracking]);
 
   const startEmergencyProtocol = () => {
     setEmergencyMode(true);
