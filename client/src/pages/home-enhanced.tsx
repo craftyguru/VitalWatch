@@ -355,12 +355,66 @@ export default function Home() {
           </Card>
         </section>
 
+        {/* Emergency AI Monitoring */}
+        <section>
+          <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 border-indigo-200/50">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-indigo-500 text-white p-2.5 rounded-xl">
+                    <Eye className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl text-indigo-900 dark:text-indigo-100">AI Emergency Friend</CardTitle>
+                    <p className="text-sm text-indigo-700 dark:text-indigo-300">Real-time monitoring and threat detection</p>
+                  </div>
+                </div>
+                <Badge className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30">
+                  Beta
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <p className="text-indigo-700 dark:text-indigo-300 text-sm mb-3">
+                  Your AI companion that listens during emergencies, transcribes what's happening, 
+                  analyzes danger levels, and automatically contacts help with critical information.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                    <Mic className="h-4 w-4 mx-auto mb-1 text-indigo-600" />
+                    <div className="text-xs font-medium">Real-time Audio</div>
+                  </div>
+                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                    <Brain className="h-4 w-4 mx-auto mb-1 text-indigo-600" />
+                    <div className="text-xs font-medium">AI Analysis</div>
+                  </div>
+                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                    <Zap className="h-4 w-4 mx-auto mb-1 text-indigo-600" />
+                    <div className="text-xs font-medium">Auto Alerts</div>
+                  </div>
+                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                    <MapPin className="h-4 w-4 mx-auto mb-1 text-indigo-600" />
+                    <div className="text-xs font-medium">Location Sharing</div>
+                  </div>
+                </div>
+              </div>
+              <Button asChild className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Link href="/tools" data-testid="link-emergency-monitoring">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Access Emergency Monitoring
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Quick Relief Tools */}
         <section>
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-bold text-foreground">Quick Relief Tools</h2>
-              <p className="text-muted-foreground">Immediate support when you need it most</p>
+              <p className="text-muted-foreground">AI-enhanced immediate support when you need it most</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/tools" data-testid="link-tools">

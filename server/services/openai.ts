@@ -14,7 +14,7 @@ export interface MoodAnalysis {
   triggerWarnings: string[];
 }
 
-export async function analyzeMoodEntry(
+async function analyzeMoodEntry(
   mood: string,
   moodScore: number,
   note?: string,
@@ -85,7 +85,7 @@ export async function analyzeMoodEntry(
   }
 }
 
-export async function generatePersonalizedInsight(
+async function generatePersonalizedInsight(
   userId: string,
   moodHistory: Array<{ mood: string; moodScore: number; createdAt: Date; note?: string }>,
   copingToolsUsage?: Array<{ toolType: string; effectiveness?: number; createdAt: Date }>
@@ -138,7 +138,7 @@ export async function generatePersonalizedInsight(
   }
 }
 
-export async function assessCrisisRisk(
+async function assessCrisisRisk(
   moodEntries: Array<{ mood: string; moodScore: number; note?: string; createdAt: Date }>,
   emergencyHistory?: Array<{ type: string; createdAt: Date }>
 ): Promise<{ riskLevel: "low" | "medium" | "high" | "critical"; confidence: number; reasoning: string }> {
@@ -190,3 +190,78 @@ export async function assessCrisisRisk(
     };
   }
 }
+
+// Audio transcription using OpenAI Whisper
+async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
+  try {
+    const response = await openai.audio.transcriptions.create({
+      file: new File([audioBuffer], "audio.webm", { type: "audio/webm" }),
+      model: "whisper-1",
+      language: "en", 
+      temperature: 0.2,
+    });
+
+    return response.text || "";
+  } catch (error) {
+    console.error("Transcription failed:", error);
+    return "";
+  }
+}
+
+// AI-powered threat level analysis
+async function analyzeThreatLevel(transcription: string, location?: any) {
+  if (!transcription.trim()) {
+    return {
+      threatLevel: 'low',
+      confidence: 0.1,
+      keywords: [],
+      suggestedActions: []
+    };
+  }
+
+  try {
+    const systemPrompt = `You are an emergency response AI analyzing audio transcriptions for potential threats or dangerous situations. 
+
+    Analyze the following transcription and respond with a JSON object containing:
+    - threatLevel: "low", "medium", "high", or "critical"
+    - confidence: 0.0-1.0 confidence score
+    - keywords: array of concerning words/phrases detected
+    - suggestedActions: array of recommended emergency actions
+
+    CRITICAL threats (immediate danger): Violence, weapons, medical emergencies, "help", "call 911", screaming, fighting
+    HIGH threats (potential danger): Arguments escalating, intoxication with aggression, stalking, breaking and entering
+    MEDIUM threats (concerning): Domestic disputes, threats, harassment, suspicious activity
+    LOW threats: Normal conversation, background noise, unclear audio
+
+    Be conservative but accurate. False positives for critical threats are acceptable to ensure safety.`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Transcription: "${transcription}"` }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+    });
+
+    const analysis = JSON.parse(response.choices[0].message.content!);
+    
+    return {
+      threatLevel: analysis.threatLevel || 'low',
+      confidence: Math.max(0, Math.min(1, analysis.confidence || 0.5)),
+      keywords: Array.isArray(analysis.keywords) ? analysis.keywords : [],
+      suggestedActions: Array.isArray(analysis.suggestedActions) ? analysis.suggestedActions : []
+    };
+  } catch (error) {
+    console.error("Threat analysis failed:", error);
+    return {
+      threatLevel: 'low',
+      confidence: 0.3,
+      keywords: ['analysis-error'],
+      suggestedActions: ['Review audio manually']
+    };
+  }
+}
+
+export { generatePersonalizedInsight, analyzeMoodEntry, assessCrisisRisk, transcribeAudio, analyzeThreatLevel };
