@@ -51,7 +51,7 @@ interface BreathingTechnique {
   color: string;
 }
 
-export function AdvancedBreathingExercise({ heartRate = 75, stressLevel = 50, onComplete }: AdvancedBreathingExerciseProps) {
+export default function AdvancedBreathingExercise({ heartRate = 75, stressLevel = 50, onComplete }: AdvancedBreathingExerciseProps) {
   const [isActive, setIsActive] = useState(false);
   const [currentTechnique, setCurrentTechnique] = useState<BreathingTechnique | null>(null);
   const [phase, setPhase] = useState(0);

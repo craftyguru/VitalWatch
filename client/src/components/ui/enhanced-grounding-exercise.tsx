@@ -61,7 +61,7 @@ interface GroundingStep {
   icon: any;
 }
 
-export function EnhancedGroundingExercise({ 
+export default function EnhancedGroundingExercise({ 
   stressLevel = 60, 
   anxietyLevel = 55, 
   onComplete 

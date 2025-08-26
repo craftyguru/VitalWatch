@@ -7,9 +7,9 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
-import Home from "@/pages/home";
+import HomeEnhanced from "@/pages/home-enhanced";
 import Mood from "@/pages/mood";
-import Tools from "@/pages/tools";
+import ToolsComprehensive from "@/pages/tools-comprehensive";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
 
@@ -22,9 +22,9 @@ function Router() {
         <Route path="/" component={Landing} />
       ) : (
         <>
-          <Route path="/" component={Home} />
+          <Route path="/" component={HomeEnhanced} />
           <Route path="/mood" component={Mood} />
-          <Route path="/tools" component={Tools} />
+          <Route path="/tools" component={ToolsComprehensive} />
           <Route path="/contacts" component={ContactsEnhanced} />
           <Route path="/profile" component={ProfileEnhanced} />
         </>

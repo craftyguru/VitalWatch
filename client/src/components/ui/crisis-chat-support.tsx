@@ -55,7 +55,7 @@ interface SupportResource {
   icon: any;
 }
 
-export function CrisisChatSupport({ 
+export default function CrisisChatSupport({ 
   crisisLevel = 'medium', 
   onEmergencyTrigger 
 }: CrisisChatSupportProps) {
