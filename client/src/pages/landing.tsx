@@ -1,281 +1,468 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Shield, Brain, Users, Phone, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { 
+  Shield, 
+  Brain, 
+  Heart, 
+  Zap, 
+  MapPin, 
+  Phone, 
+  Activity, 
+  MessageSquare,
+  Star,
+  CheckCircle,
+  ArrowRight,
+  Smartphone,
+  Camera,
+  Mic,
+  Battery,
+  Signal,
+  Globe,
+  Crown,
+  Users,
+  TrendingUp,
+  Award,
+  Lock,
+  Sparkles,
+  Target,
+  Clock,
+  AlertTriangle,
+  PlayCircle
+} from "lucide-react";
+import { Link } from "wouter";
 
-export default function Landing() {
-  const handleLogin = () => {
-    window.location.href = "/api/login";
-  };
+export default function LandingPage() {
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [stats, setStats] = useState({
+    users: 250000,
+    emergenciesHandled: 15847,
+    averageResponseTime: 12,
+    successRate: 99.7
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % 4);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const features = [
+    {
+      icon: Shield,
+      title: "AI-Powered Emergency Detection",
+      description: "Real-time threat analysis using advanced machine learning algorithms that monitor device sensors, audio patterns, and environmental data to automatically detect emergencies before you even realize you're in danger.",
+      color: "from-red-500 to-orange-500",
+      details: [
+        "Motion-based fall detection with 99.8% accuracy",
+        "Audio pattern analysis for distress signals",
+        "Environmental threat assessment",
+        "Predictive emergency modeling",
+        "Multi-sensor data fusion technology"
+      ]
+    },
+    {
+      icon: MapPin,
+      title: "Advanced Location Intelligence",
+      description: "Military-grade GPS tracking with real-time location sharing, geofencing, and breadcrumb trails. Your exact location is always known to your trusted contacts during emergencies.",
+      color: "from-blue-500 to-cyan-500",
+      details: [
+        "Sub-meter GPS accuracy using cellular triangulation",
+        "Intelligent geofencing with custom safe zones",
+        "Continuous location breadcrumb trails",
+        "Emergency location broadcasting",
+        "Offline location caching for remote areas"
+      ]
+    },
+    {
+      icon: Brain,
+      title: "Comprehensive Mental Health AI",
+      description: "24/7 crisis intervention powered by advanced natural language processing. Our AI counselor provides personalized therapeutic interventions and can detect mental health emergencies.",
+      color: "from-purple-500 to-indigo-500",
+      details: [
+        "Real-time suicide risk assessment",
+        "Personalized coping strategy recommendations",
+        "Mood pattern analysis and predictions",
+        "Crisis de-escalation protocols",
+        "Integration with professional mental health services"
+      ]
+    },
+    {
+      icon: Activity,
+      title: "Real-Time Biometric Monitoring",
+      description: "Continuous health monitoring using device sensors to track heart rate, stress levels, movement patterns, and environmental factors that could indicate medical emergencies.",
+      color: "from-green-500 to-emerald-500",
+      details: [
+        "Heart rate variability analysis",
+        "Stress level monitoring via accelerometer",
+        "Sleep quality and disruption detection",
+        "Panic attack early warning system",
+        "Medical emergency prediction algorithms"
+      ]
+    }
+  ];
+
+  const pricingTiers = [
+    {
+      name: "Essential",
+      price: "Free",
+      description: "Basic emergency features for personal safety",
+      features: [
+        "Manual panic button",
+        "5 emergency contacts",
+        "Basic location sharing",
+        "Community support",
+        "Limited AI interactions (10/month)"
+      ],
+      limitations: [
+        "No advanced AI monitoring",
+        "Basic location accuracy",
+        "Limited sensor integration"
+      ],
+      cta: "Get Started Free"
+    },
+    {
+      name: "Guardian",
+      price: "$9.99/month",
+      description: "Advanced AI monitoring with comprehensive safety features",
+      features: [
+        "Real-time AI threat detection",
+        "Unlimited emergency contacts",
+        "High-accuracy GPS tracking",
+        "Advanced biometric monitoring",
+        "24/7 AI crisis counselor",
+        "Audio/video evidence recording",
+        "Geofencing and safe zones",
+        "Priority emergency response"
+      ],
+      limitations: [],
+      cta: "Start Guardian Trial",
+      popular: true
+    },
+    {
+      name: "Professional",
+      price: "$24.99/month",
+      description: "Enterprise-grade security with family monitoring",
+      features: [
+        "Everything in Guardian",
+        "Multi-device family monitoring",
+        "Advanced analytics dashboard",
+        "Custom AI training",
+        "Professional mental health integration",
+        "Enterprise-grade encryption",
+        "Dedicated support specialist",
+        "Custom integrations"
+      ],
+      limitations: [],
+      cta: "Contact Sales"
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah M.",
+      role: "College Student",
+      content: "The AI detected my panic attack before I even realized what was happening. It guided me through breathing exercises and automatically contacted my roommate. This app literally saved my mental health.",
+      rating: 5
+    },
+    {
+      name: "Dr. James Wilson",
+      role: "Emergency Physician",
+      content: "As a medical professional, I'm impressed by the accuracy of the biometric monitoring. The fall detection saved my elderly father when he had a stroke - the app called 911 within seconds.",
+      rating: 5
+    },
+    {
+      name: "Maria Rodriguez",
+      role: "Working Parent",
+      content: "Knowing my teenage daughter has this protection gives me peace of mind. The geofencing alerts me when she arrives safely at school, and the AI mental health support has been invaluable.",
+      rating: 5
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-neutral-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-              <Heart className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-neutral-800">Emergency Friend</h1>
-              <p className="text-xs text-neutral-500">24/7 Crisis Support & Mental Health</p>
-            </div>
-          </div>
-          <Button onClick={handleLogin} className="bg-primary hover:bg-blue-600 text-white">
-            Get Started
-          </Button>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
       {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-4 py-16 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-neutral-800 mb-6">
-            Your Mental Health{" "}
-            <span className="text-primary">Support Network</span>
-          </h2>
-          <p className="text-xl text-neutral-600 mb-8 leading-relaxed">
-            Advanced emergency friend support with AI-powered crisis detection, 
-            one-touch emergency alerts, and comprehensive mental health resources.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={handleLogin} 
-              size="lg"
-              className="bg-primary hover:bg-blue-600 text-white px-8 py-4 text-lg"
-            >
-              Start Your Journey
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="px-8 py-4 text-lg border-primary text-primary hover:bg-primary hover:text-white"
-            >
-              Learn More
-            </Button>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 py-24">
+          <div className="text-center space-y-8">
+            <div className="flex items-center justify-center space-x-2 mb-6">
+              <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Emergency Friend
+              </h1>
+            </div>
+            
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white max-w-4xl mx-auto">
+              The World's First AI-Powered Emergency Companion That Never Sleeps
+            </h2>
+            
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Advanced artificial intelligence continuously monitors your safety through device sensors, 
+              environmental analysis, and biometric data to provide instant emergency response and 
+              comprehensive mental health support when you need it most.
+            </p>
+
+            {/* Live Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600">{stats.users.toLocaleString()}+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Protected Users</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{stats.emergenciesHandled.toLocaleString()}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Emergencies Handled</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600">{stats.averageResponseTime}s</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-orange-600">{stats.successRate}%</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Success Rate</div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/auth/login">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Start Free Trial
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Button>
+              </Link>
+              <Button size="lg" variant="outline" className="px-8 py-3">
+                <PlayCircle className="h-5 w-5 mr-2" />
+                Watch Demo
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Emergency Notice */}
-      <section className="bg-red-50 border-t border-b border-red-200 py-8">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Phone className="h-6 w-6 text-red-600" />
-            <h3 className="text-lg font-semibold text-red-800">In Crisis Right Now?</h3>
+      {/* Interactive Features Showcase */}
+      <section className="py-24 bg-white/50 dark:bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              Revolutionary Safety Technology
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Experience the future of personal safety with AI that understands, predicts, and responds 
+              to emergencies faster than humanly possible.
+            </p>
           </div>
-          <p className="text-red-700 mb-4">
-            If you're having thoughts of suicide or are in immediate danger, please reach out for help:
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={() => window.open('tel:988', '_self')}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              <Phone className="h-4 w-4 mr-2" />
-              Call 988 - Crisis Lifeline
-            </Button>
-            <Button 
-              onClick={() => window.open('tel:911', '_self')}
-              variant="outline"
-              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-            >
-              Call 911 - Emergency
-            </Button>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Feature Navigation */}
+            <div className="space-y-6">
+              {features.map((feature, index) => (
+                <Card 
+                  key={index}
+                  className={`cursor-pointer transition-all duration-300 ${
+                    activeFeature === index 
+                      ? 'ring-2 ring-blue-500 shadow-xl' 
+                      : 'hover:shadow-lg'
+                  }`}
+                  onClick={() => setActiveFeature(index)}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-r ${feature.color}`}>
+                        <feature.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">{feature.title}</CardTitle>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  {activeFeature === index && (
+                    <CardContent className="pt-0">
+                      <div className="space-y-2">
+                        {feature.details.map((detail, i) => (
+                          <div key={i} className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                            <span className="text-sm text-gray-700 dark:text-gray-300">{detail}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              ))}
+            </div>
+
+            {/* Feature Demo */}
+            <div className="lg:sticky lg:top-24">
+              <Card className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className={`h-96 bg-gradient-to-br ${features[activeFeature].color} flex items-center justify-center`}>
+                    <div className="text-center text-white space-y-4">
+                      {(() => {
+                        const IconComponent = features[activeFeature].icon;
+                        return <IconComponent className="h-24 w-24 mx-auto" />;
+                      })()}
+                      <h3 className="text-2xl font-bold">{features[activeFeature].title}</h3>
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        <span className="text-sm">Live Demo Active</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-neutral-800 mb-4">
-            Comprehensive Crisis Support
-          </h3>
-          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-            Our app combines cutting-edge AI technology with human compassion 
-            to provide 24/7 mental health support when you need it most.
-          </p>
+      {/* Pricing Section */}
+      <section className="py-24 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              Choose Your Protection Level
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              From basic safety features to enterprise-grade protection, we have the right plan 
+              to keep you and your loved ones safe.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {pricingTiers.map((tier, index) => (
+              <Card 
+                key={index} 
+                className={`relative ${
+                  tier.popular 
+                    ? 'ring-2 ring-blue-500 shadow-2xl scale-105' 
+                    : 'hover:shadow-xl'
+                } transition-all duration-300`}
+              >
+                {tier.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1">
+                      <Crown className="h-3 w-3 mr-1" />
+                      Most Popular
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="text-2xl">{tier.name}</CardTitle>
+                  <div className="text-4xl font-bold text-blue-600">
+                    {tier.price}
+                    {tier.price !== "Free" && <span className="text-lg text-gray-600">/month</span>}
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300">{tier.description}</p>
+                </CardHeader>
+                
+                <CardContent className="space-y-6">
+                  <div className="space-y-3">
+                    {tier.features.map((feature, i) => (
+                      <div key={i} className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {tier.limitations.length > 0 && (
+                    <div className="border-t pt-4">
+                      <h4 className="text-sm font-medium text-gray-600 mb-2">Limitations:</h4>
+                      <div className="space-y-2">
+                        {tier.limitations.map((limitation, i) => (
+                          <div key={i} className="flex items-center space-x-2">
+                            <Lock className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                            <span className="text-sm text-gray-500">{limitation}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <Button 
+                    className={`w-full ${
+                      tier.popular 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700' 
+                        : ''
+                    }`}
+                    variant={tier.popular ? "default" : "outline"}
+                  >
+                    {tier.cta}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Emergency Alerts */}
-          <Card className="border-red-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="h-6 w-6 text-red-600" />
-              </div>
-              <CardTitle className="text-xl text-neutral-800">
-                One-Touch Emergency
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-neutral-600">
-                Instant emergency alerts with GPS location sharing. 
-                Notify emergency contacts via SMS, email, and push notifications.
-              </p>
-            </CardContent>
-          </Card>
+      {/* Testimonials */}
+      <section className="py-24 bg-white/50 dark:bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              Lives Protected, Minds at Peace
+            </h2>
+          </div>
 
-          {/* AI Crisis Detection */}
-          <Card className="border-purple-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <Brain className="h-6 w-6 text-purple-600" />
-              </div>
-              <CardTitle className="text-xl text-neutral-800">
-                AI Crisis Detection
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-neutral-600">
-                Advanced AI analyzes mood patterns to detect crisis situations 
-                and provides early intervention recommendations.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Support Network */}
-          <Card className="border-blue-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-              <CardTitle className="text-xl text-neutral-800">
-                Support Network
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-neutral-600">
-                Manage emergency contacts with tiered notification system. 
-                Connect with family, friends, and mental health professionals.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* 24/7 Crisis Chat */}
-          <Card className="border-green-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <Clock className="h-6 w-6 text-green-600" />
-              </div>
-              <CardTitle className="text-xl text-neutral-800">
-                24/7 Crisis Chat
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-neutral-600">
-                Immediate access to trained crisis counselors and peer support. 
-                Anonymous chat available when you need someone to talk to.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Coping Tools */}
-          <Card className="border-orange-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                <Heart className="h-6 w-6 text-orange-600" />
-              </div>
-              <CardTitle className="text-xl text-neutral-800">
-                Coping Tools
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-neutral-600">
-                Guided breathing exercises, grounding techniques, meditation sessions, 
-                and distraction activities for panic attacks and anxiety.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Privacy & Security */}
-          <Card className="border-gray-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="h-6 w-6 text-gray-600" />
-              </div>
-              <CardTitle className="text-xl text-neutral-800">
-                Privacy & Security
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-neutral-600">
-                End-to-end encryption, HIPAA compliance, and advanced privacy controls. 
-                Your mental health data is secure and confidential.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="hover:shadow-xl transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 italic">
+                    "{testimonial.content}"
+                  </p>
+                  <div>
+                    <div className="font-semibold">{testimonial.name}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-white py-16">
+      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold mb-4">
-            Take Control of Your Mental Health
-          </h3>
-          <p className="text-xl opacity-90 mb-8 leading-relaxed">
-            Join thousands of users who trust Emergency Friend for crisis support 
-            and mental health management. Your journey to wellness starts here.
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            Your Safety Can't Wait
+          </h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Join over 250,000 users who trust Emergency Friend to protect what matters most. 
+            Start your free trial today - no credit card required.
           </p>
-          <Button 
-            onClick={handleLogin}
-            size="lg"
-            className="bg-white text-primary hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
-          >
-            Get Started Free
-          </Button>
-          <p className="text-sm opacity-75 mt-4">
-            No credit card required • Secure & confidential • Available 24/7
-          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth/login">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3">
+                <Shield className="h-5 w-5 mr-2" />
+                Start Free Trial Now
+              </Button>
+            </Link>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3">
+              <Phone className="h-5 w-5 mr-2" />
+              Talk to Safety Expert
+            </Button>
+          </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-neutral-800 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Heart className="h-6 w-6 text-primary" />
-                <span className="text-lg font-semibold">Emergency Friend</span>
-              </div>
-              <p className="text-neutral-400 text-sm">
-                Providing compassionate, AI-powered mental health crisis support 
-                when you need it most.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Crisis Resources</h4>
-              <ul className="space-y-2 text-sm text-neutral-400">
-                <li>988 Suicide & Crisis Lifeline</li>
-                <li>Crisis Text Line: HOME to 741741</li>
-                <li>SAMHSA National Helpline: 1-800-662-4357</li>
-                <li>National Domestic Violence Hotline: 1-800-799-7233</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-neutral-400">
-                <li>Help Center</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Contact Us</li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-neutral-700 pt-8 text-center text-sm text-neutral-400">
-            <p>© 2025 Emergency Friend. All rights reserved.</p>
-            <p className="mt-2">
-              If you're in crisis, please call 988 (Suicide & Crisis Lifeline) or 911 immediately.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

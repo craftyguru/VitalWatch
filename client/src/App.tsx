@@ -12,6 +12,7 @@ import Mood from "@/pages/mood";
 import ToolsComprehensive from "@/pages/tools-comprehensive";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
+import BillingPage from "@/pages/billing";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -27,6 +28,8 @@ function Router() {
           <Route path="/tools" component={ToolsComprehensive} />
           <Route path="/contacts" component={ContactsEnhanced} />
           <Route path="/profile" component={ProfileEnhanced} />
+          <Route path="/billing" component={BillingPage} />
+          <Route path="/landing" component={Landing} />
         </>
       )}
       <Route component={NotFound} />
