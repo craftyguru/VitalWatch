@@ -439,89 +439,559 @@ export default function ToolsEnhanced() {
             />
           </TabsContent>
 
-          {/* Wellness Tab */}
+          {/* Advanced Wellness Analytics */}
           <TabsContent value="wellness" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Heart className="h-5 w-5 text-red-500" />
-                  <span>Wellness Analytics</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">24</div>
-                    <div className="text-sm text-blue-700 dark:text-blue-300">Sessions This Week</div>
-                  </div>
-                  <div className="bg-green-50 dark:bg-green-950/30 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-green-600 mb-1">4.2</div>
-                    <div className="text-sm text-green-700 dark:text-green-300">Avg Mood Score</div>
-                  </div>
-                  <div className="bg-purple-50 dark:bg-purple-950/30 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">89%</div>
-                    <div className="text-sm text-purple-700 dark:text-purple-300">Stress Reduction</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-foreground mb-2">Wellness Analytics</h2>
+              <p className="text-muted-foreground">Comprehensive insights into your mental health journey with predictive analytics</p>
+            </div>
 
-          {/* Gamification Tab */}
-          <TabsContent value="gamification" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Top Level Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Activity className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2">24</div>
+                  <div className="text-sm text-muted-foreground">Sessions This Week</div>
+                  <div className="text-xs text-green-600 mt-1">↑ 12% from last week</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Heart className="h-8 w-8 text-green-600" />
+                  </div>
+                  <div className="text-3xl font-bold text-green-600 mb-2">4.2</div>
+                  <div className="text-sm text-muted-foreground">Avg Mood Score</div>
+                  <div className="text-xs text-green-600 mt-1">↑ 0.3 improvement</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border-purple-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Zap className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <div className="text-3xl font-bold text-purple-600 mb-2">89%</div>
+                  <div className="text-sm text-muted-foreground">Stress Reduction</div>
+                  <div className="text-xs text-green-600 mt-1">↑ 5% this month</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 border-orange-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Target className="h-8 w-8 text-orange-600" />
+                  </div>
+                  <div className="text-3xl font-bold text-orange-600 mb-2">12</div>
+                  <div className="text-sm text-muted-foreground">Day Streak</div>
+                  <div className="text-xs text-green-600 mt-1">Personal best!</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Detailed Analytics Sections */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Weekly Progress Chart */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <Award className="h-5 w-5 text-yellow-500" />
-                    <span>Achievements</span>
+                    <Activity className="h-5 w-5" />
+                    <span>Weekly Progress Overview</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-lg">
-                        <Timer className="h-5 w-5 text-yellow-600" />
-                      </div>
-                      <div>
-                        <div className="font-medium">7-Day Safety Streak</div>
-                        <div className="text-sm text-muted-foreground">Daily check-ins completed</div>
-                      </div>
-                      <Badge className="ml-auto">New!</Badge>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Breathing Sessions</span>
+                      <span className="text-sm text-muted-foreground">8 sessions</span>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                        <Zap className="h-5 w-5 text-blue-600" />
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-blue-600 h-2 rounded-full" style={{width: '80%'}}></div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Grounding Exercises</span>
+                      <span className="text-sm text-muted-foreground">6 sessions</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-green-600 h-2 rounded-full" style={{width: '60%'}}></div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Meditation Practice</span>
+                      <span className="text-sm text-muted-foreground">5 sessions</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-purple-600 h-2 rounded-full" style={{width: '50%'}}></div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Crisis Chat Support</span>
+                      <span className="text-sm text-muted-foreground">3 sessions</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-teal-600 h-2 rounded-full" style={{width: '30%'}}></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Mood Trends */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Heart className="h-5 w-5" />
+                    <span>Mood & Stress Trends</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                        <div className="text-lg font-bold text-green-600">4.2/5</div>
+                        <div className="text-xs text-muted-foreground">Average Mood</div>
                       </div>
-                      <div>
-                        <div className="font-medium">Emergency Response Pro</div>
-                        <div className="text-sm text-muted-foreground">Sub-15s average response time</div>
+                      <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                        <div className="text-lg font-bold text-blue-600">2.1/5</div>
+                        <div className="text-xs text-muted-foreground">Stress Level</div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">Weekly Mood Pattern</div>
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>Mon: 3.8</span>
+                        <span>Tue: 4.1</span>
+                        <span>Wed: 4.3</span>
+                        <span>Thu: 4.0</span>
+                        <span>Fri: 4.5</span>
+                        <span>Sat: 4.2</span>
+                        <span>Sun: 4.4</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="bg-gradient-to-r from-yellow-400 via-green-500 to-green-600 h-2 rounded-full" style={{width: '84%'}}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-xs text-muted-foreground p-3 bg-blue-50 dark:bg-blue-950/20 rounded">
+                      <strong>AI Insight:</strong> Your mood tends to improve throughout the week, with Friday showing consistently high scores. Consider scheduling more challenging tasks early in the week when you're building momentum.
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Advanced Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Tool Effectiveness */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Star className="h-5 w-5" />
+                    <span>Tool Effectiveness</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Breathing Exercises</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                          <div className="bg-blue-600 h-2 rounded-full" style={{width: '92%'}}></div>
+                        </div>
+                        <span className="text-xs text-muted-foreground">92%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Crisis Chat</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                          <div className="bg-teal-600 h-2 rounded-full" style={{width: '89%'}}></div>
+                        </div>
+                        <span className="text-xs text-muted-foreground">89%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Grounding Techniques</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                          <div className="bg-green-600 h-2 rounded-full" style={{width: '87%'}}></div>
+                        </div>
+                        <span className="text-xs text-muted-foreground">87%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Meditation</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                          <div className="bg-purple-600 h-2 rounded-full" style={{width: '85%'}}></div>
+                        </div>
+                        <span className="text-xs text-muted-foreground">85%</span>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              
+
+              {/* Biometric Insights */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <Star className="h-5 w-5 text-purple-500" />
-                    <span>Safety Points</span>
+                    <Activity className="h-5 w-5" />
+                    <span>Biometric Insights</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-purple-600 mb-2">1,247</div>
-                    <div className="text-muted-foreground mb-4">Total Points Earned</div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Next Level</span>
-                        <span>1,500 pts</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div className="bg-purple-600 h-2 rounded-full" style={{width: '83%'}}></div>
+                  <div className="space-y-3">
+                    <div className="text-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
+                      <div className="text-lg font-bold text-red-600">68 BPM</div>
+                      <div className="text-xs text-muted-foreground">Resting Heart Rate</div>
+                      <div className="text-xs text-green-600">↓ 4 BPM this month</div>
+                    </div>
+                    
+                    <div className="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+                      <div className="text-lg font-bold text-orange-600">42 ms</div>
+                      <div className="text-xs text-muted-foreground">HRV Score</div>
+                      <div className="text-xs text-green-600">↑ 8% improvement</div>
+                    </div>
+                    
+                    <div className="text-xs text-muted-foreground p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
+                      <strong>Trend:</strong> Your cardiovascular health is improving consistently. The breathing exercises are having a measurable positive impact.
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Predictive Analytics */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Eye className="h-5 w-5" />
+                    <span>Predictive Insights</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200">
+                      <div className="text-sm font-medium text-yellow-800 dark:text-yellow-200">Stress Risk Alert</div>
+                      <div className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
+                        Based on patterns, Tuesday 2-4 PM shows 73% likelihood of increased stress. Consider scheduling breathing exercises during this time.
                       </div>
                     </div>
+                    
+                    <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200">
+                      <div className="text-sm font-medium text-green-800 dark:text-green-200">Optimal Session Time</div>
+                      <div className="text-xs text-green-700 dark:text-green-300 mt-1">
+                        Your most effective meditation sessions occur at 7:30 AM (+23% effectiveness vs. average).
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200">
+                      <div className="text-sm font-medium text-blue-800 dark:text-blue-200">Recovery Prediction</div>
+                      <div className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                        Current trajectory suggests reaching 4.5/5 mood baseline within 8 days with consistent practice.
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Advanced Gamification & Achievements */}
+          <TabsContent value="gamification" className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-foreground mb-2">Achievements & Progress</h2>
+              <p className="text-muted-foreground">Gamified mental health journey with rewards, streaks, and milestone tracking</p>
+            </div>
+
+            {/* Points & Level Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border-purple-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Star className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <div className="text-4xl font-bold text-purple-600 mb-2">1,247</div>
+                  <div className="text-sm text-muted-foreground mb-3">Total Safety Points</div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span>Level 4: Guardian</span>
+                      <span>253 pts to Level 5</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-purple-600 h-2 rounded-full" style={{width: '83%'}}></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 border-yellow-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Award className="h-8 w-8 text-yellow-600" />
+                  </div>
+                  <div className="text-4xl font-bold text-yellow-600 mb-2">17</div>
+                  <div className="text-sm text-muted-foreground mb-3">Achievements Unlocked</div>
+                  <div className="text-xs text-green-600">+3 this week</div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Timer className="h-8 w-8 text-green-600" />
+                  </div>
+                  <div className="text-4xl font-bold text-green-600 mb-2">12</div>
+                  <div className="text-sm text-muted-foreground mb-3">Day Streak</div>
+                  <div className="text-xs text-green-600">Personal Record!</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Achievement Categories */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Recent Achievements */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Award className="h-5 w-5 text-yellow-500" />
+                    <span>Recent Achievements</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3 p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200">
+                      <div className="bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-lg">
+                        <Timer className="h-5 w-5 text-yellow-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">12-Day Safety Streak</div>
+                        <div className="text-sm text-muted-foreground">Daily wellness check-ins completed</div>
+                        <div className="text-xs text-yellow-600 mt-1">+150 points</div>
+                      </div>
+                      <Badge className="bg-yellow-200 text-yellow-800">New!</Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200">
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                        <Zap className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">Emergency Response Pro</div>
+                        <div className="text-sm text-muted-foreground">Sub-10s average response time</div>
+                        <div className="text-xs text-blue-600 mt-1">+200 points</div>
+                      </div>
+                      <Badge variant="secondary">Elite</Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200">
+                      <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg">
+                        <Heart className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">Mood Master</div>
+                        <div className="text-sm text-muted-foreground">7 days above 4.0 mood score</div>
+                        <div className="text-xs text-green-600 mt-1">+100 points</div>
+                      </div>
+                      <Badge variant="secondary">Complete</Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg border border-purple-200">
+                      <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
+                        <Wind className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">Breathing Expert</div>
+                        <div className="text-sm text-muted-foreground">50 breathing sessions completed</div>
+                        <div className="text-xs text-purple-600 mt-1">+175 points</div>
+                      </div>
+                      <Badge variant="secondary">Milestone</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Progress Challenges */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Target className="h-5 w-5 text-orange-500" />
+                    <span>Active Challenges</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">30-Day Consistency</span>
+                        <span className="text-sm text-orange-600">12/30 days</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div className="bg-orange-600 h-2 rounded-full" style={{width: '40%'}}></div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">Use any therapeutic tool daily for 30 days</div>
+                      <div className="text-xs text-orange-600 mt-1">Reward: 500 points + "Resilience Champion" badge</div>
+                    </div>
+
+                    <div className="p-3 bg-teal-50 dark:bg-teal-950/20 rounded-lg border border-teal-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">Crisis Chat Master</span>
+                        <span className="text-sm text-teal-600">3/10 sessions</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div className="bg-teal-600 h-2 rounded-full" style={{width: '30%'}}></div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">Complete 10 crisis chat sessions</div>
+                      <div className="text-xs text-teal-600 mt-1">Reward: 300 points + "Support Seeker" badge</div>
+                    </div>
+
+                    <div className="p-3 bg-indigo-50 dark:bg-indigo-950/20 rounded-lg border border-indigo-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">Biometric Optimizer</span>
+                        <span className="text-sm text-indigo-600">68% complete</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div className="bg-indigo-600 h-2 rounded-full" style={{width: '68%'}}></div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">Improve resting heart rate by 5 BPM</div>
+                      <div className="text-xs text-indigo-600 mt-1">Reward: 400 points + "Health Guardian" badge</div>
+                    </div>
+
+                    <div className="p-3 bg-pink-50 dark:bg-pink-950/20 rounded-lg border border-pink-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">Meditation Marathon</span>
+                        <span className="text-sm text-pink-600">15/25 sessions</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div className="bg-pink-600 h-2 rounded-full" style={{width: '60%'}}></div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">Complete 25 meditation sessions this month</div>
+                      <div className="text-xs text-pink-600 mt-1">Reward: 350 points + "Mindfulness Master" badge</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Leaderboard & Social Features */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Weekly Leaderboard */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Star className="h-5 w-5 text-yellow-500" />
+                    <span>Weekly Leaderboard</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3 p-2 bg-yellow-50 dark:bg-yellow-950/20 rounded">
+                      <div className="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center text-xs font-bold text-white">1</div>
+                      <div className="flex-1">
+                        <div className="font-medium">Alex M.</div>
+                        <div className="text-xs text-muted-foreground">2,847 points</div>
+                      </div>
+                      <Badge className="bg-yellow-200 text-yellow-800">👑</Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-2 bg-gray-50 dark:bg-gray-950/20 rounded">
+                      <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-xs font-bold text-white">2</div>
+                      <div className="flex-1">
+                        <div className="font-medium">Sarah K.</div>
+                        <div className="text-xs text-muted-foreground">2,103 points</div>
+                      </div>
+                      <Badge variant="secondary">🥈</Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-2 bg-orange-50 dark:bg-orange-950/20 rounded">
+                      <div className="w-6 h-6 rounded-full bg-orange-400 flex items-center justify-center text-xs font-bold text-white">3</div>
+                      <div className="flex-1">
+                        <div className="font-medium">Jordan L.</div>
+                        <div className="text-xs text-muted-foreground">1,876 points</div>
+                      </div>
+                      <Badge variant="secondary">🥉</Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-2 bg-blue-50 dark:bg-blue-950/20 rounded border-2 border-blue-300">
+                      <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">4</div>
+                      <div className="flex-1">
+                        <div className="font-medium">You</div>
+                        <div className="text-xs text-muted-foreground">1,247 points</div>
+                      </div>
+                      <Badge className="bg-blue-200 text-blue-800">↑ 2</Badge>
+                    </div>
+
+                    <div className="text-xs text-center text-muted-foreground mt-3 p-2 bg-gray-50 dark:bg-gray-950/20 rounded">
+                      You've moved up 2 positions this week! Keep up the great work!
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Badge Collection */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Award className="h-5 w-5 text-blue-500" />
+                    <span>Badge Collection</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-4 gap-3">
+                    <div className="text-center p-2 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200">
+                      <div className="text-2xl mb-1">🌱</div>
+                      <div className="text-xs font-medium">First Steps</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200">
+                      <div className="text-2xl mb-1">💨</div>
+                      <div className="text-xs font-medium">Breath Master</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-purple-50 dark:bg-purple-950/20 rounded-lg border border-purple-200">
+                      <div className="text-2xl mb-1">🧘</div>
+                      <div className="text-xs font-medium">Zen Focus</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200">
+                      <div className="text-2xl mb-1">⚡</div>
+                      <div className="text-xs font-medium">Quick Responder</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200">
+                      <div className="text-2xl mb-1">❤️</div>
+                      <div className="text-xs font-medium">Heart Helper</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-teal-50 dark:bg-teal-950/20 rounded-lg border border-teal-200">
+                      <div className="text-2xl mb-1">💬</div>
+                      <div className="text-xs font-medium">Support Seeker</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-indigo-50 dark:bg-indigo-950/20 rounded-lg border border-indigo-200">
+                      <div className="text-2xl mb-1">🎯</div>
+                      <div className="text-xs font-medium">Goal Getter</div>
+                    </div>
+                    
+                    <div className="text-center p-2 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 opacity-50">
+                      <div className="text-2xl mb-1">🏆</div>
+                      <div className="text-xs font-medium">Champion</div>
+                      <div className="text-xs text-gray-500">Locked</div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <Button variant="outline" size="sm">
+                      View All Badges
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
