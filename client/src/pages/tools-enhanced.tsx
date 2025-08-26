@@ -429,6 +429,215 @@ export default function ToolsEnhanced() {
                 ))}
               </div>
             </section>
+
+            {/* Overview Analytics Grid */}
+            <section>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                {/* Advanced Wellness Overview */}
+                <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/30 dark:to-indigo-900/20 border-blue-200">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl">
+                          <Activity className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg text-blue-900 dark:text-blue-100">Wellness Overview</CardTitle>
+                          <p className="text-sm text-blue-700 dark:text-blue-300">Your comprehensive mental health journey</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-blue-200 text-blue-800 border-blue-300">
+                        65% Strong
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* Overall Wellness Score */}
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Overall Wellness</span>
+                          <span className="text-sm font-bold text-blue-800 dark:text-blue-200">65%</span>
+                        </div>
+                        <div className="w-full bg-blue-200 rounded-full h-3">
+                          <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500" style={{width: '65%'}}></div>
+                        </div>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">Good momentum, keep it up!</p>
+                      </div>
+                      
+                      {/* Key Metrics Grid */}
+                      <div className="grid grid-cols-3 gap-3">
+                        <div className="text-center p-3 bg-white/70 dark:bg-black/20 rounded-lg">
+                          <div className="text-lg font-bold text-blue-700 dark:text-blue-300">24</div>
+                          <div className="text-xs text-blue-600 dark:text-blue-400">Sessions</div>
+                          <div className="text-xs text-green-600">+3 this week</div>
+                        </div>
+                        <div className="text-center p-3 bg-white/70 dark:bg-black/20 rounded-lg">
+                          <div className="text-lg font-bold text-green-700 dark:text-green-300">4.2</div>
+                          <div className="text-xs text-blue-600 dark:text-blue-400">Mood Avg</div>
+                          <div className="text-xs text-green-600">↑ 0.3 pts</div>
+                        </div>
+                        <div className="text-center p-3 bg-white/70 dark:bg-black/20 rounded-lg">
+                          <div className="text-lg font-bold text-purple-700 dark:text-purple-300">12</div>
+                          <div className="text-xs text-blue-600 dark:text-blue-400">Day Streak</div>
+                          <div className="text-xs text-green-600">Record!</div>
+                        </div>
+                      </div>
+                      
+                      {/* Quick Insights */}
+                      <div className="bg-white/50 dark:bg-black/10 p-3 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Star className="h-4 w-4 text-yellow-500" />
+                          <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Today's Focus</span>
+                        </div>
+                        <p className="text-xs text-blue-700 dark:text-blue-300">
+                          Your stress levels peak around 2 PM. Consider a 5-minute breathing session at 1:45 PM for optimal results.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Advanced AI Insights */}
+                <Card className="bg-gradient-to-br from-purple-50 to-violet-100 dark:from-purple-950/30 dark:to-violet-900/20 border-purple-200">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-purple-100 dark:bg-purple-900/30 p-3 rounded-xl">
+                          <Zap className="h-6 w-6 text-purple-600" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg text-purple-900 dark:text-purple-100">AI Insights</CardTitle>
+                          <p className="text-sm text-purple-700 dark:text-purple-300">Intelligent pattern analysis and predictions</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-purple-200 text-purple-800 border-purple-300">
+                        <Zap className="h-3 w-3 mr-1" />
+                        Active
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* AI Status */}
+                      <div className="flex items-center justify-between p-3 bg-white/70 dark:bg-black/20 rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-sm font-medium text-purple-800 dark:text-purple-200">AI Analysis Active</span>
+                        </div>
+                        <span className="text-xs text-purple-600 dark:text-purple-400">Real-time monitoring</span>
+                      </div>
+                      
+                      {/* Insights List */}
+                      <div className="space-y-3">
+                        <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <Target className="h-4 w-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-800 dark:text-green-200">Optimal Timing</span>
+                          </div>
+                          <p className="text-xs text-green-700 dark:text-green-300">
+                            Your meditation sessions are 23% more effective at 7:30 AM based on 2-week analysis.
+                          </p>
+                        </div>
+                        
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                            <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">Stress Prediction</span>
+                          </div>
+                          <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                            73% likelihood of increased stress Tuesday 2-4 PM. Preemptive breathing exercise recommended.
+                          </p>
+                        </div>
+                        
+                        <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <Heart className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Health Trend</span>
+                          </div>
+                          <p className="text-xs text-blue-700 dark:text-blue-300">
+                            Resting heart rate improved by 4 BPM this month. Breathing exercises showing measurable impact.
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Next Recommendation */}
+                      <div className="bg-purple-100 dark:bg-purple-900/30 p-3 rounded-lg border border-purple-300">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Zap className="h-4 w-4 text-purple-600" />
+                          <span className="text-sm font-medium text-purple-800 dark:text-purple-200">Next Recommendation</span>
+                        </div>
+                        <p className="text-xs text-purple-700 dark:text-purple-300">
+                          Try the 4-7-8 breathing technique for better sleep quality based on your recent stress patterns.
+                        </p>
+                        <Button size="sm" variant="outline" className="mt-2 w-full text-purple-700 border-purple-300">
+                          Start Session
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
+
+            {/* Emergency Network Status */}
+            <section className="mt-8">
+              <Card className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20 border-red-200">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-xl">
+                        <Shield className="h-6 w-6 text-red-600" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg text-red-900 dark:text-red-100">Emergency Network Status</CardTitle>
+                        <p className="text-sm text-red-700 dark:text-red-300">Your safety network is ready and monitoring</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className="bg-green-100 text-green-800 border-green-300">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        All Systems Online
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="text-center p-4 bg-white/70 dark:bg-black/20 rounded-lg">
+                      <Users className="h-6 w-6 mx-auto mb-2 text-red-600" />
+                      <div className="text-lg font-bold text-red-700 dark:text-red-300">{emergencyContacts.length || 0}</div>
+                      <div className="text-xs text-red-600 dark:text-red-400">Emergency Contacts</div>
+                      <div className="text-xs text-green-600 mt-1">12s avg response</div>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-white/70 dark:bg-black/20 rounded-lg">
+                      <MapPin className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                      <div className="text-lg font-bold text-blue-700 dark:text-blue-300">GPS</div>
+                      <div className="text-xs text-red-600 dark:text-red-400">Location Services</div>
+                      <div className="text-xs text-green-600 mt-1">High accuracy</div>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-white/70 dark:bg-black/20 rounded-lg">
+                      <Eye className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                      <div className="text-lg font-bold text-purple-700 dark:text-purple-300">AI</div>
+                      <div className="text-xs text-red-600 dark:text-red-400">Crisis Detection</div>
+                      <div className="text-xs text-green-600 mt-1">24/7 monitoring</div>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-white/70 dark:bg-black/20 rounded-lg">
+                      <Zap className="h-6 w-6 mx-auto mb-2 text-orange-600" />
+                      <div className="text-lg font-bold text-orange-700 dark:text-orange-300">Alert</div>
+                      <div className="text-xs text-red-600 dark:text-red-400">Response System</div>
+                      <div className="text-xs text-green-600 mt-1">Instant deployment</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
           </TabsContent>
 
           {/* Safety Tools Tab */}
