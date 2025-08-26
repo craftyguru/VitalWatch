@@ -10,6 +10,15 @@ VitalWatch is a comprehensive AI-powered vital signs monitoring and mental healt
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+**Database Architecture Update (Aug 26, 2025):**
+- Planned migration to dual-database approach: Neon + Supabase
+- Neon Database: Primary PostgreSQL for structured relational data
+- Supabase: File storage, authentication, and real-time features
+- Enhanced .gitignore for better security and environment management
+- Created comprehensive data architecture documentation
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -29,10 +38,28 @@ Preferred communication style: Simple, everyday language.
 - **Build Process**: esbuild for production bundling
 
 ### Database Architecture
-- **ORM**: Drizzle ORM with PostgreSQL dialect
-- **Database**: PostgreSQL (configured for Neon Database)
+- **Primary Database**: Neon Database (PostgreSQL) for structured relational data
+- **File Storage**: Supabase for unstructured data, file uploads, and media storage
+- **ORM**: Drizzle ORM with PostgreSQL dialect for Neon DB
 - **Migrations**: Drizzle Kit for schema management
 - **Connection**: Connection pooling with @neondatabase/serverless
+
+#### Database Split Strategy
+**Neon Database (PostgreSQL):**
+- User accounts, profiles, app settings
+- Emergency incidents and alert logs
+- Mood tracking entries and AI analysis
+- Emergency contacts and relationships
+- Sensor data and health readings (structured)
+- Coping tools usage statistics
+- Subscription and billing data
+
+**Supabase Storage:**
+- User-uploaded files (images, documents, reports)
+- Audio recordings from panic button incidents
+- Exported health reports and analytics
+- Profile images and media content
+- Backup files and data exports
 
 ## Key Components
 
@@ -70,6 +97,8 @@ Preferred communication style: Simple, everyday language.
 - **Push Notifications**: Real-time alert delivery to emergency contacts
 
 ### External Service Integration
+- **Neon Database**: Primary PostgreSQL database for structured data and relationships
+- **Supabase**: File storage, authentication, and real-time features
 - **OpenAI API**: Advanced mental health analysis, comprehensive threat detection, and personalized insights
 - **SendGrid**: Transactional email delivery for alerts and notifications
 - **Twilio**: SMS messaging for emergency alerts and check-ins
