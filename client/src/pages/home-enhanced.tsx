@@ -42,7 +42,9 @@ import {
   ChevronRight,
   Sparkles,
   Target,
-  Award
+  Award,
+  Eye,
+  Mic
 } from "lucide-react";
 
 export default function Home() {
