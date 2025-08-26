@@ -182,58 +182,122 @@ export default function Home() {
 
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
         
-        {/* Hero CTA Section */}
+        {/* Comprehensive Toolkit Hero Section */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-3xl blur-xl"></div>
           <Card className="relative bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 border-blue-200/50 shadow-xl">
             <CardContent className="p-8">
-              <div className="text-center mb-6">
-                <div className="flex justify-center mb-4">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="flex items-center justify-center space-x-4 mb-4">
                   <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-4 rounded-2xl shadow-lg">
                     <Brain className="h-8 w-8" />
                   </div>
+                  <div className="bg-gradient-to-br from-indigo-500 to-blue-500 text-white p-4 rounded-2xl shadow-lg">
+                    <Eye className="h-8 w-8" />
+                  </div>
                 </div>
                 <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-100 mb-2">
-                  Complete Mental Health Toolkit
+                  AI Emergency Friend & Mental Health Toolkit
                 </h2>
-                <p className="text-blue-700 dark:text-blue-300 text-lg max-w-2xl mx-auto">
-                  Access advanced AI-powered therapeutic tools, breathing exercises, crisis support, and achievement tracking
+                <p className="text-blue-700 dark:text-blue-300 text-lg max-w-3xl mx-auto">
+                  Complete therapeutic toolkit with advanced AI monitoring, real-time threat detection, and professional mental health tools
                 </p>
               </div>
               
+              {/* Feature Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl border border-green-200">
+                  <Mic className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                  <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1 text-sm">Real-time Audio</h3>
+                  <p className="text-xs text-green-700 dark:text-green-300">Active monitoring</p>
+                  <div className="flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+                    <span className="text-xs text-green-600">Active</span>
+                  </div>
+                </div>
+                
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl border border-blue-200">
+                  <Brain className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1 text-sm">AI Analysis</h3>
+                  <p className="text-xs text-blue-700 dark:text-blue-300">Threat detection</p>
+                  <div className="flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mr-1"></div>
+                    <span className="text-xs text-blue-600">Processing</span>
+                  </div>
+                </div>
+                
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl border border-orange-200">
+                  <Zap className="h-6 w-6 mx-auto mb-2 text-orange-600" />
+                  <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1 text-sm">Auto Alerts</h3>
+                  <p className="text-xs text-orange-700 dark:text-orange-300">Emergency contacts</p>
+                  <div className="flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full mr-1"></div>
+                    <span className="text-xs text-orange-600">Ready</span>
+                  </div>
+                </div>
+                
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl border border-purple-200">
+                  <MapPin className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                  <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1 text-sm">Location Sharing</h3>
+                  <p className="text-xs text-purple-700 dark:text-purple-300">GPS tracking</p>
+                  <div className="flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mr-1"></div>
+                    <span className="text-xs text-purple-600">High Accuracy</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Therapeutic Tools Grid */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                <div className="text-center p-4 bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl">
                   <Wind className="h-8 w-8 mx-auto mb-2 text-blue-600" />
                   <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">Breathing Tools</h3>
                   <p className="text-sm text-blue-700 dark:text-blue-300">Advanced techniques with biometric feedback</p>
                 </div>
-                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                <div className="text-center p-4 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 rounded-xl">
                   <MessageCircle className="h-8 w-8 mx-auto mb-2 text-purple-600" />
                   <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1">Crisis Chat</h3>
                   <p className="text-sm text-purple-700 dark:text-purple-300">24/7 AI support and professional resources</p>
                 </div>
-                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                <div className="text-center p-4 bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 rounded-xl">
                   <Activity className="h-8 w-8 mx-auto mb-2 text-green-600" />
                   <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">Analytics</h3>
                   <p className="text-sm text-green-700 dark:text-green-300">Comprehensive wellness tracking & insights</p>
                 </div>
-                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                <div className="text-center p-4 bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 rounded-xl">
                   <Award className="h-8 w-8 mx-auto mb-2 text-orange-600" />
                   <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1">Achievements</h3>
                   <p className="text-sm text-orange-700 dark:text-orange-300">Gamified progress with 17+ categories</p>
                 </div>
               </div>
+
+              {/* System Status */}
+              <div className="bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-900/30 dark:to-blue-900/30 rounded-xl p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Badge className="bg-green-100 text-green-800 border-green-300">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      All Systems Active
+                    </Badge>
+                    <div className="text-sm text-green-800 dark:text-green-200">
+                      Biometric sensors normal • Heart rate: 72 BPM • Stress level: Low • Environment: Safe
+                    </div>
+                  </div>
+                </div>
+              </div>
               
+              {/* Main CTA */}
               <div className="text-center">
                 <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-xl px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
                   <Link href="/tools" data-testid="link-main-toolkit">
-                    <Zap className="h-6 w-6 mr-3" />
-                    Explore Mental Health Toolkit
+                    <Shield className="h-6 w-6 mr-3" />
+                    Enter Complete Toolkit
                     <ArrowRight className="h-6 w-6 ml-3" />
                   </Link>
                 </Button>
                 <p className="text-sm text-blue-600 dark:text-blue-400 mt-3">
-                  ✨ Over 50+ professional-grade therapeutic tools available
+                  ✨ 50+ therapeutic tools + Advanced AI monitoring & threat detection
                 </p>
               </div>
             </CardContent>
@@ -502,112 +566,7 @@ export default function Home() {
           </Card>
         </section>
 
-        {/* Enhanced Emergency AI Monitoring */}
-        <section>
-          <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 border-indigo-200/50">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-indigo-500 text-white p-2.5 rounded-xl">
-                    <Eye className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl text-indigo-900 dark:text-indigo-100">AI Emergency Friend</CardTitle>
-                    <p className="text-sm text-indigo-700 dark:text-indigo-300">Advanced multi-sensor threat detection and response</p>
-                  </div>
-                </div>
-                <Badge className="bg-green-100 text-green-800 border-green-300">
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  Active
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <p className="text-indigo-700 dark:text-indigo-300 text-sm mb-4">
-                  Your AI companion that monitors via multiple sensors, transcribes real-time audio, 
-                  analyzes threat levels with biometric correlation, and automatically contacts emergency services.
-                </p>
-                
-                {/* Enhanced Monitoring Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center mb-4">
-                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3 border border-green-200">
-                    <Mic className="h-4 w-4 mx-auto mb-1 text-green-600" />
-                    <div className="text-xs font-medium text-green-700">Real-time Audio</div>
-                    <div className="text-xs text-green-600">Active</div>
-                  </div>
-                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3 border border-blue-200">
-                    <Brain className="h-4 w-4 mx-auto mb-1 text-blue-600" />
-                    <div className="text-xs font-medium text-blue-700">AI Analysis</div>
-                    <div className="text-xs text-blue-600">Processing</div>
-                  </div>
-                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3 border border-orange-200">
-                    <Zap className="h-4 w-4 mx-auto mb-1 text-orange-600" />
-                    <div className="text-xs font-medium text-orange-700">Auto Alerts</div>
-                    <div className="text-xs text-orange-600">Ready</div>
-                  </div>
-                  <div className="bg-white/50 dark:bg-black/20 rounded-lg p-3 border border-purple-200">
-                    <MapPin className="h-4 w-4 mx-auto mb-1 text-purple-600" />
-                    <div className="text-xs font-medium text-purple-700">Location Sharing</div>
-                    <div className="text-xs text-purple-600">High Accuracy</div>
-                  </div>
-                </div>
 
-                {/* Threat Level Indicator */}
-                <div className="bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-900/30 dark:to-blue-900/30 rounded-lg p-3 mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-indigo-900 dark:text-indigo-100">Current Status</span>
-                    <Badge className="bg-green-200 text-green-800">All Clear</Badge>
-                  </div>
-                  <div className="text-xs text-indigo-700 dark:text-indigo-300">
-                    Biometric sensors normal • Heart rate: 72 BPM • Stress level: Low • Environment: Safe
-                  </div>
-                </div>
-              </div>
-              
-              {/* Prominent CTA Section */}
-              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-4 text-white shadow-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="bg-white/20 p-2 rounded-lg">
-                      <Zap className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-lg">Access Full Toolkit</h4>
-                      <p className="text-sm text-indigo-100">Advanced mental health tools & monitoring</p>
-                    </div>
-                  </div>
-                  <div className="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">
-                    NEW
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-center">
-                  <div className="bg-white/10 rounded-lg p-2">
-                    <Wind className="h-4 w-4 mx-auto mb-1" />
-                    <div className="text-xs">Breathing Tools</div>
-                  </div>
-                  <div className="bg-white/10 rounded-lg p-2">
-                    <Brain className="h-4 w-4 mx-auto mb-1" />
-                    <div className="text-xs">AI Therapy</div>
-                  </div>
-                  <div className="bg-white/10 rounded-lg p-2">
-                    <Award className="h-4 w-4 mx-auto mb-1" />
-                    <div className="text-xs">Achievements</div>
-                  </div>
-                </div>
-                
-                <Button asChild className="w-full bg-white text-indigo-600 hover:bg-gray-50 font-bold text-lg py-3 shadow-lg transform hover:scale-105 transition-all duration-200">
-                  <Link href="/tools" data-testid="link-emergency-monitoring">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Enter Mental Health Toolkit
-                    <ArrowRight className="h-5 w-5 ml-2" />
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
 
         {/* Quick Relief Tools */}
         <section>
