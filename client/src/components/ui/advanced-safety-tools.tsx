@@ -149,8 +149,13 @@ export default function AdvancedSafetyTools() {
           }
         );
         
-        return watchId;
+        return () => {
+          if (watchId) {
+            navigator.geolocation.clearWatch(watchId);
+          }
+        };
       }
+      return null;
     };
     
     // Real network status monitoring
@@ -216,8 +221,8 @@ export default function AdvancedSafetyTools() {
       clearInterval(batteryUpdateInterval);
       clearInterval(sensorUpdateInterval);
       window.removeEventListener('devicemotion', handleDeviceMotion);
-      if (locationCleanup && typeof locationCleanup === 'number') {
-        navigator.geolocation.clearWatch(locationCleanup);
+      if (locationCleanup && typeof locationCleanup === 'function') {
+        locationCleanup();
       }
     };
   }, [audioRecording, videoRecording, stressLevel]);
