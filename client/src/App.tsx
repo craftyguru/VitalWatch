@@ -11,7 +11,7 @@ import Home from "@/pages/home";
 import Mood from "@/pages/mood";
 import Tools from "@/pages/tools";
 import Contacts from "@/pages/contacts";
-import Profile from "@/pages/profile";
+import ProfileEnhanced from "@/pages/profile-enhanced";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -26,7 +26,7 @@ function Router() {
           <Route path="/mood" component={Mood} />
           <Route path="/tools" component={Tools} />
           <Route path="/contacts" component={Contacts} />
-          <Route path="/profile" component={Profile} />
+          <Route path="/profile" component={ProfileEnhanced} />
         </>
       )}
       <Route component={NotFound} />
