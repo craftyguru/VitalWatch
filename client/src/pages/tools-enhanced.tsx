@@ -8,6 +8,8 @@ import { BreathingExercise } from "@/components/ui/breathing-exercise";
 import { GroundingExercise } from "@/components/ui/grounding-exercise";
 import { ComprehensiveEmergencyMonitoring } from "@/components/ui/comprehensive-emergency-monitoring";
 import { AdvancedSafetyTools } from "@/components/ui/advanced-safety-tools";
+import { TherapeuticDistractionHub } from "@/components/ui/therapeutic-distraction-hub";
+import { AIPoweredMeditation } from "@/components/ui/ai-powered-meditation";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "wouter";
 import { 
@@ -74,11 +76,11 @@ const enhancedCopingTools = [
     color: "text-purple-600",
     bgColor: "bg-purple-50 dark:bg-purple-950/30",
     borderColor: "border-purple-200",
-    component: null,
-    techniques: ["Body Scan", "Loving Kindness", "Mindful Breathing", "Walking Meditation", "Sleep Stories"],
+    component: AIPoweredMeditation,
+    techniques: ["Adaptive Breathing", "Mood-Based Mindfulness", "Stress Relief Visualization", "Biometric Body Scan", "Sleep Optimization"],
     duration: "5-60 minutes",
     effectiveness: 4.7,
-    features: ["Biometric analysis", "Mood-based selection", "Progress tracking", "Community challenges"]
+    features: ["Biometric analysis", "Mood-based selection", "Progress tracking", "AI adaptation"]
   },
   {
     id: "distraction",
@@ -88,11 +90,11 @@ const enhancedCopingTools = [
     color: "text-orange-600",
     bgColor: "bg-orange-50 dark:bg-orange-950/30",
     borderColor: "border-orange-200",
-    component: null,
-    techniques: ["Cognitive Games", "Art Therapy", "Music Therapy", "Movement Exercises", "Creative Writing"],
+    component: TherapeuticDistractionHub,
+    techniques: ["Color Breathing", "Counting Games", "Sensory Grounding", "Creative Storytelling", "Rhythm Therapy"],
     duration: "2-30 minutes",
     effectiveness: 4.2,
-    features: ["Crisis-specific selection", "Difficulty adaptation", "Social sharing", "Achievement tracking"]
+    features: ["Crisis-specific selection", "Difficulty adaptation", "Real-time adaptation", "Progress tracking"]
   },
   {
     id: "emergency-monitoring",
@@ -120,6 +122,11 @@ const quickDistractors = [
 export default function ToolsEnhanced() {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [biometricData, setBiometricData] = useState({
+    heartRate: 72,
+    stressLevel: 45,
+    moodScore: 65
+  });
 
   // Fetch coping tools usage and emergency contacts
   const { data: toolsUsage, isLoading } = useQuery({
@@ -166,6 +173,33 @@ export default function ToolsEnhanced() {
         <ToolComponent 
           emergencyContacts={emergencyContacts}
           userLocation={userLocation}
+          heartRate={biometricData.heartRate}
+          stressLevel={biometricData.stressLevel}
+          moodScore={biometricData.moodScore}
+          crisisIntensity={biometricData.stressLevel > 80 ? 'critical' : 
+                          biometricData.stressLevel > 60 ? 'high' : 
+                          biometricData.stressLevel > 40 ? 'medium' : 'low'}
+          timeOfDay={new Date().getHours() < 12 ? 'morning' : 
+                    new Date().getHours() < 17 ? 'afternoon' : 
+                    new Date().getHours() < 21 ? 'evening' : 'night'}
+          onSessionComplete={(session: any) => {
+            console.log('Session completed:', session);
+            // Update biometric data based on session effectiveness
+            setBiometricData(prev => ({
+              ...prev,
+              stressLevel: Math.max(10, prev.stressLevel - (session.effectivenessScore || 0) * 0.3),
+              heartRate: Math.max(60, prev.heartRate - (session.heartRateChange || 0))
+            }));
+          }}
+          onActivityComplete={(activity: string, duration: number, effectiveness: number) => {
+            console.log('Activity completed:', { activity, duration, effectiveness });
+            // Update stress and mood based on activity effectiveness
+            setBiometricData(prev => ({
+              ...prev,
+              stressLevel: Math.max(10, prev.stressLevel - effectiveness * 0.2),
+              moodScore: Math.min(100, prev.moodScore + effectiveness * 0.15)
+            }));
+          }}
         />
       </div>
     );
