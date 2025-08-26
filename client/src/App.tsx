@@ -13,12 +13,14 @@ import ToolsComprehensive from "@/pages/tools-comprehensive";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
 import BillingPage from "@/pages/billing";
+import DemoPage from "@/pages/demo";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
   return (
     <Switch>
+      <Route path="/demo" component={DemoPage} />
       {isLoading || !isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
