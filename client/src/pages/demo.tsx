@@ -73,17 +73,16 @@ const demoInsights = [
 ];
 
 export default function DemoPage() {
-  const [isConnected, setIsConnected] = useState(true);
-  const [emergencyOverlayOpen, setEmergencyOverlayOpen] = useState(false);
-  const [currentBattery, setCurrentBattery] = useState(85);
-  const [networkQuality, setNetworkQuality] = useState("Strong");
-  const [sensorStatus, setSensorStatus] = useState("Active");
+  const [currentTab, setCurrentTab] = useState("dashboard");
+  const [currentBattery] = useState(85);
+  const [networkQuality] = useState("Strong");
+  const [sensorStatus] = useState("Active");
 
   const userName = `${demoUser.firstName} ${demoUser.lastName}`;
   const wellnessScore = 78;
 
   useEffect(() => {
-    // Demo banner warning
+    // Demo banner warning - exactly like in the screenshots
     const banner = document.createElement('div');
     banner.style.cssText = `
       position: fixed;
@@ -121,361 +120,330 @@ export default function DemoPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Enhanced Header */}
-      <header className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-lg bg-card/95">
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground p-3 rounded-2xl shadow-lg">
-                <Shield className="h-6 w-6" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">
-                  VitalWatch
-                </h1>
-                <div className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {isConnected ? 'Protected & Connected' : 'Reconnecting...'}
-                  </span>
-                </div>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header - exactly matching the real app */}
+      <header className="bg-gray-900 border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg">
+              <Shield className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white">VitalWatch</h1>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs text-gray-400">Protected & Connected</span>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-3">
-              <ThemeToggle />
-              
-              <div className="flex items-center space-x-3">
-                <div className="hidden sm:block text-right">
-                  <p className="text-sm font-semibold text-foreground">
-                    Welcome back, {userName}
-                  </p>
-                  <p className="text-xs text-muted-foreground flex items-center space-x-1">
-                    <Sparkles className="h-3 w-3" />
-                    <span>Demo User Experience</span>
-                  </p>
-                </div>
-                <Avatar className="h-12 w-12 ring-2 ring-primary/20 shadow-md">
-                  <AvatarImage src={demoUser.profileImageUrl} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground font-bold text-lg">
-                    SJ
-                  </AvatarFallback>
-                </Avatar>
-                <Button variant="ghost" size="icon" className="hover:bg-primary/10">
-                  <Settings className="h-5 w-5" />
-                </Button>
-              </div>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm text-white">Welcome back, Sarah</p>
+              <p className="text-xs text-gray-400">Demo User Experience</p>
             </div>
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className="bg-blue-600 text-white text-xs">SJ</AvatarFallback>
+            </Avatar>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
+      <div className="max-w-6xl mx-auto px-6 py-6">
         
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200">
-            <CardContent className="p-4 text-center">
-              <Activity className="h-6 w-6 text-green-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-green-600">{wellnessScore}%</div>
-              <div className="text-sm text-muted-foreground">Wellness Score</div>
-              <div className="text-xs text-green-600">↑ 12% this week</div>
-            </CardContent>
-          </Card>
+        {/* Stats Cards - exactly like the real app */}
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="bg-gray-900 border border-green-600 rounded-lg p-4 text-center">
+            <Activity className="h-5 w-5 text-green-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-green-500">78%</div>
+            <div className="text-xs text-gray-400">Wellness Score</div>
+            <div className="text-xs text-gray-500">↑ 12% this week</div>
+          </div>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200">
-            <CardContent className="p-4 text-center">
-              <Shield className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-blue-600">24/7</div>
-              <div className="text-sm text-muted-foreground">AI Protection</div>
-              <div className="text-xs text-blue-600">Active monitoring</div>
-            </CardContent>
-          </Card>
+          <div className="bg-gray-900 border border-blue-600 rounded-lg p-4 text-center">
+            <Shield className="h-5 w-5 text-blue-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-blue-500">24/7</div>
+            <div className="text-xs text-gray-400">AI Protection</div>
+            <div className="text-xs text-gray-500">Active monitoring</div>
+          </div>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 border-purple-200">
-            <CardContent className="p-4 text-center">
-              <Brain className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-purple-600">4.2</div>
-              <div className="text-sm text-muted-foreground">Avg Mood</div>
-              <div className="text-xs text-green-600">Great trend!</div>
-            </CardContent>
-          </Card>
+          <div className="bg-gray-900 border border-purple-600 rounded-lg p-4 text-center">
+            <Brain className="h-5 w-5 text-purple-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-purple-500">4.2</div>
+            <div className="text-xs text-gray-400">Avg Mood</div>
+            <div className="text-xs text-gray-500">Great trend!</div>
+          </div>
 
-          <Card className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border-orange-200">
-            <CardContent className="p-4 text-center">
-              <Users className="h-6 w-6 text-orange-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-orange-600">{demoContacts.length}</div>
-              <div className="text-sm text-muted-foreground">Contacts</div>
-              <div className="text-xs text-orange-600">Ready to help</div>
-            </CardContent>
-          </Card>
+          <div className="bg-gray-900 border border-orange-600 rounded-lg p-4 text-center">
+            <Users className="h-5 w-5 text-orange-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-orange-500">3</div>
+            <div className="text-xs text-gray-400">Contacts</div>
+            <div className="text-xs text-gray-500">Ready to help</div>
+          </div>
         </div>
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-            <TabsTrigger value="contacts">Contacts</TabsTrigger>
-            <TabsTrigger value="insights">AI Insights</TabsTrigger>
-          </TabsList>
+        {/* Tab Navigation - exactly like the real app */}
+        <div className="bg-gray-800 rounded-lg p-1 mb-6">
+          <div className="grid grid-cols-4 gap-1">
+            {['dashboard', 'monitoring', 'contacts', 'insights'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setCurrentTab(tab)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  currentTab === tab 
+                    ? 'bg-gray-700 text-white' 
+                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {/* Dashboard Tab */}
-          <TabsContent value="dashboard" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Wellness Overview */}
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BarChart3 className="h-5 w-5 text-blue-600" />
-                    <span>Wellness Analytics</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span>Overall Wellness</span>
-                      <span className="font-semibold">{wellnessScore}%</span>
-                    </div>
-                    <Progress value={wellnessScore} className="h-3" />
+        {/* Dashboard Content */}
+        {currentTab === 'dashboard' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Wellness Analytics */}
+            <div className="bg-gray-900 border border-gray-700 rounded-lg">
+              <div className="p-4 border-b border-gray-700">
+                <h3 className="text-lg font-semibold text-blue-400 flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2" />
+                  Wellness Analytics
+                </h3>
+              </div>
+              <div className="p-4 space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-300">Overall Wellness</span>
+                    <span className="font-semibold text-white">78%</span>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="text-center p-3 bg-white/50 dark:bg-black/20 rounded-lg">
-                      <div className="text-lg font-bold text-green-600">18</div>
-                      <div className="text-xs text-muted-foreground">Day Streak</div>
-                    </div>
-                    <div className="text-center p-3 bg-white/50 dark:bg-black/20 rounded-lg">
-                      <div className="text-lg font-bold text-purple-600">92%</div>
-                      <div className="text-xs text-muted-foreground">Stress Relief</div>
-                    </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="bg-blue-500 h-2 rounded-full" style={{width: '78%'}}></div>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Mood Entries */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Heart className="h-5 w-5 text-red-500" />
-                    <span>Recent Mood Entries</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {demoMoodEntries.map((mood, index) => (
-                    <div key={mood.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`h-4 w-4 ${i < mood.moodScore ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                            />
-                          ))}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium">{mood.notes}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {new Date(mood.createdAt).toLocaleDateString()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Monitoring Tab */}
-          <TabsContent value="monitoring" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Battery className="h-5 w-5 text-green-600" />
-                    <span>Device Status</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Battery Level</span>
-                    <span className="font-semibold text-green-600">{currentBattery}%</span>
-                  </div>
-                  <Progress value={currentBattery} className="h-2" />
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Network Quality</span>
-                    <Badge className="bg-green-100 text-green-800">{networkQuality}</Badge>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Sensor Status</span>
-                    <Badge className="bg-blue-100 text-blue-800">{sensorStatus}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Activity className="h-5 w-5 text-purple-600" />
-                    <span>Live Monitoring</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Motion Detection</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm text-green-600">Active</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Audio Analysis</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm text-blue-600">Listening</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Location Services</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm text-orange-600">Tracking</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Shield className="h-5 w-5 text-red-600" />
-                    <span>Emergency Status</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">Safe</div>
-                    <div className="text-sm text-muted-foreground">All systems normal</div>
-                  </div>
-                  
-                  <Button 
-                    className="w-full bg-red-600 hover:bg-red-700 text-white"
-                    onClick={() => setEmergencyOverlayOpen(true)}
-                  >
-                    <AlertTriangle className="h-4 w-4 mr-2" />
-                    Emergency Alert
-                  </Button>
-                  
-                  <div className="text-xs text-center text-muted-foreground">
-                    Last check: Just now
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Contacts Tab */}
-          <TabsContent value="contacts" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-5 w-5" />
-                    <span>Emergency Contacts</span>
-                  </div>
-                  <Button size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Contact
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {demoContacts.map((contact) => (
-                  <div key={contact.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarFallback>{contact.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{contact.name}</div>
-                        <div className="text-sm text-muted-foreground">{contact.phone}</div>
-                        <Badge variant="secondary" className="text-xs">
-                          {contact.relationship}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline">
-                        <Phone className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <MessageCircle className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* AI Insights Tab */}
-          <TabsContent value="insights" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Brain className="h-5 w-5 text-purple-600" />
-                  <span>AI-Powered Insights</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {demoInsights.map((insight) => (
-                  <div key={insight.id} className="p-4 border rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <div className={`p-2 rounded-full ${
-                        insight.type === 'positive' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'
-                      }`}>
-                        {insight.type === 'positive' ? <CheckCircle className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm">{insight.content}</p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs text-muted-foreground">AI Generated • Just now</span>
-                          <Button size="sm" variant="ghost">
-                            Learn More
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                <div className="text-center p-8 border-2 border-dashed border-gray-200 rounded-lg">
-                  <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    AI Learning Your Patterns
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Our AI is analyzing your wellness data to provide personalized insights and early warning systems.
-                  </p>
-                  <Button variant="outline">
-                    View Analytics
-                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="text-center p-3 bg-gray-800 rounded-lg">
+                    <div className="text-lg font-bold text-green-500">18</div>
+                    <div className="text-xs text-gray-400">Day Streak</div>
+                  </div>
+                  <div className="text-center p-3 bg-gray-800 rounded-lg">
+                    <div className="text-lg font-bold text-purple-500">92%</div>
+                    <div className="text-xs text-gray-400">Stress Relief</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Mood Entries */}
+            <div className="bg-gray-900 border border-gray-700 rounded-lg">
+              <div className="p-4 border-b border-gray-700">
+                <h3 className="text-lg font-semibold text-red-400 flex items-center">
+                  <Heart className="h-5 w-5 mr-2" />
+                  Recent Mood Entries
+                </h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {demoMoodEntries.map((mood) => (
+                  <div key={mood.id} className="bg-gray-800 p-3 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={`h-4 w-4 ${i < mood.moodScore ? 'text-yellow-400 fill-current' : 'text-gray-600'}`} 
+                          />
+                        ))}
+                      </div>
+                      <div>
+                        <div className="text-sm text-white">{mood.notes}</div>
+                        <div className="text-xs text-gray-400">
+                          {new Date(mood.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Monitoring Content */}
+        {currentTab === 'monitoring' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Device Status */}
+            <div className="bg-gray-900 border border-gray-700 rounded-lg">
+              <div className="p-4 border-b border-gray-700">
+                <h3 className="text-lg font-semibold text-green-400 flex items-center">
+                  <Battery className="h-5 w-5 mr-2" />
+                  Device Status
+                </h3>
+              </div>
+              <div className="p-4 space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-300">Battery Level</span>
+                  <span className="font-semibold text-green-500">{currentBattery}%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-green-500 h-2 rounded-full" style={{width: `${currentBattery}%`}}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-300">Network Quality</span>
+                  <span className="text-xs bg-green-800 text-green-300 px-2 py-1 rounded">{networkQuality}</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-300">Sensor Status</span>
+                  <span className="text-xs bg-blue-800 text-blue-300 px-2 py-1 rounded">{sensorStatus}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Monitoring */}
+            <div className="bg-gray-900 border border-gray-700 rounded-lg">
+              <div className="p-4 border-b border-gray-700">
+                <h3 className="text-lg font-semibold text-purple-400 flex items-center">
+                  <Activity className="h-5 w-5 mr-2" />
+                  Live Monitoring
+                </h3>
+              </div>
+              <div className="p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Motion Detection</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-green-500">Active</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Audio Analysis</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-blue-500">Listening</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Location Services</span>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-orange-500">Tracking</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Emergency Status */}
+            <div className="bg-gray-900 border border-gray-700 rounded-lg">
+              <div className="p-4 border-b border-gray-700">
+                <h3 className="text-lg font-semibold text-red-400 flex items-center">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Emergency Status
+                </h3>
+              </div>
+              <div className="p-4 space-y-4">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-500">Safe</div>
+                  <div className="text-sm text-gray-400">All systems normal</div>
+                </div>
+                
+                <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  Emergency Alert
+                </Button>
+                
+                <div className="text-xs text-center text-gray-500">
+                  Last check: Just now
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Contacts Content */}
+        {currentTab === 'contacts' && (
+          <div className="bg-gray-900 border border-gray-700 rounded-lg">
+            <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-orange-400 flex items-center">
+                <Users className="h-5 w-5 mr-2" />
+                Emergency Contacts
+              </h3>
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Contact
+              </Button>
+            </div>
+            <div className="p-4 space-y-4">
+              {demoContacts.map((contact) => (
+                <div key={contact.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-xs font-bold">
+                      {contact.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="font-medium text-white">{contact.name}</div>
+                      <div className="text-sm text-gray-400">{contact.phone}</div>
+                      <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
+                        {contact.relationship}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+                      <Phone className="h-4 w-4" />
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* AI Insights Content */}
+        {currentTab === 'insights' && (
+          <div className="bg-gray-900 border border-gray-700 rounded-lg">
+            <div className="p-4 border-b border-gray-700">
+              <h3 className="text-lg font-semibold text-purple-400 flex items-center">
+                <Brain className="h-5 w-5 mr-2" />
+                AI-Powered Insights
+              </h3>
+            </div>
+            <div className="p-4 space-y-4">
+              {demoInsights.map((insight) => (
+                <div key={insight.id} className="p-4 bg-gray-800 rounded-lg">
+                  <div className="flex items-start space-x-3">
+                    <div className={`p-2 rounded-full ${
+                      insight.type === 'positive' ? 'bg-green-800 text-green-400' : 'bg-blue-800 text-blue-400'
+                    }`}>
+                      {insight.type === 'positive' ? <CheckCircle className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-300">{insight.content}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-xs text-gray-500">AI Generated • Just now</span>
+                        <Button size="sm" variant="ghost" className="text-blue-400 hover:text-blue-300">
+                          Learn More
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bottom Action Bar */}
-        <div className="flex justify-center space-x-4 py-6">
+        <div className="flex justify-center space-x-4 py-6 mt-8">
           <Link href="/landing">
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" className="border-gray-600 text-gray-300">
               <ArrowRight className="h-5 w-5 mr-2 rotate-180" />
               Back to Landing
             </Button>
