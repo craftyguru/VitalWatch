@@ -138,7 +138,7 @@ export default function AuthPage() {
   };
 
   const handleReplotAuth = () => {
-    window.location.href = "/api/auth/replit";
+    window.location.href = "/api/login";
   };
 
   return (
@@ -166,214 +166,51 @@ export default function AuthPage() {
           <p className="text-gray-300">AI-Powered Vital Signs Monitoring</p>
         </div>
 
-        {/* Auth Tabs */}
+        {/* Auth Card */}
         <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-lg shadow-2xl">
-          <Tabs defaultValue="login" className="w-full">
-            <CardHeader className="pb-4">
-              <TabsList className="grid w-full grid-cols-2 bg-gray-800">
-                <TabsTrigger value="login" className="data-[state=active]:bg-blue-600">
-                  Sign In
-                </TabsTrigger>
-                <TabsTrigger value="signup" className="data-[state=active]:bg-purple-600">
-                  Sign Up
-                </TabsTrigger>
-              </TabsList>
-            </CardHeader>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-white">Access VitalWatch</CardTitle>
+            <p className="text-gray-400">Your AI-powered emergency companion</p>
+          </CardHeader>
 
-            <CardContent className="space-y-6">
-              {/* Replit Auth Button */}
-              <Button
-                onClick={handleReplotAuth}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                size="lg"
-              >
-                <Shield className="h-5 w-5 mr-2" />
-                Continue with Replit Auth
-              </Button>
+          <CardContent className="space-y-6">
+            {/* Main Auth Button */}
+            <Button
+              onClick={handleReplotAuth}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+              size="lg"
+              data-testid="button-auth-login"
+            >
+              <Shield className="h-5 w-5 mr-2" />
+              Sign In to VitalWatch
+            </Button>
 
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-600" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-gray-900 px-2 text-gray-400">Or continue with email</span>
-                </div>
+            <div className="text-center text-gray-400 text-sm">
+              Secure authentication powered by Replit
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-600" />
               </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-gray-900 px-2 text-gray-400">Test Account Available</span>
+              </div>
+            </div>
 
-              {/* Login Tab */}
-              <TabsContent value="login" className="space-y-4">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="login-email" className="text-gray-200">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="login-email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={loginData.email}
-                        onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                        className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                        required
-                        data-testid="input-login-email"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="login-password" className="text-gray-200">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="login-password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        value={loginData.password}
-                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                        className="pl-10 pr-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                        required
-                        data-testid="input-login-password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-200"
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                    disabled={isLoading}
-                    data-testid="button-login-submit"
-                  >
-                    {isLoading ? "Signing In..." : "Sign In"}
-                  </Button>
-                </form>
-
-                <div className="text-center">
-                  <Button variant="link" className="text-blue-400 hover:text-blue-300">
-                    Forgot password?
-                  </Button>
-                </div>
-              </TabsContent>
-
-              {/* Signup Tab */}
-              <TabsContent value="signup" className="space-y-4">
-                <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-firstname" className="text-gray-200">First Name</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                        <Input
-                          id="signup-firstname"
-                          type="text"
-                          placeholder="First name"
-                          value={signupData.firstName}
-                          onChange={(e) => setSignupData({ ...signupData, firstName: e.target.value })}
-                          className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                          required
-                          data-testid="input-signup-firstname"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-lastname" className="text-gray-200">Last Name</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                        <Input
-                          id="signup-lastname"
-                          type="text"
-                          placeholder="Last name"
-                          value={signupData.lastName}
-                          onChange={(e) => setSignupData({ ...signupData, lastName: e.target.value })}
-                          className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                          required
-                          data-testid="input-signup-lastname"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="text-gray-200">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={signupData.email}
-                        onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                        className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                        required
-                        data-testid="input-signup-email"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="text-gray-200">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="signup-password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Create a password"
-                        value={signupData.password}
-                        onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                        className="pl-10 pr-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                        required
-                        data-testid="input-signup-password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-200"
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-confirm-password" className="text-gray-200">Confirm Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="signup-confirm-password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Confirm your password"
-                        value={signupData.confirmPassword}
-                        onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
-                        className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                        required
-                        data-testid="input-signup-confirm-password"
-                      />
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full bg-purple-600 hover:bg-purple-700"
-                    disabled={isLoading}
-                    data-testid="button-signup-submit"
-                  >
-                    {isLoading ? "Creating Account..." : "Create Account"}
-                  </Button>
-                </form>
-
-                <div className="text-xs text-gray-400 text-center">
-                  By creating an account, you agree to our Terms of Service and Privacy Policy
-                </div>
-              </TabsContent>
-            </CardContent>
-          </Tabs>
+            <div className="bg-gray-800 p-4 rounded-lg">
+              <h4 className="text-white font-semibold mb-2">Test Account Info</h4>
+              <p className="text-gray-300 text-sm mb-1">
+                <strong>Email:</strong> VitalWatch@vitalwatch.com
+              </p>
+              <p className="text-gray-300 text-sm mb-3">
+                <strong>Status:</strong> Ready for testing
+              </p>
+              <p className="text-gray-400 text-xs">
+                Click "Sign In to VitalWatch" above to authenticate through Replit and access the test account.
+              </p>
+            </div>
+          </CardContent>
         </Card>
 
         {/* Features Preview */}
