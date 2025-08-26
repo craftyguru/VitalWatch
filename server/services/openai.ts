@@ -264,4 +264,134 @@ async function analyzeThreatLevel(transcription: string, location?: any) {
   }
 }
 
-export { generatePersonalizedInsight, analyzeMoodEntry, assessCrisisRisk, transcribeAudio, analyzeThreatLevel };
+// Enhanced comprehensive threat analysis
+async function analyzeComprehensiveThreat(transcription: string, context: any) {
+  if (!transcription.trim()) {
+    return {
+      threatLevel: 'low',
+      confidence: 0.1,
+      keywords: [],
+      suggestedActions: []
+    };
+  }
+
+  try {
+    const systemPrompt = `You are an advanced emergency response AI analyzing comprehensive data for potential threats. 
+
+    Analyze the following data and respond with a JSON object containing:
+    - threatLevel: "low", "medium", "high", or "critical"
+    - confidence: 0.0-1.0 confidence score
+    - keywords: array of concerning words/phrases detected
+    - suggestedActions: array of recommended emergency actions
+    - riskFactors: array of identified risk factors
+    - contextualAnalysis: brief analysis of contributing factors
+
+    Consider all available data:
+    1. Audio transcription for verbal indicators
+    2. Biometric data (heart rate, stress levels) for physiological indicators
+    3. Environmental factors (noise, lighting) for situational context
+    4. Location data for geographical risk assessment
+
+    CRITICAL threats: Violence, weapons, medical emergencies, "help", "call 911", screaming, fighting, elevated heart rate with stress
+    HIGH threats: Arguments escalating, intoxication with aggression, stalking, breaking and entering, high stress with concerning audio
+    MEDIUM threats: Domestic disputes, threats, harassment, suspicious activity, elevated biometrics
+    LOW threats: Normal conversation, background noise, normal biometrics
+
+    Weight biometric and environmental data significantly in your analysis.`;
+
+    const contextData = `
+    Transcription: "${transcription}"
+    ${context.biometrics ? `Biometrics: Heart Rate ${context.biometrics.heartRate}bpm, Stress Level ${context.biometrics.stressLevel}%` : ''}
+    ${context.environmental ? `Environment: Noise ${context.environmental.noiseLevel}dB, Light ${context.environmental.lightLevel}%` : ''}
+    ${context.location ? `Location: Available with ${context.location.accuracy}m accuracy` : 'Location: Not available'}
+    ${context.settings ? `Detection Sensitivity: ${context.settings.sensitivity}%` : ''}
+    `;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: contextData }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.2,
+    });
+
+    const analysis = JSON.parse(response.choices[0].message.content!);
+    
+    return {
+      threatLevel: analysis.threatLevel || 'low',
+      confidence: Math.max(0, Math.min(1, analysis.confidence || 0.5)),
+      keywords: Array.isArray(analysis.keywords) ? analysis.keywords : [],
+      suggestedActions: Array.isArray(analysis.suggestedActions) ? analysis.suggestedActions : [],
+      riskFactors: Array.isArray(analysis.riskFactors) ? analysis.riskFactors : [],
+      contextualAnalysis: analysis.contextualAnalysis || 'Analysis based on available data'
+    };
+  } catch (error) {
+    console.error("Comprehensive threat analysis failed:", error);
+    return {
+      threatLevel: 'low',
+      confidence: 0.3,
+      keywords: ['analysis-error'],
+      suggestedActions: ['Review data manually'],
+      riskFactors: ['System error'],
+      contextualAnalysis: 'Analysis temporarily unavailable'
+    };
+  }
+}
+
+// Helper functions for additional analysis
+function analyzeBiometrics(biometrics: any) {
+  const { heartRate, stressLevel } = biometrics;
+  
+  let riskLevel = 'normal';
+  if (heartRate > 100 || stressLevel > 70) riskLevel = 'elevated';
+  if (heartRate > 120 || stressLevel > 85) riskLevel = 'high';
+  
+  return {
+    riskLevel,
+    heartRateStatus: heartRate > 100 ? 'elevated' : 'normal',
+    stressLevelStatus: stressLevel > 70 ? 'high' : stressLevel > 40 ? 'moderate' : 'low',
+    recommendations: riskLevel === 'high' ? ['Immediate attention recommended'] : ['Monitor closely']
+  };
+}
+
+function analyzeEnvironmental(environmental: any) {
+  const { noiseLevel, lightLevel, crowdDensity } = environmental;
+  
+  let riskAssessment = 'normal';
+  const riskFactors = [];
+  
+  if (noiseLevel > 80) {
+    riskAssessment = 'elevated';
+    riskFactors.push('High noise level detected');
+  }
+  
+  if (lightLevel < 20) {
+    riskAssessment = 'elevated';
+    riskFactors.push('Low light conditions');
+  }
+  
+  if (crowdDensity === 'high') {
+    riskFactors.push('High crowd density');
+  }
+  
+  return {
+    riskAssessment,
+    riskFactors,
+    noiseStatus: noiseLevel > 80 ? 'loud' : noiseLevel > 50 ? 'moderate' : 'quiet',
+    lightingStatus: lightLevel < 20 ? 'dark' : lightLevel > 70 ? 'bright' : 'moderate',
+    crowdStatus: crowdDensity
+  };
+}
+
+export { 
+  generatePersonalizedInsight, 
+  analyzeMoodEntry, 
+  assessCrisisRisk, 
+  transcribeAudio, 
+  analyzeThreatLevel,
+  analyzeComprehensiveThreat,
+  analyzeBiometrics,
+  analyzeEnvironmental
+};

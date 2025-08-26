@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BreathingExercise } from "@/components/ui/breathing-exercise";
 import { GroundingExercise } from "@/components/ui/grounding-exercise";
-import { EmergencyMonitoring } from "@/components/ui/emergency-monitoring";
+import { ComprehensiveEmergencyMonitoring } from "@/components/ui/comprehensive-emergency-monitoring";
 import { AdvancedSafetyTools } from "@/components/ui/advanced-safety-tools";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "wouter";
@@ -102,7 +102,7 @@ const enhancedCopingTools = [
     color: "text-red-600",
     bgColor: "bg-red-50 dark:bg-red-950/30",
     borderColor: "border-red-200",
-    component: EmergencyMonitoring,
+    component: ComprehensiveEmergencyMonitoring,
     techniques: ["Voice Pattern Analysis", "Threat Detection", "Auto-Alert System", "Location Tracking"],
     duration: "Always Active",
     effectiveness: 4.9,

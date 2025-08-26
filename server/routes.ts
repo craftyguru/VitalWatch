@@ -4,7 +4,14 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { emergencyService } from "./services/emergency";
-import { generatePersonalizedInsight } from "./services/openai";
+import { 
+  generatePersonalizedInsight,
+  transcribeAudio,
+  analyzeThreatLevel,
+  analyzeComprehensiveThreat,
+  analyzeBiometrics,
+  analyzeEnvironmental
+} from "./services/openai";
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
 import { sendCrisisResourcesSMS } from "./services/twilio";
 import {
@@ -263,7 +270,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Emergency AI Analysis Route
+  // Comprehensive Emergency AI Analysis Route
+  app.post('/api/comprehensive-emergency-analysis', isAuthenticated, async (req: any, res) => {
+    try {
+      const { audio, location, biometrics, environmental, settings, timestamp } = req.body;
+      
+      if (!audio) {
+        return res.status(400).json({ message: "Audio data required" });
+      }
+
+      // Convert base64 audio to buffer for OpenAI Whisper
+      const audioBuffer = Buffer.from(audio, 'base64');
+      
+      // Transcribe audio using OpenAI Whisper
+      const transcription = await transcribeAudio(audioBuffer);
+      
+      // Enhanced threat analysis with biometric and environmental data
+      const threatAnalysis = await analyzeComprehensiveThreat(transcription, {
+        location,
+        biometrics,
+        environmental,
+        settings
+      });
+      
+      res.json({
+        transcription,
+        threatAnalysis: threatAnalysis.threatLevel !== 'low' ? threatAnalysis : null,
+        timestamp,
+        biometricAnalysis: biometrics ? analyzeBiometrics(biometrics) : null,
+        environmentalAnalysis: environmental ? analyzeEnvironmental(environmental) : null
+      });
+      
+    } catch (error) {
+      console.error("Error in comprehensive emergency analysis:", error);
+      res.status(500).json({ message: "Failed to analyze comprehensive emergency data" });
+    }
+  });
+
+  // Legacy Emergency AI Analysis Route (for backward compatibility)
   app.post('/api/emergency-analysis', isAuthenticated, async (req: any, res) => {
     try {
       const { audio, location, timestamp } = req.body;
