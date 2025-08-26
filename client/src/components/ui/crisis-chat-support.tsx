@@ -335,25 +335,27 @@ export default function CrisisChatSupport({
               <Card className="h-[600px] flex flex-col">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="font-medium">AI Crisis Counselor</span>
-                      <Badge variant="secondary">Online</Badge>
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+                      <span className="font-medium truncate">AI Crisis Counselor</span>
+                      <Badge variant="secondary" className="flex-shrink-0">Online</Badge>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setVoiceMode(!voiceMode)}
+                        className="h-8 w-8 p-0"
                       >
-                        {voiceMode ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                        {voiceMode ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setAudioEnabled(!audioEnabled)}
+                        className="h-8 w-8 p-0"
                       >
-                        {audioEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+                        {audioEnabled ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
                       </Button>
                     </div>
                   </div>
@@ -379,12 +381,12 @@ export default function CrisisChatSupport({
                                   <Shield className="h-4 w-4" />
                                 )}
                               </div>
-                              <div className="flex-1">
+                              <div className="flex-1 min-w-0">
                                 <div className={`p-3 rounded-lg border ${getMessageStyle(message)}`}>
-                                  <p className="text-sm">{message.content}</p>
+                                  <p className="text-sm break-words">{message.content}</p>
                                   {message.type === 'escalation' && (
                                     <div className="mt-2 pt-2 border-t border-current/20">
-                                      <p className="text-xs font-medium">This message has been flagged for immediate attention.</p>
+                                      <p className="text-xs font-medium break-words">This message has been flagged for immediate attention.</p>
                                     </div>
                                   )}
                                 </div>
@@ -431,7 +433,7 @@ export default function CrisisChatSupport({
                         <Send className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground mt-2 break-words">
                       This AI provides support but is not a replacement for professional help. In emergencies, contact 911.
                     </p>
                   </div>
@@ -448,35 +450,35 @@ export default function CrisisChatSupport({
                 <CardContent className="space-y-3">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start"
+                    className="w-full justify-start text-left h-auto py-3 px-3"
                     onClick={() => setInputMessage("I'm feeling overwhelmed and need help")}
                   >
-                    <Heart className="h-4 w-4 mr-2" />
-                    I need immediate support
+                    <Heart className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span className="text-sm break-words">I need immediate support</span>
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start"
+                    className="w-full justify-start text-left h-auto py-3 px-3"
                     onClick={() => setInputMessage("Can you guide me through a breathing exercise?")}
                   >
-                    <Brain className="h-4 w-4 mr-2" />
-                    Breathing exercises
+                    <Brain className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span className="text-sm break-words">Breathing exercises</span>
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start"
+                    className="w-full justify-start text-left h-auto py-3 px-3"
                     onClick={() => setInputMessage("I'm having a panic attack")}
                   >
-                    <Zap className="h-4 w-4 mr-2" />
-                    Panic attack help
+                    <Zap className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span className="text-sm break-words">Panic attack help</span>
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start"
+                    className="w-full justify-start text-left h-auto py-3 px-3"
                     onClick={() => setInputMessage("I'm having thoughts of self-harm")}
                   >
-                    <AlertTriangle className="h-4 w-4 mr-2" />
-                    Crisis intervention
+                    <AlertTriangle className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span className="text-sm break-words">Crisis intervention</span>
                   </Button>
                 </CardContent>
               </Card>
