@@ -30,7 +30,8 @@ import {
   Target,
   Clock,
   AlertTriangle,
-  PlayCircle
+  PlayCircle,
+  Eye
 } from "lucide-react";
 import { Link } from "wouter";
 

@@ -52,7 +52,7 @@ const demoUser = {
   firstName: "Sarah",
   lastName: "Johnson",
   email: "sarah.johnson@demo.com",
-  profileImageUrl: null
+  profileImageUrl: undefined
 };
 
 const demoMoodEntries = [
