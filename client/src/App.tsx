@@ -10,7 +10,7 @@ import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import Mood from "@/pages/mood";
 import Tools from "@/pages/tools";
-import Contacts from "@/pages/contacts";
+import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
 
 function Router() {
@@ -25,7 +25,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/mood" component={Mood} />
           <Route path="/tools" component={Tools} />
-          <Route path="/contacts" component={Contacts} />
+          <Route path="/contacts" component={ContactsEnhanced} />
           <Route path="/profile" component={ProfileEnhanced} />
         </>
       )}
