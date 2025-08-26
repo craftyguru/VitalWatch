@@ -10,6 +10,7 @@ import { ComprehensiveEmergencyMonitoring } from "@/components/ui/comprehensive-
 import { AdvancedSafetyTools } from "@/components/ui/advanced-safety-tools";
 import { TherapeuticDistractionHub } from "@/components/ui/therapeutic-distraction-hub";
 import { AIPoweredMeditation } from "@/components/ui/ai-powered-meditation";
+import { CrisisChatSupport } from "@/components/ui/crisis-chat-support";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "wouter";
 import { 
@@ -36,7 +37,8 @@ import {
   Palette,
   Target,
   Timer,
-  Award
+  Award,
+  MessageCircle
 } from "lucide-react";
 
 const enhancedCopingTools = [
@@ -109,6 +111,20 @@ const enhancedCopingTools = [
     duration: "Always Active",
     effectiveness: 4.9,
     features: ["Real-time transcription", "AI threat analysis", "Instant alerts", "Evidence recording"]
+  },
+  {
+    id: "crisis-chat",
+    name: "Crisis Chat Support",
+    description: "AI-powered emotional support and guided crisis intervention available 24/7",
+    icon: MessageCircle,
+    color: "text-teal-600",
+    bgColor: "bg-teal-50 dark:bg-teal-950/30",
+    borderColor: "border-teal-200",
+    component: CrisisChatSupport,
+    techniques: ["Crisis conversation", "Emotional support", "Resource connection", "Risk assessment"],
+    duration: "24/7 Available",
+    effectiveness: 4.9,
+    features: ["24/7 availability", "Crisis detection", "Emergency escalation", "Professional resources"]
   }
 ];
 
