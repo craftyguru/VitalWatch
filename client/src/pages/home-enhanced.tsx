@@ -182,6 +182,64 @@ export default function Home() {
 
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
         
+        {/* Hero CTA Section */}
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-3xl blur-xl"></div>
+          <Card className="relative bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 border-blue-200/50 shadow-xl">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <div className="flex justify-center mb-4">
+                  <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-4 rounded-2xl shadow-lg">
+                    <Brain className="h-8 w-8" />
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-100 mb-2">
+                  Complete Mental Health Toolkit
+                </h2>
+                <p className="text-blue-700 dark:text-blue-300 text-lg max-w-2xl mx-auto">
+                  Access advanced AI-powered therapeutic tools, breathing exercises, crisis support, and achievement tracking
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                  <Wind className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">Breathing Tools</h3>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">Advanced techniques with biometric feedback</p>
+                </div>
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                  <MessageCircle className="h-8 w-8 mx-auto mb-2 text-purple-600" />
+                  <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1">Crisis Chat</h3>
+                  <p className="text-sm text-purple-700 dark:text-purple-300">24/7 AI support and professional resources</p>
+                </div>
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                  <Activity className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">Analytics</h3>
+                  <p className="text-sm text-green-700 dark:text-green-300">Comprehensive wellness tracking & insights</p>
+                </div>
+                <div className="text-center p-4 bg-white/60 dark:bg-black/20 rounded-xl">
+                  <Award className="h-8 w-8 mx-auto mb-2 text-orange-600" />
+                  <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1">Achievements</h3>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">Gamified progress with 17+ categories</p>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-xl px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <Link href="/tools" data-testid="link-main-toolkit">
+                    <Zap className="h-6 w-6 mr-3" />
+                    Explore Mental Health Toolkit
+                    <ArrowRight className="h-6 w-6 ml-3" />
+                  </Link>
+                </Button>
+                <p className="text-sm text-blue-600 dark:text-blue-400 mt-3">
+                  ✨ Over 50+ professional-grade therapeutic tools available
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+        
         {/* Enhanced Emergency Section */}
         <section className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-3xl blur-xl"></div>
@@ -506,12 +564,47 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <Button asChild className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
-                <Link href="/tools" data-testid="link-emergency-monitoring">
-                  <Shield className="h-4 w-4 mr-2" />
-                  Access Emergency Monitoring
-                </Link>
-              </Button>
+              
+              {/* Prominent CTA Section */}
+              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-4 text-white shadow-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="bg-white/20 p-2 rounded-lg">
+                      <Zap className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg">Access Full Toolkit</h4>
+                      <p className="text-sm text-indigo-100">Advanced mental health tools & monitoring</p>
+                    </div>
+                  </div>
+                  <div className="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">
+                    NEW
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-center">
+                  <div className="bg-white/10 rounded-lg p-2">
+                    <Wind className="h-4 w-4 mx-auto mb-1" />
+                    <div className="text-xs">Breathing Tools</div>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-2">
+                    <Brain className="h-4 w-4 mx-auto mb-1" />
+                    <div className="text-xs">AI Therapy</div>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-2">
+                    <Award className="h-4 w-4 mx-auto mb-1" />
+                    <div className="text-xs">Achievements</div>
+                  </div>
+                </div>
+                
+                <Button asChild className="w-full bg-white text-indigo-600 hover:bg-gray-50 font-bold text-lg py-3 shadow-lg transform hover:scale-105 transition-all duration-200">
+                  <Link href="/tools" data-testid="link-emergency-monitoring">
+                    <Shield className="h-5 w-5 mr-2" />
+                    Enter Mental Health Toolkit
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </section>
