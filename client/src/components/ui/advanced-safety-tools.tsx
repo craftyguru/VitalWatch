@@ -129,31 +129,29 @@ export default function AdvancedSafetyTools() {
     
     // Real geolocation monitoring
     const startLocationTracking = () => {
-      if ('geolocation' in navigator) {
-        const watchId = navigator.geolocation.watchPosition(
-          (position) => {
-            setCurrentLocation({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-              accuracy: position.coords.accuracy,
-              timestamp: Date.now()
-            });
-          },
-          (error) => {
-            console.log('Geolocation error:', error.message);
-          },
-          {
-            enableHighAccuracy: true,
-            maximumAge: 30000,
-            timeout: 27000
-          }
-        );
-        
-        return () => {
-          if (watchId) {
-            navigator.geolocation.clearWatch(watchId);
-          }
-        };
+      if ('geolocation' in navigator && navigator.geolocation) {
+        try {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setCurrentLocation({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+                timestamp: Date.now()
+              });
+            },
+            (error) => {
+              console.log('Geolocation error:', error.message);
+            },
+            {
+              enableHighAccuracy: true,
+              maximumAge: 60000,
+              timeout: 15000
+            }
+          );
+        } catch (error) {
+          console.log('Geolocation not supported');
+        }
       }
       return null;
     };
@@ -218,12 +216,9 @@ export default function AdvancedSafetyTools() {
     
     return () => {
       if (recordingInterval) clearInterval(recordingInterval);
-      clearInterval(batteryUpdateInterval);
-      clearInterval(sensorUpdateInterval);
+      if (batteryUpdateInterval) clearInterval(batteryUpdateInterval);
+      if (sensorUpdateInterval) clearInterval(sensorUpdateInterval);
       window.removeEventListener('devicemotion', handleDeviceMotion);
-      if (locationCleanup && typeof locationCleanup === 'function') {
-        locationCleanup();
-      }
     };
   }, [audioRecording, videoRecording, stressLevel]);
 
