@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BreathingExercise } from "@/components/ui/breathing-exercise";
-import { GroundingExercise } from "@/components/ui/grounding-exercise";
+import { AdvancedBreathingExercise } from "@/components/ui/advanced-breathing-exercise";
+import { EnhancedGroundingExercise } from "@/components/ui/enhanced-grounding-exercise";
 import { ComprehensiveEmergencyMonitoring } from "@/components/ui/comprehensive-emergency-monitoring";
 import { AdvancedSafetyTools } from "@/components/ui/advanced-safety-tools";
 import { TherapeuticDistractionHub } from "@/components/ui/therapeutic-distraction-hub";
@@ -48,8 +48,8 @@ const enhancedCopingTools = [
     color: "text-blue-600",
     bgColor: "bg-blue-50 dark:bg-blue-950/30",
     borderColor: "border-blue-200",
-    component: BreathingExercise,
-    techniques: ["4-7-8 Relaxation", "Box Breathing", "Calm Breathing", "Wim Hof Method", "Triangle Breathing"],
+    component: AdvancedBreathingExercise,
+    techniques: ["4-7-8 Deep Relaxation", "Box Breathing (Navy SEAL)", "Wim Hof Method", "Triangle Breathing", "Coherent Breathing", "Fire Breathing"],
     duration: "3-15 minutes",
     effectiveness: 4.8,
     features: ["Heart rate monitoring", "Stress level tracking", "Personalized pace", "Progress analytics"]
@@ -62,8 +62,8 @@ const enhancedCopingTools = [
     color: "text-green-600",
     bgColor: "bg-green-50 dark:bg-green-950/30",
     borderColor: "border-green-200",
-    component: GroundingExercise,
-    techniques: ["5-4-3-2-1 Method", "Body Awareness", "Mindful Observation", "Progressive Muscle", "Sensory Focus"],
+    component: EnhancedGroundingExercise,
+    techniques: ["Enhanced 5-4-3-2-1", "Progressive Body Awareness", "Mindful Environmental Observation", "Adaptive Sensory Anchoring"],
     duration: "5-20 minutes",
     effectiveness: 4.6,
     features: ["Anxiety level detection", "Adaptive guidance", "Environmental cues", "Voice coaching"]
