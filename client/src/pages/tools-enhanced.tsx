@@ -323,116 +323,9 @@ export default function ToolsEnhanced() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-8">
             
-            {/* Enhanced Coping Tools Grid */}
+            {/* Overview Analytics Grid - Primary Dashboard */}
             <section>
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground">AI-Enhanced Coping Tools</h2>
-                  <p className="text-muted-foreground">Personalized mental health tools powered by artificial intelligence</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {enhancedCopingTools.map((tool) => (
-                  <Card 
-                    key={tool.id}
-                    className={`cursor-pointer hover:shadow-lg transition-all duration-200 ${tool.bgColor} ${tool.borderColor} hover:scale-105`}
-                    onClick={() => setSelectedTool(tool.id)}
-                  >
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center justify-between">
-                        <div className={`p-3 rounded-xl bg-white/70 dark:bg-black/30`}>
-                          <tool.icon className={`h-6 w-6 ${tool.color}`} />
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center space-x-1">
-                            <Star className="h-4 w-4 fill-current text-yellow-500" />
-                            <span className="text-sm font-bold">{tool.effectiveness}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg mb-2">{tool.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground">{tool.description}</p>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="flex items-center space-x-1">
-                            <Clock className="h-3 w-3" />
-                            <span>{tool.duration}</span>
-                          </span>
-                          <Badge variant="secondary" className="text-xs">
-                            {tool.techniques.length} Techniques
-                          </Badge>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-muted-foreground">Key Features:</p>
-                          <div className="flex flex-wrap gap-1">
-                            {tool.features?.slice(0, 2).map((feature: string, index: number) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {feature}
-                              </Badge>
-                            ))}
-                            {tool.features && tool.features.length > 2 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{tool.features.length - 2} more
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                        
-                        <Button 
-                          className="w-full mt-3"
-                          size="sm"
-                        >
-                          <Play className="h-4 w-4 mr-2" />
-                          Start Session
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
-
-            {/* Quick Distraction Tools */}
-            <section>
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-xl font-bold text-foreground">Quick Relief Activities</h2>
-                  <p className="text-muted-foreground">Immediate distraction tools for acute stress</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {quickDistractors.map((distractor, index) => (
-                  <Card 
-                    key={index}
-                    className="cursor-pointer hover:shadow-md transition-all duration-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/30 hover:scale-105"
-                    onClick={distractor.action}
-                  >
-                    <CardContent className="p-4 text-center">
-                      <div className="bg-primary/10 text-primary p-3 rounded-xl w-fit mx-auto mb-3">
-                        <distractor.icon className="h-6 w-6" />
-                      </div>
-                      <h3 className="font-semibold text-sm mb-2">{distractor.name}</h3>
-                      <p className="text-xs text-muted-foreground mb-3">{distractor.description}</p>
-                      <Button size="sm" variant="outline" className="w-full text-xs">
-                        Open External
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
-
-            {/* Overview Analytics Grid */}
-            <section>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 {/* Advanced Wellness Overview */}
                 <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/30 dark:to-indigo-900/20 border-blue-200">
                   <CardHeader>
@@ -544,21 +437,11 @@ export default function ToolsEnhanced() {
                         
                         <div className="p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200">
                           <div className="flex items-center space-x-2 mb-1">
-                            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                            <Shield className="h-4 w-4 text-yellow-600" />
                             <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">Stress Prediction</span>
                           </div>
                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
                             73% likelihood of increased stress Tuesday 2-4 PM. Preemptive breathing exercise recommended.
-                          </p>
-                        </div>
-                        
-                        <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <Heart className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Health Trend</span>
-                          </div>
-                          <p className="text-xs text-blue-700 dark:text-blue-300">
-                            Resting heart rate improved by 4 BPM this month. Breathing exercises showing measurable impact.
                           </p>
                         </div>
                       </div>
@@ -581,6 +464,115 @@ export default function ToolsEnhanced() {
                 </Card>
               </div>
             </section>
+
+            {/* Enhanced Coping Tools Grid */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">AI-Enhanced Coping Tools</h2>
+                  <p className="text-muted-foreground">Personalized mental health tools powered by artificial intelligence</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {enhancedCopingTools.map((tool) => (
+                  <Card 
+                    key={tool.id}
+                    className={`cursor-pointer hover:shadow-lg transition-all duration-200 ${tool.bgColor} ${tool.borderColor} hover:scale-105`}
+                    onClick={() => setSelectedTool(tool.id)}
+                  >
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center justify-between">
+                        <div className={`p-3 rounded-xl bg-white/70 dark:bg-black/30`}>
+                          <tool.icon className={`h-6 w-6 ${tool.color}`} />
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-4 w-4 fill-current text-yellow-500" />
+                            <span className="text-sm font-bold">{tool.effectiveness}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg mb-2">{tool.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground">{tool.description}</p>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="flex items-center space-x-1">
+                            <Clock className="h-3 w-3" />
+                            <span>{tool.duration}</span>
+                          </span>
+                          <Badge variant="secondary" className="text-xs">
+                            {tool.techniques.length} Techniques
+                          </Badge>
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-muted-foreground">Key Features:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {tool.features?.slice(0, 2).map((feature: string, index: number) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {feature}
+                              </Badge>
+                            ))}
+                            {tool.features && tool.features.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{tool.features.length - 2} more
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <Button 
+                          className="w-full mt-3"
+                          size="sm"
+                        >
+                          <Play className="h-4 w-4 mr-2" />
+                          Start Session
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            {/* Quick Distraction Tools */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-foreground">Quick Relief Activities</h2>
+                  <p className="text-muted-foreground">Immediate distraction tools for acute stress</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {quickDistractors.map((distractor, index) => (
+                  <Card 
+                    key={index}
+                    className="cursor-pointer hover:shadow-md transition-all duration-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/30 hover:scale-105"
+                    onClick={distractor.action}
+                  >
+                    <CardContent className="p-4 text-center">
+                      <div className="bg-primary/10 text-primary p-3 rounded-xl w-fit mx-auto mb-3">
+                        <distractor.icon className="h-6 w-6" />
+                      </div>
+                      <h3 className="font-semibold text-sm mb-2">{distractor.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-3">{distractor.description}</p>
+                      <Button size="sm" variant="outline" className="w-full text-xs">
+                        Open External
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+
 
             {/* Emergency Network Status */}
             <section className="mt-8">
