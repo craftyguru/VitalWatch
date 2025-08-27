@@ -115,8 +115,9 @@ export default function Home() {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const response = await fetch("/api/logout", {
-        method: "GET",
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Include cookies
       });
       
       if (response.ok) {
@@ -124,8 +125,10 @@ export default function Home() {
           title: "Logged out successfully",
           description: "See you next time!",
         });
-        // Redirect to landing page
-        window.location.href = "/";
+        // Wait a moment for the toast, then redirect to landing page
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       } else {
         toast({
           title: "Logout failed",
@@ -135,7 +138,7 @@ export default function Home() {
       }
     } catch (error) {
       toast({
-        title: "Connection error",
+        title: "Connection error", 
         description: "Unable to logout properly",
         variant: "destructive",
       });
