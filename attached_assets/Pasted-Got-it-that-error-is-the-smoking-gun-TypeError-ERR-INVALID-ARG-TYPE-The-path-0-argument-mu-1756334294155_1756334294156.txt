@@ -1,0 +1,64 @@
+Got it — that error is the smoking gun:
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "path[0]" argument must be of type string. Received undefined
+    at Object.resolve (node:path:…)
+    at file:///app/dist/server/index.js:…
+
+What’s happening
+
+In production you’re running ESM code from dist/server/index.js. Inside your server you call:
+
+path.resolve(import.meta.dirname, "../client")
+
+
+…but in standard Node ESM import.meta.dirname doesn’t exist, so it’s undefined. That makes path.resolve(undefined, “…”) blow up with the error you’re seeing. (It may have “worked” in dev/tsx/Vite, but not once bundled & run by Node.)
+
+The fix
+
+Compute a robust directory name for ESM, and resolve the SPA build folder from there. Replace your current serveStatic with this version:
+
+// server/vite.ts (or wherever serveStatic lives)
+import path from "path";
+import fs from "fs";
+import express, { type Express } from "express";
+import { fileURLToPath } from "url";
+
+export function serveStatic(app: Express) {
+  // ESM-safe __dirname
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+  // If server is built to dist/server/index.js, this points to dist/client
+  const coLocated = path.resolve(__dirname, "../client");
+
+  // Fallback for single-file server build (dist/index.js)
+  const cwdDist = path.resolve(process.cwd(), "dist", "client");
+
+  // Choose whichever actually exists
+  const clientRoot = fs.existsSync(path.join(coLocated, "index.html"))
+    ? coLocated
+    : cwdDist;
+
+  if (!fs.existsSync(path.join(clientRoot, "index.html"))) {
+    throw new Error(
+      `Client build not found. Expected index.html in ${clientRoot}. Run "npm run build".`
+    );
+  }
+
+  app.use(express.static(clientRoot));
+
+  // SPA fallback (don’t swallow /api)
+  app.get(/^\/(?!api\b).*/, (_req, res) => {
+    res.sendFile(path.join(clientRoot, "index.html"));
+  });
+}
+
+
+And make sure production actually uses it:
+
+if (process.env.NODE_ENV === "development") {
+  await setupVite(app, server);
+} else {
+  serveStatic(app);
+}
+
+Quick checklist
