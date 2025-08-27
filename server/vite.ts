@@ -5,7 +5,7 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
-
+import { fileURLToPath } from "url";
 const viteLogger = createLogger();
 
 export function log(message: string, source = "express") {
@@ -68,18 +68,30 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "../client");
+  // ESM-safe __dirname
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  
+  // If server is built to dist/server/index.js, this points to dist/client
+  const coLocated = path.resolve(__dirname, "../client");
+  
+  // Fallback for single-file server build (dist/index.js)
+  const cwdDist = path.resolve(process.cwd(), "dist", "client");
+  
+  // Choose whichever actually exists
+  const clientRoot = fs.existsSync(path.join(coLocated, "index.html"))
+    ? coLocated
+    : cwdDist;
 
-  if (!fs.existsSync(distPath)) {
+  if (!fs.existsSync(path.join(clientRoot, "index.html"))) {
     throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
+      `Client build not found. Expected index.html in ${clientRoot}. Run "npm run build".`
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(express.static(clientRoot));
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  // SPA fallback (don't swallow /api)
+  app.get(/^\/(?!api\b).*/, (_req, res) => {
+    res.sendFile(path.join(clientRoot, "index.html"));
   });
 }
