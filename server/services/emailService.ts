@@ -21,17 +21,25 @@ export class EmailService {
 
   // Send welcome email with verification
   async sendWelcomeEmail(userId: string, email: string, firstName: string): Promise<boolean> {
+    console.log(`🚀 Starting welcome email process for ${email}...`);
+    
     if (!process.env.SENDGRID_API_KEY) {
-      console.log('SendGrid not configured - would send welcome email to:', email);
+      console.log('❌ SendGrid not configured - would send welcome email to:', email);
       return false;
     }
 
     try {
       // Generate verification token
       const verificationToken = this.generateVerificationToken();
+      console.log(`🔑 Generated verification token for ${email}`);
       
-      // Save token to database
-      await storage.updateUserVerificationToken(userId, verificationToken);
+      // Save token to database - Skip for test users
+      if (!userId.startsWith('test-user-')) {
+        await storage.updateUserVerificationToken(userId, verificationToken);
+        console.log(`💾 Saved verification token to database for ${email}`);
+      } else {
+        console.log(`⚠️ Skipping database save for test user ${userId}`);
+      }
       
       // Create verification link
       const baseUrl = process.env.NODE_ENV === 'production' 
@@ -59,7 +67,10 @@ export class EmailService {
       // Mark welcome email as sent
       await storage.markWelcomeEmailSent(userId);
       
-      console.log(`Welcome email sent successfully to ${email}`);
+      console.log(`✅ Welcome email sent successfully to ${email}`);
+      console.log(`📧 Subject: ${emailContent.subject}`);
+      console.log(`📤 From: ${FROM_EMAIL} (${FROM_NAME})`);
+      console.log(`📥 To: ${email}`);
       return true;
     } catch (error) {
       console.error('Error sending welcome email:', error);

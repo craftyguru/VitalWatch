@@ -750,30 +750,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // Test welcome email via GET for debugging
+  app.get('/api/send-test-email', async (req, res) => {
+    console.log('📨 GET Test welcome email endpoint hit!');
+    
+    try {
+      console.log('🎯 Attempting to send welcome email to: support@vitalwatch.app');
+      
+      const success = await emailService.sendWelcomeEmail(
+        'test-user-' + Date.now(),
+        'support@vitalwatch.app',
+        'VitalWatch Support'
+      );
+
+      const result = { 
+        success, 
+        message: success ? 'Welcome email sent successfully' : 'Failed to send welcome email',
+        sendgridConfigured: !!process.env.SENDGRID_API_KEY,
+        fromEmail: 'noreply@vitalwatch.app',
+        toEmail: 'support@vitalwatch.app',
+        timestamp: new Date().toISOString()
+      };
+      
+      console.log('📤 Email test result:', result);
+      res.json(result);
+    } catch (error: any) {
+      console.error('💥 Test welcome email error:', error);
+      res.status(500).json({ message: "Test welcome email failed: " + error.message });
+    }
+  });
+
   // Test welcome email endpoint
   app.post('/api/test-welcome-email', async (req, res) => {
+    console.log('📨 Test welcome email endpoint hit!', req.body);
+    
     try {
       const { email, firstName } = req.body;
       
       if (!email || !firstName) {
+        console.log('❌ Missing email or firstName');
         return res.status(400).json({ message: "Email and firstName required" });
       }
 
+      console.log(`🎯 Attempting to send welcome email to: ${email}`);
+      
       const success = await emailService.sendWelcomeEmail(
         'test-user-' + Date.now(),
         email,
         firstName
       );
 
-      res.json({ 
+      const result = { 
         success, 
         message: success ? 'Welcome email sent successfully' : 'Failed to send welcome email',
         sendgridConfigured: !!process.env.SENDGRID_API_KEY,
         fromEmail: 'noreply@vitalwatch.app',
-        toEmail: email
-      });
+        toEmail: email,
+        timestamp: new Date().toISOString()
+      };
+      
+      console.log('📤 Email test result:', result);
+      res.json(result);
     } catch (error: any) {
-      console.error('Test welcome email error:', error);
+      console.error('💥 Test welcome email error:', error);
       res.status(500).json({ message: "Test welcome email failed: " + error.message });
     }
   });
