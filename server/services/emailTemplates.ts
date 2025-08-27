@@ -16,18 +16,49 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           color: #e2e8f0; 
           margin: 0; 
           padding: 20px; 
-          background: #0a0a0f url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="star" cx="50%25" cy="50%25" r="2"><stop offset="0%25" style="stop-color:white;stop-opacity:1" /><stop offset="100%25" style="stop-color:white;stop-opacity:0" /></radialGradient></defs><rect width="100%25" height="100%25" fill="%23050814"/><circle cx="100" cy="150" r="1" fill="url(%23star)"/><circle cx="300" cy="80" r="1.5" fill="url(%23star)"/><circle cx="200" cy="250" r="1" fill="url(%23star)"/><circle cx="450" cy="120" r="1" fill="url(%23star)"/><circle cx="600" cy="200" r="1.5" fill="url(%23star)"/><circle cx="750" cy="100" r="1" fill="url(%23star)"/><circle cx="850" cy="180" r="1" fill="url(%23star)"/><circle cx="500" cy="300" r="1" fill="url(%23star)"/><circle cx="150" cy="350" r="1.5" fill="url(%23star)"/><circle cx="700" cy="350" r="1" fill="url(%23star)"/><circle cx="900" cy="320" r="1" fill="url(%23star)"/><circle cx="50" cy="450" r="1" fill="url(%23star)"/><circle cx="380" cy="480" r="1.5" fill="url(%23star)"/><circle cx="650" cy="500" r="1" fill="url(%23star)"/><circle cx="820" cy="470" r="1" fill="url(%23star)"/><circle cx="250" cy="600" r="1" fill="url(%23star)"/><circle cx="550" cy="650" r="1.5" fill="url(%23star)"/><circle cx="780" cy="620" r="1" fill="url(%23star)"/><circle cx="120" cy="700" r="1" fill="url(%23star)"/><circle cx="420" cy="750" r="1" fill="url(%23star)"/><circle cx="680" cy="780" r="1.5" fill="url(%23star)"/><circle cx="800" cy="850" r="1" fill="url(%23star)"/><circle cx="300" cy="900" r="1" fill="url(%23star)"/></svg>') fixed;
+          background: radial-gradient(ellipse at top, #1e293b 0%, #0f172a 50%, #050814 100%);
+          background-size: 100% 100%;
           min-height: 100vh;
         }
         .container { 
           max-width: 650px; 
           margin: 0 auto; 
-          background: linear-gradient(145deg, #0f1419 0%, #1a1f2e 100%); 
+          background: radial-gradient(ellipse at center, #1a202c 0%, #0f1419 80%, #050814 100%); 
           padding: 0; 
           border-radius: 20px; 
           overflow: hidden;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
-          border: 1px solid rgba(59, 130, 246, 0.2);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(59, 130, 246, 0.3);
+          position: relative;
+        }
+        .container::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: 
+            radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+            radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+            radial-gradient(1px 1px at 90px 40px, #ffffff, transparent),
+            radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+            radial-gradient(2px 2px at 160px 30px, #ffffff, transparent),
+            radial-gradient(1px 1px at 200px 90px, rgba(255,255,255,0.8), transparent),
+            radial-gradient(2px 2px at 240px 20px, #ffffff, transparent),
+            radial-gradient(1px 1px at 280px 60px, rgba(255,255,255,0.7), transparent),
+            radial-gradient(1px 1px at 320px 100px, #ffffff, transparent),
+            radial-gradient(2px 2px at 360px 45px, rgba(255,255,255,0.6), transparent),
+            radial-gradient(1px 1px at 400px 85px, #ffffff, transparent),
+            radial-gradient(1px 1px at 440px 25px, rgba(255,255,255,0.8), transparent),
+            radial-gradient(2px 2px at 480px 70px, #ffffff, transparent),
+            radial-gradient(1px 1px at 520px 110px, rgba(255,255,255,0.7), transparent),
+            radial-gradient(1px 1px at 560px 50px, #ffffff, transparent),
+            radial-gradient(2px 2px at 600px 90px, rgba(255,255,255,0.6), transparent);
+          background-repeat: repeat;
+          background-size: 650px 200px;
+          pointer-events: none;
+          opacity: 0.4;
         }
         .header { 
           background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); 
@@ -44,7 +75,10 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           left: 0;
           right: 0;
           bottom: 0;
-          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+          background: 
+            linear-gradient(90deg, transparent 98%, rgba(255,255,255,0.1) 100%),
+            linear-gradient(180deg, transparent 98%, rgba(255,255,255,0.1) 100%);
+          background-size: 20px 20px;
           opacity: 0.3;
         }
         .header h1 { 
@@ -65,15 +99,18 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
         }
         .content { 
           padding: 30px; 
-          background: linear-gradient(145deg, #0f1419 0%, #1a1f2e 100%);
+          background: transparent;
+          position: relative;
+          z-index: 1;
         }
         .welcome-section { 
           text-align: center; 
           margin-bottom: 25px; 
           padding: 25px;
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
           border-radius: 16px;
-          border: 1px solid rgba(99, 102, 241, 0.3);
+          border: 1px solid rgba(99, 102, 241, 0.4);
+          backdrop-filter: blur(10px);
         }
         .welcome-section h2 { 
           color: #f1f5f9; 
@@ -285,11 +322,13 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           letter-spacing: 0.5px;
         }
         .footer { 
-          background: linear-gradient(135deg, #050814 0%, #0f1419 100%); 
+          background: linear-gradient(135deg, #020409 0%, #050814 100%); 
           color: #e2e8f0; 
           padding: 25px; 
           text-align: center; 
-          border-top: 1px solid rgba(99, 102, 241, 0.3);
+          border-top: 1px solid rgba(99, 102, 241, 0.4);
+          position: relative;
+          z-index: 1;
         }
         .footer p { margin: 8px 0; }
         .footer-highlight {
