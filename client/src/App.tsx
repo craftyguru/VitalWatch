@@ -5,36 +5,43 @@ function App() {
       <div style={{ 
         position: 'absolute', 
         inset: 0, 
-        background: 'linear-gradient(to bottom right, #312e81, #581c87, #1e3a8a)' 
+        background: 'linear-gradient(to bottom right, #000000, #111111, #000000)' 
       }}>
-        <div style={{ position: 'absolute', inset: 0, opacity: 0.8 }}>
-          {/* Large Stars */}
-          <div className="absolute top-10 left-10 w-2 h-2 bg-white rounded-full animate-pulse"></div>
-          <div className="absolute top-20 right-20 w-1.5 h-1.5 bg-yellow-200 rounded-full animate-pulse"></div>
-          <div className="absolute top-32 left-1/4 w-1 h-1 bg-blue-100 rounded-full animate-pulse"></div>
-          <div className="absolute top-40 right-1/3 w-2 h-2 bg-white rounded-full animate-pulse"></div>
-          <div className="absolute top-60 left-1/3 w-1.5 h-1.5 bg-yellow-100 rounded-full animate-pulse"></div>
-          <div className="absolute top-80 right-1/4 w-1 h-1 bg-white rounded-full animate-pulse"></div>
-          <div className="absolute bottom-40 left-20 w-2 h-2 bg-blue-200 rounded-full animate-pulse"></div>
-          <div className="absolute bottom-60 right-16 w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-          <div className="absolute bottom-80 left-1/2 w-1 h-1 bg-yellow-200 rounded-full animate-pulse"></div>
-          <div className="absolute bottom-32 right-1/2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
+        <div style={{ position: 'absolute', inset: 0, opacity: 1 }}>
+          {/* Large Bright Stars */}
+          <div style={{ position: 'absolute', top: '10%', left: '10%', width: '3px', height: '3px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 2s infinite', boxShadow: '0 0 6px #ffffff' }}></div>
+          <div style={{ position: 'absolute', top: '20%', right: '15%', width: '2px', height: '2px', backgroundColor: '#ffff99', borderRadius: '50%', animation: 'pulse 3s infinite', boxShadow: '0 0 4px #ffff99' }}></div>
+          <div style={{ position: 'absolute', top: '30%', left: '25%', width: '2px', height: '2px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 2.5s infinite', boxShadow: '0 0 4px #ffffff' }}></div>
+          <div style={{ position: 'absolute', top: '40%', right: '30%', width: '3px', height: '3px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 1.8s infinite', boxShadow: '0 0 6px #ffffff' }}></div>
+          <div style={{ position: 'absolute', top: '60%', left: '35%', width: '2px', height: '2px', backgroundColor: '#ffff99', borderRadius: '50%', animation: 'pulse 2.2s infinite', boxShadow: '0 0 4px #ffff99' }}></div>
+          <div style={{ position: 'absolute', top: '80%', right: '25%', width: '2px', height: '2px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 3.2s infinite', boxShadow: '0 0 4px #ffffff' }}></div>
+          <div style={{ position: 'absolute', bottom: '40%', left: '20%', width: '3px', height: '3px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 1.5s infinite', boxShadow: '0 0 6px #ffffff' }}></div>
+          <div style={{ position: 'absolute', bottom: '60%', right: '16%', width: '2px', height: '2px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 2.8s infinite', boxShadow: '0 0 4px #ffffff' }}></div>
+          <div style={{ position: 'absolute', bottom: '80%', left: '50%', width: '2px', height: '2px', backgroundColor: '#ffff99', borderRadius: '50%', animation: 'pulse 2.4s infinite', boxShadow: '0 0 4px #ffff99' }}></div>
+          <div style={{ position: 'absolute', bottom: '32%', right: '50%', width: '3px', height: '3px', backgroundColor: '#ffffff', borderRadius: '50%', animation: 'pulse 1.9s infinite', boxShadow: '0 0 6px #ffffff' }}></div>
           
           {/* Medium Stars */}
-          <div className="absolute top-16 left-1/2 w-1 h-1 bg-white rounded-full opacity-70 animate-pulse"></div>
-          <div className="absolute top-24 right-1/4 w-1 h-1 bg-blue-100 rounded-full opacity-60 animate-pulse"></div>
-          <div className="absolute top-44 left-1/6 w-1 h-1 bg-yellow-100 rounded-full opacity-80 animate-pulse"></div>
-          <div className="absolute top-56 right-1/6 w-1 h-1 bg-white rounded-full opacity-70 animate-pulse"></div>
-          <div className="absolute bottom-44 left-1/4 w-1 h-1 bg-blue-200 rounded-full opacity-60 animate-pulse"></div>
-          <div className="absolute bottom-56 right-1/3 w-1 h-1 bg-white rounded-full opacity-80 animate-pulse"></div>
+          <div style={{ position: 'absolute', top: '16%', left: '50%', width: '1.5px', height: '1.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.8, animation: 'pulse 3.5s infinite' }}></div>
+          <div style={{ position: 'absolute', top: '24%', right: '25%', width: '1.5px', height: '1.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.7, animation: 'pulse 2.9s infinite' }}></div>
+          <div style={{ position: 'absolute', top: '44%', left: '16%', width: '1.5px', height: '1.5px', backgroundColor: '#ffff99', borderRadius: '50%', opacity: 0.8, animation: 'pulse 2.1s infinite' }}></div>
+          <div style={{ position: 'absolute', top: '56%', right: '16%', width: '1.5px', height: '1.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.7, animation: 'pulse 3.1s infinite' }}></div>
+          <div style={{ position: 'absolute', bottom: '44%', left: '25%', width: '1.5px', height: '1.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.6, animation: 'pulse 2.7s infinite' }}></div>
+          <div style={{ position: 'absolute', bottom: '56%', right: '33%', width: '1.5px', height: '1.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.8, animation: 'pulse 2.3s infinite' }}></div>
           
-          {/* Small Stars */}
-          <div className="absolute top-28 left-3/4 w-0.5 h-0.5 bg-white rounded-full opacity-50"></div>
-          <div className="absolute top-36 right-1/5 w-0.5 h-0.5 bg-blue-100 rounded-full opacity-40"></div>
-          <div className="absolute top-48 left-1/5 w-0.5 h-0.5 bg-yellow-100 rounded-full opacity-60"></div>
-          <div className="absolute top-64 right-2/5 w-0.5 h-0.5 bg-white rounded-full opacity-50"></div>
-          <div className="absolute bottom-48 left-3/5 w-0.5 h-0.5 bg-blue-200 rounded-full opacity-40"></div>
-          <div className="absolute bottom-64 right-1/5 w-0.5 h-0.5 bg-white rounded-full opacity-60"></div>
+          {/* Small Distant Stars */}
+          <div style={{ position: 'absolute', top: '28%', left: '75%', width: '1px', height: '1px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.5 }}></div>
+          <div style={{ position: 'absolute', top: '36%', right: '20%', width: '1px', height: '1px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.4 }}></div>
+          <div style={{ position: 'absolute', top: '48%', left: '20%', width: '1px', height: '1px', backgroundColor: '#ffff99', borderRadius: '50%', opacity: 0.6 }}></div>
+          <div style={{ position: 'absolute', top: '64%', right: '40%', width: '1px', height: '1px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.5 }}></div>
+          <div style={{ position: 'absolute', bottom: '48%', left: '60%', width: '1px', height: '1px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.4 }}></div>
+          <div style={{ position: 'absolute', bottom: '64%', right: '20%', width: '1px', height: '1px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.6 }}></div>
+          
+          {/* Extra Tiny Stars */}
+          <div style={{ position: 'absolute', top: '15%', left: '80%', width: '0.5px', height: '0.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.3 }}></div>
+          <div style={{ position: 'absolute', top: '35%', left: '70%', width: '0.5px', height: '0.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.4 }}></div>
+          <div style={{ position: 'absolute', top: '55%', right: '10%', width: '0.5px', height: '0.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.3 }}></div>
+          <div style={{ position: 'absolute', bottom: '25%', left: '85%', width: '0.5px', height: '0.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.4 }}></div>
+          <div style={{ position: 'absolute', bottom: '15%', right: '5%', width: '0.5px', height: '0.5px', backgroundColor: '#ffffff', borderRadius: '50%', opacity: 0.3 }}></div>
         </div>
       </div>
       
