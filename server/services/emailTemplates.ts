@@ -10,32 +10,306 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Welcome to VitalWatch</title>
       <style>
-        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 0; }
-        .header { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; padding: 30px; text-align: center; }
-        .header h1 { margin: 0; font-size: 32px; font-weight: bold; }
-        .header p { margin: 10px 0 0 0; font-size: 16px; opacity: 0.9; }
-        .content { padding: 40px 30px; }
-        .welcome-section { text-align: center; margin-bottom: 30px; }
-        .welcome-section h2 { color: #1e40af; margin-bottom: 15px; }
-        .verify-button { display: inline-block; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
-        .tips-section { background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; }
-        .tips-section h3 { color: #1e40af; margin-bottom: 20px; text-align: center; }
-        .tip { display: flex; align-items: flex-start; margin-bottom: 20px; }
-        .tip-icon { background: #e0e7ff; color: #3730a3; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; }
-        .tip-content h4 { margin: 0 0 5px 0; color: #1e40af; }
-        .tip-content p { margin: 0; color: #64748b; }
-        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
-        .feature { text-align: center; padding: 20px; background: #f1f5f9; border-radius: 8px; }
-        .feature h4 { color: #1e40af; margin-bottom: 10px; }
-        .feature p { color: #64748b; font-size: 14px; margin: 0; }
-        .footer { background: #1e293b; color: white; padding: 30px; text-align: center; }
-        .footer p { margin: 5px 0; }
-        .social-links { margin: 20px 0; }
-        .social-links a { color: #60a5fa; text-decoration: none; margin: 0 10px; }
+        body { 
+          font-family: 'Segoe UI', 'San Francisco', -apple-system, BlinkMacSystemFont, sans-serif; 
+          line-height: 1.7; 
+          color: #e2e8f0; 
+          margin: 0; 
+          padding: 0; 
+          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+          min-height: 100vh;
+        }
+        .container { 
+          max-width: 650px; 
+          margin: 0 auto; 
+          background: linear-gradient(145deg, #1e293b 0%, #334155 100%); 
+          padding: 0; 
+          border-radius: 20px; 
+          overflow: hidden;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        .header { 
+          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); 
+          color: white; 
+          padding: 50px 40px; 
+          text-align: center; 
+          position: relative;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+          opacity: 0.3;
+        }
+        .header h1 { 
+          margin: 0; 
+          font-size: 42px; 
+          font-weight: 800; 
+          text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+          position: relative;
+          z-index: 1;
+        }
+        .header p { 
+          margin: 15px 0 0 0; 
+          font-size: 18px; 
+          opacity: 0.95; 
+          font-weight: 500;
+          position: relative;
+          z-index: 1;
+        }
+        .content { 
+          padding: 50px 40px; 
+          background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
+        }
+        .welcome-section { 
+          text-align: center; 
+          margin-bottom: 40px; 
+          padding: 30px;
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+          border-radius: 16px;
+          border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .welcome-section h2 { 
+          color: #f1f5f9; 
+          margin-bottom: 20px; 
+          font-size: 28px;
+          font-weight: 700;
+        }
+        .welcome-section p {
+          color: #cbd5e1;
+          font-size: 16px;
+          line-height: 1.8;
+        }
+        .trial-banner {
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+          border: 2px solid #fbbf24;
+          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+          transform: scale(1.02);
+        }
+        .trial-banner h3 {
+          color: #451a03;
+          text-shadow: none;
+          margin-top: 0;
+        }
+        .trial-banner p {
+          color: #92400e;
+        }
+        .verify-button { 
+          display: inline-block; 
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+          color: white; 
+          padding: 18px 35px; 
+          text-decoration: none; 
+          border-radius: 12px; 
+          font-weight: 700; 
+          font-size: 16px;
+          margin: 25px 0; 
+          box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+          transition: all 0.3s ease;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .revolutionary-section {
+          background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+          border-radius: 20px;
+          padding: 40px;
+          margin: 40px 0;
+          border: 1px solid rgba(139, 92, 246, 0.3);
+          box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+        }
+        .revolutionary-section h3 {
+          color: #c084fc;
+          text-align: center;
+          margin-bottom: 30px;
+          font-size: 24px;
+          font-weight: 700;
+        }
+        .feature-cards {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 20px;
+          margin: 30px 0;
+        }
+        .feature-card {
+          background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+          padding: 25px;
+          border-radius: 12px;
+          border: 1px solid rgba(99, 102, 241, 0.2);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card h4 {
+          color: #a5b4fc;
+          margin-bottom: 12px;
+          font-size: 18px;
+          font-weight: 600;
+        }
+        .feature-card p {
+          color: #d1d5db;
+          margin: 0;
+          line-height: 1.6;
+        }
+        .tips-section { 
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%); 
+          border-radius: 20px; 
+          padding: 40px; 
+          margin: 40px 0; 
+          border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .tips-section h3 { 
+          color: #60a5fa; 
+          margin-bottom: 30px; 
+          text-align: center; 
+          font-size: 24px;
+          font-weight: 700;
+        }
+        .tip { 
+          display: flex; 
+          align-items: flex-start; 
+          margin-bottom: 25px; 
+          padding: 20px;
+          background: rgba(30, 41, 59, 0.5);
+          border-radius: 12px;
+          border-left: 4px solid #3b82f6;
+        }
+        .tip-icon { 
+          background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); 
+          color: white; 
+          width: 40px; 
+          height: 40px; 
+          border-radius: 50%; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          margin-right: 20px; 
+          font-weight: 800; 
+          font-size: 16px;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        .tip-content h4 { 
+          margin: 0 0 8px 0; 
+          color: #f1f5f9; 
+          font-size: 18px;
+          font-weight: 600;
+        }
+        .tip-content p { 
+          margin: 0; 
+          color: #cbd5e1; 
+          line-height: 1.6;
+        }
+        .comparison-section {
+          background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+          border-radius: 20px;
+          padding: 40px;
+          margin: 40px 0;
+          border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+        .comparison-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 30px;
+          margin: 30px 0;
+        }
+        .plan-free {
+          background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+          padding: 30px;
+          border-radius: 16px;
+          border: 2px solid #6b7280;
+        }
+        .plan-pro {
+          background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+          color: white;
+          padding: 30px;
+          border-radius: 16px;
+          position: relative;
+          box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+        }
+        .plan-pro::before {
+          content: 'RECOMMENDED';
+          position: absolute;
+          top: -12px;
+          right: 20px;
+          background: #f59e0b;
+          color: white;
+          padding: 6px 16px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+        }
+        .testimonial-section {
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+          border-radius: 20px;
+          padding: 40px;
+          margin: 40px 0;
+          border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .testimonial {
+          background: rgba(30, 41, 59, 0.6);
+          padding: 25px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+          border-left: 4px solid;
+        }
+        .testimonial:first-child {
+          border-left-color: #10b981;
+        }
+        .testimonial:last-child {
+          border-left-color: #3b82f6;
+        }
+        .cta-section {
+          text-align: center;
+          margin: 40px 0;
+          padding: 40px;
+          background: linear-gradient(135deg, rgba(30, 64, 175, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%);
+          border-radius: 20px;
+          border: 1px solid rgba(30, 64, 175, 0.3);
+        }
+        .cta-button {
+          display: inline-block;
+          background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+          color: white;
+          padding: 20px 45px;
+          text-decoration: none;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 18px;
+          margin: 15px;
+          box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .footer { 
+          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+          color: #e2e8f0; 
+          padding: 40px; 
+          text-align: center; 
+          border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .footer p { margin: 8px 0; }
+        .footer-highlight {
+          background: rgba(99, 102, 241, 0.1);
+          padding: 20px;
+          border-radius: 12px;
+          margin: 25px 0;
+          border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .social-links { margin: 25px 0; }
+        .social-links a { 
+          color: #60a5fa; 
+          text-decoration: none; 
+          margin: 0 15px; 
+          font-weight: 500;
+        }
         @media (max-width: 600px) {
-          .features-grid { grid-template-columns: 1fr; }
-          .content { padding: 30px 20px; }
+          .comparison-grid { grid-template-columns: 1fr; }
+          .content { padding: 30px 25px; }
+          .header { padding: 40px 25px; }
+          .feature-cards { grid-template-columns: 1fr; }
         }
       </style>
     </head>
@@ -54,34 +328,34 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
             <h2>Welcome to the Future, ${firstName}!</h2>
             <p><strong>Congratulations!</strong> You've just activated the most advanced personal safety and health monitoring system ever created. VitalWatch uses cutting-edge AI to protect you in ways that were impossible until now.</p>
             
-            <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #92400e; margin-top: 0;">🔥 Limited Time: Your Free Trial Includes Pro Features!</h3>
-              <p style="color: #92400e; margin-bottom: 0;">For the next 14 days, experience VitalWatch Pro absolutely free - including advanced AI threat detection, unlimited emergency contacts, and premium crisis intervention tools.</p>
+            <div class="trial-banner" style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-left: 4px solid #f59e0b; padding: 25px; border-radius: 12px; margin: 25px 0; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);">
+              <h3 style="color: #92400e; margin-top: 0; font-size: 20px; font-weight: 700;">🔥 Limited Time: Your Free Trial Includes Pro Features!</h3>
+              <p style="color: #92400e; margin-bottom: 0; font-weight: 500;">For the next 14 days, experience VitalWatch Pro absolutely free - including advanced AI threat detection, unlimited emergency contacts, and premium crisis intervention tools.</p>
             </div>
             
             <a href="${verificationLink}" class="verify-button">🚀 Activate Your Life-Saving Account</a>
             
-            <p style="font-size: 14px; color: #64748b; margin-top: 15px;">
-              <strong>Critical:</strong> Email verification is required for emergency alerts to reach you when seconds matter most.
+            <p style="font-size: 15px; color: #94a3b8; margin-top: 20px; line-height: 1.6;">
+              <strong style="color: #f1f5f9;">Critical:</strong> Email verification is required for emergency alerts to reach you when seconds matter most.
             </p>
           </div>
 
           <!-- Revolutionary Features -->
-          <div style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); border-radius: 12px; padding: 30px; margin: 30px 0; text-align: center;">
-            <h3 style="color: #5b21b6; margin-bottom: 20px;">🤖 What Makes VitalWatch Revolutionary</h3>
+          <div class="revolutionary-section">
+            <h3>🤖 What Makes VitalWatch Revolutionary</h3>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 25px 0;">
-              <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #c4b5fd;">
-                <h4 style="color: #5b21b6; margin-bottom: 10px;">🧠 AI That Never Sleeps</h4>
-                <p style="margin: 0; color: #374151;">Continuous monitoring using your device sensors, detecting falls, stress spikes, and emergency patterns in real-time</p>
+            <div class="feature-cards">
+              <div class="feature-card">
+                <h4>🧠 AI That Never Sleeps</h4>
+                <p>Continuous monitoring using your device sensors, detecting falls, stress spikes, and emergency patterns in real-time with machine learning precision</p>
               </div>
-              <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #c4b5fd;">
-                <h4 style="color: #5b21b6; margin-bottom: 10px;">📱 Invisible Protection</h4>
-                <p style="margin: 0; color: #374151;">Works silently in the background - no wearables needed. Your phone becomes a life-saving medical device</p>
+              <div class="feature-card">
+                <h4>📱 Invisible Protection</h4>
+                <p>Works silently in the background - no wearables needed. Your phone becomes a life-saving medical device with advanced sensor fusion</p>
               </div>
-              <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #c4b5fd;">
-                <h4 style="color: #5b21b6; margin-bottom: 10px;">⚡ Instant Response</h4>
-                <p style="margin: 0; color: #374151;">Emergency alerts sent in under 3 seconds to your contacts with precise location and vital signs data</p>
+              <div class="feature-card">
+                <h4>⚡ Instant Response</h4>
+                <p>Emergency alerts sent in under 3 seconds to your contacts with precise location and vital signs data, faster than traditional emergency services</p>
               </div>
             </div>
           </div>
@@ -124,13 +398,13 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           </div>
 
           <!-- Pro vs Free Comparison -->
-          <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; padding: 30px; margin: 30px 0;">
-            <h3 style="color: #0c4a6e; text-align: center; margin-bottom: 25px;">🔥 VitalWatch Pro - Unlock Maximum Protection</h3>
+          <div class="comparison-section">
+            <h3 style="color: #06b6d4; text-align: center; margin-bottom: 25px; font-size: 26px; font-weight: 700;">🔥 VitalWatch Pro - Unlock Maximum Protection</h3>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 20px 0;">
-              <div style="background: white; padding: 25px; border-radius: 8px; border: 2px solid #e2e8f0;">
-                <h4 style="color: #475569; margin-bottom: 15px; text-align: center;">Free Plan</h4>
-                <ul style="color: #64748b; padding-left: 20px; line-height: 1.8;">
+            <div class="comparison-grid">
+              <div class="plan-free">
+                <h4 style="color: #9ca3af; margin-bottom: 20px; text-align: center; font-size: 20px;">Free Plan</h4>
+                <ul style="color: #d1d5db; padding-left: 20px; line-height: 2;">
                   <li>Basic panic button</li>
                   <li>2 emergency contacts</li>
                   <li>Simple mood tracking</li>
@@ -139,76 +413,79 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
                 </ul>
               </div>
               
-              <div style="background: linear-gradient(135deg, #1e40af, #7c3aed); color: white; padding: 25px; border-radius: 8px; position: relative;">
-                <div style="position: absolute; top: -10px; right: 20px; background: #f59e0b; color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; font-weight: bold;">RECOMMENDED</div>
-                <h4 style="margin-bottom: 15px; text-align: center;">VitalWatch Pro</h4>
-                <ul style="padding-left: 20px; line-height: 1.8;">
-                  <li><strong>Advanced AI threat detection</strong></li>
-                  <li><strong>Unlimited emergency contacts</strong></li>
-                  <li><strong>Predictive health analysis</strong></li>
-                  <li><strong>Real-time vital signs monitoring</strong></li>
-                  <li><strong>3-second emergency response</strong></li>
-                  <li><strong>Fall detection & auto-alerts</strong></li>
-                  <li><strong>24/7 crisis intervention tools</strong></li>
-                  <li><strong>Premium therapeutic resources</strong></li>
+              <div class="plan-pro">
+                <h4 style="margin-bottom: 20px; text-align: center; font-size: 20px;">VitalWatch Pro</h4>
+                <ul style="padding-left: 20px; line-height: 2;">
+                  <li><strong>🎯 Advanced AI threat detection</strong></li>
+                  <li><strong>👥 Unlimited emergency contacts</strong></li>
+                  <li><strong>🔮 Predictive health analysis</strong></li>
+                  <li><strong>💓 Real-time vital signs monitoring</strong></li>
+                  <li><strong>⚡ 3-second emergency response</strong></li>
+                  <li><strong>🚨 Fall detection & auto-alerts</strong></li>
+                  <li><strong>🆘 24/7 crisis intervention tools</strong></li>
+                  <li><strong>🧘 Premium therapeutic resources</strong></li>
                 </ul>
-                <div style="text-align: center; margin-top: 20px;">
-                  <p style="margin: 5px 0; font-size: 18px;"><strong>$9.99/month</strong></p>
-                  <p style="margin: 5px 0; font-size: 14px; opacity: 0.9;">First 14 days FREE</p>
+                <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                  <p style="margin: 5px 0; font-size: 24px; font-weight: 800;">$9.99/month</p>
+                  <p style="margin: 5px 0; font-size: 16px; opacity: 0.9; font-weight: 600;">First 14 days FREE</p>
                 </div>
               </div>
             </div>
             
-            <div style="text-align: center; margin-top: 25px;">
-              <p style="color: #0c4a6e; font-weight: bold; margin-bottom: 15px;">⚡ Pro users report 3x faster emergency response times</p>
-              <a href="http://localhost:5000/upgrade" style="display: inline-block; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 10px;">Start Free Pro Trial</a>
+            <div style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(6, 182, 212, 0.1); border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.3);">
+              <p style="color: #06b6d4; font-weight: 700; margin-bottom: 20px; font-size: 18px;">⚡ Pro users report 3x faster emergency response times</p>
+              <a href="http://localhost:5000/upgrade" style="display: inline-block; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 18px 35px; text-decoration: none; border-radius: 12px; font-weight: 700; margin: 10px; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4); text-transform: uppercase; letter-spacing: 0.5px;">Start Free Pro Trial</a>
             </div>
           </div>
 
           <!-- Success Stories -->
-          <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0;">
-            <h3 style="color: #1e40af; text-align: center; margin-bottom: 20px;">🌟 Real Lives Saved</h3>
+          <div class="testimonial-section">
+            <h3 style="color: #10b981; text-align: center; margin-bottom: 30px; font-size: 26px; font-weight: 700;">🌟 Real Lives Saved</h3>
             
-            <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #10b981;">
-                <p style="margin: 0; color: #374151; font-style: italic;">"VitalWatch detected my heart irregularities and alerted my family before I even felt symptoms. Doctors said the early warning saved my life."</p>
-                <p style="margin: 10px 0 0 0; color: #6b7280; font-size: 14px;">- Sarah M., VitalWatch Pro user</p>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+              <div class="testimonial" style="border-left-color: #10b981;">
+                <p style="margin: 0; color: #e2e8f0; font-style: italic; font-size: 16px; line-height: 1.7;">"VitalWatch detected my heart irregularities and alerted my family before I even felt symptoms. Doctors said the early warning saved my life."</p>
+                <p style="margin: 15px 0 0 0; color: #94a3b8; font-size: 14px; font-weight: 500;">- Sarah M., VitalWatch Pro user</p>
               </div>
-              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                <p style="margin: 0; color: #374151; font-style: italic;">"The fall detection worked perfectly when I had an accident hiking alone. Emergency contacts received my exact location and I was rescued within 20 minutes."</p>
-                <p style="margin: 10px 0 0 0; color: #6b7280; font-size: 14px;">- Mike R., VitalWatch Pro user</p>
+              <div class="testimonial" style="border-left-color: #3b82f6;">
+                <p style="margin: 0; color: #e2e8f0; font-style: italic; font-size: 16px; line-height: 1.7;">"The fall detection worked perfectly when I had an accident hiking alone. Emergency contacts received my exact location and I was rescued within 20 minutes."</p>
+                <p style="margin: 15px 0 0 0; color: #94a3b8; font-size: 14px; font-weight: 500;">- Mike R., VitalWatch Pro user</p>
               </div>
             </div>
           </div>
 
           <!-- Call to Action -->
-          <div style="text-align: center; margin: 30px 0; padding: 30px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 12px;">
-            <h3 style="color: #1e40af; margin-bottom: 15px;">🚀 Your Safety Journey Starts Now</h3>
-            <p style="color: #3730a3; margin-bottom: 20px;">Join thousands who trust VitalWatch to protect what matters most</p>
-            <a href="${verificationLink}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 10px;">Activate VitalWatch Protection</a>
+          <div class="cta-section">
+            <h3 style="color: #f1f5f9; margin-bottom: 20px; font-size: 28px; font-weight: 700;">🚀 Your Safety Journey Starts Now</h3>
+            <p style="color: #cbd5e1; margin-bottom: 25px; font-size: 18px; line-height: 1.6;">Join thousands who trust VitalWatch to protect what matters most</p>
+            <a href="${verificationLink}" class="cta-button">Activate VitalWatch Protection</a>
           </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-          <p><strong>The VitalWatch Team</strong></p>
-          <p>Protecting lives with AI that never sleeps</p>
-          <div style="margin: 20px 0;">
-            <p style="color: #60a5fa; margin: 5px 0;">📧 Questions? Reply to this email</p>
-            <p style="color: #60a5fa; margin: 5px 0;">🆘 Emergency Support: support@vitalwatch.app</p>
+          <p style="font-size: 20px; font-weight: 700; margin-bottom: 10px;"><strong>The VitalWatch Team</strong></p>
+          <p style="font-size: 16px; color: #cbd5e1; margin-bottom: 25px;">Protecting lives with AI that never sleeps</p>
+          
+          <div style="margin: 30px 0;">
+            <p style="color: #60a5fa; margin: 8px 0; font-size: 16px; font-weight: 500;">📧 Questions? Reply to this email</p>
+            <p style="color: #ef4444; margin: 8px 0; font-size: 16px; font-weight: 600;">🆘 Emergency Support: support@vitalwatch.app</p>
           </div>
+          
           <div class="social-links">
             <a href="http://localhost:5000/help">Help Center</a> | 
             <a href="http://localhost:5000/privacy">Privacy Policy</a> | 
             <a href="http://localhost:5000/terms">Terms of Service</a>
           </div>
-          <div style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
-            <p style="margin: 0; font-size: 14px; line-height: 1.6;">
+          
+          <div class="footer-highlight">
+            <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #f1f5f9;">
               <strong>Remember:</strong> VitalWatch works best when your phone stays with you. 
               Enable notifications and keep location services active for maximum protection.
             </p>
           </div>
-          <p style="font-size: 12px; opacity: 0.8; margin: 10px 0;">
+          
+          <p style="font-size: 13px; color: #64748b; margin: 15px 0; line-height: 1.5;">
             This email was sent to ${firstName} as part of your VitalWatch account activation.
             You're receiving this because you signed up for VitalWatch emergency monitoring services.
           </p>
