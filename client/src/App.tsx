@@ -15,6 +15,7 @@ import ProfileEnhanced from "@/pages/profile-enhanced";
 import BillingPage from "@/pages/billing";
 import DemoPage from "@/pages/demo";
 import AuthPage from "@/pages/auth";
+import VerifyEmail from "@/pages/verify-email";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -24,11 +25,13 @@ function Router() {
       <Route path="/demo" component={DemoPage} />
       <Route path="/auth/login" component={AuthPage} />
       <Route path="/auth/signup" component={AuthPage} />
+      <Route path="/verify-email" component={VerifyEmail} />
       {isLoading || !isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
         <>
           <Route path="/" component={HomeEnhanced} />
+          <Route path="/dashboard" component={HomeEnhanced} />
           <Route path="/mood" component={Mood} />
           <Route path="/tools" component={ToolsComprehensive} />
           <Route path="/contacts" component={ContactsEnhanced} />

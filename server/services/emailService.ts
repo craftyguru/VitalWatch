@@ -124,7 +124,7 @@ export class EmailService {
   }
 
   // Verify email token
-  async verifyEmailToken(token: string): Promise<{ success: boolean; userId?: string; message: string }> {
+  async verifyEmailToken(token: string): Promise<{ success: boolean; user?: any; message: string }> {
     try {
       const user = await storage.getUserByVerificationToken(token);
       
@@ -132,12 +132,16 @@ export class EmailService {
         return { success: false, message: 'Invalid or expired verification token' };
       }
 
-      // Mark email as verified
-      await storage.markEmailVerified(user.id);
+      if (user.emailVerified) {
+        return { success: false, message: 'Email already verified' };
+      }
+
+      // Mark email as verified (this is handled in routes.ts with Pro trial activation)
+      // We return the user so the route can update with Pro trial details
       
       return { 
         success: true, 
-        userId: user.id, 
+        user: user,
         message: 'Email verified successfully!' 
       };
     } catch (error) {

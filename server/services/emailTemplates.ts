@@ -474,7 +474,7 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
             
             <div style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(6, 182, 212, 0.1); border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.3);">
               <p style="color: #06b6d4; font-weight: 700; margin-bottom: 20px; font-size: 18px;">⚡ Pro users report 3x faster emergency response times</p>
-              <a href="http://localhost:5000/upgrade" style="display: inline-block; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 18px 35px; text-decoration: none; border-radius: 12px; font-weight: 700; margin: 10px; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4); text-transform: uppercase; letter-spacing: 0.5px;">Start Free Pro Trial</a>
+              <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/upgrade" style="display: inline-block; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 18px 35px; text-decoration: none; border-radius: 12px; font-weight: 700; margin: 10px; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4); text-transform: uppercase; letter-spacing: 0.5px;">Start Free Pro Trial</a>
             </div>
           </div>
 
@@ -513,9 +513,9 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           </div>
           
           <div class="social-links">
-            <a href="http://localhost:5000/help">Help Center</a> | 
-            <a href="http://localhost:5000/privacy">Privacy Policy</a> | 
-            <a href="http://localhost:5000/terms">Terms of Service</a>
+            <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/help">Help Center</a> | 
+            <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/privacy">Privacy Policy</a> | 
+            <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/terms">Terms of Service</a>
           </div>
           
           <div class="footer-highlight">

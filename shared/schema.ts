@@ -37,6 +37,14 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").default(false),
   emailVerificationToken: varchar("email_verification_token"),
   welcomeEmailSent: boolean("welcome_email_sent").default(false),
+  // Pro subscription fields
+  subscriptionPlan: varchar("subscription_plan").default("free"), // free, pro
+  subscriptionStatus: varchar("subscription_status").default("active"), // active, cancelled, expired
+  proTrialStarted: boolean("pro_trial_started").default(false),
+  proTrialStartDate: timestamp("pro_trial_start_date"),
+  proTrialEndDate: timestamp("pro_trial_end_date"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
   settings: jsonb("settings"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

@@ -664,56 +664,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { token } = req.query;
       
       if (!token || typeof token !== 'string') {
-        return res.status(400).send(`
-          <html>
-            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-              <h1 style="color: #dc2626;">Invalid Verification Link</h1>
-              <p>The verification link is invalid or missing.</p>
-              <a href="/" style="color: #2563eb;">Return to VitalWatch</a>
-            </body>
-          </html>
-        `);
+        return res.redirect('/verify-email?error=invalid-token');
       }
 
       const result = await emailService.verifyEmailToken(token);
       
-      if (result.success) {
-        res.send(`
-          <html>
-            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-              <h1 style="color: #059669;">Email Verified Successfully!</h1>
-              <p>Your VitalWatch account is now fully activated.</p>
-              <p>You can now access all features including emergency notifications and health insights.</p>
-              <a href="/" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 20px;">
-                Continue to VitalWatch
-              </a>
-            </body>
-          </html>
-        `);
+      if (result.success && result.user) {
+        // Start Pro trial for new verified users
+        const now = new Date();
+        const trialEndDate = new Date(now.getTime() + (14 * 24 * 60 * 60 * 1000)); // 14 days from now
+        
+        await storage.updateUser(result.user.id, {
+          emailVerified: true,
+          proTrialStarted: true,
+          proTrialStartDate: now,
+          proTrialEndDate: trialEndDate,
+          subscriptionPlan: 'pro' // Temporarily set to pro during trial
+        });
+        
+        // Redirect to the professional verification success page
+        res.redirect(`/verify-email?success=true&firstName=${encodeURIComponent(result.user.firstName || 'User')}&trialActive=true&trialEndDate=${trialEndDate.toISOString()}`);
       } else {
-        res.status(400).send(`
-          <html>
-            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-              <h1 style="color: #dc2626;">Verification Failed</h1>
-              <p>${result.message}</p>
-              <a href="/" style="color: #2563eb;">Return to VitalWatch</a>
-            </body>
-          </html>
-        `);
+        res.redirect(`/verify-email?error=verification-failed&message=${encodeURIComponent(result.message || 'Verification failed')}`);
       }
     } catch (error) {
       console.error('Email verification error:', error);
-      res.status(500).send(`
-        <html>
-          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-            <h1 style="color: #dc2626;">Verification Error</h1>
-            <p>An error occurred during verification. Please try again.</p>
-            <a href="/" style="color: #2563eb;">Return to VitalWatch</a>
-          </body>
-        </html>
-      `);
+      res.redirect('/verify-email?error=server-error');
     }
   });
+
+  // JSON API for email verification (for frontend)
+  app.get('/api/verify-email-json', async (req, res) => {
+    try {
+      const { token } = req.query;
+      
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid verification link. Please check your email and try again."
+        });
+      }
+
+      const result = await emailService.verifyEmailToken(token);
+      
+      if (result.success && result.user) {
+        // Start Pro trial for new verified users
+        const now = new Date();
+        const trialEndDate = new Date(now.getTime() + (14 * 24 * 60 * 60 * 1000)); // 14 days from now
+        
+        await storage.updateUser(result.user.id, {
+          emailVerified: true,
+          proTrialStarted: true,
+          proTrialStartDate: now,
+          proTrialEndDate: trialEndDate,
+          subscriptionPlan: 'pro' // Temporarily set to pro during trial
+        });
+        
+        res.json({
+          success: true,
+          message: "Email verified successfully! Your VitalWatch Pro trial has started.",
+          user: {
+            firstName: result.user.firstName,
+            email: result.user.email,
+            proTrialActive: true,
+            proTrialEndDate: trialEndDate.toISOString()
+          }
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: result.message || "Verification failed. Please try again or contact support."
+        });
+      }
+    } catch (error) {
+      console.error('Email verification error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Verification failed. Please try again or contact support."
+      });
+    }
+  });
+
 
   app.post('/api/resend-verification', isAuthenticated, async (req: any, res) => {
     try {
