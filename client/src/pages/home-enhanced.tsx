@@ -49,7 +49,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user } = useAuth() as { user: any };
   const { toast } = useToast();
   const { isConnected, lastMessage } = useWebSocket();
   const [emergencyOverlayOpen, setEmergencyOverlayOpen] = useState(false);
