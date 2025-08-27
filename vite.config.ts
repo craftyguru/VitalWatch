@@ -20,7 +20,7 @@ export default defineConfig({
     fs: { strict: true, deny: ["**/.*"] },
     host: "0.0.0.0",
     port: 5173,
-    allowedHosts: "all",
+    allowedHosts: true,
     hmr: {
       port: 24678,
     },
