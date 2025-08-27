@@ -26,7 +26,13 @@ import {
   insertEmergencyIncidentSchema,
   insertCopingToolsUsageSchema,
   updateUserSettingsSchema,
+  users,
+  emergencyIncidents,
+  aiInsights,
+  moodEntries,
+  emergencyContacts
 } from "@shared/schema";
+import { db } from "./db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup session middleware before auth
