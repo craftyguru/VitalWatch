@@ -9,17 +9,138 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Welcome to VitalWatch</title>
+      <!--[if mso]>
       <style>
-        body { 
-          font-family: 'Segoe UI', 'San Francisco', -apple-system, BlinkMacSystemFont, sans-serif; 
-          line-height: 1.6; 
-          color: #e2e8f0; 
-          margin: 0; 
-          padding: 20px; 
-          background: radial-gradient(ellipse at top, #1e293b 0%, #0f172a 50%, #050814 100%);
-          background-size: 100% 100%;
-          min-height: 100vh;
-        }
+        table { border-collapse: collapse; }
+      </style>
+      <![endif]-->
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #0f172a; font-family: Arial, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0f172a;">
+        <tr>
+          <td align="center" style="padding: 20px;">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #1a202c; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
+              
+              <!-- Header Section -->
+              <tr>
+                <td style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; font-size: 36px; font-weight: bold; color: #ffffff; text-shadow: 0 4px 8px rgba(0,0,0,0.3);">🛡️ VitalWatch</h1>
+                  <p style="margin: 15px 0 0 0; font-size: 16px; color: #ffffff; opacity: 0.9;">The World's First AI That Never Sleeps - Protecting You 24/7</p>
+                </td>
+              </tr>
+              
+              <!-- Welcome Section -->
+              <tr>
+                <td style="padding: 30px; background-color: #1a202c;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding: 25px; background-color: rgba(99, 102, 241, 0.1); border-radius: 16px; border: 1px solid rgba(99, 102, 241, 0.3); text-align: center;">
+                        <h2 style="margin: 0 0 20px 0; font-size: 24px; color: #f1f5f9; font-weight: bold;">Welcome to the Future, ${firstName}! VitalWatch Support!</h2>
+                        <p style="margin: 0; color: #cbd5e1; font-size: 16px; line-height: 1.6;">Congratulations! You've joined the most advanced safety and health monitoring system ever created. VitalWatch uses cutting-edge AI to protect you in ways that seemed impossible until now.</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <!-- Pro Trial Banner -->
+              <tr>
+                <td style="padding: 0 30px;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);">
+                        <p style="margin: 0 0 10px 0; color: #ffffff; font-size: 18px; font-weight: bold;">🔥 Limited Time: Your Free Trial Includes Pro Features!</p>
+                        <p style="margin: 0; color: #ffffff; font-size: 14px;">For the next 14 days, experience VitalWatch Pro absolutely free - including advanced AI threat detection, unlimited emergency contacts, and premium crisis intervention tools.</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <!-- CTA Button -->
+              <tr>
+                <td style="padding: 30px; text-align: center; background-color: #1a202c;">
+                  <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                    <tr>
+                      <td style="background: linear-gradient(135deg, #2563eb, #7c3aed); border-radius: 12px; text-align: center;">
+                        <a href="${verificationLink}" style="display: block; padding: 18px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px;">🚀 Activate Your Life-Saving Account</a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin: 15px 0 0 0; color: #94a3b8; font-size: 12px;"><strong>Critical:</strong> Email verification is required for emergency alerts to reach you when seconds matter most.</p>
+                </td>
+              </tr>
+              
+              <!-- Features Grid -->
+              <tr>
+                <td style="padding: 0 30px 30px 30px; background-color: #1a202c;">
+                  <h3 style="color: #a855f7; margin-bottom: 20px; text-align: center; font-size: 20px;">⚡ What Makes VitalWatch Revolutionary</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="50%" style="padding: 10px;">
+                        <div style="background-color: #2d3748; padding: 15px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3);">
+                          <p style="margin: 0; color: #a5b4fc; font-weight: bold;">🤖 AI That Never Sleeps</p>
+                          <p style="margin: 5px 0 0 0; color: #d1d5db; font-size: 14px;">Continuously monitors patterns and detects threats before they escalate</p>
+                        </div>
+                      </td>
+                      <td width="50%" style="padding: 10px;">
+                        <div style="background-color: #2d3748; padding: 15px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3);">
+                          <p style="margin: 0; color: #a5b4fc; font-weight: bold;">🚨 Instant Emergency Response</p>
+                          <p style="margin: 5px 0 0 0; color: #d1d5db; font-size: 14px;">Alerts your contacts in under 3 seconds during crisis situations</p>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" style="padding: 10px;">
+                        <div style="background-color: #2d3748; padding: 15px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3);">
+                          <p style="margin: 0; color: #a5b4fc; font-weight: bold;">💊 Health Pattern Recognition</p>
+                          <p style="margin: 5px 0 0 0; color: #d1d5db; font-size: 14px;">Identifies concerning health trends weeks before traditional methods</p>
+                        </div>
+                      </td>
+                      <td width="50%" style="padding: 10px;">
+                        <div style="background-color: #2d3748; padding: 15px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3);">
+                          <p style="margin: 0; color: #a5b4fc; font-weight: bold;">🧠 Mental Health Guardian</p>
+                          <p style="margin: 5px 0 0 0; color: #d1d5db; font-size: 14px;">Advanced crisis intervention with professional therapeutic tools</p>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <!-- Pro Trial Upgrade Section -->
+              <tr>
+                <td style="padding: 30px; background-color: rgba(6, 182, 212, 0.1); text-align: center;">
+                  <p style="color: #06b6d4; font-weight: bold; margin-bottom: 15px; font-size: 16px;">⚡ Pro users report 3x faster emergency response times</p>
+                  <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                    <tr>
+                      <td style="background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 12px;">
+                        <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/upgrade" style="display: block; padding: 15px 30px; color: #ffffff; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Start Free Pro Trial</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <!-- Footer -->
+              <tr>
+                <td style="padding: 30px; background-color: #020409; text-align: center; border-top: 1px solid rgba(99, 102, 241, 0.3);">
+                  <p style="color: #60a5fa; margin: 8px 0; font-size: 14px;">📧 Questions? Reply to this email</p>
+                  <p style="color: #ef4444; margin: 8px 0; font-size: 14px; font-weight: bold;">🆘 Emergency Support: support@vitalwatch.app</p>
+                  <p style="color: #94a3b8; margin: 15px 0 0 0; font-size: 12px;">
+                    <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/help" style="color: #60a5fa;">Help Center</a> | 
+                    <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/privacy" style="color: #60a5fa;">Privacy Policy</a> | 
+                    <a href="${process.env.NODE_ENV === 'production' ? 'https://vitalwatch.replit.app' : 'http://localhost:5000'}/terms" style="color: #60a5fa;">Terms of Service</a>
+                  </p>
+                  <p style="color: #10b981; margin: 20px 0 0 0; font-size: 16px; font-weight: bold;">Your safety is our mission. Your privacy is our promise.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>`
         .container { 
           max-width: 650px; 
           margin: 0 auto; 
