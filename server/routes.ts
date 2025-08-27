@@ -102,8 +102,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Demo login route
   app.post('/api/auth/demo', async (req, res) => {
     try {
-      // Use the test user account for demo
-      const demoUser = await storage.getUserByEmail('test@vitalwatch.demo');
+      // Use the demo account with sample data
+      const demoUser = await storage.getUserByEmail('testme@vitalwatch.app');
       
       if (!demoUser) {
         return res.status(404).json({ message: 'Demo account not found' });
@@ -115,13 +115,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(500).json({ message: 'Demo login failed' });
         }
         
-        // Mark session as demo mode to prevent saving data
-        (req.session as any).isDemoMode = true;
-        
         res.json({ 
           user: demoUser, 
-          message: 'Demo session started',
-          isDemoMode: true
+          message: 'Demo session started - explore with sample data!'
         });
       });
       
@@ -271,20 +267,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/mood-entries', isAuthenticated, async (req: any, res) => {
     try {
-      // Check if this is demo mode
-      if ((req.session as any)?.isDemoMode) {
-        // Return a simulated response without saving to database
-        const simulatedEntry = {
-          id: Date.now(),
-          userId: 'demo-user-vitalwatch',
-          mood: req.body.mood,
-          moodScore: req.body.moodScore,
-          note: req.body.note || null,
-          createdAt: new Date().toISOString()
-        };
-        return res.json(simulatedEntry);
-      }
-
       const userId = req.user.claims.sub;
       const { location, ...moodData } = req.body;
       const validatedData = insertMoodEntrySchema.parse(moodData);

@@ -59,7 +59,7 @@ export default function LandingPage() {
         const data = await response.json();
         toast({
           title: "Demo Mode Started!",
-          description: "You're now exploring VitalWatch safely - no data will be saved.",
+          description: "Exploring VitalWatch with real sample data - see exactly what you'll get!",
         });
         setTimeout(() => {
           window.location.href = "/dashboard";
