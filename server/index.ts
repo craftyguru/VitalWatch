@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import http from "http";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -7,36 +8,35 @@ const app = express();
 // Trust proxy for Cloudflare/Replit
 app.set("trust proxy", 1);
 
-// Simple health endpoint
+// Health/liveness - public endpoint
 app.get("/health", (_req, res) => res.status(200).send("OK"));
+app.get("/", (_req, res) => res.send("VitalWatch is up ✅"));
 
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false, limit: "100mb" }));
 
+// Lightweight API request logging
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let captured: unknown;
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
+  const origJson = res.json.bind(res);
+  res.json = ((body: unknown, ...args: any[]) => {
+    captured = body;
+    // @ts-expect-error express types
+    return origJson(body, ...args);
+  }) as any;
 
   res.on("finish", () => {
-    const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      const duration = Date.now() - start;
+      let line = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      if (captured !== undefined) {
+        const s = JSON.stringify(captured);
+        line += ` :: ${s.length > 200 ? s.slice(0, 200) + "…" : s}`;
       }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
+      log(line);
     }
   });
 
@@ -44,39 +44,39 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  // Attach all routes to the express app
+  await registerRoutes(app);
 
+  // Create ONE http server that everything shares
+  const server = http.createServer(app);
+
+  // Error middleware (do NOT rethrow)
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
+    log(`ERROR ${status}: ${message}`);
+    if (!res.headersSent) res.status(status).json({ message });
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // Dev uses Vite middleware; prod serves static
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // Use platform port (Replit sets PORT) and bind to 0.0.0.0
+  // Replit/Cloudflare: use platform port and 0.0.0.0
   const PORT = Number(process.env.PORT) || 3000;
   const HOST = "0.0.0.0";
-  
+
   server.listen(PORT, HOST, () => {
     console.log(`✅ Server listening on http://${HOST}:${PORT}`);
     log(`serving on ${HOST}:${PORT}`);
   });
 
   // Graceful shutdown
-  process.on('SIGINT', () => {
-    log('Gracefully shutting down server...');
-    server.close(() => {
-      process.exit(0);
-    });
+  process.on("SIGINT", () => {
+    log("Gracefully shutting down server…");
+    server.close(() => process.exit(0));
   });
 })();

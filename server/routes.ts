@@ -39,12 +39,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       conString: process.env.DATABASE_URL,
       tableName: 'sessions'
     }),
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    secret: process.env.SESSION_SECRET || 'dev-secret-vitalwatch-2025',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false, // don't create sessions for anonymous hits
     cookie: { 
-      secure: false, // Set to true in production with HTTPS
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      secure: process.env.NODE_ENV === 'production', // https on replit.dev 
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // allow cross-site cookies in production
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     }
   }));
 

@@ -1,0 +1,63 @@
+Yes—we’re up now. That JSON means your server is running, but a Passport session error is being returned on /:
+
+{"message":"Failed to deserialize user out of session"}
+
+
+This happens when passport.session() runs but there’s no session cookie, and your deserializeUser throws instead of returning “no user”.
+
+Fix (2 parts)
+1) Middleware order + session config
+
+Make sure session comes before passport, and cookies work behind a proxy:
+
+import session from "express-session";
+import passport from "passport";
+import MemoryStore from "memorystore"; // or connect-pg-simple if you use PG
+
+app.set("trust proxy", 1);
+
+const MemStore = MemoryStore(session);
+app.use(session({
+  secret: process.env.SESSION_SECRET || "dev-secret",
+  resave: false,
+  saveUninitialized: false,              // don't create sessions for anonymous hits
+  store: new MemStore({ checkPeriod: 86400000 }),
+  cookie: {
+    secure: true,                        // https on replit.dev
+    sameSite: "none",                    // allow cross-site cookies
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+Set SESSION_SECRET in Replit “Secrets”.
+
+2) Make deserializeUser tolerant (don’t throw)
+
+If you currently throw when user isn’t found, return done(null, false) instead:
+
+passport.deserializeUser(async (id: string, done) => {
+  try {
+    const user = await db.users.findById(id);
+    if (!user) return done(null, false); // <- do NOT throw
+    return done(null, user);
+  } catch (err) {
+    return done(err as Error);
+  }
+});
+
+Optional: don’t require auth on public routes
+
+Only protect what needs auth:
+
+const requireAuth = (req: any, res: any, next: any) =>
+  req.isAuthenticated() ? next() : res.status(401).json({ message: "unauthorized" });
+
+app.get("/", (_req, res) => res.send("VitalWatch is up ✅"));
+app.get("/health", (_req, res) => res.send("OK"));
+
+app.use("/api/private", requireAuth, privateRouter);   // protected
+app.use("/api/public", publicRouter);                  // public

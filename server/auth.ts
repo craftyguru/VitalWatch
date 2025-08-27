@@ -17,13 +17,14 @@ export function setupAuth(app: Express) {
     done(null, user.id);
   });
 
-  // Deserialize user from session
+  // Deserialize user from session - tolerant of missing users
   passport.deserializeUser(async (id: string, done) => {
     try {
       const user = await storage.getUser(id);
-      done(null, user);
+      if (!user) return done(null, false); // <- do NOT throw, return false for missing users
+      return done(null, user);
     } catch (error) {
-      done(error, null);
+      return done(error as Error);
     }
   });
 
