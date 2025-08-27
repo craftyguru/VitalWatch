@@ -1,0 +1,121 @@
+{
+  "packageId": "app.vitalwatch.emergency",
+  "host": "www.vitalwatch.app",
+  "name": "VitalWatch",
+  "launcherName": "VitalWatch",
+  "display": "standalone",
+  "themeColor": "#3b82f6",
+  "navigationColor": "#3b82f6",
+  "navigationColorDark": "#1e40af",
+  "navigationDividerColor": "#e5e7eb",
+  "navigationDividerColorDark": "#374151",
+  "backgroundColor": "#ffffff",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "/icons/icon-512x512.png",
+  "maskableIconUrl": "/icons/icon-512x512.png",
+  "shortcuts": [
+    {
+      "name": "Emergency Alert",
+      "short_name": "Emergency",
+      "url": "/home?action=emergency",
+      "icon": "/icons/shortcut-emergency.png"
+    },
+    {
+      "name": "Mood Check-in",
+      "short_name": "Mood",
+      "url": "/mood",
+      "icon": "/icons/shortcut-mood.png"
+    },
+    {
+      "name": "Breathing Exercise",
+      "short_name": "Breathe", 
+      "url": "/tools?tool=breathing",
+      "icon": "/icons/shortcut-breathing.png"
+    }
+  ],
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "minSdkVersion": 21,
+  "targetSdkVersion": 34,
+  "compileSdkVersion": 34,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "vitalwatch"
+  },
+  "appDetails": {
+    "name": "VitalWatch - Emergency Protection",
+    "shortDescription": "AI-powered emergency monitoring and mental health support",
+    "longDescription": "VitalWatch provides comprehensive emergency protection with real-time crisis detection, biometric monitoring, mood tracking, and instant emergency alerts. Features include AI-powered threat assessment, GPS location sharing, emergency contact management, breathing exercises, and 24/7 monitoring. Perfect for personal safety, mental health support, and emergency preparedness.",
+    "developerName": "VitalWatch Inc",
+    "developerEmail": "support@vitalwatch.app",
+    "website": "https://www.vitalwatch.app",
+    "privacyPolicy": "https://www.vitalwatch.app/privacy",
+    "category": "HEALTH_AND_FITNESS",
+    "contentRating": "EVERYONE"
+  },
+  "features": [
+    {
+      "name": "android.hardware.location",
+      "required": false
+    },
+    {
+      "name": "android.hardware.location.gps",
+      "required": false
+    },
+    {
+      "name": "android.hardware.telephony",
+      "required": false
+    },
+    {
+      "name": "android.hardware.camera",
+      "required": false
+    },
+    {
+      "name": "android.hardware.microphone",
+      "required": false
+    }
+  ],
+  "permissions": [
+    {
+      "name": "android.permission.INTERNET",
+      "required": true
+    },
+    {
+      "name": "android.permission.ACCESS_NETWORK_STATE", 
+      "required": true
+    },
+    {
+      "name": "android.permission.ACCESS_FINE_LOCATION",
+      "required": false
+    },
+    {
+      "name": "android.permission.ACCESS_COARSE_LOCATION",
+      "required": false
+    },
+    {
+      "name": "android.permission.SEND_SMS",
+      "required": false
+    },
+    {
+      "name": "android.permission.CALL_PHONE",
+      "required": false
+    },
+    {
+      "name": "android.permission.CAMERA",
+      "required": false
+    },
+    {
+      "name": "android.permission.RECORD_AUDIO",
+      "required": false
+    },
+    {
+      "name": "android.permission.VIBRATE",
+      "required": false
+    },
+    {
+      "name": "android.permission.WAKE_LOCK",
+      "required": false
+    }
+  ]
+}
