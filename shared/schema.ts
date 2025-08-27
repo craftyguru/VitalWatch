@@ -28,12 +28,16 @@ export const sessions = pgTable(
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
+  username: varchar("username"),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
+  profileImage: varchar("profile_image"),
+  passwordHash: varchar("password_hash"),
+  authProvider: varchar("auth_provider").default("local"), // local, google, facebook
   emailVerified: boolean("email_verified").default(false),
   emailVerificationToken: varchar("email_verification_token"),
   welcomeEmailSent: boolean("welcome_email_sent").default(false),
+  settings: jsonb("settings"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

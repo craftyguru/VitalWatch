@@ -18,6 +18,7 @@ import {
   Brain,
   Activity
 } from "lucide-react";
+import { SiGoogle, SiFacebook } from "react-icons/si";
 
 export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -137,8 +138,12 @@ export default function AuthPage() {
     }
   };
 
-  const handleReplotAuth = () => {
-    window.location.href = "/api/login";
+  const handleGoogleAuth = () => {
+    window.location.href = "/api/auth/google";
+  };
+
+  const handleFacebookAuth = () => {
+    window.location.href = "/api/auth/facebook";
   };
 
   return (
@@ -181,16 +186,30 @@ export default function AuthPage() {
             </CardHeader>
 
             <CardContent className="space-y-6">
-              {/* Quick Access Replit Auth */}
-              <Button
-                onClick={handleReplotAuth}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                size="lg"
-                data-testid="button-auth-replit"
-              >
-                <Shield className="h-5 w-5 mr-2" />
-                Continue with Replit Auth
-              </Button>
+              {/* Social Auth Buttons */}
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  onClick={handleGoogleAuth}
+                  variant="outline"
+                  className="w-full border-gray-600 bg-gray-800 hover:bg-gray-700 text-white"
+                  size="lg"
+                  data-testid="button-auth-google"
+                >
+                  <SiGoogle className="h-5 w-5 mr-2 text-red-500" />
+                  Google
+                </Button>
+
+                <Button
+                  onClick={handleFacebookAuth}
+                  variant="outline"
+                  className="w-full border-gray-600 bg-gray-800 hover:bg-gray-700 text-white"
+                  size="lg"
+                  data-testid="button-auth-facebook"
+                >
+                  <SiFacebook className="h-5 w-5 mr-2 text-blue-500" />
+                  Facebook
+                </Button>
+              </div>
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

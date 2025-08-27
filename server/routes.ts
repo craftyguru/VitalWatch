@@ -3,7 +3,10 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
+import bcrypt from 'bcrypt';
+import passport from 'passport';
+import crypto from 'crypto';
 import { emergencyService } from "./services/emergency";
 import { storageService } from "./services/supabase";
 import { emailService } from "./services/emailService";
@@ -26,8 +29,27 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup session middleware before auth
+  const session = await import('express-session');
+  const pgSession = await import('connect-pg-simple');
+  const pgStore = pgSession.default(session.default);
+  
+  app.use(session.default({
+    store: new pgStore({
+      conString: process.env.DATABASE_URL,
+      tableName: 'sessions'
+    }),
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: false, // Set to true in production with HTTPS
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
+
   // Auth middleware
-  await setupAuth(app);
+  setupAuth(app);
 
   // Multer setup for file uploads
   const upload = multer({
@@ -46,12 +68,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Google OAuth routes
+  app.get('/api/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+  }));
+
+  app.get('/api/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/auth/login' }),
+    (req, res) => {
+      res.redirect('/dashboard');
+    }
+  );
+
+  // Facebook OAuth routes
+  app.get('/api/auth/facebook', passport.authenticate('facebook', {
+    scope: ['email']
+  }));
+
+  app.get('/api/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+    (req, res) => {
+      res.redirect('/dashboard');
+    }
+  );
+
+  // Local auth routes
+  app.post('/api/auth/login', passport.authenticate('local'), (req, res) => {
+    res.json({ user: req.user, message: 'Login successful' });
+  });
+
+  app.post('/api/auth/signup', async (req, res) => {
+    try {
+      const { firstName, lastName, email, password } = req.body;
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+
+      // Hash password
+      const passwordHash = await bcrypt.hash(password, 10);
+      
+      // Create user
+      const userData = {
+        id: crypto.randomUUID(),
+        email,
+        username: `${firstName} ${lastName}`,
+        firstName,
+        lastName,
+        passwordHash,
+        authProvider: 'local' as const,
+        emailVerified: false,
+        settings: {
+          emergencyMode: false,
+          locationTracking: true,
+          darkMode: false,
+          notifications: {
+            email: true,
+            sms: false,
+            push: true
+          }
+        }
+      };
+      
+      const user = await storage.createUser(userData);
+      
+      // Send welcome email
+      await emailService.sendWelcomeEmail(user.id, user.email, user.firstName);
+      
+      // Auto login
+      req.login(user, (err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Login failed after signup' });
+        }
+        res.json({ user, message: 'Account created successfully' });
+      });
+      
+    } catch (error) {
+      console.error('Signup error:', error);
+      res.status(500).json({ message: 'Failed to create account' });
+    }
+  });
+
+  app.post('/api/auth/logout', (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Logout failed' });
+      }
+      res.json({ message: 'Logged out successfully' });
+    });
+  });
+
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
+      res.json(req.user);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
