@@ -1,1 +1,1 @@
-web: npm start
+web: npm run build && cp -r dist/client/* client/ && NODE_ENV=production node dist/server/index.js
