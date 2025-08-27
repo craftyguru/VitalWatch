@@ -169,8 +169,12 @@ export default function Home() {
         <div className="px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground p-3 rounded-2xl shadow-lg">
-                <Shield className="h-6 w-6" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-2xl shadow-lg overflow-hidden bg-white">
+                <img 
+                  src="/logo.png" 
+                  alt="VitalWatch Logo" 
+                  className="w-10 h-10 object-contain"
+                />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">

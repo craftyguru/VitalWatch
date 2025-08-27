@@ -230,8 +230,12 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-xl shadow-lg">
-                <Shield className="h-6 w-6 text-white" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg overflow-hidden bg-white">
+                <img 
+                  src="/logo.png" 
+                  alt="VitalWatch Logo" 
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">VitalWatch</h1>
             </div>
@@ -267,9 +271,13 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 py-24">
           <div className="text-center space-y-8">
-            <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
-                <Shield className="h-8 w-8 text-white" />
+            <div className="flex items-center justify-center space-x-4 mb-6">
+              <div className="flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl overflow-hidden bg-white">
+                <img 
+                  src="/logo.png" 
+                  alt="VitalWatch Logo" 
+                  className="w-16 h-16 object-contain"
+                />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 VitalWatch

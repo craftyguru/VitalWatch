@@ -22,6 +22,13 @@ export function ProfileHeader({ user, userName, userInitials, onLogout }: Profil
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden bg-white shadow-sm">
+              <img 
+                src="/logo.png" 
+                alt="VitalWatch Logo" 
+                className="w-7 h-7 object-contain"
+              />
+            </div>
             <div className="flex items-center space-x-3">
               <Avatar className="h-12 w-12 border-2 border-blue-200 dark:border-blue-800">
                 <AvatarImage src={user?.profileImage} alt={userName} />
