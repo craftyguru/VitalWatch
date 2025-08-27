@@ -44,7 +44,8 @@ import {
   Target,
   Award,
   Eye,
-  Mic
+  Mic,
+  LogOut
 } from "lucide-react";
 
 export default function Home() {
@@ -53,6 +54,7 @@ export default function Home() {
   const { isConnected, lastMessage } = useWebSocket();
   const [emergencyOverlayOpen, setEmergencyOverlayOpen] = useState(false);
   const [currentIncidentId, setCurrentIncidentId] = useState<number | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Fetch user settings for emergency countdown
   const { data: userSettings } = useQuery({
@@ -108,6 +110,38 @@ export default function Home() {
   const handleEmergencyTriggered = (incidentId?: number) => {
     setCurrentIncidentId(incidentId ?? null);
     setEmergencyOverlayOpen(true);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      const response = await fetch("/api/logout", {
+        method: "GET",
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "Logged out successfully",
+          description: "See you next time!",
+        });
+        // Redirect to landing page
+        window.location.href = "/";
+      } else {
+        toast({
+          title: "Logout failed",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Connection error",
+        description: "Unable to logout properly",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const userName = user ? `${(user as any).firstName || ''} ${(user as any).lastName || ''}`.trim() || (user as any).email?.split('@')[0] || "Friend" : "Friend";
@@ -187,6 +221,18 @@ export default function Home() {
                     <Link href="/profile" data-testid="link-profile">
                       <Settings className="h-5 w-5" />
                     </Link>
+                  </Button>
+                  
+                  {/* Logout Button */}
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400" 
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    data-testid="button-logout"
+                  >
+                    <LogOut className="h-5 w-5" />
                   </Button>
                 </div>
               )}
