@@ -83,8 +83,6 @@ async function start() {
       configFile: path.resolve(__dirname, "../vite.config.ts"),
       server: { 
         middlewareMode: true,
-        host: "0.0.0.0",
-        allowedHosts: "all",
       },
       appType: "spa",
     });
