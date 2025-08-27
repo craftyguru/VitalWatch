@@ -216,7 +216,7 @@ export default function AuthPage() {
                   <span className="w-full border-t border-gray-600" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-gray-900 px-2 text-gray-400">Or use email</span>
+                  <span className="bg-gray-900 px-2 text-gray-400">Or use email/username</span>
                 </div>
               </div>
 
@@ -224,13 +224,13 @@ export default function AuthPage() {
               <TabsContent value="login" className="space-y-4">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email" className="text-gray-200">Email</Label>
+                    <Label htmlFor="login-email" className="text-gray-200">Email or Username</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                       <Input
                         id="login-email"
-                        type="email"
-                        placeholder="Enter your email"
+                        type="text"
+                        placeholder="Enter your email or username"
                         value={loginData.email}
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                         className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
