@@ -638,6 +638,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // Test email endpoint (for debugging)
+  app.post('/api/test-email', async (req, res) => {
+    try {
+      const { email, firstName } = req.body;
+      
+      if (!email || !firstName) {
+        return res.status(400).json({ message: "Email and firstName required" });
+      }
+
+      const success = await emailService.sendVerificationEmail(
+        'test-user-123',
+        email,
+        firstName
+      );
+
+      res.json({ 
+        success, 
+        message: success ? 'Test email sent successfully' : 'Failed to send test email',
+        sendgridConfigured: !!process.env.SENDGRID_API_KEY
+      });
+    } catch (error: any) {
+      console.error('Test email error:', error);
+      res.status(500).json({ message: "Test email failed: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
 
   // WebSocket server for real-time emergency alerts and notifications
