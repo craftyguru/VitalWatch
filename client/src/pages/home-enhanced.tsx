@@ -188,7 +188,7 @@ export default function Home() {
             <div className="flex items-center space-x-3">
               <ThemeToggle />
               
-{user && (
+              {user && (
                 <div className="flex items-center space-x-3">
                   <div className="hidden sm:block text-right">
                     <p className="text-sm font-semibold text-foreground">
