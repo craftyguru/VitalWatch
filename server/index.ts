@@ -10,7 +10,6 @@ app.set("trust proxy", 1);
 
 // Health/liveness - public endpoint
 app.get("/health", (_req, res) => res.status(200).send("OK"));
-app.get("/", (_req, res) => res.send("VitalWatch is up ✅"));
 
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false, limit: "100mb" }));
