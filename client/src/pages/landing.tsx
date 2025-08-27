@@ -224,9 +224,51 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Starry Night Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <div className="absolute inset-0">
+          {/* Large Bright Stars */}
+          <div className="absolute top-[10%] left-[10%] w-1 h-1 bg-white rounded-full animate-pulse shadow-sm"></div>
+          <div className="absolute top-[20%] right-[15%] w-0.5 h-0.5 bg-yellow-200 rounded-full animate-pulse"></div>
+          <div className="absolute top-[30%] left-[25%] w-0.5 h-0.5 bg-white rounded-full animate-pulse"></div>
+          <div className="absolute top-[40%] right-[30%] w-1 h-1 bg-white rounded-full animate-pulse shadow-sm"></div>
+          <div className="absolute top-[60%] left-[35%] w-0.5 h-0.5 bg-yellow-200 rounded-full animate-pulse"></div>
+          <div className="absolute top-[80%] right-[25%] w-0.5 h-0.5 bg-white rounded-full animate-pulse"></div>
+          <div className="absolute bottom-[40%] left-[20%] w-1 h-1 bg-white rounded-full animate-pulse shadow-sm"></div>
+          <div className="absolute bottom-[60%] right-[16%] w-0.5 h-0.5 bg-white rounded-full animate-pulse"></div>
+          <div className="absolute bottom-[80%] left-[50%] w-0.5 h-0.5 bg-yellow-200 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-[32%] right-[50%] w-1 h-1 bg-white rounded-full animate-pulse shadow-sm"></div>
+          
+          {/* Medium Stars */}
+          <div className="absolute top-[16%] left-[50%] w-0.5 h-0.5 bg-white rounded-full opacity-70"></div>
+          <div className="absolute top-[24%] right-[25%] w-0.5 h-0.5 bg-white rounded-full opacity-60"></div>
+          <div className="absolute top-[44%] left-[16%] w-0.5 h-0.5 bg-yellow-200 rounded-full opacity-80"></div>
+          <div className="absolute top-[56%] right-[16%] w-0.5 h-0.5 bg-white rounded-full opacity-70"></div>
+          <div className="absolute bottom-[44%] left-[25%] w-0.5 h-0.5 bg-white rounded-full opacity-60"></div>
+          <div className="absolute bottom-[56%] right-[33%] w-0.5 h-0.5 bg-white rounded-full opacity-80"></div>
+          
+          {/* Small Distant Stars */}
+          <div className="absolute top-[28%] left-[75%] w-px h-px bg-white rounded-full opacity-50"></div>
+          <div className="absolute top-[36%] right-[20%] w-px h-px bg-white rounded-full opacity-40"></div>
+          <div className="absolute top-[48%] left-[20%] w-px h-px bg-yellow-200 rounded-full opacity-60"></div>
+          <div className="absolute top-[64%] right-[40%] w-px h-px bg-white rounded-full opacity-50"></div>
+          <div className="absolute bottom-[48%] left-[60%] w-px h-px bg-white rounded-full opacity-40"></div>
+          <div className="absolute bottom-[64%] right-[20%] w-px h-px bg-white rounded-full opacity-60"></div>
+          
+          {/* Extra Tiny Stars */}
+          <div className="absolute top-[15%] left-[80%] w-px h-px bg-white rounded-full opacity-30"></div>
+          <div className="absolute top-[35%] left-[70%] w-px h-px bg-white rounded-full opacity-40"></div>
+          <div className="absolute top-[55%] right-[10%] w-px h-px bg-white rounded-full opacity-30"></div>
+          <div className="absolute bottom-[25%] left-[85%] w-px h-px bg-white rounded-full opacity-40"></div>
+          <div className="absolute bottom-[15%] right-[5%] w-px h-px bg-white rounded-full opacity-30"></div>
+        </div>
+      </div>
+      
+      {/* Content Overlay */}
+      <div className="relative z-10">
       {/* Navigation Header */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+      <header className="sticky top-0 z-50 bg-black/20 backdrop-blur-lg border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -237,14 +279,14 @@ export default function LandingPage() {
                   className="w-8 h-8 object-contain"
                 />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">VitalWatch</h1>
+              <h1 className="text-2xl font-bold text-white">VitalWatch</h1>
             </div>
             
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" 
+                className="text-white/80 hover:text-white" 
                 onClick={handleDemoLogin}
                 disabled={isDemoLoading}
                 data-testid="button-nav-demo"
@@ -252,7 +294,7 @@ export default function LandingPage() {
                 {isDemoLoading ? "Starting Demo..." : "Try Demo"}
               </Button>
               <Link href="/auth/login">
-                <Button variant="outline" size="sm" data-testid="button-nav-signin">
+                <Button variant="outline" size="sm" className="border-white/30 text-white hover:bg-white/10" data-testid="button-nav-signin">
                   Sign In
                 </Button>
               </Link>
@@ -265,6 +307,7 @@ export default function LandingPage() {
           </nav>
         </div>
       </header>
+      </div>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
