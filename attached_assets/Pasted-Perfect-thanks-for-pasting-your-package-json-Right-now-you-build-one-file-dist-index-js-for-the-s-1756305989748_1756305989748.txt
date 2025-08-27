@@ -1,0 +1,91 @@
+Perfect—thanks for pasting your package.json.
+Right now you build one file (dist/index.js) for the server, and the client build also goes to dist/…. That makes it very easy for the server to not find the client files in production, which is why you’re seeing 404s even though Railway is clearly hitting your app.
+
+The clean fix is to split the build into:
+
+dist/client → Vite’s static files (your React app)
+
+dist/server/index.js → the Express bundle
+
+Then have Express serve dist/client in production and use an SPA fallback to index.html.
+
+1) Update package.json scripts
+
+Replace your scripts with these (only the build/start lines change):
+
+{
+  "scripts": {
+    "dev": "NODE_ENV=development tsx server/index.ts",
+    "build:client": "vite build", 
+    "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server",
+    "build": "npm run build:client && npm run build:server",
+    "prestart": "npm run build",
+    "start": "NODE_ENV=production node dist/server/index.js",
+    "check": "tsc",
+    "db:push": "drizzle-kit push"
+  }
+}
+
+
+Key change: we output the server to dist/server/index.js and keep the client under dist/client.
+
+2) Ensure Vite outputs to dist/client
+
+In your vite.config.ts:
+
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    outDir: 'dist/client',
+    emptyOutDir: true
+  }
+})
+
+3) Serve the client + SPA fallback in your Express server
+
+In server/index.ts (production path only), add the static serving and fallback after your API routes, before server.listen:
+
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+// ... your existing imports and app setup
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/** health check */
+app.get('/health', (_req, res) => res.status(200).send('OK'));
+
+// ... your API routes here (e.g., app.use('/api', ...))
+
+if (process.env.NODE_ENV === 'production') {
+  const clientDir = path.resolve(__dirname, '../client');
+
+  // Serve Vite assets (cache-friendly)
+  app.use('/assets', express.static(path.join(clientDir, 'assets'), {
+    immutable: true,
+    maxAge: '1y',
+  }));
+
+  // Serve other static files (index.html, favicon, etc.)
+  app.use(express.static(clientDir, { index: false }));
+
+  // SPA fallback for any non-API route
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientDir, 'index.html'));
+  });
+}
+
+// Make sure to use the platform port
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = '0.0.0.0';
+
+server.listen(PORT, HOST, () => {
+  console.log(`✅ Server listening on http://${HOST}:${PORT}`);
+});
+
+
+Why this works: Railway → your server → serves dist/client/index.html for / and all non-API routes, so your SPA renders instead of returning 404.
