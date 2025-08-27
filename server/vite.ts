@@ -6,7 +6,11 @@ import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
 import { fileURLToPath } from "url";
+
 const viteLogger = createLogger();
+
+// ESM-safe __dirname (use everywhere in this file)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -15,7 +19,6 @@ export function log(message: string, source = "express") {
     second: "2-digit",
     hour12: true,
   });
-
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
@@ -43,21 +46,16 @@ export async function setupVite(app: Express, server: Server) {
   app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
-
     try {
-      const clientTemplate = path.resolve(
-        import.meta.dirname,
-        "..",
-        "client",
-        "index.html",
-      );
+      const clientTemplate = path.resolve(__dirname, "..", "client", "index.html");
 
-      // always reload the index.html file from disk incase it changes
+      // always reload template
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`,
+        `src="/src/main.tsx?v=${nanoid()}"`
       );
+
       const page = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
@@ -68,16 +66,11 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  // ESM-safe __dirname
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  
-  // If server is built to dist/server/index.js, this points to dist/client
+  // If server is built to dist/server/index.js, this is dist/client
   const coLocated = path.resolve(__dirname, "../client");
-  
   // Fallback for single-file server build (dist/index.js)
   const cwdDist = path.resolve(process.cwd(), "dist", "client");
-  
-  // Choose whichever actually exists
+
   const clientRoot = fs.existsSync(path.join(coLocated, "index.html"))
     ? coLocated
     : cwdDist;
@@ -90,7 +83,7 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(clientRoot));
 
-  // SPA fallback (don't swallow /api)
+  // SPA fallback—don't swallow API routes if you have them
   app.get(/^\/(?!api\b).*/, (_req, res) => {
     res.sendFile(path.join(clientRoot, "index.html"));
   });
