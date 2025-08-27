@@ -12,21 +12,22 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
       <style>
         body { 
           font-family: 'Segoe UI', 'San Francisco', -apple-system, BlinkMacSystemFont, sans-serif; 
-          line-height: 1.7; 
+          line-height: 1.6; 
           color: #e2e8f0; 
           margin: 0; 
-          padding: 0; 
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+          padding: 20px; 
+          background: #0a0a0f url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="star" cx="50%25" cy="50%25" r="2"><stop offset="0%25" style="stop-color:white;stop-opacity:1" /><stop offset="100%25" style="stop-color:white;stop-opacity:0" /></radialGradient></defs><rect width="100%25" height="100%25" fill="%23050814"/><circle cx="100" cy="150" r="1" fill="url(%23star)"/><circle cx="300" cy="80" r="1.5" fill="url(%23star)"/><circle cx="200" cy="250" r="1" fill="url(%23star)"/><circle cx="450" cy="120" r="1" fill="url(%23star)"/><circle cx="600" cy="200" r="1.5" fill="url(%23star)"/><circle cx="750" cy="100" r="1" fill="url(%23star)"/><circle cx="850" cy="180" r="1" fill="url(%23star)"/><circle cx="500" cy="300" r="1" fill="url(%23star)"/><circle cx="150" cy="350" r="1.5" fill="url(%23star)"/><circle cx="700" cy="350" r="1" fill="url(%23star)"/><circle cx="900" cy="320" r="1" fill="url(%23star)"/><circle cx="50" cy="450" r="1" fill="url(%23star)"/><circle cx="380" cy="480" r="1.5" fill="url(%23star)"/><circle cx="650" cy="500" r="1" fill="url(%23star)"/><circle cx="820" cy="470" r="1" fill="url(%23star)"/><circle cx="250" cy="600" r="1" fill="url(%23star)"/><circle cx="550" cy="650" r="1.5" fill="url(%23star)"/><circle cx="780" cy="620" r="1" fill="url(%23star)"/><circle cx="120" cy="700" r="1" fill="url(%23star)"/><circle cx="420" cy="750" r="1" fill="url(%23star)"/><circle cx="680" cy="780" r="1.5" fill="url(%23star)"/><circle cx="800" cy="850" r="1" fill="url(%23star)"/><circle cx="300" cy="900" r="1" fill="url(%23star)"/></svg>') fixed;
           min-height: 100vh;
         }
         .container { 
           max-width: 650px; 
           margin: 0 auto; 
-          background: linear-gradient(145deg, #1e293b 0%, #334155 100%); 
+          background: linear-gradient(145deg, #0f1419 0%, #1a1f2e 100%); 
           padding: 0; 
           border-radius: 20px; 
           overflow: hidden;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+          border: 1px solid rgba(59, 130, 246, 0.2);
         }
         .header { 
           background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); 
@@ -63,16 +64,16 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           z-index: 1;
         }
         .content { 
-          padding: 50px 40px; 
-          background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
+          padding: 30px; 
+          background: linear-gradient(145deg, #0f1419 0%, #1a1f2e 100%);
         }
         .welcome-section { 
           text-align: center; 
-          margin-bottom: 40px; 
-          padding: 30px;
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+          margin-bottom: 25px; 
+          padding: 25px;
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
           border-radius: 16px;
-          border: 1px solid rgba(99, 102, 241, 0.2);
+          border: 1px solid rgba(99, 102, 241, 0.3);
         }
         .welcome-section h2 { 
           color: #f1f5f9; 
@@ -116,9 +117,9 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
         }
         .revolutionary-section {
           background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
-          border-radius: 20px;
-          padding: 40px;
-          margin: 40px 0;
+          border-radius: 16px;
+          padding: 25px;
+          margin: 20px 0;
           border: 1px solid rgba(139, 92, 246, 0.3);
           box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
         }
@@ -132,15 +133,15 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
         .feature-cards {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 20px;
-          margin: 30px 0;
+          gap: 15px;
+          margin: 20px 0;
         }
         .feature-card {
-          background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
-          padding: 25px;
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 20px;
           border-radius: 12px;
-          border: 1px solid rgba(99, 102, 241, 0.2);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(99, 102, 241, 0.3);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
         .feature-card h4 {
           color: #a5b4fc;
@@ -154,11 +155,11 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           line-height: 1.6;
         }
         .tips-section { 
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%); 
-          border-radius: 20px; 
-          padding: 40px; 
-          margin: 40px 0; 
-          border: 1px solid rgba(59, 130, 246, 0.2);
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%); 
+          border-radius: 16px; 
+          padding: 25px; 
+          margin: 20px 0; 
+          border: 1px solid rgba(59, 130, 246, 0.3);
         }
         .tips-section h3 { 
           color: #60a5fa; 
@@ -170,9 +171,9 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
         .tip { 
           display: flex; 
           align-items: flex-start; 
-          margin-bottom: 25px; 
-          padding: 20px;
-          background: rgba(30, 41, 59, 0.5);
+          margin-bottom: 15px; 
+          padding: 15px;
+          background: rgba(26, 31, 46, 0.8);
           border-radius: 12px;
           border-left: 4px solid #3b82f6;
         }
@@ -202,31 +203,31 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           line-height: 1.6;
         }
         .comparison-section {
-          background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-          border-radius: 20px;
-          padding: 40px;
-          margin: 40px 0;
+          background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+          border-radius: 16px;
+          padding: 25px;
+          margin: 20px 0;
           border: 1px solid rgba(6, 182, 212, 0.3);
         }
         .comparison-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 30px;
-          margin: 30px 0;
+          gap: 20px;
+          margin: 20px 0;
         }
         .plan-free {
-          background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
-          padding: 30px;
-          border-radius: 16px;
-          border: 2px solid #6b7280;
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 20px;
+          border-radius: 12px;
+          border: 2px solid #4a5568;
         }
         .plan-pro {
           background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
           color: white;
-          padding: 30px;
-          border-radius: 16px;
+          padding: 20px;
+          border-radius: 12px;
           position: relative;
-          box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+          box-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
         }
         .plan-pro::before {
           content: 'RECOMMENDED';
@@ -242,17 +243,17 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           letter-spacing: 0.5px;
         }
         .testimonial-section {
-          background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-          border-radius: 20px;
-          padding: 40px;
-          margin: 40px 0;
-          border: 1px solid rgba(16, 185, 129, 0.2);
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+          border-radius: 16px;
+          padding: 25px;
+          margin: 20px 0;
+          border: 1px solid rgba(16, 185, 129, 0.3);
         }
         .testimonial {
-          background: rgba(30, 41, 59, 0.6);
-          padding: 25px;
+          background: rgba(26, 31, 46, 0.8);
+          padding: 20px;
           border-radius: 12px;
-          margin-bottom: 20px;
+          margin-bottom: 15px;
           border-left: 4px solid;
         }
         .testimonial:first-child {
@@ -263,10 +264,10 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
         }
         .cta-section {
           text-align: center;
-          margin: 40px 0;
-          padding: 40px;
+          margin: 20px 0;
+          padding: 25px;
           background: linear-gradient(135deg, rgba(30, 64, 175, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%);
-          border-radius: 20px;
+          border-radius: 16px;
           border: 1px solid rgba(30, 64, 175, 0.3);
         }
         .cta-button {
@@ -284,11 +285,11 @@ export const generateWelcomeEmail = (firstName: string, verificationLink: string
           letter-spacing: 0.5px;
         }
         .footer { 
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+          background: linear-gradient(135deg, #050814 0%, #0f1419 100%); 
           color: #e2e8f0; 
-          padding: 40px; 
+          padding: 25px; 
           text-align: center; 
-          border-top: 1px solid rgba(99, 102, 241, 0.2);
+          border-top: 1px solid rgba(99, 102, 241, 0.3);
         }
         .footer p { margin: 8px 0; }
         .footer-highlight {
