@@ -1,76 +1,121 @@
-import express, { type Request, Response, NextFunction } from "express";
-import http from "http";
+import express from "express";
+import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
+import { createServer as createViteServer } from "vite";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { createServer } from "http";
 
-const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Trust proxy for Cloudflare/Replit
-app.set("trust proxy", 1);
+const isProd = process.env.NODE_ENV === "production";
+const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 
-// Health/liveness - public endpoint
-app.get("/health", (_req, res) => res.status(200).send("OK"));
+// IMPORTANT: point Vite to the client directory
+const clientRoot = path.resolve(__dirname, "../client");
 
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ extended: false, limit: "100mb" }));
+function log(message: string, source = "express") {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
 
-// Lightweight API request logging
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let captured: unknown;
+async function start() {
+  const app = express();
+  const server = createServer(app);
 
-  const origJson = res.json.bind(res);
-  res.json = ((body: unknown, ...args: any[]) => {
-    captured = body;
-    // @ts-expect-error express types
-    return origJson(body, ...args);
-  }) as any;
+  // Trust proxy for Cloudflare/Replit
+  app.set("trust proxy", 1);
 
-  res.on("finish", () => {
-    if (path.startsWith("/api")) {
-      const duration = Date.now() - start;
-      let line = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (captured !== undefined) {
-        const s = JSON.stringify(captured);
-        line += ` :: ${s.length > 200 ? s.slice(0, 200) + "…" : s}`;
+  // Health/liveness - public endpoint
+  app.get("/health", (_req, res) => res.status(200).send("OK"));
+
+  app.use(express.json({ limit: "100mb" }));
+  app.use(express.urlencoded({ extended: false, limit: "100mb" }));
+
+  // Lightweight API request logging
+  app.use((req, res, next) => {
+    const start = Date.now();
+    const path = req.path;
+    let captured: unknown;
+
+    const origJson = res.json.bind(res);
+    res.json = ((body: unknown, ...args: any[]) => {
+      captured = body;
+      // @ts-expect-error express types
+      return origJson(body, ...args);
+    }) as any;
+
+    res.on("finish", () => {
+      if (path.startsWith("/api")) {
+        const duration = Date.now() - start;
+        let line = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+        if (captured !== undefined) {
+          const s = JSON.stringify(captured);
+          line += ` :: ${s.length > 200 ? s.slice(0, 200) + "…" : s}`;
+        }
+        log(line);
       }
-      log(line);
-    }
+    });
+
+    next();
   });
 
-  next();
-});
-
-(async () => {
-  // Attach all routes to the express app
-  await registerRoutes(app);
-
-  // Create ONE http server that everything shares
-  const server = http.createServer(app);
+  // Initialize database and routes
+  await registerRoutes(app, server);
 
   // Error middleware (do NOT rethrow)
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, _req: any, res: any, _next: any) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
     log(`ERROR ${status}: ${message}`);
     if (!res.headersSent) res.status(status).json({ message });
   });
 
-  // Dev uses Vite middleware; prod serves static
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
+  if (!isProd) {
+    // DEV: Use configFile to load vite.config.ts with proper server settings
+    const vite = await createViteServer({
+      configFile: path.resolve(__dirname, "../vite.config.ts"),
+      server: { 
+        middlewareMode: true,
+        host: "0.0.0.0",
+        allowedHosts: "all",
+      },
+      appType: "spa",
+    });
+
+    app.use(vite.middlewares);
+
+    app.use("*", async (req, res, next) => {
+      try {
+        const url = req.originalUrl;
+        const htmlPath = path.resolve(clientRoot, "index.html");
+        let html = await fs.readFile(htmlPath, "utf-8");
+        html = await vite.transformIndexHtml(url, html);
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        next(e);
+      }
+    });
   } else {
-    serveStatic(app);
+    // PROD: serve built assets
+    const distClient = path.resolve(__dirname, "../dist/client");
+    app.use(express.static(distClient, { index: false }));
+    app.get("*", async (_req, res) => {
+      const html = await fs.readFile(path.join(distClient, "index.html"), "utf-8");
+      res.setHeader("Content-Type", "text/html");
+      res.end(html);
+    });
   }
 
-  // Replit/Cloudflare: use platform port and 0.0.0.0
-  const PORT = Number(process.env.PORT) || 3000;
-  const HOST = "0.0.0.0";
-
-  server.listen(PORT, HOST, () => {
-    console.log(`✅ Server listening on http://${HOST}:${PORT}`);
-    log(`serving on ${HOST}:${PORT}`);
+  server.listen(PORT, "0.0.0.0", () => {
+    console.log(`✅ Server listening on http://0.0.0.0:${PORT}`);
+    log(`serving on 0.0.0.0:${PORT}`);
   });
 
   // Graceful shutdown
@@ -78,4 +123,9 @@ app.use((req, res, next) => {
     log("Gracefully shutting down server…");
     server.close(() => process.exit(0));
   });
-})();
+}
+
+start().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -1,0 +1,93 @@
+2) server/index.ts
+import express from "express";
+import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
+import { createServer as createViteServer } from "vite";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const isProd = process.env.NODE_ENV === "production";
+const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
+
+// IMPORTANT: point Vite to the client directory
+const clientRoot = path.resolve(__dirname, "../client");
+
+async function start() {
+  const app = express();
+
+  if (!isProd) {
+    // DEV: run Vite in middleware mode and let it handle /src/* and transform index.html
+    const vite = await createViteServer({
+      root: clientRoot,
+      server: { middlewareMode: true },
+      appType: "spa",
+    });
+
+    app.use(vite.middlewares); // <-- must be BEFORE any other static/route handlers
+
+    app.use("*", async (req, res, next) => {
+      try {
+        const url = req.originalUrl;
+        const htmlPath = path.resolve(clientRoot, "index.html");
+        let html = await fs.readFile(htmlPath, "utf-8");
+        html = await vite.transformIndexHtml(url, html);
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        next(e);
+      }
+    });
+  } else {
+    // PROD: serve built assets
+    const distClient = path.resolve(__dirname, "../dist/client");
+    app.use(express.static(distClient, { index: false }));
+    app.get("*", async (_req, res) => {
+      const html = await fs.readFile(path.join(distClient, "index.html"), "utf-8");
+      res.setHeader("Content-Type", "text/html");
+      res.end(html);
+    });
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`✅ Server listening on http://0.0.0.0:${PORT}`);
+  });
+}
+
+start().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
+
+3) client/index.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VitalWatch</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Leave this EXACT path in dev; Vite middleware resolves /src/... -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+4) client/src/main.tsx
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+
+const root = createRoot(document.getElementById("root")!);
+root.render(<App />);
+
+5) Common pitfalls to avoid
+
+Don’t mount any express.static(...) or custom routes before vite.middlewares in dev. That will hijack /src/* and cause the exact error you saw.
+
+Make sure root for Vite is the client folder both in the programmatic server (createViteServer({ root: clientRoot })) and in vite.config.ts (or pass it only programmatically and keep the config simple).
+
+Keep the dev HTML script as /src/main.tsx. In prod, the built index.html will reference hashed assets automatically.
+
+After these changes, start dev with the script you’re already using (e.g. NODE_ENV=development tsx server/index.ts). You should see the Vite banner in your server logs and the page will load without the “Failed to load url /src/main.tsx” error.

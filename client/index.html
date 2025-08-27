@@ -2,64 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-    
-    <!-- Basic App Info -->
-    <title>VitalWatch - Emergency Protection</title>
-    <meta name="description" content="AI-powered emergency monitoring and mental health support with real-time crisis detection, biometric analysis, and comprehensive emergency response." />
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Theme Colors -->
-    <meta name="theme-color" content="#3b82f6" />
-    <meta name="msapplication-TileColor" content="#3b82f6" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120x120.png" />
-    
-    <!-- Standard Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    
-    <!-- Mobile App Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="VitalWatch" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="VitalWatch" />
-    
-    <!-- TWA-specific Meta Tags -->
-    <meta name="twa-display-mode" content="standalone" />
-    <meta name="twa-orientation" content="portrait" />
-    <meta name="twa-theme-color" content="#3b82f6" />
-    <meta name="twa-background-color" content="#ffffff" />
-    
-    <!-- Security Headers -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
-    
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="VitalWatch - Emergency Protection" />
-    <meta property="og:description" content="AI-powered emergency monitoring with real-time crisis detection and mental health support" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.vitalwatch.app" />
-    <meta property="og:image" content="https://www.vitalwatch.app/icons/og-image.png" />
-    <meta property="og:site_name" content="VitalWatch" />
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="VitalWatch - Emergency Protection" />
-    <meta name="twitter:description" content="AI-powered emergency monitoring with real-time crisis detection" />
-    <meta name="twitter:image" content="https://www.vitalwatch.app/icons/twitter-card.png" />
-    
-    <script type="module" src="/src/main.tsx"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VitalWatch</title>
   </head>
+  <body>
+    <div id="root"></div>
+    <!-- Leave this EXACT path in dev; Vite middleware resolves /src/... -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
   <body>
     <div id="root"></div>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
