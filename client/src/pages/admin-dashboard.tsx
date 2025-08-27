@@ -17,13 +17,20 @@ import {
   DollarSign,
   UserCheck,
   Clock,
-  BarChart3
+  BarChart3,
+  Phone,
+  Send
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
 export default function AdminDashboard() {
   const { toast } = useToast();
+  const [smsTestPhone, setSmsTestPhone] = useState('');
+  const [smsTestMessage, setSmsTestMessage] = useState('Test emergency alert from VitalWatch');
 
   // Fetch admin analytics
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
@@ -70,6 +77,24 @@ export default function AdminDashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/emergency-incidents"] });
       toast({ title: "Incident resolved successfully" });
+    },
+  });
+
+  const testSmsMutation = useMutation({
+    mutationFn: (data: { phoneNumber: string; message: string }) =>
+      apiRequest("POST", "/api/test-sms", data),
+    onSuccess: (response) => {
+      toast({
+        title: "SMS Test Successful",
+        description: response.details + " - " + response.cost,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "SMS Test Failed",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 
@@ -189,6 +214,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="health" className="data-[state=active]:bg-purple-500">
               <Activity className="w-4 h-4 mr-2" />
               System Health
+            </TabsTrigger>
+            <TabsTrigger value="sms-test" className="data-[state=active]:bg-purple-500">
+              <Phone className="w-4 h-4 mr-2" />
+              SMS Testing
             </TabsTrigger>
           </TabsList>
 
@@ -471,6 +500,92 @@ export default function AdminDashboard() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* SMS Testing Tab */}
+          <TabsContent value="sms-test" className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center space-x-2">
+                  <Phone className="w-5 h-5" />
+                  <span>Twilio SMS Testing</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-white text-sm font-medium mb-2 block">
+                        Phone Number (include +1)
+                      </label>
+                      <Input
+                        placeholder="+1234567890"
+                        value={smsTestPhone}
+                        onChange={(e) => setSmsTestPhone(e.target.value)}
+                        className="bg-slate-700 border-slate-600 text-white"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-white text-sm font-medium mb-2 block">
+                        Test Message
+                      </label>
+                      <Textarea
+                        placeholder="Test emergency alert message"
+                        value={smsTestMessage}
+                        onChange={(e) => setSmsTestMessage(e.target.value)}
+                        className="bg-slate-700 border-slate-600 text-white"
+                        rows={3}
+                      />
+                    </div>
+                    
+                    <Button
+                      onClick={() => testSmsMutation.mutate({ 
+                        phoneNumber: smsTestPhone, 
+                        message: smsTestMessage 
+                      })}
+                      disabled={testSmsMutation.isPending || !smsTestPhone || !smsTestMessage}
+                      className="w-full bg-purple-600 hover:bg-purple-700"
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      {testSmsMutation.isPending ? 'Sending...' : 'Send Test SMS'}
+                    </Button>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-slate-700/50 p-4 rounded-lg">
+                      <h4 className="text-white font-medium mb-2">SMS Cost Breakdown</h4>
+                      <div className="space-y-2 text-sm text-slate-300">
+                        <div className="flex justify-between">
+                          <span>Single SMS segment (≤160 chars):</span>
+                          <span>$0.008</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Long SMS (2+ segments):</span>
+                          <span>$0.016+</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Guardian plan includes:</span>
+                          <span>500/month</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Overage pricing:</span>
+                          <span>$0.015</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-lg">
+                      <h4 className="text-blue-400 font-medium mb-2">Test Results</h4>
+                      <p className="text-slate-300 text-sm">
+                        SMS test results will appear here after sending.
+                        Check your phone for the actual message delivery.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

@@ -37,7 +37,8 @@ export async function sendEmergencyAlertSMS(
     ? `Location: ${location.address || `${location.lat}, ${location.lng}`} https://maps.google.com/?q=${location.lat},${location.lng}`
     : "Location not available";
   
-  const smsMessage = `🚨 EMERGENCY ALERT: ${userName} needs help through Emergency Friend app. ${message ? `Message: ${message}. ` : ""}${locationText} Please reach out immediately or call 911 if needed. Time: ${new Date().toLocaleTimeString()}`;
+  // Optimized for 160-character SMS to avoid multi-segment charges
+  const smsMessage = `🚨 EMERGENCY: ${userName} needs help via VitalWatch. ${message || ""} ${locationText} Call them or 911 now. ${new Date().toLocaleTimeString()}`;
 
   return await sendSMS(contactPhone, smsMessage);
 }
@@ -46,7 +47,7 @@ export async function sendCrisisCheckInSMS(
   userPhone: string,
   userName: string
 ): Promise<boolean> {
-  const message = `Hi ${userName}, this is a gentle check-in from Emergency Friend. How are you feeling right now? Reply HELP for crisis resources, or STOP to opt out. You're not alone. 💙`;
+  const message = `Hi ${userName}, VitalWatch check-in: How are you? Reply HELP for crisis resources or STOP to opt out. You're not alone 💙`;
 
   return await sendSMS(userPhone, message);
 }
@@ -68,7 +69,7 @@ export async function sendLocationRequestSMS(
   contactPhone: string,
   userName: string
 ): Promise<boolean> {
-  const message = `${userName} has requested location sharing through Emergency Friend app. They may need support. Please reach out to check on them. 💙`;
+  const message = `${userName} shared location via VitalWatch. They may need support. Please check on them 💙`;
 
   return await sendSMS(contactPhone, message);
 }

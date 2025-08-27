@@ -19,7 +19,7 @@ import {
   analyzeEnvironmental
 } from "./services/openai";
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
-import { sendCrisisResourcesSMS } from "./services/twilio";
+import { sendCrisisResourcesSMS, sendEmergencyAlertSMS } from "./services/twilio";
 import {
   insertEmergencyContactSchema,
   insertMoodEntrySchema,
@@ -434,6 +434,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating insight:", error);
       res.status(500).json({ message: "Failed to generate insight" });
+    }
+  });
+
+  // Test SMS endpoint (admin only) - test your Twilio integration
+  app.post('/api/test-sms', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { phoneNumber, message } = req.body;
+      
+      if (!phoneNumber || !message) {
+        return res.status(400).json({ message: 'Phone number and message required' });
+      }
+      
+      const success = await sendEmergencyAlertSMS(
+        phoneNumber, 
+        req.user.firstName || 'Test User',
+        { lat: 40.7128, lng: -74.0060, address: '123 Test St, New York, NY' },
+        message
+      );
+      
+      if (success) {
+        res.json({ 
+          message: 'Test SMS sent successfully!',
+          details: `SMS sent via Twilio to ${phoneNumber}`,
+          cost: '$0.008 (1 segment)'
+        });
+      } else {
+        res.status(500).json({ message: 'Failed to send SMS - check Twilio credentials' });
+      }
+      
+    } catch (error) {
+      console.error('Test SMS error:', error);
+      res.status(500).json({ message: 'SMS test failed: ' + error.message });
     }
   });
 
