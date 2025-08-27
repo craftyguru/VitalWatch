@@ -60,8 +60,9 @@ export default function LandingPage() {
           title: "Demo Started!",
           description: "Exploring VitalWatch with sample data",
         });
+        // Force page reload to ensure authentication state is updated
         setTimeout(() => {
-          window.location.href = "/dashboard";
+          window.location.reload();
         }, 1000);
       } else {
         toast({
@@ -317,12 +318,17 @@ export default function LandingPage() {
                 <PlayCircle className="h-5 w-5 mr-2" />
                 Watch Demo
               </Button>
-              <Link href="/demo">
-                <Button size="lg" variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-3">
-                  <Eye className="h-5 w-5 mr-2" />
-                  Try Demo
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-3"
+                onClick={handleDemoLogin}
+                disabled={isDemoLoading}
+                data-testid="button-hero-demo"
+              >
+                <Eye className="h-5 w-5 mr-2" />
+                {isDemoLoading ? "Starting Demo..." : "Try Demo"}
+              </Button>
             </div>
           </div>
         </div>
