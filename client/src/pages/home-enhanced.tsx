@@ -168,6 +168,21 @@ export default function Home() {
                       {userName.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
+                  
+                  {/* Admin Button - Only for Admin Users */}
+                  {(user as any)?.isAdmin && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400" 
+                      asChild
+                    >
+                      <Link href="/admin" data-testid="link-admin-nav">
+                        <Shield className="h-5 w-5" />
+                      </Link>
+                    </Button>
+                  )}
+                  
                   <Button variant="ghost" size="icon" className="hover:bg-primary/10" asChild>
                     <Link href="/profile" data-testid="link-profile">
                       <Settings className="h-5 w-5" />
