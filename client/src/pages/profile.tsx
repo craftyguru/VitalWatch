@@ -222,6 +222,12 @@ export default function Profile() {
                         <Shield className="h-3 w-3 mr-1 text-blue-500" />
                         Verified
                       </Badge>
+                      {user?.isAdmin && (
+                        <Badge variant="outline" className="text-xs bg-purple-100 text-purple-700 border-purple-300">
+                          <Settings className="h-3 w-3 mr-1" />
+                          Administrator
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -245,6 +251,29 @@ export default function Profile() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Admin Panel Access - Only for Admin Users */}
+            {user?.isAdmin && (
+              <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 border-purple-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Settings className="h-5 w-5 text-purple-600" />
+                    <span className="text-purple-800 dark:text-purple-200">Administrator Panel</span>
+                  </CardTitle>
+                  <p className="text-sm text-purple-600 dark:text-purple-300">
+                    Access admin dashboard with user management, analytics, and system monitoring
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <Button asChild className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                    <Link href="/admin" data-testid="link-admin-dashboard">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Open Admin Dashboard
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Account Actions */}
             <Card>
