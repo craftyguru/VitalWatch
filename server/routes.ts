@@ -1,9 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
+import multer from "multer";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { emergencyService } from "./services/emergency";
+import { storageService } from "./services/supabase";
 import { 
   generatePersonalizedInsight,
   transcribeAudio,
@@ -25,6 +27,23 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+
+  // Multer setup for file uploads
+  const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB limit
+    },
+    fileFilter: (req, file, cb) => {
+      // Allow images, audio, and PDFs
+      const allowedTypes = [
+        'image/jpeg', 'image/png', 'image/webp',
+        'audio/mpeg', 'audio/wav', 'audio/mp3',
+        'application/pdf'
+      ];
+      cb(null, allowedTypes.includes(file.mimetype));
+    }
+  });
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
@@ -421,6 +440,109 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error sending crisis resources:", error);
       res.status(500).json({ message: "Failed to send crisis resources" });
     }
+  });
+
+  // File upload routes
+  app.post('/api/upload/profile-image', isAuthenticated, upload.single('image'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const userId = req.user.claims.sub;
+      const fileName = `profile-${Date.now()}.jpg`;
+      
+      const filePath = await storageService.uploadProfileImage(userId, req.file.buffer, fileName);
+      
+      res.json({ 
+        message: "Profile image uploaded successfully", 
+        filePath,
+        url: await storageService.getSignedUrl('user-files', filePath)
+      });
+    } catch (error: any) {
+      console.error("Error uploading profile image:", error);
+      res.status(500).json({ message: "Failed to upload profile image: " + error.message });
+    }
+  });
+
+  app.post('/api/upload/emergency-audio', isAuthenticated, upload.single('audio'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No audio file uploaded" });
+      }
+
+      const userId = req.user.claims.sub;
+      const { incidentId } = req.body;
+      
+      if (!incidentId) {
+        return res.status(400).json({ message: "Incident ID required" });
+      }
+      
+      const filePath = await storageService.uploadEmergencyAudio(userId, incidentId, req.file.buffer);
+      
+      res.json({ 
+        message: "Emergency audio uploaded successfully", 
+        filePath,
+        url: await storageService.getSignedUrl('emergency-files', filePath)
+      });
+    } catch (error: any) {
+      console.error("Error uploading emergency audio:", error);
+      res.status(500).json({ message: "Failed to upload emergency audio: " + error.message });
+    }
+  });
+
+  app.post('/api/upload/document', isAuthenticated, upload.single('document'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No document uploaded" });
+      }
+
+      const userId = req.user.claims.sub;
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      
+      const filePath = await storageService.uploadHealthReport(userId, req.file.buffer, fileName);
+      
+      res.json({ 
+        message: "Document uploaded successfully", 
+        filePath,
+        url: await storageService.getSignedUrl('user-files', filePath)
+      });
+    } catch (error: any) {
+      console.error("Error uploading document:", error);
+      res.status(500).json({ message: "Failed to upload document: " + error.message });
+    }
+  });
+
+  app.get('/api/files/signed-url/:bucket/:path(*)', isAuthenticated, async (req: any, res) => {
+    try {
+      const { bucket, path } = req.params;
+      const url = await storageService.getSignedUrl(bucket, path);
+      
+      res.json({ url });
+    } catch (error: any) {
+      console.error("Error creating signed URL:", error);
+      res.status(500).json({ message: "Failed to create signed URL: " + error.message });
+    }
+  });
+
+  app.delete('/api/files/:bucket/:path(*)', isAuthenticated, async (req: any, res) => {
+    try {
+      const { bucket, path } = req.params;
+      await storageService.deleteFile(bucket, path);
+      
+      res.json({ message: "File deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting file:", error);
+      res.status(500).json({ message: "Failed to delete file: " + error.message });
+    }
+  });
+
+  // Config route for frontend environment variables
+  app.get('/api/config', (req, res) => {
+    res.json({
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+    });
   });
 
   // Health check route
