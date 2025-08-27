@@ -1040,6 +1040,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve static files from the React build
+  if (process.env.NODE_ENV === 'production') {
+    const path = require('path');
+    const staticPath = path.join(process.cwd(), 'dist', 'client');
+    app.use(express.static(staticPath));
+    
+    // Catch-all handler: send back React's index.html file for any non-API routes
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(staticPath, 'index.html'));
+    });
+  }
+
   const httpServer = createServer(app);
 
   // WebSocket server for real-time emergency alerts and notifications
