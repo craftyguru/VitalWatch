@@ -29,6 +29,12 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  
+  // Email verification
+  updateUserVerificationToken(userId: string, token: string): Promise<void>;
+  getUserByVerificationToken(token: string): Promise<User | undefined>;
+  markEmailVerified(userId: string): Promise<void>;
+  markWelcomeEmailSent(userId: string): Promise<void>;
 
   // Emergency contacts
   getEmergencyContacts(userId: string): Promise<EmergencyContact[]>;
@@ -70,6 +76,41 @@ export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
+  }
+
+  async updateUserVerificationToken(userId: string, token: string): Promise<void> {
+    await db.update(users)
+      .set({ 
+        emailVerificationToken: token,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async getUserByVerificationToken(token: string): Promise<User | undefined> {
+    const [user] = await db.select()
+      .from(users)
+      .where(eq(users.emailVerificationToken, token));
+    return user;
+  }
+
+  async markEmailVerified(userId: string): Promise<void> {
+    await db.update(users)
+      .set({ 
+        emailVerified: true,
+        emailVerificationToken: null,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async markWelcomeEmailSent(userId: string): Promise<void> {
+    await db.update(users)
+      .set({ 
+        welcomeEmailSent: true,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {

@@ -6,6 +6,7 @@ import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { emergencyService } from "./services/emergency";
 import { storageService } from "./services/supabase";
+import { emailService } from "./services/emailService";
 import { 
   generatePersonalizedInsight,
   transcribeAudio,
@@ -543,6 +544,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
     });
+  });
+
+  // Email verification routes
+  app.get('/api/verify-email', async (req, res) => {
+    try {
+      const { token } = req.query;
+      
+      if (!token || typeof token !== 'string') {
+        return res.status(400).send(`
+          <html>
+            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+              <h1 style="color: #dc2626;">Invalid Verification Link</h1>
+              <p>The verification link is invalid or missing.</p>
+              <a href="/" style="color: #2563eb;">Return to VitalWatch</a>
+            </body>
+          </html>
+        `);
+      }
+
+      const result = await emailService.verifyEmailToken(token);
+      
+      if (result.success) {
+        res.send(`
+          <html>
+            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+              <h1 style="color: #059669;">Email Verified Successfully!</h1>
+              <p>Your VitalWatch account is now fully activated.</p>
+              <p>You can now access all features including emergency notifications and health insights.</p>
+              <a href="/" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 20px;">
+                Continue to VitalWatch
+              </a>
+            </body>
+          </html>
+        `);
+      } else {
+        res.status(400).send(`
+          <html>
+            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+              <h1 style="color: #dc2626;">Verification Failed</h1>
+              <p>${result.message}</p>
+              <a href="/" style="color: #2563eb;">Return to VitalWatch</a>
+            </body>
+          </html>
+        `);
+      }
+    } catch (error) {
+      console.error('Email verification error:', error);
+      res.status(500).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1 style="color: #dc2626;">Verification Error</h1>
+            <p>An error occurred during verification. Please try again.</p>
+            <a href="/" style="color: #2563eb;">Return to VitalWatch</a>
+          </body>
+        </html>
+      `);
+    }
+  });
+
+  app.post('/api/resend-verification', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (user.emailVerified) {
+        return res.json({ message: "Email already verified" });
+      }
+
+      const success = await emailService.sendVerificationEmail(
+        userId,
+        user.email!,
+        user.firstName || 'User'
+      );
+
+      if (success) {
+        res.json({ message: "Verification email sent successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to send verification email" });
+      }
+    } catch (error) {
+      console.error('Error resending verification:', error);
+      res.status(500).json({ message: "Failed to resend verification email" });
+    }
   });
 
   // Health check route
