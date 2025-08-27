@@ -8,18 +8,23 @@ const client = process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN
   ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
   : null;
 
-export async function sendSMS(to: string, message: string): Promise<boolean> {
+async function sendSMS(to: string, message: string): Promise<boolean> {
   if (!client) {
     console.warn("Cannot send SMS - Twilio not configured");
     return false;
   }
 
   try {
-    await client.messages.create({
+    console.log(`Sending SMS to ${to} from ${process.env.TWILIO_PHONE_NUMBER}`);
+    console.log(`Message: ${message}`);
+    
+    const result = await client.messages.create({
       body: message,
       from: process.env.TWILIO_PHONE_NUMBER || "+1234567890",
       to: to,
     });
+    
+    console.log(`Twilio response: SID=${result.sid}, Status=${result.status}, To=${result.to}, From=${result.from}`);
     return true;
   } catch (error) {
     console.error('Twilio SMS error:', error);
@@ -73,3 +78,6 @@ export async function sendLocationRequestSMS(
 
   return await sendSMS(contactPhone, message);
 }
+
+// Export the base sendSMS function for testing
+export { sendSMS };

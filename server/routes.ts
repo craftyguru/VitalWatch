@@ -19,7 +19,7 @@ import {
   analyzeEnvironmental
 } from "./services/openai";
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
-import { sendCrisisResourcesSMS, sendEmergencyAlertSMS } from "./services/twilio";
+import { sendCrisisResourcesSMS, sendEmergencyAlertSMS, sendSMS } from "./services/twilio";
 import {
   insertEmergencyContactSchema,
   insertMoodEntrySchema,
@@ -446,12 +446,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Phone number and message required' });
       }
       
-      const success = await sendEmergencyAlertSMS(
-        phoneNumber, 
-        req.user.firstName || 'Test User',
-        { lat: 40.7128, lng: -74.0060, address: '123 Test St, New York, NY' },
-        message
-      );
+      // Use simple SMS for testing (not emergency format)
+      const success = await sendSMS(phoneNumber, message);
       
       if (success) {
         res.json({ 
