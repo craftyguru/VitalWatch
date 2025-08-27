@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,13 +37,50 @@ import {
 import { Link } from "wouter";
 
 export default function LandingPage() {
+  const { toast } = useToast();
   const [activeFeature, setActiveFeature] = useState(0);
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
   const [stats, setStats] = useState({
     users: 250000,
     emergenciesHandled: 15847,
     averageResponseTime: 12,
     successRate: 99.7
   });
+
+  const handleDemoLogin = async () => {
+    setIsDemoLoading(true);
+    try {
+      const response = await fetch("/api/auth/demo", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: "Demo Mode Started!",
+          description: "You're now exploring VitalWatch safely - no data will be saved.",
+        });
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 1000);
+      } else {
+        toast({
+          title: "Demo Unavailable",
+          description: "Please try again later or create an account",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Connection Error",
+        description: "Unable to start demo mode",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDemoLoading(false);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -197,11 +235,16 @@ export default function LandingPage() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Link href="/demo">
-                <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" data-testid="button-nav-demo">
-                  Try Demo
-                </Button>
-              </Link>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" 
+                onClick={handleDemoLogin}
+                disabled={isDemoLoading}
+                data-testid="button-nav-demo"
+              >
+                {isDemoLoading ? "Starting Demo..." : "Try Demo"}
+              </Button>
               <Link href="/auth/login">
                 <Button variant="outline" size="sm" data-testid="button-nav-signin">
                   Sign In
