@@ -130,9 +130,13 @@ export function setupAuth(app: Express) {
   // Local Strategy for email/password
   passport.use(new LocalStrategy({
     usernameField: 'email'
-  }, async (email, password, done) => {
+  }, async (emailOrUsername, password, done) => {
     try {
-      const user = await storage.getUserByEmail(email);
+      // Try to find user by email first, then by username
+      let user = await storage.getUserByEmail(emailOrUsername);
+      if (!user) {
+        user = await storage.getUserByUsername(emailOrUsername);
+      }
       
       if (!user) {
         return done(null, false, { message: 'User not found' });
@@ -161,4 +165,12 @@ export function isAuthenticated(req: any, res: any, next: any) {
     return next();
   }
   res.status(401).json({ message: 'Unauthorized' });
+}
+
+// Admin middleware
+export function isAdmin(req: any, res: any, next: any) {
+  if (req.isAuthenticated() && req.user?.isAdmin) {
+    return next();
+  }
+  res.status(403).json({ message: 'Admin access required' });
 }

@@ -16,9 +16,10 @@ import BillingPage from "@/pages/billing";
 import DemoPage from "@/pages/demo";
 import AuthPage from "@/pages/auth";
 import VerifyEmail from "@/pages/verify-email";
+import AdminDashboard from "@/pages/admin-dashboard";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   return (
     <Switch>
@@ -38,6 +39,7 @@ function Router() {
           <Route path="/profile" component={ProfileEnhanced} />
           <Route path="/billing" component={BillingPage} />
           <Route path="/landing" component={Landing} />
+          {user?.isAdmin && <Route path="/admin" component={AdminDashboard} />}
         </>
       )}
       <Route component={NotFound} />

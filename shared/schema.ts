@@ -37,6 +37,7 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").default(false),
   emailVerificationToken: varchar("email_verification_token"),
   welcomeEmailSent: boolean("welcome_email_sent").default(false),
+  isAdmin: boolean("is_admin").default(false),
   // Pro subscription fields
   subscriptionPlan: varchar("subscription_plan").default("free"), // free, pro
   subscriptionStatus: varchar("subscription_status").default("active"), // active, cancelled, expired
