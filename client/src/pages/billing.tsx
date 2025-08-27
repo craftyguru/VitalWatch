@@ -48,11 +48,11 @@ export default function BillingPage() {
   const { toast } = useToast();
   const [usage, setUsage] = useState<UsageData>({
     aiInteractions: 847,
-    emergencyAlerts: 12,
+    emergencyAlerts: 142, // SMS alerts sent this month
     locationRequests: 2340,
     biometricScans: 15670,
-    totalCost: 8.42,
-    billingPeriod: "November 2024"
+    totalCost: 9.99, // Fixed $9.99 Guardian plan
+    billingPeriod: "December 2024"
   });
   
   const [subscription, setSubscription] = useState<SubscriptionData>({
@@ -73,34 +73,57 @@ export default function BillingPage() {
       name: 'Essential',
       price: 0,
       limits: {
-        aiInteractions: 10,
-        emergencyAlerts: 5,
-        locationRequests: 100,
-        biometricScans: 500
+        smsAlerts: 0, // No SMS alerts
+        aiInteractions: 10, // Limited AI
+        emergencyContacts: 3,
+        features: ['Basic mood tracking', 'Limited emergency contacts', 'Email notifications only']
       },
-      features: ['Basic panic button', '5 emergency contacts', 'Community support']
+      color: 'from-gray-500 to-gray-600'
     },
     guardian: {
       name: 'Guardian',
       price: 9.99,
       limits: {
-        aiInteractions: 1000,
-        emergencyAlerts: 100,
-        locationRequests: 10000,
-        biometricScans: 50000
+        smsAlerts: 500, // 500 SMS alerts per month - key feature!
+        aiInteractions: 'unlimited',
+        emergencyContacts: 'unlimited',
+        features: [
+          'Real-time AI threat detection',
+          'Unlimited emergency contacts', 
+          'High-accuracy GPS tracking',
+          'Advanced biometric monitoring',
+          '24/7 AI crisis counselor',
+          'Audio/video evidence recording',
+          'Geofencing and safe zones',
+          'Priority emergency response',
+          '500 SMS alerts/month',
+          'Unlimited email & in-app notifications',
+          '$0.015 per overage alert'
+        ]
       },
-      features: ['AI threat detection', 'Unlimited contacts', '24/7 AI counselor', 'High-accuracy GPS']
+      color: 'from-blue-600 to-purple-600',
+      popular: true
     },
     professional: {
-      name: 'Professional',
-      price: 24.99,
+      name: 'Professional', 
+      price: 29.99,
       limits: {
-        aiInteractions: -1, // unlimited
-        emergencyAlerts: -1,
-        locationRequests: -1,
-        biometricScans: -1
+        smsAlerts: 'unlimited', // Unlimited SMS alerts
+        aiInteractions: 'unlimited',
+        emergencyContacts: 'unlimited',
+        features: [
+          'Everything in Guardian',
+          'Unlimited SMS alerts (no overage)',
+          'Family monitoring dashboard',
+          'Enterprise-grade security',
+          'Custom integrations', 
+          'Dedicated support team',
+          'Advanced analytics & reporting',
+          'Custom alerting rules',
+          'API access for integrations'
+        ]
       },
-      features: ['Everything in Guardian', 'Family monitoring', 'Enterprise encryption', 'Dedicated support']
+      color: 'from-purple-600 to-pink-600'
     }
   };
 
@@ -247,8 +270,52 @@ export default function BillingPage() {
             </CardContent>
           </Card>
 
+          {/* SMS Usage Tracking for Guardian Plan */}
+          {subscription.plan === 'guardian' && (
+            <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
+                  <AlertTriangle className="h-5 w-5" />
+                  <span>SMS Alert Usage</span>
+                  <Badge className="bg-blue-100 text-blue-800">Guardian Plan</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-bold">{usage.emergencyAlerts}/500</span>
+                  <span className="text-sm text-muted-foreground">SMS alerts sent</span>
+                </div>
+                <Progress 
+                  value={(usage.emergencyAlerts / 500) * 100} 
+                  className="h-3"
+                />
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="font-medium text-green-600">
+                      {500 - usage.emergencyAlerts} remaining
+                    </p>
+                    <p className="text-muted-foreground">This month</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-orange-600">
+                      $0.015/overage
+                    </p>
+                    <p className="text-muted-foreground">After 500 alerts</p>
+                  </div>
+                </div>
+                {usage.emergencyAlerts >= 450 && (
+                  <div className="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                    <p className="text-sm text-orange-800 dark:text-orange-200">
+                      ⚠️ Approaching SMS limit. Consider upgrading to Professional for unlimited alerts.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Usage Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">

@@ -38,14 +38,17 @@ export const users = pgTable("users", {
   emailVerificationToken: varchar("email_verification_token"),
   welcomeEmailSent: boolean("welcome_email_sent").default(false),
   isAdmin: boolean("is_admin").default(false),
-  // Pro subscription fields
-  subscriptionPlan: varchar("subscription_plan").default("free"), // free, pro
-  subscriptionStatus: varchar("subscription_status").default("active"), // active, cancelled, expired
-  proTrialStarted: boolean("pro_trial_started").default(false),
-  proTrialStartDate: timestamp("pro_trial_start_date"),
-  proTrialEndDate: timestamp("pro_trial_end_date"),
+  // Subscription fields
+  subscriptionPlan: varchar("subscription_plan").default("free"), // free, guardian, professional
+  subscriptionStatus: varchar("subscription_status").default("active"), // active, cancelled, expired, trial
+  guardianTrialStarted: boolean("guardian_trial_started").default(false),
+  guardianTrialStartDate: timestamp("guardian_trial_start_date"),
+  guardianTrialEndDate: timestamp("guardian_trial_end_date"),
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
+  // SMS usage tracking for $9.99 Guardian plan
+  monthlyAlertUsage: integer("monthly_alert_usage").default(0), // SMS alerts sent this month
+  lastUsageReset: timestamp("last_usage_reset").defaultNow(), // when counter was last reset
   settings: jsonb("settings"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
