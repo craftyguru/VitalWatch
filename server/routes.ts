@@ -99,7 +99,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   );
 
+  // Demo login route
+  app.post('/api/auth/demo', async (req, res) => {
+    try {
+      // Use the demo account with sample data
+      const demoUser = await storage.getUserByEmail('testme@vitalwatch.app');
+      
+      if (!demoUser) {
+        return res.status(404).json({ message: 'Demo account not found' });
+      }
 
+      // Log in the demo user
+      req.login(demoUser, (err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Demo login failed' });
+        }
+        
+        res.json({ 
+          user: demoUser, 
+          message: 'Demo session started - explore with sample data!'
+        });
+      });
+      
+    } catch (error) {
+      console.error('Demo login error:', error);
+      res.status(500).json({ message: 'Demo login failed' });
+    }
+  });
 
   // Local auth routes
   app.post('/api/auth/login', passport.authenticate('local'), (req, res) => {
