@@ -13,7 +13,7 @@ import ToolsComprehensive from "@/pages/tools-comprehensive";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
 import BillingPage from "@/pages/billing";
-import DemoPage from "@/pages/demo";
+
 import AuthPage from "@/pages/auth";
 import VerifyEmail from "@/pages/verify-email";
 import AdminDashboard from "@/pages/admin-dashboard";
@@ -23,7 +23,7 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/demo" component={DemoPage} />
+
       <Route path="/auth/login" component={AuthPage} />
       <Route path="/auth/signup" component={AuthPage} />
       <Route path="/verify-email" component={VerifyEmail} />
