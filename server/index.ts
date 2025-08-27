@@ -3,6 +3,13 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// Trust proxy for Cloudflare/Replit
+app.set("trust proxy", 1);
+
+// Simple health endpoint
+app.get("/health", (_req, res) => res.status(200).send("OK"));
+
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false, limit: "100mb" }));
 
@@ -56,16 +63,13 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  const host = process.env.NODE_ENV === 'development' ? '0.0.0.0' : 'localhost';
+  // Use platform port (Replit sets PORT) and bind to 0.0.0.0
+  const PORT = Number(process.env.PORT) || 3000;
+  const HOST = "0.0.0.0";
   
-  server.listen(port, host, () => {
-    log(`serving on ${host}:${port}`);
-    console.log(`🚀 VitalWatch server is running on http://${host}:${port}`);
+  server.listen(PORT, HOST, () => {
+    console.log(`✅ Server listening on http://${HOST}:${PORT}`);
+    log(`serving on ${HOST}:${PORT}`);
   });
 
   // Graceful shutdown

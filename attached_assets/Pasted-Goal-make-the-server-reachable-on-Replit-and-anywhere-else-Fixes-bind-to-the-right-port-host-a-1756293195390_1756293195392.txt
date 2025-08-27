@@ -1,0 +1,66 @@
+Goal: make the server reachable on Replit (and anywhere else).
+Fixes: bind to the right port/host, add a healthcheck, correct start command, and harden startup.
+
+Use the platform port (NOT hardcoded 5000) and bind 0.0.0.0
+
+In your server entry (e.g. server/index.ts or server/index.js) do:
+
+import express from "express";
+const app = express();
+
+// trust proxy for Cloudflare/Replit
+app.set("trust proxy", 1);
+
+// simple health endpoint
+app.get("/health", (_req, res) => res.status(200).send("OK"));
+
+// start server (use platform port)
+const PORT = Number(process.env.PORT) || 3000;   // Replit sets PORT
+const HOST = "0.0.0.0";
+
+app.listen(PORT, HOST, () => {
+  console.log(`✅ Server listening on http://${HOST}:${PORT}`);
+});
+
+
+Serve your client (if you have a built frontend)
+
+import path from "path";
+import express from "express";
+
+const staticDir = path.join(process.cwd(), "dist"); // adjust if needed
+app.use(express.static(staticDir));
+app.get("*", (_req, res) => res.sendFile(path.join(staticDir, "index.html")));
+
+
+Fix the start command so Replit knows how to run the web server
+
+In package.json ensure:
+
+"scripts": {
+  "start": "node dist/server/index.js",        // or ts-node if running TS directly
+  "dev": "nodemon --watch server --exec ts-node server/index.ts",
+  "build": "tsc -p tsconfig.json && vite build" // adjust to your stack
+}
+
+
+In .replit make the run command use npm start (or the exact start you need), not a preview task or something that doesn’t listen to PORT.
+
+Kill duplicates & free the port before restarting
+
+Make the AI add a small util or npm script to kill previous node procs on hot restarts:
+
+pkill -f "node .*index" || true
+
+
+(run it before starting)
+
+Add logs so Replit detects the web server
+
+Make sure you console.log the exact line when the server starts (already in the code above). Replit’s UI looks for an open listener on PORT.
+
+Add a liveness/healthcheck for monitors
+
+You already added GET /health. After deploy, test:
+
+curl -I https://<your-replit-URL>/health → should return 200 OK
