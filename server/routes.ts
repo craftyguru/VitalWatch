@@ -750,8 +750,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
-  // Test email endpoint (for debugging)
-  app.post('/api/test-email', async (req, res) => {
+  // Test welcome email endpoint
+  app.post('/api/test-welcome-email', async (req, res) => {
     try {
       const { email, firstName } = req.body;
       
@@ -759,20 +759,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Email and firstName required" });
       }
 
-      const success = await emailService.sendVerificationEmail(
-        'test-user-123',
+      const success = await emailService.sendWelcomeEmail(
+        'test-user-' + Date.now(),
         email,
         firstName
       );
 
       res.json({ 
         success, 
-        message: success ? 'Test email sent successfully' : 'Failed to send test email',
-        sendgridConfigured: !!process.env.SENDGRID_API_KEY
+        message: success ? 'Welcome email sent successfully' : 'Failed to send welcome email',
+        sendgridConfigured: !!process.env.SENDGRID_API_KEY,
+        fromEmail: 'noreply@vitalwatch.app',
+        toEmail: email
       });
     } catch (error: any) {
-      console.error('Test email error:', error);
-      res.status(500).json({ message: "Test email failed: " + error.message });
+      console.error('Test welcome email error:', error);
+      res.status(500).json({ message: "Test welcome email failed: " + error.message });
     }
   });
 
