@@ -20,7 +20,10 @@ import {
   TrendingUp,
   AlertCircle,
   CheckCircle,
-  Settings
+  Settings,
+  Watch,
+  Headphones,
+  Bluetooth
 } from "lucide-react";
 
 export function EnhancedSensorMonitoring() {
@@ -117,11 +120,7 @@ export function EnhancedSensorMonitoring() {
         }
       }));
 
-      setEnvironmentalData(prev => ({
-        ...prev,
-        noiseLevel: Math.floor(30 + Math.random() * 20),
-        lightLevel: Math.floor(300 + Math.random() * 100)
-      }));
+      // Remove this since we're using real sensor data now
     }, 5000);
 
     return () => clearInterval(interval);
@@ -140,13 +139,13 @@ export function EnhancedSensorMonitoring() {
   const getSensorIcon = (sensorName: string) => {
     const iconMap: { [key: string]: any } = {
       accelerometer: Move,
-      gyroscope: RotateCcw,
+      gyroscope: Activity,
       magnetometer: Gauge,
-      proximity: Eye,
+      proximity: Activity,
       lightSensor: Lightbulb,
       heartRate: Heart,
-      audioAnalysis: Ear,
-      noiseLevel: Ear,
+      audioAnalysis: Activity,
+      noiseLevel: Activity,
       temperature: Thermometer,
       humidity: Wind
     };
@@ -274,7 +273,7 @@ export function EnhancedSensorMonitoring() {
             <CardContent>
               {!deviceSensors.headphones.connected ? (
                 <div className="text-center py-6">
-                  <Headphones className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                  <Activity className="h-12 w-12 mx-auto mb-4 text-gray-400" />
                   <p className="text-muted-foreground mb-4">Connect headphones for audio monitoring</p>
                   <Button onClick={connectHeadphones} variant="outline">
                     <Bluetooth className="h-4 w-4 mr-2" />

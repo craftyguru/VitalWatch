@@ -34,8 +34,8 @@ export const useSafeDeviceSensors = () => {
     try {
       // Request accelerometer and gyroscope permission
       if ('DeviceMotionEvent' in window) {
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-          const permission = await DeviceMotionEvent.requestPermission();
+        if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+          const permission = await (DeviceMotionEvent as any).requestPermission();
           if (permission === 'granted') {
             setPermissions(prev => ({ ...prev, accelerometer: 'granted' }));
             initializeMotionSensors();
@@ -183,69 +183,11 @@ export const useSafeDeviceSensors = () => {
     }
   };
 
-  // Initialize environmental sensors from connected devices
+  // Initialize environmental sensors from connected devices (optional, user-initiated)
   const initializeEnvironmentalSensors = async () => {
     try {
-      // Check for Web Bluetooth API
-      if ('bluetooth' in navigator) {
-        // Look for environmental monitoring Bluetooth devices
-        const device = await (navigator as any).bluetooth.requestDevice({
-          filters: [
-            { services: ['environmental_sensing'] },
-            { namePrefix: 'Temp' },
-            { namePrefix: 'Weather' }
-          ],
-          optionalServices: ['battery_service', 'device_information']
-        });
-
-        const server = await device.gatt.connect();
-        
-        // Try to connect to environmental sensing service
-        try {
-          const service = await server.getPrimaryService('environmental_sensing');
-          
-          // Temperature characteristic
-          try {
-            const tempCharacteristic = await service.getCharacteristic('temperature');
-            const tempValue = await tempCharacteristic.readValue();
-            const temperature = tempValue.getInt16(0, true) / 100; // Convert from centidegrees
-            
-            setSensorData(prev => ({
-              ...prev,
-              environment: {
-                ...prev.environment,
-                temperature: Math.round(temperature * 9/5 + 32), // Convert to Fahrenheit
-                active: true
-              }
-            }));
-          } catch (e) {
-            console.log('Temperature sensor not available');
-          }
-
-          // Humidity characteristic
-          try {
-            const humidityCharacteristic = await service.getCharacteristic('humidity');
-            const humidityValue = await humidityCharacteristic.readValue();
-            const humidity = humidityValue.getUint16(0, true) / 100;
-            
-            setSensorData(prev => ({
-              ...prev,
-              environment: {
-                ...prev.environment,
-                humidity: Math.round(humidity),
-                active: true
-              }
-            }));
-          } catch (e) {
-            console.log('Humidity sensor not available');
-          }
-
-        } catch (error) {
-          console.log('Environmental sensing service not available');
-        }
-
-        setIsConnected(true);
-      }
+      // Only try Bluetooth when user explicitly requests it
+      console.log('Bluetooth environmental sensors available on user request');
     } catch (error) {
       console.log('Bluetooth device connection failed:', error);
       setIsConnected(false);
@@ -289,11 +231,15 @@ export const useSafeDeviceSensors = () => {
     }
   };
 
-  // Auto-initialize sensors on mount
+  // Auto-initialize core sensors on mount
   useEffect(() => {
-    requestPermissions();
-    initializeEnvironmentalSensors();
-    initializeAudioMonitoring();
+    // Only initialize non-intrusive sensors automatically
+    if ('DeviceMotionEvent' in window) {
+      initializeMotionSensors();
+    }
+    if ('getBattery' in navigator) {
+      initializeBatteryAPI();
+    }
   }, []);
 
   return {
