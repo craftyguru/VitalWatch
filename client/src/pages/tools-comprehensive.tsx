@@ -73,6 +73,7 @@ import {
   Search,
   Filter,
   MoreVertical,
+  Headphones,
   ChevronRight,
   ChevronDown,
   ExternalLink,
@@ -80,7 +81,6 @@ import {
   Database,
   CloudUpload,
   Timer,
-  Headphones,
   Camera,
   Fingerprint,
   ScanLine,
@@ -107,6 +107,7 @@ import {
   Flower2,
   Rainbow
 } from "lucide-react";
+import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
 
 // Import enhanced components
 import AdvancedBreathingExercise from "@/components/ui/advanced-breathing-exercise";
@@ -359,8 +360,8 @@ export default function ToolsComprehensive() {
                 <span className="text-sm font-medium">Wellness Analytics</span>
               </TabsTrigger>
               <TabsTrigger value="achievements" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Award className="h-5 w-5" />
-                <span className="text-sm font-medium">Achievements</span>
+                <Headphones className="h-5 w-5" />
+                <span className="text-sm font-medium">Device Hub</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -621,9 +622,26 @@ export default function ToolsComprehensive() {
             </Card>
           </TabsContent>
 
-          {/* Achievements Tab */}
+          {/* Device Integration Hub Tab */}
           <TabsContent value="achievements" className="space-y-8">
-            <ComprehensiveEmergencyMonitoring />
+            <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 border-purple-200/50">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-3 text-purple-900 dark:text-purple-100">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                    <Headphones className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">Smart Device Integration</h2>
+                    <p className="text-sm text-purple-700 dark:text-purple-300 font-normal">
+                      Connect headphones, smartwatches, and phones for comprehensive monitoring
+                    </p>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DeviceIntegrationHub />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
