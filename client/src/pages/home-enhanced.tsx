@@ -320,6 +320,18 @@ export default function Home() {
                     </AvatarFallback>
                   </Avatar>
                   
+                  {/* Tools Button */}
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 hidden sm:flex" 
+                    asChild
+                  >
+                    <Link href="/tools" data-testid="link-tools-nav">
+                      <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </Link>
+                  </Button>
+
                   {/* Admin Button - Only for Admin Users */}
                   {(user as any)?.isAdmin && (
                     <Button 

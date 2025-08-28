@@ -4,13 +4,13 @@ import { Code, GitBranch, Clock } from 'lucide-react';
 
 export function VersionBadge() {
   // Version information - update this when making major releases
-  const version = "2.5.0";
+  const version = "3.0.0";
   const buildDate = new Date().toISOString().split('T')[0]; // Current date as build date
   const environment = import.meta.env.MODE || 'development';
   const isDevelopment = environment === 'development';
   
   // Git commit hash (simulated - in real deployment this would come from build process)
-  const commitHash = "a7f3d92";
+  const commitHash = "f8b2c45";
   
   return (
     <Tooltip>
