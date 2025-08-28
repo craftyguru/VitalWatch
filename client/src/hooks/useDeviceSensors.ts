@@ -65,28 +65,28 @@ export function useDeviceSensors() {
         const permission = await (DeviceMotionEvent as any).requestPermission();
         setPermissions(prev => ({ 
           ...prev, 
-          accelerometer: permission === 'granted',
-          gyroscope: permission === 'granted'
+          accelerometer: permission === 'granted' ? 'granted' : 'denied',
+          gyroscope: permission === 'granted' ? 'granted' : 'denied'
         }));
       } else {
         setPermissions(prev => ({ 
           ...prev, 
-          accelerometer: true,
-          gyroscope: true
+          accelerometer: 'granted',
+          gyroscope: 'granted'
         }));
       }
 
       // Request location permission
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
-          () => setPermissions(prev => ({ ...prev, location: true })),
-          () => setPermissions(prev => ({ ...prev, location: false }))
+          () => setPermissions(prev => ({ ...prev, geolocation: 'granted' })),
+          () => setPermissions(prev => ({ ...prev, geolocation: 'denied' }))
         );
       }
 
       // Battery API permission
       if ('getBattery' in navigator) {
-        setPermissions(prev => ({ ...prev, battery: true }));
+        setPermissions(prev => ({ ...prev, battery: 'granted' }));
       }
 
     } catch (error) {
@@ -96,7 +96,7 @@ export function useDeviceSensors() {
 
   // Initialize accelerometer
   useEffect(() => {
-    if (!permissions.accelerometer) return;
+    if (permissions.accelerometer !== 'granted') return;
 
     const handleMotion = (event: DeviceMotionEvent) => {
       if (event.acceleration && event.acceleration.x !== null) {
@@ -118,7 +118,7 @@ export function useDeviceSensors() {
 
   // Initialize gyroscope
   useEffect(() => {
-    if (!permissions.gyroscope) return;
+    if (permissions.gyroscope !== 'granted') return;
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
       setSensorData(prev => ({
@@ -142,7 +142,7 @@ export function useDeviceSensors() {
 
   // Initialize GPS location
   useEffect(() => {
-    if (!permissions.location) return;
+    if (permissions.geolocation !== 'granted') return;
 
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
@@ -167,11 +167,11 @@ export function useDeviceSensors() {
     );
 
     return () => navigator.geolocation.clearWatch(watchId);
-  }, [permissions.location]);
+  }, [permissions.geolocation]);
 
   // Initialize battery monitoring
   useEffect(() => {
-    if (!permissions.battery) return;
+    if (permissions.battery !== 'granted') return;
 
     const updateBattery = async () => {
       try {
@@ -258,6 +258,6 @@ export function useDeviceSensors() {
     sensorData,
     permissions,
     requestPermissions,
-    isConnected: Object.values(permissions).some(p => p)
+    isConnected: Object.values(sensorData).some((sensor: any) => sensor?.active)
   };
 }

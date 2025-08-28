@@ -163,6 +163,11 @@ export default function Home() {
   // Calculate wellness score based on recent activities
   const wellnessScore = latestMood ? Math.min(100, (latestMood as any).moodScore * 20 + 20) : 65;
 
+  // Initialize sensor permissions on component mount
+  useEffect(() => {
+    requestPermissions();
+  }, [requestPermissions]);
+
   return (
     <div className="min-h-screen bg-background">
       {emergencyOverlayOpen && (
