@@ -108,7 +108,7 @@ import {
   Rainbow
 } from "lucide-react";
 import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
-import { useDeviceSensors } from "@/hooks/useDeviceSensors";
+// Removed problematic device sensor import
 import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
 
 // Import enhanced components
