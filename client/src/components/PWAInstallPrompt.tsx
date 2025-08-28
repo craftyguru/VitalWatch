@@ -50,10 +50,10 @@ export function PWAInstallPrompt() {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
-      // Show prompt after a short delay for better UX
+      // Show prompt after a longer delay for better UX
       setTimeout(() => {
         setShowPrompt(true);
-      }, 2000);
+      }, 10000);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -62,7 +62,7 @@ export function PWAInstallPrompt() {
     if ((iOS || isMobile) && !isStandalone) {
       setTimeout(() => {
         setShowPrompt(true);
-      }, 5000); // Show after 5 seconds for testing
+      }, 12000); // Show after 12 seconds - less intrusive timing
     }
 
     return () => {

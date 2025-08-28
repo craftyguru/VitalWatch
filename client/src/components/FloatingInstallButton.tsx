@@ -16,19 +16,36 @@ export function FloatingInstallButton() {
       return; // Don't show if already installed
     }
 
+    // Check if user has already seen/dismissed the install prompt
+    const hasSeenInstall = localStorage.getItem('vitalwatch-install-seen');
+    const dismissedTime = localStorage.getItem('vitalwatch-install-dismissed');
+    
+    if (hasSeenInstall || dismissedTime) {
+      const timeSinceDismissed = dismissedTime ? Date.now() - parseInt(dismissedTime) : 0;
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      
+      // Only show again after 7 days if dismissed
+      if (!dismissedTime || timeSinceDismissed < sevenDays) {
+        return;
+      }
+    }
+
     // Listen for the beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setIsVisible(true);
+      // Don't auto-show, wait for user interaction or timer
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // Show floating button after 3 seconds for testing (even without prompt)
+    // Show install prompt once after user has been on site for 8 seconds
     const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 3000);
+      if (!hasSeenInstall) {
+        setShowInstructions(true);
+        localStorage.setItem('vitalwatch-install-seen', 'true');
+      }
+    }, 8000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -126,16 +143,6 @@ export function FloatingInstallButton() {
     );
   }
 
-  return (
-    <div className="fixed bottom-6 right-6 z-40">
-      <Button
-        onClick={handleInstall}
-        className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg animate-pulse"
-        size="lg"
-      >
-        <Download className="w-5 h-5 mr-2" />
-        {deferredPrompt ? 'Install Now' : 'Install App'}
-      </Button>
-    </div>
-  );
+  // Don't render the floating button - only show the modal when triggered
+  return null;
 }
