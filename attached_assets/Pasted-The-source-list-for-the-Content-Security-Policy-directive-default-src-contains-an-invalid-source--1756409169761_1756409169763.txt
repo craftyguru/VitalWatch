@@ -1,0 +1,524 @@
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-0e390e32e560d23c.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+VitalWatch:1 The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+VitalWatch:1 The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+VitalWatch:1 The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-0e390e32e560d23c.js:38 [LaunchDarkly] LaunchDarkly client initialized
+init-script.ts:45  GET https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=D004GE3C77U8PIVDSDJG&lib=ttq net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ init-script.ts:45
+(anonymous) @ init-script.ts:48
+(anonymous) @ init-script.ts:4
+initialize @ index.ts:249
+h @ plugin.js:19
+(anonymous) @ index.ts:154
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:140
+(anonymous) @ event-queue.js:50
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ event-queue.js:30
+(anonymous) @ index.ts:410
+(anonymous) @ index.ts:408
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:404
+(anonymous) @ index.ts:200
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+(anonymous) @ index.ts:389
+(anonymous) @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+web-client-content-script.js:2 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    at HTMLIFrameElement.<anonymous> (web-client-content-script.js:2:534973)
+(anonymous) @ web-client-content-script.js:2
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0905300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0007705BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0307705BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0607705BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+framework-927f1a5dc7ce3a24.js:1 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'battery'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+framework-927f1a5dc7ce3a24.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-927f1a5dc7ce3a24.js:1
+(anonymous) @ framework-927f1a5dc7ce3a24.js:1
+uD @ framework-927f1a5dc7ce3a24.js:1
+uI @ framework-927f1a5dc7ce3a24.js:1
+uM @ framework-927f1a5dc7ce3a24.js:1
+uS @ framework-927f1a5dc7ce3a24.js:1
+C @ framework-927f1a5dc7ce3a24.js:1
+z @ framework-927f1a5dc7ce3a24.js:1
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'battery'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+web-client-content-script.js:2 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    at HTMLIFrameElement.<anonymous> (web-client-content-script.js:2:534973)
+(anonymous) @ web-client-content-script.js:2
+main.tsx:5 VitalWatch main.tsx loading...
+main.tsx:12 Root element found, creating React root...
+main.tsx:14 React root created, rendering App...
+main.tsx:16 App rendered successfully!
+SeamlessInstallButton.tsx:24 PWA Install Check: {isStandalone: false, displayMode: false, standalone: undefined, referrer: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-84…orkspace_iframe.html?initialPath=%2F&id=%3Ar3v%3A'}
+(index):40 SW registered:  ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/', …}
+chunk-RPCDYKBN.js?v=a667adbf:521 Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/components/ui/badge.tsx:35:18)
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=a667adbf:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=a667adbf:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=a667adbf:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=a667adbf:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=a667adbf:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=a667adbf:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=a667adbf:1929:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=a667adbf:199:13
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=a667adbf:38:15)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=a667adbf:38:15)
+    at Popper (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=a667adbf:1921:11)
+    at Tooltip (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=a667adbf:108:5)
+    at VersionBadge
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at header
+    at div
+    at Home (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/home-enhanced.tsx:70:20)
+    at Route (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=a667adbf:323:16)
+    at Switch (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=a667adbf:379:17)
+    at Router (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/App.tsx:39:48)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=a667adbf:38:15)
+    at TooltipProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=a667adbf:64:5)
+    at QueryClientProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=a667adbf:2805:3)
+    at ThemeProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/ThemeContext.tsx:25:3)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=a667adbf:521
+error @ chunk-RPCDYKBN.js?v=a667adbf:505
+validateFunctionComponentInDev @ chunk-RPCDYKBN.js?v=a667adbf:15013
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=a667adbf:14988
+beginWork @ chunk-RPCDYKBN.js?v=a667adbf:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=a667adbf:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=a667adbf:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=a667adbf:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=a667adbf:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a667adbf:18627
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=a667adbf:555
+flush @ @tanstack_react-query.js?v=a667adbf:569
+batch @ @tanstack_react-query.js?v=a667adbf:587
+dispatch_fn @ @tanstack_react-query.js?v=a667adbf:996
+setData @ @tanstack_react-query.js?v=a667adbf:696
+onSuccess @ @tanstack_react-query.js?v=a667adbf:897
+resolve @ @tanstack_react-query.js?v=a667adbf:456
+Promise.then
+run @ @tanstack_react-query.js?v=a667adbf:498
+start @ @tanstack_react-query.js?v=a667adbf:536
+fetch @ @tanstack_react-query.js?v=a667adbf:926
+executeFetch_fn @ @tanstack_react-query.js?v=a667adbf:2211
+onSubscribe @ @tanstack_react-query.js?v=a667adbf:1898
+subscribe @ @tanstack_react-query.js?v=a667adbf:24
+(anonymous) @ @tanstack_react-query.js?v=a667adbf:3022
+subscribeToStore @ chunk-RPCDYKBN.js?v=a667adbf:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=a667adbf:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=a667adbf:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=a667adbf:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a667adbf:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a667adbf:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19432
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=a667adbf:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18718
+workLoop @ chunk-RPCDYKBN.js?v=a667adbf:197
+flushWork @ chunk-RPCDYKBN.js?v=a667adbf:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=a667adbf:384
+useBluetoothDevices.ts:26 [Violation] Permissions policy violation: bluetooth is not allowed in this document.
+(anonymous) @ useBluetoothDevices.ts:26
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=a667adbf:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=a667adbf:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=a667adbf:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a667adbf:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a667adbf:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19416
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a667adbf:18627
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=a667adbf:555
+flush @ @tanstack_react-query.js?v=a667adbf:569
+batch @ @tanstack_react-query.js?v=a667adbf:587
+dispatch_fn @ @tanstack_react-query.js?v=a667adbf:996
+setData @ @tanstack_react-query.js?v=a667adbf:696
+onSuccess @ @tanstack_react-query.js?v=a667adbf:897
+resolve @ @tanstack_react-query.js?v=a667adbf:456
+Promise.then
+run @ @tanstack_react-query.js?v=a667adbf:498
+start @ @tanstack_react-query.js?v=a667adbf:536
+fetch @ @tanstack_react-query.js?v=a667adbf:926
+executeFetch_fn @ @tanstack_react-query.js?v=a667adbf:2211
+onSubscribe @ @tanstack_react-query.js?v=a667adbf:1898
+subscribe @ @tanstack_react-query.js?v=a667adbf:24
+(anonymous) @ @tanstack_react-query.js?v=a667adbf:3022
+subscribeToStore @ chunk-RPCDYKBN.js?v=a667adbf:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=a667adbf:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=a667adbf:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=a667adbf:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a667adbf:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a667adbf:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19432
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=a667adbf:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18718
+workLoop @ chunk-RPCDYKBN.js?v=a667adbf:197
+flushWork @ chunk-RPCDYKBN.js?v=a667adbf:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=a667adbf:384
+VitalWatch:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:93
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=a667adbf:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=a667adbf:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=a667adbf:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a667adbf:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a667adbf:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19416
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a667adbf:18627
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+(index):44 Checking PWA installability...
+(index):45 HTTPS: true
+(index):46 Manifest: true
+(index):47 Service Worker: true
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+chunk-RPCDYKBN.js?v=a667adbf:16670 Uncaught TypeError: navigator.geolocation.clearWatch is not a function
+    at useDeviceSensors.ts:169:40
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=a667adbf:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=a667adbf:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=a667adbf:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=a667adbf:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=a667adbf:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=a667adbf:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=a667adbf:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=a667adbf:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=a667adbf:19416:13)
+(anonymous) @ useDeviceSensors.ts:169
+safelyCallDestroy @ chunk-RPCDYKBN.js?v=a667adbf:16748
+commitHookEffectListUnmount @ chunk-RPCDYKBN.js?v=a667adbf:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-RPCDYKBN.js?v=a667adbf:18245
+commitPassiveUnmountEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:18181
+commitPassiveUnmountEffects @ chunk-RPCDYKBN.js?v=a667adbf:18169
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a667adbf:19489
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a667adbf:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19416
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a667adbf:18627
+chunk-RPCDYKBN.js?v=a667adbf:14032 The above error occurred in the <Home> component:
+
+    at Home (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/home-enhanced.tsx:70:20)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=a667adbf:14032
+update.callback @ chunk-RPCDYKBN.js?v=a667adbf:14052
+callCallback @ chunk-RPCDYKBN.js?v=a667adbf:11248
+commitUpdateQueue @ chunk-RPCDYKBN.js?v=a667adbf:11265
+commitLayoutEffectOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:17093
+commitLayoutMountEffects_complete @ chunk-RPCDYKBN.js?v=a667adbf:17980
+commitLayoutEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:17969
+commitLayoutEffects @ chunk-RPCDYKBN.js?v=a667adbf:17920
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19353
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a667adbf:18627
+chunk-RPCDYKBN.js?v=a667adbf:9129 Uncaught TypeError: navigator.geolocation.clearWatch is not a function
+    at useDeviceSensors.ts:169:40
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=a667adbf:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=a667adbf:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=a667adbf:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=a667adbf:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=a667adbf:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=a667adbf:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=a667adbf:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=a667adbf:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=a667adbf:19416:13)
+(anonymous) @ useDeviceSensors.ts:169
+safelyCallDestroy @ chunk-RPCDYKBN.js?v=a667adbf:16748
+commitHookEffectListUnmount @ chunk-RPCDYKBN.js?v=a667adbf:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-RPCDYKBN.js?v=a667adbf:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-RPCDYKBN.js?v=a667adbf:18245
+commitPassiveUnmountEffects_begin @ chunk-RPCDYKBN.js?v=a667adbf:18181
+commitPassiveUnmountEffects @ chunk-RPCDYKBN.js?v=a667adbf:18169
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a667adbf:19489
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a667adbf:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=a667adbf:19416
+commitRoot @ chunk-RPCDYKBN.js?v=a667adbf:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a667adbf:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a667adbf:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a667adbf:18627

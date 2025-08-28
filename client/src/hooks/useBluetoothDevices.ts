@@ -135,42 +135,30 @@ export function useBluetoothDevices() {
     );
   }, []);
 
-  // Simulate some common connected devices for demo
+  // Add some realistic device data for demo purposes
   useEffect(() => {
     if (bluetoothSupported && devices.length === 0) {
-      // Add some realistic device data based on user agent
       const userAgent = navigator.userAgent;
       const sampleDevices: BluetoothDevice[] = [];
 
-      if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-        sampleDevices.push({
-          id: 'airpods-pro-2',
-          name: 'AirPods Pro',
-          connected: true,
-          deviceType: 'headphones',
-          battery: 85,
-          services: ['0000110b-0000-1000-8000-00805f9b34fb'],
-          lastSeen: new Date(),
-        });
-      }
-
+      // Add sample devices based on platform
       if (userAgent.includes('Mobile')) {
         sampleDevices.push({
-          id: 'smartwatch-1',
-          name: 'Apple Watch',
+          id: 'mobile-device-1',
+          name: 'Connected Phone',
           connected: true,
-          deviceType: 'smartwatch',
-          battery: 67,
-          services: ['00001812-0000-1000-8000-00805f9b34fb', '0000180f-0000-1000-8000-00805f9b34fb'],
+          deviceType: 'phone',
+          battery: 75,
+          services: [],
           lastSeen: new Date(),
         });
       }
 
-      if (sampleDevices.length > 0) {
+      setTimeout(() => {
         setDevices(sampleDevices);
-      }
+      }, 1000);
     }
-  }, [bluetoothSupported, devices.length]);
+  }, [bluetoothSupported]);
 
   return {
     devices,

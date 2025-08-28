@@ -54,13 +54,29 @@ import {
 import { VersionBadge } from "@/components/VersionBadge";
 import { useDeviceSensors } from "@/hooks/useDeviceSensors";
 import { useBluetoothDevices } from "@/hooks/useBluetoothDevices";
+import { useSafeDeviceSensors } from "@/hooks/useSafeDeviceSensors";
 
 export default function Home() {
   const { user } = useAuth() as { user: any };
   const { toast } = useToast();
   const { isConnected, lastMessage } = useWebSocket();
-  const { sensorData, permissions, requestPermissions } = useDeviceSensors();
-  const { devices: bluetoothDevices, bluetoothSupported } = useBluetoothDevices();
+  const safeSensorData = useSafeDeviceSensors();
+  let sensorHook, bluetoothHook;
+  
+  try {
+    sensorHook = useDeviceSensors();
+    bluetoothHook = useBluetoothDevices();
+  } catch (error) {
+    console.warn('Device sensor hooks failed, using fallback:', error);
+    sensorHook = null;
+    bluetoothHook = null;
+  }
+  
+  const sensorData = sensorHook?.sensorData || safeSensorData.sensorData;
+  const permissions = sensorHook?.permissions || safeSensorData.permissions;
+  const requestPermissions = sensorHook?.requestPermissions || safeSensorData.requestPermissions;
+  const bluetoothDevices = bluetoothHook?.devices || [];
+  const bluetoothSupported = bluetoothHook?.bluetoothSupported || false;
   const [emergencyOverlayOpen, setEmergencyOverlayOpen] = useState(false);
   const [currentIncidentId, setCurrentIncidentId] = useState<number | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -165,7 +181,9 @@ export default function Home() {
 
   // Initialize sensor permissions on component mount
   useEffect(() => {
-    requestPermissions();
+    if (requestPermissions && typeof requestPermissions === 'function') {
+      requestPermissions();
+    }
   }, [requestPermissions]);
 
   return (
