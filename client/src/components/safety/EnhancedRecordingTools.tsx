@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSupabaseRecordings } from "@/hooks/useSupabaseRecordings";
 import { 
   Camera,
   Mic,
@@ -42,6 +43,8 @@ import {
 
 export function EnhancedRecordingTools() {
   const { toast } = useToast();
+  // Get user from localStorage for now - replace with your auth system
+  const user = { id: 'demo-user' };
   const [activeTab, setActiveTab] = useState("audio");
   const [isRecording, setIsRecording] = useState(false);
   const [recordingType, setRecordingType] = useState<string | null>(null);
@@ -49,6 +52,20 @@ export function EnhancedRecordingTools() {
   const [stealthMode, setStealthMode] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+
+  // Supabase recordings hook
+  const {
+    recordings: supabaseRecordings,
+    storageStats,
+    isLoading: recordingsLoading,
+    downloadRecording,
+    deleteRecording,
+    uploadRecording,
+    refreshRecordings,
+    isDownloading,
+    isDeleting,
+    isUploading
+  } = useSupabaseRecordings(user?.id || 'anonymous');
 
   // Recording settings
   const [recordingSettings, setRecordingSettings] = useState({
@@ -635,75 +652,204 @@ export function EnhancedRecordingTools() {
 
         {/* Storage Management Tab */}
         <TabsContent value="storage" className="space-y-4">
-          {/* Storage Overview */}
-          <Card>
+          {/* Cloud Storage Overview */}
+          <Card className="border-blue-200 dark:border-blue-800">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <HardDrive className="h-5 w-5" />
-                Storage Overview
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <HardDrive className="h-5 w-5 text-blue-600" />
+                  Supabase Cloud Storage
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => refreshRecordings()}
+                  disabled={recordingsLoading}
+                >
+                  {recordingsLoading ? (
+                    <div className="h-3 w-3 animate-spin border-2 border-current border-t-transparent rounded-full" />
+                  ) : (
+                    <Settings className="h-3 w-3" />
+                  )}
+                  Refresh
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Used Storage</span>
-                  <span>{storageInfo.used} GB / {storageInfo.used + storageInfo.available} GB</span>
+                  <span>Cloud Storage Used</span>
+                  <span>{storageStats.formattedSize || '0 B'} / 5 GB</span>
                 </div>
-                <Progress value={(storageInfo.used / (storageInfo.used + storageInfo.available)) * 100} className="h-2" />
+                <Progress 
+                  value={(storageStats.usedStorage / storageStats.availableStorage) * 100} 
+                  className="h-3"
+                />
               </div>
               
               <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{storageInfo.recordings}</div>
-                  <p className="text-xs text-muted-foreground">Total Recordings</p>
+                <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="text-3xl font-bold text-blue-600">{storageStats.totalFiles}</div>
+                  <p className="text-sm text-muted-foreground">Cloud Recordings</p>
                 </div>
-                <div className="p-3 bg-green-50 dark:bg-green-950 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">{storageInfo.totalDuration}</div>
-                  <p className="text-xs text-muted-foreground">Total Duration</p>
+                <div className="p-4 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="text-3xl font-bold text-green-600">{storageStats.totalDuration}</div>
+                  <p className="text-sm text-muted-foreground">Total Duration</p>
+                </div>
+              </div>
+
+              {/* Cloud Storage Features */}
+              <div className="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-green-600" />
+                  Cloud Storage Features
+                </h4>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    End-to-end Encryption
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    Auto Sync
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    Emergency Backup
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    Cross-device Access
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Recent Recordings */}
+          {/* Cloud Recordings Management */}
           <Card>
             <CardHeader>
-              <CardTitle>Recent Recordings</CardTitle>
+              <CardTitle className="flex items-center justify-between">
+                <span>Cloud Recordings</span>
+                <Badge variant="secondary">
+                  {supabaseRecordings.length} files
+                </Badge>
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {recordings.slice(0, 5).map((recording) => {
-                  const Icon = getRecordingIcon(recording.type);
-                  return (
-                    <div key={recording.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Icon className={`h-5 w-5 ${
-                          recording.type === "audio" ? "text-blue-500" :
-                          recording.type === "video" ? "text-purple-500" :
-                          "text-green-500"
-                        }`} />
-                        <div>
-                          <p className="font-medium text-sm">{recording.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {recording.timestamp.toLocaleDateString()} • {recording.duration} • {recording.size}
-                          </p>
+              {recordingsLoading ? (
+                <div className="text-center py-8">
+                  <div className="h-8 w-8 animate-spin border-2 border-primary border-t-transparent rounded-full mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Loading cloud recordings...</p>
+                </div>
+              ) : supabaseRecordings.length === 0 ? (
+                <div className="text-center py-8">
+                  <HardDrive className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground mb-2">No recordings found in cloud storage</p>
+                  <p className="text-xs text-muted-foreground">Start recording to see your files here</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {supabaseRecordings.map((recording) => {
+                    const Icon = getRecordingIcon(recording.type);
+                    return (
+                      <div key={recording.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                        <div className="flex items-center gap-3">
+                          <Icon className={`h-5 w-5 ${
+                            recording.type === "audio" ? "text-blue-500" :
+                            recording.type === "video" ? "text-purple-500" :
+                            "text-red-500"
+                          }`} />
+                          <div className="flex-1">
+                            <p className="font-medium text-sm">{recording.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {recording.timestamp.toLocaleDateString()} • {recording.duration} • {recording.size}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          {recording.isEmergency && (
+                            <Badge variant="destructive" className="text-xs">
+                              Emergency
+                            </Badge>
+                          )}
+                          
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadRecording({ recording })}
+                            disabled={isDownloading(recording.id)}
+                            title="Download to device"
+                          >
+                            {isDownloading(recording.id) ? (
+                              <div className="h-3 w-3 animate-spin border-2 border-current border-t-transparent rounded-full" />
+                            ) : (
+                              <Download className="h-3 w-3" />
+                            )}
+                          </Button>
+                          
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              if (window.confirm(`Delete "${recording.title}" from cloud storage? This action cannot be undone.`)) {
+                                deleteRecording({ recording });
+                              }
+                            }}
+                            disabled={isDeleting(recording.id)}
+                            title="Delete from cloud"
+                            className="text-red-600 hover:text-red-700 hover:border-red-300"
+                          >
+                            {isDeleting(recording.id) ? (
+                              <div className="h-3 w-3 animate-spin border-2 border-current border-t-transparent rounded-full" />
+                            ) : (
+                              <Trash2 className="h-3 w-3" />
+                            )}
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {recording.isEmergency && (
-                          <Badge variant="destructive">Emergency</Badge>
-                        )}
-                        <Badge variant={recording.isUploaded ? "default" : "secondary"}>
-                          {recording.isUploaded ? "Uploaded" : "Local"}
-                        </Badge>
-                        <Button variant="outline" size="sm">
-                          <Download className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Storage Actions */}
+              {supabaseRecordings.length > 0 && (
+                <div className="mt-4 pt-4 border-t">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (window.confirm('Download all recordings to your device? This may take a while.')) {
+                          supabaseRecordings.forEach(recording => {
+                            setTimeout(() => downloadRecording({ recording }), Math.random() * 1000);
+                          });
+                        }
+                      }}
+                    >
+                      <Download className="h-3 w-3 mr-1" />
+                      Download All
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (window.confirm('Delete ALL recordings from cloud storage? This action cannot be undone.')) {
+                          supabaseRecordings.forEach(recording => {
+                            setTimeout(() => deleteRecording({ recording }), Math.random() * 500);
+                          });
+                        }
+                      }}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      Clear All
+                    </Button>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { registerRecordingRoutes } from "./routes/recordings";
 import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import { storage } from "./storage";
@@ -36,6 +37,8 @@ import { db } from "./db";
 import { eq, desc, and, gte, lte, lt, sql } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register recording management routes
+  registerRecordingRoutes(app);
   // Setup session middleware before auth
   const session = await import('express-session');
   const pgSession = await import('connect-pg-simple');
