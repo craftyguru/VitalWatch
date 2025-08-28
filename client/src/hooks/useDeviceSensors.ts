@@ -50,11 +50,11 @@ export function useDeviceSensors() {
   });
 
   const [permissions, setPermissions] = useState({
-    accelerometer: false,
-    gyroscope: false,
-    location: false,
-    battery: false,
-    camera: false
+    accelerometer: 'denied' as PermissionState,
+    gyroscope: 'denied' as PermissionState,
+    geolocation: 'denied' as PermissionState,
+    battery: 'denied' as PermissionState,
+    camera: 'denied' as PermissionState
   });
 
   // Request device permissions

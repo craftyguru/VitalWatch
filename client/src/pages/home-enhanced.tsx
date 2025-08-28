@@ -52,11 +52,15 @@ import {
   Wifi
 } from "lucide-react";
 import { VersionBadge } from "@/components/VersionBadge";
+import { useDeviceSensors } from "@/hooks/useDeviceSensors";
+import { useBluetoothDevices } from "@/hooks/useBluetoothDevices";
 
 export default function Home() {
   const { user } = useAuth() as { user: any };
   const { toast } = useToast();
   const { isConnected, lastMessage } = useWebSocket();
+  const { sensorData, permissions, requestPermissions } = useDeviceSensors();
+  const { devices: bluetoothDevices, bluetoothSupported } = useBluetoothDevices();
   const [emergencyOverlayOpen, setEmergencyOverlayOpen] = useState(false);
   const [currentIncidentId, setCurrentIncidentId] = useState<number | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -199,61 +203,100 @@ export default function Home() {
                   {/* Device Connection Badges */}
                   {isConnected && (
                     <div className="flex items-center space-x-1 ml-2">
-                      {/* Smartphone Badge */}
+                      {/* Smartphone Badge - Shows sensor activity */}
                       <div className="relative group">
-                        <div className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full">
+                        <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                          sensorData?.accelerometer?.active ? 'bg-blue-500' : 'bg-gray-400'
+                        }`}>
                           <Smartphone className="h-3 w-3 text-white" />
                         </div>
-                        <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                        <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                          sensorData?.accelerometer?.active ? 'bg-green-400' : 'bg-red-400'
+                        }`}></div>
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                          Phone Connected
+                          {sensorData?.accelerometer?.active ? 'Sensors Active' : 'Sensors Inactive'}
                         </div>
                       </div>
 
-                      {/* GPS Badge */}
+                      {/* GPS Badge - Shows real location status */}
                       <div className="relative group">
-                        <div className="flex items-center justify-center w-6 h-6 bg-orange-500 rounded-full">
+                        <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                          sensorData?.location?.active ? 'bg-orange-500' : 'bg-gray-400'
+                        }`}>
                           <MapPin className="h-3 w-3 text-white" />
                         </div>
-                        <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                        <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                          permissions?.geolocation === 'granted' ? 'bg-green-400' : 'bg-red-400'
+                        }`}></div>
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                          GPS Active
+                          {sensorData?.location?.active 
+                            ? `GPS Active (±${sensorData.location.accuracy}m)` 
+                            : 'GPS Inactive'
+                          }
                         </div>
                       </div>
 
-                      {/* WiFi Badge */}
+                      {/* WiFi Badge - Shows network status */}
                       <div className="relative group">
-                        <div className="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full">
+                        <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                          navigator.onLine ? 'bg-green-500' : 'bg-red-500'
+                        }`}>
                           <Wifi className="h-3 w-3 text-white" />
                         </div>
-                        <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                        <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                          navigator.onLine ? 'bg-green-400' : 'bg-red-400'
+                        }`}></div>
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                          Network Online
+                          {navigator.onLine ? 'Network Online' : 'Network Offline'}
                         </div>
                       </div>
 
-                      {/* Watch Badge - Show on mobile */}
-                      {navigator.userAgent.includes('Mobile') && (
+                      {/* Watch Badge - Shows connected smartwatches */}
+                      {bluetoothDevices.some(d => d.deviceType === 'smartwatch' && d.connected) && (
                         <div className="relative group">
                           <div className="flex items-center justify-center w-6 h-6 bg-purple-500 rounded-full">
                             <Watch className="h-3 w-3 text-white" />
                           </div>
                           <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
                           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                            Wearable Ready
+                            {bluetoothDevices.find(d => d.deviceType === 'smartwatch' && d.connected)?.name || 'Smartwatch'}
                           </div>
                         </div>
                       )}
 
-                      {/* Bluetooth Badge - Show if available */}
-                      {typeof navigator !== 'undefined' && 'bluetooth' in navigator && (
+                      {/* Bluetooth Devices - Shows connected count */}
+                      {bluetoothSupported && (
                         <div className="relative group">
-                          <div className="flex items-center justify-center w-6 h-6 bg-cyan-500 rounded-full">
+                          <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                            bluetoothDevices.filter(d => d.connected).length > 0 ? 'bg-cyan-500' : 'bg-gray-400'
+                          }`}>
                             <Bluetooth className="h-3 w-3 text-white" />
                           </div>
-                          <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                          <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                            bluetoothDevices.filter(d => d.connected).length > 0 ? 'bg-green-400' : 'bg-red-400'
+                          }`}></div>
                           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                            Bluetooth Ready
+                            {bluetoothDevices.filter(d => d.connected).length} Device(s) Connected
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Battery Badge - Shows actual battery level */}
+                      {sensorData?.battery?.active && (
+                        <div className="relative group">
+                          <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                            sensorData.battery.level > 50 ? 'bg-green-500' : 
+                            sensorData.battery.level > 20 ? 'bg-yellow-500' : 'bg-red-500'
+                          }`}>
+                            <span className="text-white text-xs font-bold">
+                              {Math.round(sensorData.battery.level)}
+                            </span>
+                          </div>
+                          <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                            sensorData.battery.charging ? 'bg-yellow-400' : 'bg-green-400'
+                          }`}></div>
+                          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                            {sensorData.battery.level}% {sensorData.battery.charging ? '(Charging)' : ''}
                           </div>
                         </div>
                       )}

@@ -42,6 +42,7 @@ import {
   Target,
   Sparkles
 } from 'lucide-react';
+import { useBluetoothDevices } from '@/hooks/useBluetoothDevices';
 
 interface DeviceData {
   id: string;
@@ -73,6 +74,14 @@ interface DeviceIntegrationHubProps {
 
 export function DeviceIntegrationHub({ sensorData, permissions, requestPermissions }: DeviceIntegrationHubProps) {
   const { toast } = useToast();
+  const { 
+    devices: bluetoothDevices, 
+    scanForDevices, 
+    isScanning, 
+    bluetoothSupported,
+    connectToDevice,
+    disconnectFromDevice 
+  } = useBluetoothDevices();
   const [devices, setDevices] = useState<DeviceData[]>([]);
   const [scanning, setScanning] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
