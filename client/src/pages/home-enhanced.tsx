@@ -191,42 +191,42 @@ export default function Home() {
       
       {/* Enhanced Header */}
       <header className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-lg bg-card/95">
-        <div className="px-4 py-3 sm:py-4">
+        <div className="px-3 sm:px-4 py-2 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-lg overflow-hidden bg-white flex-shrink-0">
+            <div className="flex items-center space-x-2 min-w-0 flex-1">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-2xl shadow-lg overflow-hidden bg-white flex-shrink-0">
                 <img 
                   src="/logo.png" 
                   alt="VitalWatch Logo" 
-                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+                  className="w-6 h-6 sm:w-10 sm:h-10 object-contain"
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent truncate">
+                <div className="flex items-center space-x-1 sm:space-x-3">
+                  <h1 className="text-base sm:text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent truncate">
                     VitalWatch
                   </h1>
-                  <div className="hidden xs:block">
+                  <div className="hidden md:block">
                     <VersionBadge />
                   </div>
                 </div>
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse flex-shrink-0`} />
-                  <span className="text-xs sm:text-sm text-muted-foreground font-medium truncate">
-                    {isConnected ? 'Protected & Connected' : 'Reconnecting...'}
+                <div className="flex items-center space-x-1">
+                  <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse flex-shrink-0`} />
+                  <span className="text-xs text-muted-foreground font-medium truncate">
+                    {isConnected ? 'Protected' : 'Reconnecting...'}
                   </span>
                   
-                  {/* Device Connection Badges */}
+                  {/* Device Connection Badges - Only show on larger screens */}
                   {isConnected && (
-                    <div className="flex items-center space-x-1 ml-2">
+                    <div className="hidden md:flex items-center space-x-1 ml-2">
                       {/* Smartphone Badge - Shows sensor activity */}
                       <div className="relative group">
-                        <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                        <div className={`flex items-center justify-center w-5 h-5 rounded-full ${
                           deviceStatus?.accelerometer?.active ? 'bg-blue-500' : 'bg-gray-400'
                         }`}>
-                          <Smartphone className="h-3 w-3 text-white" />
+                          <Smartphone className="h-2.5 w-2.5 text-white" />
                         </div>
-                        <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                        <div className={`absolute top-0 right-0 w-1.5 h-1.5 rounded-full border border-white ${
                           deviceStatus?.accelerometer?.active ? 'bg-green-400' : 'bg-red-400'
                         }`}></div>
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
@@ -236,12 +236,12 @@ export default function Home() {
 
                       {/* GPS Badge - Shows location availability */}
                       <div className="relative group">
-                        <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                        <div className={`flex items-center justify-center w-5 h-5 rounded-full ${
                           deviceStatus?.location?.active ? 'bg-orange-500' : 'bg-gray-400'
                         }`}>
-                          <MapPin className="h-3 w-3 text-white" />
+                          <MapPin className="h-2.5 w-2.5 text-white" />
                         </div>
-                        <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                        <div className={`absolute top-0 right-0 w-1.5 h-1.5 rounded-full border border-white ${
                           deviceStatus?.location?.active ? 'bg-green-400' : 'bg-red-400'
                         }`}></div>
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
@@ -251,12 +251,12 @@ export default function Home() {
 
                       {/* WiFi Badge - Shows network status */}
                       <div className="relative group">
-                        <div className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                        <div className={`flex items-center justify-center w-5 h-5 rounded-full ${
                           deviceStatus?.network?.active ? 'bg-green-500' : 'bg-red-500'
                         }`}>
-                          <Wifi className="h-3 w-3 text-white" />
+                          <Wifi className="h-2.5 w-2.5 text-white" />
                         </div>
-                        <div className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${
+                        <div className={`absolute top-0 right-0 w-1.5 h-1.5 rounded-full border border-white ${
                           deviceStatus?.network?.active ? 'bg-green-400' : 'bg-red-400'
                         }`}></div>
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
@@ -267,10 +267,10 @@ export default function Home() {
                       {/* Bluetooth Badge - Shows availability */}
                       {typeof navigator !== 'undefined' && 'bluetooth' in navigator && (
                         <div className="relative group">
-                          <div className="flex items-center justify-center w-6 h-6 bg-cyan-500 rounded-full">
-                            <Bluetooth className="h-3 w-3 text-white" />
+                          <div className="flex items-center justify-center w-5 h-5 bg-cyan-500 rounded-full">
+                            <Bluetooth className="h-2.5 w-2.5 text-white" />
                           </div>
-                          <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                          <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-green-400 rounded-full border border-white"></div>
                           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                             Bluetooth Available
                           </div>
@@ -280,12 +280,12 @@ export default function Home() {
                       {/* Battery Badge - Shows battery API availability */}
                       {deviceStatus?.battery?.active && (
                         <div className="relative group">
-                          <div className="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full">
+                          <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full">
                             <span className="text-white text-xs font-bold">
                               {deviceStatus.battery.level}
                             </span>
                           </div>
-                          <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                          <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-green-400 rounded-full border border-white"></div>
                           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                             Battery {deviceStatus.battery.level}%
                           </div>
@@ -297,14 +297,14 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
-              <div className="hidden sm:block">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+              <div className="hidden lg:block">
                 <ThemeToggle />
               </div>
               
               {user && (
-                <div className="flex items-center space-x-1 sm:space-x-3">
-                  <div className="hidden lg:block text-right">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="hidden xl:block text-right">
                     <p className="text-sm font-semibold text-foreground">
                       Welcome back, {userName}
                     </p>
@@ -313,56 +313,73 @@ export default function Home() {
                       <span>You're doing great today</span>
                     </p>
                   </div>
-                  <Avatar className="h-10 w-10 sm:h-12 sm:w-12 ring-2 ring-primary/20 shadow-md">
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10 ring-2 ring-primary/20 shadow-md">
                     <AvatarImage src={(user as any).profileImageUrl} />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground font-bold text-sm sm:text-lg">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground font-bold text-xs sm:text-sm">
                       {userName.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   
-                  {/* Tools Button */}
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 hidden sm:flex" 
-                    asChild
-                  >
-                    <Link href="/tools" data-testid="link-tools-nav">
-                      <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </Link>
-                  </Button>
-
-                  {/* Admin Button - Only for Admin Users */}
-                  {(user as any)?.isAdmin && (
+                  {/* Mobile: Only show essential buttons */}
+                  <div className="flex sm:hidden">
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400 hidden sm:flex" 
+                      className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 h-8 w-8" 
                       asChild
                     >
-                      <Link href="/admin" data-testid="link-admin-nav">
-                        <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <Link href="/tools" data-testid="link-tools-nav">
+                        <Zap className="h-4 w-4" />
                       </Link>
                     </Button>
-                  )}
-                  
-                  <Button variant="ghost" size="icon" className="hover:bg-primary/10 hidden sm:flex" asChild>
-                    <Link href="/profile" data-testid="link-profile">
-                      <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </Link>
-                  </Button>
-                  
-                  {/* Logout Button */}
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 hidden sm:flex" 
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                    data-testid="button-logout"
-                  >
-                    <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </Button>
+                  </div>
+
+                  {/* Desktop: Show all buttons */}
+                  <div className="hidden sm:flex items-center space-x-1">
+                    {/* Tools Button */}
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400" 
+                      asChild
+                    >
+                      <Link href="/tools" data-testid="link-tools-nav">
+                        <Zap className="h-4 w-4" />
+                      </Link>
+                    </Button>
+
+                    {/* Admin Button - Only for Admin Users */}
+                    {(user as any)?.isAdmin && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400" 
+                        asChild
+                      >
+                        <Link href="/admin" data-testid="link-admin-nav">
+                          <Shield className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    )}
+                    
+                    <Button variant="ghost" size="icon" className="hover:bg-primary/10" asChild>
+                      <Link href="/profile" data-testid="link-profile">
+                        <Settings className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    
+                    {/* Logout Button */}
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400" 
+                      onClick={handleLogout}
+                      disabled={isLoggingOut}
+                      data-testid="button-logout"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
