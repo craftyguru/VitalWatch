@@ -42,6 +42,9 @@ export function PWAInstallPrompt() {
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(iOS);
 
+    // Detect mobile devices
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     // Handle PWA install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
@@ -55,11 +58,11 @@ export function PWAInstallPrompt() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // For iOS, show manual install instructions
-    if (iOS && !isStandalone) {
+    // For iOS or mobile devices, show manual install instructions
+    if ((iOS || isMobile) && !isStandalone) {
       setTimeout(() => {
         setShowPrompt(true);
-      }, 3000);
+      }, 5000); // Show after 5 seconds for testing
     }
 
     return () => {

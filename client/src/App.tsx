@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { HelpChatBubble } from "@/components/HelpChatBubble";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { FloatingInstallButton } from "@/components/FloatingInstallButton";
 import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
@@ -55,6 +56,7 @@ function App() {
           <Toaster />
           <Router />
           <PWAInstallPrompt />
+          <FloatingInstallButton />
           <HelpChatBubble />
         </TooltipProvider>
       </QueryClientProvider>

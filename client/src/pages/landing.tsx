@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { InstallButton } from "@/components/InstallButton";
+import { TestInstallButton } from "@/components/TestInstallButton";
 
 export default function LandingPage() {
   const { toast } = useToast();
@@ -365,10 +366,7 @@ export default function LandingPage() {
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="px-8 py-3 border-white/30 text-white hover:bg-white/10">
-                <PlayCircle className="h-5 w-5 mr-2" />
-                Watch Demo
-              </Button>
+              <TestInstallButton />
               <Button 
                 size="lg" 
                 variant="secondary" 
