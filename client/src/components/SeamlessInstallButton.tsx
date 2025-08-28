@@ -30,12 +30,14 @@ export function SeamlessInstallButton() {
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      console.log('Install prompt available');
     };
 
     // Listen for successful installation
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
+      console.log('App installed successfully');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
@@ -50,9 +52,12 @@ export function SeamlessInstallButton() {
   const handleInstallClick = async () => {
     if (deferredPrompt) {
       try {
-        // Directly trigger the native browser install prompt (like Google Play Store)
+        console.log('Triggering native install prompt');
+        // Directly trigger the native browser install prompt (NO custom dialogs)
         await deferredPrompt.prompt();
         const choiceResult = await deferredPrompt.userChoice;
+        
+        console.log('User choice:', choiceResult.outcome);
         
         if (choiceResult.outcome === 'accepted') {
           setIsInstalled(true);
@@ -62,11 +67,13 @@ export function SeamlessInstallButton() {
       } catch (error) {
         console.error('Install error:', error);
       }
+    } else {
+      console.log('No install prompt available - browser may not support PWA installation');
     }
   };
 
-  // Don't show anything if already installed or no install prompt available
-  if (isInstalled || !deferredPrompt) {
+  // Don't show anything if already installed
+  if (isInstalled) {
     return null;
   }
 
