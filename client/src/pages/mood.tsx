@@ -148,10 +148,13 @@ export default function Mood() {
     };
   };
 
-  const moodTrend = calculateMoodTrend(moodEntries || []);
-  const moodStats = getMoodStats(moodEntries || []);
-  const unreadInsights = aiInsights?.filter(insight => !insight.isRead) || [];
-  const criticalInsights = aiInsights?.filter(insight => insight.type === "crisis_warning") || [];
+  const validMoodEntries = Array.isArray(moodEntries) ? moodEntries : [];
+  const validAiInsights = Array.isArray(aiInsights) ? aiInsights : [];
+  
+  const moodTrend = calculateMoodTrend(validMoodEntries);
+  const moodStats = getMoodStats(validMoodEntries);
+  const unreadInsights = validAiInsights.filter((insight: any) => !insight.isRead);
+  const criticalInsights = validAiInsights.filter((insight: any) => insight.type === "crisis_warning");
 
   return (
     <div className="min-h-screen bg-neutral-50 pb-20">
@@ -208,11 +211,11 @@ export default function Mood() {
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="tracker">Track</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-            <TabsTrigger value="insights">Insights</TabsTrigger>
-            <TabsTrigger value="stats">Stats</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-6 h-auto p-1">
+            <TabsTrigger value="tracker" className="py-2 px-2 sm:px-4 text-xs sm:text-sm">Track</TabsTrigger>
+            <TabsTrigger value="history" className="py-2 px-2 sm:px-4 text-xs sm:text-sm">History</TabsTrigger>
+            <TabsTrigger value="insights" className="py-2 px-2 sm:px-4 text-xs sm:text-sm">AI</TabsTrigger>
+            <TabsTrigger value="stats" className="py-2 px-2 sm:px-4 text-xs sm:text-sm">Stats</TabsTrigger>
           </TabsList>
 
           {/* Mood Tracker Tab */}
@@ -275,9 +278,9 @@ export default function Mood() {
                   </Card>
                 ))}
               </div>
-            ) : moodEntries && moodEntries.length > 0 ? (
+            ) : validMoodEntries.length > 0 ? (
               <div className="space-y-3">
-                {moodEntries.map((entry: any) => {
+                {validMoodEntries.map((entry: any) => {
                   const MoodIcon = moodIcons[entry.mood as keyof typeof moodIcons];
                   return (
                     <Card key={entry.id} className="hover:shadow-md transition-shadow">
@@ -456,9 +459,10 @@ export default function Mood() {
                     <div className="p-4 bg-purple-50 rounded-lg">
                       <div className="flex items-center space-x-2 mb-2">
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${moodBgColors[moodStats.mostCommonMood as keyof typeof moodBgColors]}`}>
-                          {React.createElement(moodIcons[moodStats.mostCommonMood as keyof typeof moodIcons], {
-                            className: `h-4 w-4 ${moodColors[moodStats.mostCommonMood as keyof typeof moodColors]}`
-                          })}
+                          {(() => {
+                            const MoodIcon = moodIcons[moodStats.mostCommonMood as keyof typeof moodIcons];
+                            return <MoodIcon className={`h-4 w-4 ${moodColors[moodStats.mostCommonMood as keyof typeof moodColors]}`} />;
+                          })()}
                         </div>
                         <span className="font-medium text-purple-700">Most Common Mood</span>
                       </div>

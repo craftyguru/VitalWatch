@@ -376,7 +376,7 @@ export default function ToolsComprehensive() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-8">
             {/* Comprehensive Dashboard Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
               <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200/50">
                 <CardContent className="p-6 text-center">
                   <div className="bg-blue-500 text-white p-3 rounded-xl w-fit mx-auto mb-3">
@@ -431,38 +431,38 @@ export default function ToolsComprehensive() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <Button 
                     onClick={triggerPanicButton}
-                    className="h-20 bg-red-600 hover:bg-red-700 text-white flex flex-col items-center justify-center space-y-2"
+                    className="h-16 sm:h-20 bg-red-600 hover:bg-red-700 text-white flex flex-col items-center justify-center space-y-1 sm:space-y-2"
                   >
-                    <AlertTriangle className="h-6 w-6" />
-                    <span className="text-sm font-bold">PANIC BUTTON</span>
+                    <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span className="text-xs sm:text-sm font-bold">PANIC</span>
                   </Button>
                   
                   <Button 
                     variant="outline"
-                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                    className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2"
                   >
-                    <Wind className="h-6 w-6" />
-                    <span className="text-sm">Breathing Exercise</span>
+                    <Wind className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span className="text-xs sm:text-sm">Breathing</span>
                   </Button>
                   
                   <Button 
                     variant="outline"
-                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                    className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2"
                   >
-                    <MessageSquare className="h-6 w-6" />
-                    <span className="text-sm">Crisis Chat</span>
+                    <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span className="text-xs sm:text-sm">Crisis Chat</span>
                   </Button>
                   
                   <Button 
                     onClick={startLocationTracking}
                     variant="outline"
-                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                    className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2"
                   >
-                    <MapPin className="h-6 w-6" />
-                    <span className="text-sm">Share Location</span>
+                    <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span className="text-xs sm:text-sm">Location</span>
                   </Button>
                 </div>
               </CardContent>

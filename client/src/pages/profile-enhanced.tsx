@@ -131,32 +131,36 @@ export default function ProfileEnhanced() {
 
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Enhanced Tab Navigation */}
+          {/* Enhanced Tab Navigation - Mobile Responsive */}
           <div className="mb-8">
-            <TabsList className="grid w-full grid-cols-6 h-auto p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg rounded-2xl border border-slate-200 dark:border-slate-800">
-              <TabsTrigger value="overview" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <User className="h-5 w-5" />
-                <span className="text-sm font-medium">Overview</span>
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg rounded-2xl border border-slate-200 dark:border-slate-800">
+              <TabsTrigger value="overview" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <User className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Overview</span>
               </TabsTrigger>
-              <TabsTrigger value="security" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Shield className="h-5 w-5" />
-                <span className="text-sm font-medium">Security</span>
+              <TabsTrigger value="security" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Security</span>
               </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Bell className="h-5 w-5" />
-                <span className="text-sm font-medium">Notifications</span>
+              <TabsTrigger value="notifications" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden xs:block">Alerts</span>
+                <span className="text-xs sm:text-sm font-medium xs:hidden">📱</span>
               </TabsTrigger>
-              <TabsTrigger value="subscription" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <CreditCard className="h-5 w-5" />
-                <span className="text-sm font-medium">Subscription</span>
+              <TabsTrigger value="subscription" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden xs:block">Pro</span>
+                <span className="text-xs sm:text-sm font-medium xs:hidden">💳</span>
               </TabsTrigger>
-              <TabsTrigger value="data" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Download className="h-5 w-5" />
-                <span className="text-sm font-medium">Data</span>
+              <TabsTrigger value="data" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <Download className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden xs:block">Data</span>
+                <span className="text-xs sm:text-sm font-medium xs:hidden">📊</span>
               </TabsTrigger>
-              <TabsTrigger value="support" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <LifeBuoy className="h-5 w-5" />
-                <span className="text-sm font-medium">Support</span>
+              <TabsTrigger value="support" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <LifeBuoy className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden xs:block">Help</span>
+                <span className="text-xs sm:text-sm font-medium xs:hidden">🆘</span>
               </TabsTrigger>
             </TabsList>
           </div>

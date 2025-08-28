@@ -179,42 +179,42 @@ export default function ContactsEnhanced() {
       <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon" asChild className="hover:bg-blue-100 dark:hover:bg-blue-900">
+            <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+              <Button variant="ghost" size="icon" asChild className="hover:bg-blue-100 dark:hover:bg-blue-900 flex-shrink-0">
                 <Link href="/" data-testid="link-back-home">
-                  <ArrowLeft className="h-5 w-5" />
+                  <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Link>
               </Button>
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg">
+              <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden bg-white shadow-lg flex-shrink-0">
                   <img 
                     src="/logo.png" 
                     alt="VitalWatch Logo" 
-                    className="w-8 h-8 object-contain"
+                    className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
                   />
                 </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Emergency Contacts</h1>
-                  <p className="text-slate-600 dark:text-slate-400">Manage your safety network and emergency contacts</p>
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">Emergency Contacts</h1>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden sm:block">Manage your safety network and emergency contacts</p>
                 </div>
               </div>
             </div>
             
-            {/* Quick Stats */}
-            <div className="flex items-center space-x-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">{contacts.length}</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Total Contacts</div>
+            {/* Quick Stats - Mobile Responsive */}
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+              <div className="text-center hidden sm:block">
+                <div className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">{contacts.length}</div>
+                <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Total</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{primaryContacts.length}</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Primary</div>
+              <div className="text-center hidden sm:block">
+                <div className="text-lg sm:text-2xl font-bold text-blue-600">{primaryContacts.length}</div>
+                <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Primary</div>
               </div>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Contact
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg px-3 sm:px-4">
+                    <Plus className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Add Contact</span>
                   </Button>
                 </DialogTrigger>
               </Dialog>
@@ -306,19 +306,19 @@ export default function ContactsEnhanced() {
           </Card>
         </div>
 
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        {/* Search and Filter - Mobile Responsive */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 mb-6">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
-              placeholder="Search contacts by name or relationship..."
+              placeholder="Search contacts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-10 sm:h-auto"
             />
           </div>
           <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-            <SelectTrigger className="w-full sm:w-48">
+            <SelectTrigger className="w-full sm:w-48 h-10 sm:h-auto">
               <Filter className="h-4 w-4 mr-2" />
               <SelectValue placeholder="Filter by priority" />
             </SelectTrigger>
