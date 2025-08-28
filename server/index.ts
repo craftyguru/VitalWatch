@@ -102,7 +102,7 @@ async function start() {
     });
   } else {
     // PROD: serve built assets
-    const distClient = path.resolve(__dirname, "../dist/client");
+    const distClient = path.resolve(__dirname, "../client");
     app.use(express.static(distClient, { index: false }));
     app.get("*", async (_req, res) => {
       const html = await fs.readFile(path.join(distClient, "index.html"), "utf-8");
