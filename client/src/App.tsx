@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { HelpChatBubble } from "@/components/HelpChatBubble";
+import { UpdateAvailableToast } from "@/components/UpdateAvailableToast";
 
 import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
@@ -53,6 +54,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
+          <UpdateAvailableToast />
           <Router />
 
           <HelpChatBubble />

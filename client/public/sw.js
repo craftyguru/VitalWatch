@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vitalwatch-v1';
+const CACHE_NAME = 'vitalwatch-v3.0.0';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -34,10 +34,22 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
+    }).then(() => {
+      console.log('Service worker activated with cache:', CACHE_NAME);
+      // Force all clients to reload with new version
+      return self.clients.claim();
     })
   );
+});
+
+// Add message handler for version updates
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

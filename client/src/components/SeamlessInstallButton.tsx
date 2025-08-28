@@ -103,30 +103,13 @@ export function SeamlessInstallButton() {
       let instructions = '';
       
       if (isReplit) {
-        instructions = 'VitalWatch needs to be deployed to enable mobile app installation.\n\n';
-        instructions += 'Development sites cannot be installed as apps on mobile devices.\n\n';
-        instructions += 'For now, you can:\n';
-        instructions += '• Bookmark this page for quick access\n';
-        instructions += '• Use "Add to Home Screen" to create a shortcut\n';
-        instructions += '• Ask your developer to deploy the app for full PWA installation';
-      } else if (isIOS && isSafari) {
-        instructions = 'To install VitalWatch on iOS:\n\n';
-        instructions += '1. Tap the Share button (square with arrow)\n';
-        instructions += '2. Scroll down and tap "Add to Home Screen"\n';
-        instructions += '3. Tap "Add" to install VitalWatch';
-      } else if (isAndroid && isChrome) {
-        instructions = 'To install VitalWatch on Android:\n\n';
-        instructions += '1. Look for "Install app" in the browser menu (3 dots)\n';
-        instructions += '2. Or check the address bar for an install icon\n';
-        instructions += '3. Tap "Install" when prompted';
+        alert('App installation is only available after deployment. This is a development environment.');
       } else {
-        instructions = 'To install VitalWatch:\n\n';
-        instructions += '• Chrome: Look for "Install" icon in the address bar\n';
-        instructions += '• Safari: Use "Add to Home Screen" from the share menu\n';
-        instructions += '• Edge: Use "Install this site as an app" from the menu';
+        // For deployed TWA, users should get native install prompt
+        // Don't show manual instructions since this is a TWA
+        console.log('TWA deployment detected - native install should be available');
+        return;
       }
-      
-      alert(instructions);
     }
   };
 
