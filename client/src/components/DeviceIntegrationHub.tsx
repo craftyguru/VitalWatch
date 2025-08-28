@@ -65,14 +65,19 @@ interface SensorData {
   description: string;
 }
 
-export function DeviceIntegrationHub() {
+interface DeviceIntegrationHubProps {
+  sensorData?: any;
+  permissions?: any;
+  requestPermissions?: () => void;
+}
+
+export function DeviceIntegrationHub({ sensorData, permissions, requestPermissions }: DeviceIntegrationHubProps) {
   const { toast } = useToast();
   const [devices, setDevices] = useState<DeviceData[]>([]);
   const [scanning, setScanning] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
   const [realTimeMonitoring, setRealTimeMonitoring] = useState(true);
   const [connectedDevices, setConnectedDevices] = useState<DeviceData[]>([]);
-  const [sensorData, setSensorData] = useState<{ [key: string]: any }>({});
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Real device detection and sensor integration
@@ -92,14 +97,44 @@ export function DeviceIntegrationHub() {
             id: 'device-motion',
             name: 'Smartphone Sensors',
             type: 'phone',
-            connected: true,
-            battery: 100,
+            connected: sensorData?.accelerometer?.active || sensorData?.gyroscope?.active || false,
+            battery: sensorData?.battery?.level || 85,
             signal: 100,
             lastSync: new Date(),
             sensors: [
-              { id: 'accelerometer', name: 'Accelerometer', icon: Zap, value: 'Active', status: 'active', accuracy: 95, description: 'Motion and impact detection' },
-              { id: 'gyroscope', name: 'Gyroscope', icon: RotateCcw, value: 'Active', status: 'active', accuracy: 93, description: 'Orientation and rotation sensing' },
-              { id: 'orientation', name: 'Device Orientation', icon: Navigation, value: 'Active', status: 'active', accuracy: 90, description: 'Device position tracking' }
+              { 
+                id: 'accelerometer', 
+                name: 'Accelerometer', 
+                icon: Zap, 
+                value: sensorData?.accelerometer?.active ? 
+                  `X:${sensorData.accelerometer.x.toFixed(1)} Y:${sensorData.accelerometer.y.toFixed(1)} Z:${sensorData.accelerometer.z.toFixed(1)}` : 
+                  'Inactive', 
+                status: sensorData?.accelerometer?.active ? 'active' : 'inactive', 
+                accuracy: sensorData?.accelerometer?.active ? 95 : 0, 
+                description: 'Real-time motion and impact detection' 
+              },
+              { 
+                id: 'gyroscope', 
+                name: 'Gyroscope', 
+                icon: RotateCcw, 
+                value: sensorData?.gyroscope?.active ? 
+                  `α:${sensorData.gyroscope.alpha.toFixed(1)}° β:${sensorData.gyroscope.beta.toFixed(1)}° γ:${sensorData.gyroscope.gamma.toFixed(1)}°` : 
+                  'Inactive', 
+                status: sensorData?.gyroscope?.active ? 'active' : 'inactive', 
+                accuracy: sensorData?.gyroscope?.active ? 93 : 0, 
+                description: 'Real-time orientation and rotation sensing' 
+              },
+              { 
+                id: 'orientation', 
+                name: 'Device Orientation', 
+                icon: Navigation, 
+                value: sensorData?.orientation?.active ? 
+                  `${sensorData.orientation.orientation.toFixed(1)}°` : 
+                  'Inactive', 
+                status: sensorData?.orientation?.active ? 'active' : 'inactive', 
+                accuracy: sensorData?.orientation?.active ? 90 : 0, 
+                description: 'Real device position tracking' 
+              }
             ]
           });
         }
@@ -114,13 +149,32 @@ export function DeviceIntegrationHub() {
         id: 'geolocation',
         name: 'GPS Location',
         type: 'phone',
-        connected: true,
-        battery: 100,
+        connected: sensorData?.location?.active || false,
+        battery: sensorData?.battery?.level || 100,
         signal: 95,
         lastSync: new Date(),
         sensors: [
-          { id: 'gps', name: 'GPS Tracking', icon: MapPin, value: 'Ready', status: 'active', accuracy: 88, description: 'High-accuracy location tracking' },
-          { id: 'speed', name: 'Speed Detection', icon: Gauge, value: '0', unit: 'km/h', status: 'active', accuracy: 85, description: 'Movement speed monitoring' }
+          { 
+            id: 'gps', 
+            name: 'GPS Tracking', 
+            icon: MapPin, 
+            value: sensorData?.location?.active ? 
+              `Lat:${sensorData.location.latitude?.toFixed(4)} Lng:${sensorData.location.longitude?.toFixed(4)}` : 
+              'Location access needed', 
+            status: sensorData?.location?.active ? 'active' : 'inactive', 
+            accuracy: sensorData?.location?.accuracy ? Math.min(sensorData.location.accuracy, 100) : 0, 
+            description: 'Real-time GPS tracking for emergency services' 
+          },
+          { 
+            id: 'speed', 
+            name: 'Speed Detection', 
+            icon: Gauge, 
+            value: '0', 
+            unit: 'km/h', 
+            status: sensorData?.location?.active ? 'active' : 'inactive', 
+            accuracy: 85, 
+            description: 'Movement speed monitoring' 
+          }
         ]
       });
     }
@@ -192,7 +246,7 @@ export function DeviceIntegrationHub() {
 
   useEffect(() => {
     initializeRealSensors();
-  }, []);
+  }, [sensorData]);
 
   // Real-time sensor monitoring
   useEffect(() => {

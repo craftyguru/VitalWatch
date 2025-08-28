@@ -108,6 +108,8 @@ import {
   Rainbow
 } from "lucide-react";
 import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
+import { useDeviceSensors } from "@/hooks/useDeviceSensors";
+import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
 
 // Import enhanced components
 import AdvancedBreathingExercise from "@/components/ui/advanced-breathing-exercise";
@@ -120,6 +122,7 @@ export default function ToolsComprehensive() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { sensorData, permissions, requestPermissions, isConnected } = useDeviceSensors();
   const [activeTab, setActiveTab] = useState("overview");
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [voiceCommands, setVoiceCommands] = useState(true);
@@ -520,6 +523,13 @@ export default function ToolsComprehensive() {
 
           {/* Safety Tools Tab */}
           <TabsContent value="safety-tools" className="space-y-8">
+            {/* Real-time Biometrics */}
+            <RealTimeBiometrics 
+              sensorData={sensorData} 
+              permissions={permissions} 
+              requestPermissions={requestPermissions} 
+            />
+            
             <AdvancedSafetyTools />
           </TabsContent>
 
@@ -687,7 +697,7 @@ export default function ToolsComprehensive() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <DeviceIntegrationHub />
+                <DeviceIntegrationHub sensorData={sensorData} permissions={permissions} requestPermissions={requestPermissions} />
               </CardContent>
             </Card>
           </TabsContent>
