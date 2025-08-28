@@ -54,7 +54,7 @@ export default function ToolsComprehensive() {
   const { sensorData, permissions, requestPermissions, isConnected } = useSafeDeviceSensors();
   const [activeTab, setActiveTab] = useState("overview");
   const [emergencyMode, setEmergencyMode] = useState(false);
-  const [voiceCommands, setVoiceCommands] = useState(true);
+  const [voiceCommands] = useState(true);
   const [liveLocation, setLiveLocation] = useState(false);
   const [networkTrustScore] = useState(89);
   const [safetyStreak] = useState(7);
@@ -62,40 +62,14 @@ export default function ToolsComprehensive() {
   const [safetyPoints] = useState(240);
 
   // Enhanced state for real functionality
-  const [isRecording, setIsRecording] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
 
   // Fetch user settings and data
-  const { data: userSettings } = useQuery({
-    queryKey: ["/api/user-settings"],
-  });
-
   const { data: emergencyContacts } = useQuery({
     queryKey: ["/api/emergency-contacts"],
   });
 
-  const { data: recentMoods } = useQuery({
-    queryKey: ["/api/mood-entries"],
-  });
 
-  // Voice command testing
-  const testVoiceCommands = () => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance("Voice commands are working. Say 'Emergency Help' to trigger assistance.");
-      window.speechSynthesis.speak(utterance);
-      toast({
-        title: "Voice Commands Active",
-        description: "Try saying 'Emergency Help' to test voice activation",
-        variant: "default",
-      });
-    } else {
-      toast({
-        title: "Voice Commands Unavailable",
-        description: "Your browser doesn't support voice commands",
-        variant: "destructive",
-      });
-    }
-  };
 
   // Geolocation functions
   const startLocationTracking = () => {
@@ -125,26 +99,7 @@ export default function ToolsComprehensive() {
     }
   };
 
-  // Device integration simulation
-  const connectWearables = () => {
-    setTimeout(() => {
-      toast({
-        title: "Wearables Connected",
-        description: "Heart rate and activity monitoring active",
-        variant: "default",
-      });
-    }, 2000);
-  };
 
-  const connectSmartHome = () => {
-    setTimeout(() => {
-      toast({
-        title: "Smart Home Connected",
-        description: "Emergency lighting and door controls activated",
-        variant: "default",
-      });
-    }, 1500);
-  };
 
   // Real panic button functionality
   const triggerPanicButton = () => {
@@ -177,40 +132,9 @@ export default function ToolsComprehensive() {
     }, 1000);
   };
 
-  const cancelEmergency = () => {
-    setEmergencyMode(false);
-    toast({
-      title: "Emergency Cancelled",
-      description: "Alert has been cancelled. You are safe.",
-      variant: "default",
-    });
-  };
 
-  // Multi-channel alert testing
-  const testMultiChannelAlert = () => {
-    toast({
-      title: "Testing Alert System",
-      description: "Sending test alerts via SMS, Email, and Push notifications...",
-      variant: "default",
-    });
-    
-    setTimeout(() => {
-      toast({
-        title: "Alert Test Complete",
-        description: "All channels tested successfully. Network ready.",
-        variant: "default",
-      });
-    }, 3000);
-  };
 
-  // Safety check-in
-  const performSafetyCheckIn = () => {
-    toast({
-      title: "Safety Check-In Complete",
-      description: `Streak: ${safetyStreak + 1} days. +10 points earned!`,
-      variant: "default",
-    });
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
