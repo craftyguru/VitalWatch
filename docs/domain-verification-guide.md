@@ -7,13 +7,15 @@ From your screenshots, I can see several DNS records need to be configured corre
 ### 1. SendGrid Email Verification Records
 Your SendGrid domain verification is failing because several DNS records are missing or incorrect:
 
-**Required DNS Records for SendGrid:**
+**Required DNS Records for SendGrid (UPDATED):**
 
 ```
-Type: CNAME   Name: em1216.vitalwatch   Value: u23345503.wl034.sendgrid.net
-Type: CNAME   Name: s1._domainkey.vitalwatch   Value: s1.domainkey.u23345503.wl034.sendgrid.net  
-Type: CNAME   Name: s2._domainkey.vitalwatch   Value: s2.domainkey.u23345503.wl034.sendgrid.net
-Type: TXT     Name: vitalwatch.app   Value: v=spf1 include:sendgrid.net ~all
+Type: CNAME   Name: em3111.vitalwatch   Value: u52345503.wl004.sendgrid.net
+Type: CNAME   Name: s1._domainkey.vitalwatch   Value: s1.domainkey.u52345503.wl004.sendgrid.net  
+Type: CNAME   Name: s2._domainkey.vitalwatch   Value: s2.domainkey.u52345503.wl004.sendgrid.net
+Type: CNAME   Name: url2118.vitalwatch   Value: sendgrid.net
+Type: CNAME   Name: 52345503.vitalwatch   Value: sendgrid.net
+Type: TXT     Name: _dmarc.vitalwatch   Value: v=DMARC1; p=none;
 ```
 
 ### 2. DMARC Record Missing
