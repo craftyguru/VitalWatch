@@ -369,7 +369,26 @@ export default function LandingPage() {
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
-              <SeamlessInstallButton />
+              
+              <div className="flex flex-col items-center space-y-3">
+                <SeamlessInstallButton />
+                
+                {/* Mobile deployment notice */}
+                {(window.location.hostname.includes('replit.dev') || window.location.hostname.includes('replit.app')) && (
+                  <div className="text-center max-w-md">
+                    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                      <div className="flex items-center justify-center space-x-2 mb-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-600" />
+                        <span className="text-sm font-medium text-amber-800 dark:text-amber-200">Development Mode</span>
+                      </div>
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        Mobile app installation requires deployment. For now, use "Add to Home Screen" for quick access.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               <Button 
                 size="lg" 
                 variant="secondary" 

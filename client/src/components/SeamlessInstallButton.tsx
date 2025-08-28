@@ -96,19 +96,34 @@ export function SeamlessInstallButton() {
       const isAndroid = /Android/.test(navigator.userAgent);
       const isChrome = /Chrome/.test(navigator.userAgent);
       const isSafari = /Safari/.test(navigator.userAgent) && !isChrome;
+      const isReplit = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('replit.app');
       
-      console.log('Browser detection:', { isIOS, isAndroid, isChrome, isSafari });
+      console.log('Browser detection:', { isIOS, isAndroid, isChrome, isSafari, isReplit });
       
-      let instructions = 'To install VitalWatch:\n\n';
+      let instructions = '';
       
-      if (isIOS && isSafari) {
-        instructions += '• Tap the Share button (square with arrow)\n• Select "Add to Home Screen"\n• Tap "Add" to install';
+      if (isReplit) {
+        instructions = 'VitalWatch needs to be deployed to enable mobile app installation.\n\n';
+        instructions += 'Development sites cannot be installed as apps on mobile devices.\n\n';
+        instructions += 'For now, you can:\n';
+        instructions += '• Bookmark this page for quick access\n';
+        instructions += '• Use "Add to Home Screen" to create a shortcut\n';
+        instructions += '• Ask your developer to deploy the app for full PWA installation';
+      } else if (isIOS && isSafari) {
+        instructions = 'To install VitalWatch on iOS:\n\n';
+        instructions += '1. Tap the Share button (square with arrow)\n';
+        instructions += '2. Scroll down and tap "Add to Home Screen"\n';
+        instructions += '3. Tap "Add" to install VitalWatch';
       } else if (isAndroid && isChrome) {
-        instructions += '• Look for "Install app" in the browser menu\n• Or check the address bar for an install icon\n• Tap "Install" when prompted';
-      } else if (isChrome) {
-        instructions += '• Look for the install icon in the address bar\n• Click "Install VitalWatch"\n• Or check the browser menu for "Install app"';
+        instructions = 'To install VitalWatch on Android:\n\n';
+        instructions += '1. Look for "Install app" in the browser menu (3 dots)\n';
+        instructions += '2. Or check the address bar for an install icon\n';
+        instructions += '3. Tap "Install" when prompted';
       } else {
-        instructions += '• Chrome: Look for "Install" icon in the address bar\n• Safari: Use "Add to Home Screen" from the share menu\n• Edge: Use "Install this site as an app" from the menu';
+        instructions = 'To install VitalWatch:\n\n';
+        instructions += '• Chrome: Look for "Install" icon in the address bar\n';
+        instructions += '• Safari: Use "Add to Home Screen" from the share menu\n';
+        instructions += '• Edge: Use "Install this site as an app" from the menu';
       }
       
       alert(instructions);
