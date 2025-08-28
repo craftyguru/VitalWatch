@@ -112,7 +112,7 @@ export function useGeolocation() {
   }, [isWatching]);
 
   const stopWatching = useCallback(() => {
-    if (watchId !== null) {
+    if (watchId !== null && typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.clearWatch(watchId);
       setWatchId(null);
       setIsWatching(false);
@@ -122,7 +122,7 @@ export function useGeolocation() {
   // Clean up watch on unmount
   useEffect(() => {
     return () => {
-      if (watchId !== null) {
+      if (watchId !== null && typeof navigator !== 'undefined' && navigator.geolocation) {
         navigator.geolocation.clearWatch(watchId);
       }
     };

@@ -152,7 +152,7 @@ export default function ComprehensiveEmergencyMonitoring() {
   const completedAchievements = achievements.filter(a => a.completed);
   const inProgressAchievements = achievements.filter(a => !a.completed);
 
-  const categories = [...new Set(achievements.map(a => a.category))];
+  const categories = Array.from(new Set(achievements.map(a => a.category)));
 
   const getCategoryIcon = (category: string) => {
     switch (category) {

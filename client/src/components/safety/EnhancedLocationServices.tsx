@@ -110,7 +110,7 @@ export function EnhancedLocationServices() {
     }
 
     return () => {
-      if (locationWatchId) {
+      if (locationWatchId && typeof navigator !== 'undefined' && navigator.geolocation) {
         navigator.geolocation.clearWatch(locationWatchId);
       }
     };
@@ -153,7 +153,11 @@ export function EnhancedLocationServices() {
             GPS Tracking
           </TabsTrigger>
           <TabsTrigger value="zones" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
+            <img 
+              src="/logo.png" 
+              alt="VitalWatch Logo" 
+              className="h-4 w-4 object-contain"
+            />
             Safe Zones
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
