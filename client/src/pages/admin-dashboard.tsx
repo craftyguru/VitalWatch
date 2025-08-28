@@ -125,9 +125,18 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white">VitalWatch Admin Dashboard</h1>
-            <p className="text-purple-200 mt-2">Comprehensive platform monitoring and management</p>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl overflow-hidden bg-white shadow-lg">
+              <img 
+                src="/logo.png" 
+                alt="VitalWatch Logo" 
+                className="w-10 h-10 object-contain"
+              />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-orange-400 to-pink-400 bg-clip-text text-transparent">VitalWatch Admin Dashboard</h1>
+              <p className="text-purple-200 mt-2">Comprehensive platform monitoring and management</p>
+            </div>
           </div>
           <div className="flex items-center space-x-4">
             <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500">

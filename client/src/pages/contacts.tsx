@@ -211,8 +211,15 @@ export default function Contacts() {
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden bg-white shadow-sm">
+              <img 
+                src="/logo.png" 
+                alt="VitalWatch Logo" 
+                className="w-7 h-7 object-contain"
+              />
+            </div>
             <div>
-              <h1 className="text-lg font-semibold text-neutral-700">Emergency Contacts</h1>
+              <h1 className="text-lg font-semibold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">Emergency Contacts</h1>
               <p className="text-xs text-neutral-500">Your safety network</p>
             </div>
           </div>

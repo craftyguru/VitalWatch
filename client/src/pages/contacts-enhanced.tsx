@@ -186,8 +186,12 @@ export default function ContactsEnhanced() {
                 </Link>
               </Button>
               <div className="flex items-center space-x-3">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-2.5 rounded-xl shadow-lg">
-                  <Users className="h-6 w-6" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg">
+                  <img 
+                    src="/logo.png" 
+                    alt="VitalWatch Logo" 
+                    className="w-8 h-8 object-contain"
+                  />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Emergency Contacts</h1>

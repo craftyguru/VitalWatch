@@ -176,11 +176,20 @@ export default function BillingPage() {
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Billing & Usage</h1>
-          <p className="text-muted-foreground">
-            Manage your subscription and monitor AI usage costs
-          </p>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl overflow-hidden bg-white shadow-lg">
+            <img 
+              src="/logo.png" 
+              alt="VitalWatch Logo" 
+              className="w-10 h-10 object-contain"
+            />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">Billing & Usage</h1>
+            <p className="text-muted-foreground">
+              Manage your subscription and monitor AI usage costs
+            </p>
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           <Badge 

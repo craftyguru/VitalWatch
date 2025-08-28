@@ -317,11 +317,15 @@ export default function ToolsComprehensive() {
                 </Link>
               </Button>
               <div className="flex items-center space-x-3">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-2.5 rounded-xl shadow-lg">
-                  <Shield className="h-6 w-6" />
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl overflow-hidden bg-white shadow-lg">
+                  <img 
+                    src="/logo.png" 
+                    alt="VitalWatch Logo" 
+                    className="w-10 h-10 object-contain"
+                  />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">VitalWatch</h1>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">VitalWatch Safety Tools</h1>
                   <p className="text-slate-600 dark:text-slate-400">AI-powered vital signs monitoring with comprehensive crisis management</p>
                 </div>
               </div>
