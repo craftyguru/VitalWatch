@@ -367,7 +367,11 @@ export default function Home() {
               <div className="text-center">
                 <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-xl px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
                   <Link href="/tools" data-testid="link-main-toolkit">
-                    <Shield className="h-6 w-6 mr-3" />
+                    <img 
+                      src="/logo.png" 
+                      alt="VitalWatch Logo" 
+                      className="h-6 w-6 mr-3 object-contain"
+                    />
                     Enter Complete Toolkit
                     <ArrowRight className="h-6 w-6 ml-3" />
                   </Link>
