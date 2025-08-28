@@ -324,19 +324,19 @@ export default function ToolsComprehensive() {
                     className="w-10 h-10 object-contain"
                   />
                 </div>
-                <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">VitalWatch Safety Tools</h1>
-                  <p className="text-slate-600 dark:text-slate-400">AI-powered vital signs monitoring with comprehensive crisis management</p>
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">VitalWatch Safety Tools</h1>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden sm:block">AI-powered vital signs monitoring with comprehensive crisis management</p>
                 </div>
               </div>
             </div>
             
             {/* Real-time Status */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="text-center">
-                <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${emergencyMode ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></div>
-                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${emergencyMode ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></div>
+                  <span className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100">
                     {emergencyMode ? 'EMERGENCY ACTIVE' : 'All Systems Normal'}
                   </span>
                 </div>
@@ -350,22 +350,22 @@ export default function ToolsComprehensive() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Enhanced Tab Navigation */}
           <div className="mb-8">
-            <TabsList className="grid w-full grid-cols-4 h-auto p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg rounded-2xl border border-slate-200 dark:border-slate-800">
-              <TabsTrigger value="overview" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <BarChart3 className="h-5 w-5" />
-                <span className="text-sm font-medium">Overview</span>
+            <TabsList className="grid w-full grid-cols-4 h-auto p-1 sm:p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg rounded-2xl border border-slate-200 dark:border-slate-800">
+              <TabsTrigger value="overview" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Overview</span>
               </TabsTrigger>
-              <TabsTrigger value="safety-tools" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Shield className="h-5 w-5" />
-                <span className="text-sm font-medium">Safety Tools</span>
+              <TabsTrigger value="safety-tools" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Safety Tools</span>
               </TabsTrigger>
-              <TabsTrigger value="wellness-analytics" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Activity className="h-5 w-5" />
-                <span className="text-sm font-medium">Wellness Analytics</span>
+              <TabsTrigger value="wellness-analytics" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Wellness Analytics</span>
               </TabsTrigger>
-              <TabsTrigger value="achievements" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-                <Headphones className="h-5 w-5" />
-                <span className="text-sm font-medium">Device Hub</span>
+              <TabsTrigger value="achievements" className="flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
+                <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Device Hub</span>
               </TabsTrigger>
             </TabsList>
           </div>

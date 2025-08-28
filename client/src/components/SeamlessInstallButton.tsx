@@ -50,6 +50,10 @@ export function SeamlessInstallButton() {
   }, []);
 
   const handleInstallClick = async () => {
+    console.log('Install button clicked');
+    console.log('Deferred prompt available:', !!deferredPrompt);
+    console.log('User agent:', navigator.userAgent);
+    
     if (deferredPrompt) {
       try {
         console.log('Triggering native install prompt');
@@ -68,11 +72,13 @@ export function SeamlessInstallButton() {
         console.error('Install error:', error);
       }
     } else {
-      console.log('No install prompt available - browser may not support PWA installation');
+      // For browsers that don't support beforeinstallprompt yet, show helpful message
+      console.log('No install prompt available');
+      alert('To install VitalWatch:\n\n• Chrome: Look for "Install" icon in the address bar\n• Safari: Use "Add to Home Screen" from the share menu\n• Edge: Use "Install this site as an app" from the menu');
     }
   };
 
-  // Don't show anything if already installed
+  // Show button even if no prompt is available yet (for debugging)
   if (isInstalled) {
     return null;
   }
@@ -84,7 +90,7 @@ export function SeamlessInstallButton() {
       size="lg"
     >
       <Download className="w-5 h-5 mr-2" />
-      Install VitalWatch
+      {deferredPrompt ? 'Install VitalWatch' : 'Install App'}
     </Button>
   );
 }
