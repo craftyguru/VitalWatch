@@ -631,9 +631,9 @@ export default function ToolsComprehensive() {
                     <Headphones className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">Smart Device Integration</h2>
+                    <h2 className="text-xl font-bold">Universal Device Hub</h2>
                     <p className="text-sm text-purple-700 dark:text-purple-300 font-normal">
-                      Connect headphones, smartwatches, and phones for comprehensive monitoring
+                      Connect any Bluetooth device with sensors for comprehensive monitoring
                     </p>
                   </div>
                 </CardTitle>

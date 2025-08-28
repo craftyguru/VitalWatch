@@ -31,6 +31,7 @@ import {
   Navigation,
   Sun,
   Waves,
+  Moon,
   RotateCcw,
   Play,
   Pause,
@@ -75,8 +76,8 @@ export function DeviceIntegrationHub() {
   useEffect(() => {
     const mockDevices: DeviceData[] = [
       {
-        id: 'airpods-pro-2',
-        name: 'AirPods Pro (2nd Gen)',
+        id: 'bluetooth-headphones-1',
+        name: 'Wireless Headphones',
         type: 'headphones',
         connected: true,
         battery: 87,
@@ -84,14 +85,15 @@ export function DeviceIntegrationHub() {
         lastSync: new Date(),
         sensors: [
           { id: 'audio-level', name: 'Audio Level', icon: Volume2, value: 65, unit: 'dB', status: 'active', accuracy: 98, description: 'Environmental audio monitoring for stress detection' },
-          { id: 'spatial-audio', name: 'Spatial Awareness', icon: Navigation, value: 'Active', status: 'active', accuracy: 92, description: 'Head tracking and spatial orientation' },
+          { id: 'head-movement', name: 'Head Movement', icon: Navigation, value: 'Stable', status: 'active', accuracy: 92, description: 'Head tracking and orientation monitoring' },
           { id: 'ambient-noise', name: 'Ambient Noise', icon: Waves, value: 42, unit: 'dB', status: 'active', accuracy: 95, description: 'Background noise analysis for situation assessment' },
-          { id: 'voice-patterns', name: 'Voice Analysis', icon: Mic, value: 'Calm', status: 'active', accuracy: 89, description: 'Speech patterns and stress indicators' }
+          { id: 'voice-patterns', name: 'Voice Analysis', icon: Mic, value: 'Calm', status: 'active', accuracy: 89, description: 'Speech patterns and stress indicators' },
+          { id: 'touch-controls', name: 'Touch Sensors', icon: Target, value: 'Active', status: 'active', accuracy: 94, description: 'Emergency gesture detection' }
         ]
       },
       {
-        id: 'apple-watch-ultra',
-        name: 'Apple Watch Ultra',
+        id: 'smartwatch-1',
+        name: 'Fitness Smartwatch',
         type: 'watch',
         connected: true,
         battery: 73,
@@ -99,34 +101,75 @@ export function DeviceIntegrationHub() {
         lastSync: new Date(Date.now() - 30000),
         sensors: [
           { id: 'heart-rate', name: 'Heart Rate', icon: Heart, value: 72, unit: 'BPM', status: 'active', accuracy: 99, description: 'Continuous heart rate monitoring' },
-          { id: 'hrv', name: 'Heart Rate Variability', icon: Activity, value: 35, unit: 'ms', status: 'active', accuracy: 94, description: 'Stress and recovery indicators' },
-          { id: 'spo2', name: 'Blood Oxygen', icon: Target, value: 98, unit: '%', status: 'active', accuracy: 96, description: 'Oxygen saturation levels' },
+          { id: 'pulse-ox', name: 'Pulse Oximeter', icon: Target, value: 98, unit: '%', status: 'active', accuracy: 96, description: 'Blood oxygen saturation levels' },
           { id: 'skin-temp', name: 'Skin Temperature', icon: Thermometer, value: 36.2, unit: '°C', status: 'active', accuracy: 91, description: 'Body temperature monitoring' },
           { id: 'accelerometer', name: 'Motion Detection', icon: Zap, value: 'Moderate', status: 'active', accuracy: 97, description: 'Fall detection and activity monitoring' },
           { id: 'gyroscope', name: 'Orientation', icon: RotateCcw, value: 'Stable', status: 'active', accuracy: 93, description: 'Balance and posture analysis' },
-          { id: 'gps', name: 'Location Services', icon: MapPin, value: 'Enabled', status: 'active', accuracy: 85, description: 'Emergency location tracking' },
-          { id: 'ecg', name: 'ECG Monitor', icon: Activity, value: 'Normal', status: 'active', accuracy: 97, description: 'Electrocardiogram readings for heart health' },
-          { id: 'stress-level', name: 'Stress Detection', icon: Brain, value: 'Low', status: 'active', accuracy: 91, description: 'AI-powered stress level analysis' }
+          { id: 'gps', name: 'GPS Tracking', icon: MapPin, value: 'Enabled', status: 'active', accuracy: 85, description: 'Emergency location tracking' },
+          { id: 'stress-monitor', name: 'Stress Monitor', icon: Brain, value: 'Low', status: 'active', accuracy: 91, description: 'HRV-based stress level analysis' },
+          { id: 'sleep-tracking', name: 'Sleep Sensor', icon: Moon, value: 'Awake', status: 'active', accuracy: 88, description: 'Sleep pattern and fatigue detection' }
         ]
       },
       {
-        id: 'iphone-15-pro',
-        name: 'iPhone 15 Pro',
+        id: 'smartphone-1',
+        name: 'Android/iOS Phone',
         type: 'phone',
         connected: true,
         battery: 82,
         signal: 92,
         lastSync: new Date(Date.now() - 15000),
         sensors: [
-          { id: 'camera-analysis', name: 'Visual Analysis', icon: Camera, value: 'Active', status: 'active', accuracy: 87, description: 'Facial expression and environment analysis' },
-          { id: 'ambient-light', name: 'Ambient Light', icon: Sun, value: 450, unit: 'lux', status: 'active', accuracy: 88, description: 'Environmental lighting conditions' },
-          { id: 'barometer', name: 'Air Pressure', icon: Gauge, value: 1013, unit: 'hPa', status: 'active', accuracy: 92, description: 'Atmospheric pressure changes' },
+          { id: 'camera-monitor', name: 'Camera Sensor', icon: Camera, value: 'Active', status: 'active', accuracy: 87, description: 'Facial expression and environment analysis' },
+          { id: 'ambient-light', name: 'Light Sensor', icon: Sun, value: 450, unit: 'lux', status: 'active', accuracy: 88, description: 'Environmental lighting conditions' },
+          { id: 'barometer', name: 'Pressure Sensor', icon: Gauge, value: 1013, unit: 'hPa', status: 'active', accuracy: 92, description: 'Atmospheric pressure changes' },
           { id: 'proximity', name: 'Proximity Sensor', icon: Eye, value: 'Clear', status: 'active', accuracy: 95, description: 'Nearby object detection' },
-          { id: 'microphone', name: 'Audio Recording', icon: Mic, value: 'Standby', status: 'limited', accuracy: 91, description: 'Emergency audio capture' },
-          { id: 'wifi-scan', name: 'Wi-Fi Networks', icon: Wifi, value: 12, unit: 'networks', status: 'active', accuracy: 84, description: 'Location triangulation backup' },
-          { id: 'cellular-tower', name: 'Cell Tower Data', icon: Signal, value: 4, unit: 'towers', status: 'active', accuracy: 88, description: 'Cellular network positioning' },
-          { id: 'fall-detection', name: 'Fall Detection', icon: AlertCircle, value: 'Armed', status: 'active', accuracy: 96, description: 'Advanced fall and accident detection' },
-          { id: 'noise-analysis', name: 'Sound Analysis', icon: Mic, value: 'Safe', status: 'active', accuracy: 89, description: 'Environmental sound threat detection' }
+          { id: 'microphone', name: 'Microphone', icon: Mic, value: 'Standby', status: 'limited', accuracy: 91, description: 'Emergency audio capture and analysis' },
+          { id: 'gps-phone', name: 'GPS Location', icon: MapPin, value: 'Enabled', status: 'active', accuracy: 89, description: 'High-accuracy location tracking' },
+          { id: 'accelerometer-phone', name: 'Accelerometer', icon: Zap, value: 'Normal', status: 'active', accuracy: 94, description: 'Motion and impact detection' },
+          { id: 'compass', name: 'Magnetometer', icon: Navigation, value: 'North', status: 'active', accuracy: 86, description: 'Direction and orientation sensing' }
+        ]
+      },
+      {
+        id: 'fitness-tracker-1',
+        name: 'Fitness Band',
+        type: 'watch',
+        connected: false,
+        battery: 45,
+        signal: 0,
+        lastSync: new Date(Date.now() - 300000),
+        sensors: [
+          { id: 'steps', name: 'Step Counter', icon: Activity, value: 8542, unit: 'steps', status: 'inactive', accuracy: 95, description: 'Daily activity tracking' },
+          { id: 'heart-rate-basic', name: 'Heart Monitor', icon: Heart, value: 0, unit: 'BPM', status: 'inactive', accuracy: 92, description: 'Basic heart rate monitoring' },
+          { id: 'sleep-basic', name: 'Sleep Tracker', icon: Moon, value: 'Unknown', status: 'inactive', accuracy: 85, description: 'Basic sleep pattern tracking' }
+        ]
+      },
+      {
+        id: 'bluetooth-earbuds-1',
+        name: 'Gaming Earbuds',
+        type: 'headphones',
+        connected: true,
+        battery: 68,
+        signal: 82,
+        lastSync: new Date(Date.now() - 120000),
+        sensors: [
+          { id: 'audio-latency', name: 'Audio Latency', icon: Zap, value: 15, unit: 'ms', status: 'active', accuracy: 96, description: 'Real-time audio processing delay' },
+          { id: 'ear-detection', name: 'In-Ear Detection', icon: Eye, value: 'Both Ears', status: 'active', accuracy: 99, description: 'Automatic wear detection' },
+          { id: 'noise-cancel', name: 'ANC Level', icon: Volume2, value: 85, unit: '%', status: 'active', accuracy: 93, description: 'Active noise cancellation monitoring' }
+        ]
+      },
+      {
+        id: 'smart-ring-1',
+        name: 'Health Ring',
+        type: 'watch',
+        connected: true,
+        battery: 91,
+        signal: 77,
+        lastSync: new Date(Date.now() - 60000),
+        sensors: [
+          { id: 'body-temp', name: 'Body Temperature', icon: Thermometer, value: 36.8, unit: '°C', status: 'active', accuracy: 97, description: 'Continuous body temperature monitoring' },
+          { id: 'finger-pulse', name: 'Pulse Monitor', icon: Heart, value: 68, unit: 'BPM', status: 'active', accuracy: 98, description: 'Finger-based pulse detection' },
+          { id: 'sleep-stage', name: 'Sleep Analysis', icon: Moon, value: 'Awake', status: 'active', accuracy: 91, description: 'Advanced sleep stage detection' },
+          { id: 'gesture-control', name: 'Gesture Sensor', icon: Target, value: 'Ready', status: 'active', accuracy: 89, description: 'Emergency gesture recognition' }
         ]
       }
     ];
