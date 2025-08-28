@@ -37,6 +37,7 @@ import {
 import { Link } from "wouter";
 import { InstallButton } from "@/components/InstallButton";
 import { TestInstallButton } from "@/components/TestInstallButton";
+import { VersionBadge } from "@/components/VersionBadge";
 
 export default function LandingPage() {
   const { toast } = useToast();
@@ -281,7 +282,10 @@ export default function LandingPage() {
                   className="w-8 h-8 object-contain"
                 />
               </div>
-              <h1 className="text-2xl font-bold text-white">VitalWatch</h1>
+              <div className="flex items-center space-x-3">
+                <h1 className="text-2xl font-bold text-white">VitalWatch</h1>
+                <VersionBadge />
+              </div>
             </div>
             
             <div className="flex items-center space-x-4">

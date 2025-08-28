@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowLeft, Edit, LogOut, Crown } from "lucide-react";
+import { VersionBadge } from "@/components/VersionBadge";
 
 interface ProfileHeaderProps {
   user: any;
@@ -22,12 +23,15 @@ export function ProfileHeader({ user, userName, userInitials, onLogout }: Profil
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden bg-white shadow-sm">
-              <img 
-                src="/logo.png" 
-                alt="VitalWatch Logo" 
-                className="w-7 h-7 object-contain"
-              />
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden bg-white shadow-sm">
+                <img 
+                  src="/logo.png" 
+                  alt="VitalWatch Logo" 
+                  className="w-7 h-7 object-contain"
+                />
+              </div>
+              <VersionBadge />
             </div>
             <div className="flex items-center space-x-3">
               <Avatar className="h-12 w-12 border-2 border-blue-200 dark:border-blue-800">

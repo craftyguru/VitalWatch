@@ -47,6 +47,7 @@ import {
   Mic,
   LogOut
 } from "lucide-react";
+import { VersionBadge } from "@/components/VersionBadge";
 
 export default function Home() {
   const { user } = useAuth() as { user: any };
@@ -177,9 +178,12 @@ export default function Home() {
                 />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">
-                  VitalWatch
-                </h1>
+                <div className="flex items-center space-x-3">
+                  <h1 className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">
+                    VitalWatch
+                  </h1>
+                  <VersionBadge />
+                </div>
                 <div className="flex items-center space-x-2">
                   <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
                   <span className="text-sm text-muted-foreground font-medium">
