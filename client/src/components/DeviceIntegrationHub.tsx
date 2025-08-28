@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useSafeDeviceSensors } from '@/hooks/useSafeDeviceSensors';
 import {
   Bluetooth,
   Smartphone,
@@ -12,7 +13,10 @@ import {
   Wifi,
   CheckCircle,
   AlertCircle,
-  Settings
+  Settings,
+  Mic,
+  Shield,
+  Zap
 } from 'lucide-react';
 
 interface DeviceIntegrationHubProps {
@@ -24,6 +28,12 @@ interface DeviceIntegrationHubProps {
 export function DeviceIntegrationHub({ sensorData, permissions, requestPermissions }: DeviceIntegrationHubProps) {
   const { toast } = useToast();
   const [scanning, setScanning] = useState(false);
+  const { sensorData: realSensorData, permissions: realPermissions, requestPermissions: requestRealPermissions } = useSafeDeviceSensors();
+  
+  // Use real sensor data if available, otherwise use props
+  const currentSensorData = realSensorData || sensorData;
+  const currentPermissions = realPermissions || permissions;
+  const currentRequestPermissions = requestRealPermissions || requestPermissions;
   
   const deviceCapabilities = {
     motion: 'DeviceMotionEvent' in window,
@@ -58,6 +68,47 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Global Sensor Permissions */}
+        {currentPermissions && (currentPermissions.geolocation !== 'granted' || currentPermissions.accelerometer !== 'granted') && (
+          <Card className="border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="h-5 w-5 text-yellow-600" />
+                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Enable All Device Sensors</h3>
+              </div>
+              <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-4">
+                Grant permissions once to enable real-time sensor monitoring across the entire app:
+              </p>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <div className={`h-2 w-2 rounded-full ${currentPermissions?.geolocation === 'granted' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  <MapPin className="h-3 w-3" />
+                  <span>GPS Location</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <div className={`h-2 w-2 rounded-full ${currentPermissions?.accelerometer === 'granted' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  <Activity className="h-3 w-3" />
+                  <span>Motion Sensors</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <div className={`h-2 w-2 rounded-full ${currentPermissions?.battery === 'granted' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  <Battery className="h-3 w-3" />
+                  <span>Battery Status</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <div className={`h-2 w-2 rounded-full bg-yellow-500`}></div>
+                  <Mic className="h-3 w-3" />
+                  <span>Microphone</span>
+                </div>
+              </div>
+              <Button onClick={currentRequestPermissions} className="w-full">
+                <Shield className="h-4 w-4 mr-2" />
+                Enable All Sensors
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Device Capabilities */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Device Capabilities</h3>

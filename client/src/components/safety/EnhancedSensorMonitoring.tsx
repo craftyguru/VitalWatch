@@ -68,14 +68,23 @@ export function EnhancedSensorMonitoring() {
     }
   });
 
-  // Get real environmental data from sensors
+  // Get real environmental data from sensors, clearly indicate when using fallback
   const environmentalData = {
-    temperature: sensorData.environment.temperature || 72,
-    humidity: sensorData.environment.humidity || 45,
-    noiseLevel: sensorData.environment.noiseLevel || 35,
-    lightLevel: sensorData.ambient.light || 350,
-    airQuality: sensorData.environment.airQuality || 85,
-    vibration: Math.abs(sensorData.accelerometer.x) + Math.abs(sensorData.accelerometer.y) + Math.abs(sensorData.accelerometer.z) || 2
+    temperature: sensorData.environment.active ? sensorData.environment.temperature : 72,
+    humidity: sensorData.environment.active ? sensorData.environment.humidity : 45,
+    noiseLevel: sensorData.environment.active ? sensorData.environment.noiseLevel : 35,
+    lightLevel: sensorData.ambient.active ? sensorData.ambient.light : 350,
+    airQuality: sensorData.environment.active ? sensorData.environment.airQuality : 85,
+    vibration: sensorData.accelerometer.active ? 
+      Math.abs(sensorData.accelerometer.x) + Math.abs(sensorData.accelerometer.y) + Math.abs(sensorData.accelerometer.z) : 2
+  };
+
+  // Status indicators for each sensor
+  const sensorStatus = {
+    location: sensorData.location.active ? 'Real GPS Data' : 'Demo Location',
+    motion: sensorData.accelerometer.active ? 'Real Motion Data' : 'Demo Motion',
+    battery: sensorData.battery.active ? 'Real Battery Data' : 'Demo Battery',
+    environment: sensorData.environment.active ? 'Real Environment Data' : 'Demo Environment'
   };
 
   // Biometric analytics
@@ -456,6 +465,9 @@ export function EnhancedSensorMonitoring() {
                 <Thermometer className="h-6 w-6 mx-auto mb-2 text-red-500" />
                 <div className="text-2xl font-bold">{environmentalData.temperature}°F</div>
                 <p className="text-sm text-muted-foreground">Temperature</p>
+                <div className={`text-xs mt-1 ${sensorData.environment.active ? 'text-green-600' : 'text-orange-500'}`}>
+                  {sensorStatus.environment}
+                </div>
               </CardContent>
             </Card>
 
@@ -472,6 +484,9 @@ export function EnhancedSensorMonitoring() {
                 <Volume2 className="h-6 w-6 mx-auto mb-2 text-purple-500" />
                 <div className="text-2xl font-bold">{environmentalData.noiseLevel} dB</div>
                 <p className="text-sm text-muted-foreground">Noise Level</p>
+                <div className={`text-xs mt-1 ${sensorData.environment.active ? 'text-green-600' : 'text-orange-500'}`}>
+                  {sensorStatus.environment}
+                </div>
               </CardContent>
             </Card>
 

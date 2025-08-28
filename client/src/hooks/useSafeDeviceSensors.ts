@@ -239,7 +239,24 @@ export const useSafeDeviceSensors = () => {
       initializeMotionSensors();
     }
     if ('getBattery' in navigator) {
+      setPermissions(prev => ({ ...prev, battery: 'granted' }));
       initializeBatteryAPI();
+    }
+    
+    // Check for ambient light sensor
+    if ('AmbientLightSensor' in window) {
+      try {
+        const sensor = new (window as any).AmbientLightSensor();
+        sensor.addEventListener('reading', () => {
+          setSensorData(prev => ({
+            ...prev,
+            ambient: { light: Math.round(sensor.illuminance), active: true }
+          }));
+        });
+        sensor.start();
+      } catch (error) {
+        console.log('Ambient light sensor not available');
+      }
     }
   }, []);
 
