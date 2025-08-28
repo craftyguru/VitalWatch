@@ -208,7 +208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Emergency Contact routes
   app.get('/api/emergency-contacts', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const contacts = await storage.getEmergencyContacts(userId);
       res.json(contacts);
     } catch (error) {
@@ -219,7 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/emergency-contacts', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const validatedData = insertEmergencyContactSchema.parse(req.body);
       const contact = await storage.createEmergencyContact(userId, validatedData);
       res.json(contact);
@@ -255,7 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Mood tracking routes
   app.get('/api/mood-entries', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 30;
       const entries = await storage.getMoodEntries(userId, limit);
       res.json(entries);
@@ -267,7 +267,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/mood-entries', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { location, ...moodData } = req.body;
       const validatedData = insertMoodEntrySchema.parse(moodData);
       
@@ -290,7 +290,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Emergency incident routes
   app.get('/api/emergency-incidents', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const incidents = await storage.getEmergencyIncidents(userId);
       res.json(incidents);
     } catch (error) {
@@ -301,7 +301,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/emergency-alert', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { type = "panic_button", severity = "high", location, message } = req.body;
       
       const result = await emergencyService.triggerEmergencyAlert({
@@ -321,7 +321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/emergency-incidents/:id/resolve', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const incidentId = parseInt(req.params.id);
       const success = await emergencyService.resolveEmergencyIncident(incidentId, userId);
       res.json({ success });
@@ -333,7 +333,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/emergency-incidents/:id/cancel', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const incidentId = parseInt(req.params.id);
       const success = await emergencyService.cancelEmergencyIncident(incidentId, userId);
       res.json({ success });
@@ -346,7 +346,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Coping tools routes
   app.get('/api/coping-tools-usage', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 50;
       const usage = await storage.getCopingToolsUsage(userId, limit);
       res.json(usage);
@@ -358,7 +358,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/coping-tools-usage', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const validatedData = insertCopingToolsUsageSchema.parse(req.body);
       const usage = await storage.createCopingToolsUsage(userId, validatedData);
       res.json(usage);
@@ -371,7 +371,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI insights routes
   app.get('/api/ai-insights', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const unreadOnly = req.query.unread === 'true';
       const insights = await storage.getAIInsights(userId, unreadOnly);
       res.json(insights);
@@ -394,7 +394,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/generate-insight', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       
       // Get user's mood history and coping tools usage
       const moodHistory = await storage.getMoodEntries(userId, 30);
@@ -535,7 +535,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Crisis chat routes
   app.post('/api/crisis-chat/start', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const session = await storage.createCrisisChatSession(userId);
       res.json(session);
     } catch (error) {
@@ -547,7 +547,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User settings routes
   app.get('/api/user-settings', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       let settings = await storage.getUserSettings(userId);
       
       // Create default settings if none exist
@@ -571,7 +571,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/user-settings', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const validatedData = updateUserSettingsSchema.parse(req.body);
       const settings = await storage.upsertUserSettings(userId, validatedData);
       res.json(settings);
@@ -584,7 +584,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Crisis resources routes
   app.post('/api/send-crisis-resources', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { method } = req.body; // 'email' or 'sms'
       
       const user = await storage.getUser(userId);
@@ -625,7 +625,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No file uploaded" });
       }
 
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const fileName = `profile-${Date.now()}.jpg`;
       
       const filePath = await storageService.uploadProfileImage(userId, req.file.buffer, fileName);
@@ -647,7 +647,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No audio file uploaded" });
       }
 
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { incidentId } = req.body;
       
       if (!incidentId) {
@@ -673,7 +673,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No document uploaded" });
       }
 
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const fileName = `${Date.now()}-${req.file.originalname}`;
       
       const filePath = await storageService.uploadHealthReport(userId, req.file.buffer, fileName);
@@ -940,7 +940,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/resend-verification', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user) {
