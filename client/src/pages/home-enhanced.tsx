@@ -45,7 +45,11 @@ import {
   Award,
   Eye,
   Mic,
-  LogOut
+  LogOut,
+  Smartphone,
+  Watch,
+  Bluetooth,
+  Wifi
 } from "lucide-react";
 import { VersionBadge } from "@/components/VersionBadge";
 
@@ -191,6 +195,70 @@ export default function Home() {
                   <span className="text-xs sm:text-sm text-muted-foreground font-medium truncate">
                     {isConnected ? 'Protected & Connected' : 'Reconnecting...'}
                   </span>
+                  
+                  {/* Device Connection Badges */}
+                  {isConnected && (
+                    <div className="flex items-center space-x-1 ml-2">
+                      {/* Smartphone Badge */}
+                      <div className="relative group">
+                        <div className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full">
+                          <Smartphone className="h-3 w-3 text-white" />
+                        </div>
+                        <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          Phone Connected
+                        </div>
+                      </div>
+
+                      {/* GPS Badge */}
+                      <div className="relative group">
+                        <div className="flex items-center justify-center w-6 h-6 bg-orange-500 rounded-full">
+                          <MapPin className="h-3 w-3 text-white" />
+                        </div>
+                        <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          GPS Active
+                        </div>
+                      </div>
+
+                      {/* WiFi Badge */}
+                      <div className="relative group">
+                        <div className="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full">
+                          <Wifi className="h-3 w-3 text-white" />
+                        </div>
+                        <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          Network Online
+                        </div>
+                      </div>
+
+                      {/* Watch Badge - Show on mobile */}
+                      {navigator.userAgent.includes('Mobile') && (
+                        <div className="relative group">
+                          <div className="flex items-center justify-center w-6 h-6 bg-purple-500 rounded-full">
+                            <Watch className="h-3 w-3 text-white" />
+                          </div>
+                          <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                            Wearable Ready
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Bluetooth Badge - Show if available */}
+                      {typeof navigator !== 'undefined' && 'bluetooth' in navigator && (
+                        <div className="relative group">
+                          <div className="flex items-center justify-center w-6 h-6 bg-cyan-500 rounded-full">
+                            <Bluetooth className="h-3 w-3 text-white" />
+                          </div>
+                          <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+                          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                            Bluetooth Ready
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
