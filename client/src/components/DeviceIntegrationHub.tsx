@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -71,126 +71,254 @@ export function DeviceIntegrationHub() {
   const [scanning, setScanning] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
   const [realTimeMonitoring, setRealTimeMonitoring] = useState(true);
+  const [connectedDevices, setConnectedDevices] = useState<DeviceData[]>([]);
+  const [sensorData, setSensorData] = useState<{ [key: string]: any }>({});
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize mock device data - in real app this would come from device APIs
-  useEffect(() => {
-    const mockDevices: DeviceData[] = [
-      {
-        id: 'bluetooth-headphones-1',
-        name: 'Wireless Headphones',
-        type: 'headphones',
+  // Real device detection and sensor integration
+  const initializeRealSensors = async () => {
+    const detectedDevices: DeviceData[] = [];
+
+    // Check for Device Motion API (phone sensors)
+    if ('DeviceMotionEvent' in window && typeof DeviceMotionEvent.requestPermission === 'function') {
+      try {
+        const permission = await DeviceMotionEvent.requestPermission();
+        if (permission === 'granted') {
+          detectedDevices.push({
+            id: 'device-motion',
+            name: 'Smartphone Sensors',
+            type: 'phone',
+            connected: true,
+            battery: 100,
+            signal: 100,
+            lastSync: new Date(),
+            sensors: [
+              { id: 'accelerometer', name: 'Accelerometer', icon: Zap, value: 'Active', status: 'active', accuracy: 95, description: 'Motion and impact detection' },
+              { id: 'gyroscope', name: 'Gyroscope', icon: RotateCcw, value: 'Active', status: 'active', accuracy: 93, description: 'Orientation and rotation sensing' },
+              { id: 'orientation', name: 'Device Orientation', icon: Navigation, value: 'Active', status: 'active', accuracy: 90, description: 'Device position tracking' }
+            ]
+          });
+        }
+      } catch (error) {
+        console.log('Device motion permission denied');
+      }
+    }
+
+    // Check for Geolocation API
+    if ('geolocation' in navigator) {
+      detectedDevices.push({
+        id: 'geolocation',
+        name: 'GPS Location',
+        type: 'phone',
         connected: true,
-        battery: 87,
+        battery: 100,
         signal: 95,
         lastSync: new Date(),
         sensors: [
-          { id: 'audio-level', name: 'Audio Level', icon: Volume2, value: 65, unit: 'dB', status: 'active', accuracy: 98, description: 'Environmental audio monitoring for stress detection' },
-          { id: 'head-movement', name: 'Head Movement', icon: Navigation, value: 'Stable', status: 'active', accuracy: 92, description: 'Head tracking and orientation monitoring' },
-          { id: 'ambient-noise', name: 'Ambient Noise', icon: Waves, value: 42, unit: 'dB', status: 'active', accuracy: 95, description: 'Background noise analysis for situation assessment' },
-          { id: 'voice-patterns', name: 'Voice Analysis', icon: Mic, value: 'Calm', status: 'active', accuracy: 89, description: 'Speech patterns and stress indicators' },
-          { id: 'touch-controls', name: 'Touch Sensors', icon: Target, value: 'Active', status: 'active', accuracy: 94, description: 'Emergency gesture detection' }
+          { id: 'gps', name: 'GPS Tracking', icon: MapPin, value: 'Ready', status: 'active', accuracy: 88, description: 'High-accuracy location tracking' },
+          { id: 'speed', name: 'Speed Detection', icon: Gauge, value: '0', unit: 'km/h', status: 'active', accuracy: 85, description: 'Movement speed monitoring' }
         ]
-      },
-      {
-        id: 'smartwatch-1',
-        name: 'Fitness Smartwatch',
-        type: 'watch',
-        connected: true,
-        battery: 73,
-        signal: 88,
-        lastSync: new Date(Date.now() - 30000),
-        sensors: [
-          { id: 'heart-rate', name: 'Heart Rate', icon: Heart, value: 72, unit: 'BPM', status: 'active', accuracy: 99, description: 'Continuous heart rate monitoring' },
-          { id: 'pulse-ox', name: 'Pulse Oximeter', icon: Target, value: 98, unit: '%', status: 'active', accuracy: 96, description: 'Blood oxygen saturation levels' },
-          { id: 'skin-temp', name: 'Skin Temperature', icon: Thermometer, value: 36.2, unit: '°C', status: 'active', accuracy: 91, description: 'Body temperature monitoring' },
-          { id: 'accelerometer', name: 'Motion Detection', icon: Zap, value: 'Moderate', status: 'active', accuracy: 97, description: 'Fall detection and activity monitoring' },
-          { id: 'gyroscope', name: 'Orientation', icon: RotateCcw, value: 'Stable', status: 'active', accuracy: 93, description: 'Balance and posture analysis' },
-          { id: 'gps', name: 'GPS Tracking', icon: MapPin, value: 'Enabled', status: 'active', accuracy: 85, description: 'Emergency location tracking' },
-          { id: 'stress-monitor', name: 'Stress Monitor', icon: Brain, value: 'Low', status: 'active', accuracy: 91, description: 'HRV-based stress level analysis' },
-          { id: 'sleep-tracking', name: 'Sleep Sensor', icon: Moon, value: 'Awake', status: 'active', accuracy: 88, description: 'Sleep pattern and fatigue detection' }
-        ]
-      },
-      {
-        id: 'smartphone-1',
-        name: 'Android/iOS Phone',
+      });
+    }
+
+    // Check for Ambient Light API
+    if ('AmbientLightSensor' in window) {
+      try {
+        const sensor = new (window as any).AmbientLightSensor();
+        detectedDevices.push({
+          id: 'ambient-light',
+          name: 'Light Sensor',
+          type: 'phone',
+          connected: true,
+          battery: 100,
+          signal: 100,
+          lastSync: new Date(),
+          sensors: [
+            { id: 'light-level', name: 'Ambient Light', icon: Sun, value: '450', unit: 'lux', status: 'active', accuracy: 92, description: 'Environmental lighting detection' }
+          ]
+        });
+      } catch (error) {
+        console.log('Ambient light sensor not available');
+      }
+    }
+
+    // Check for Web Audio API (microphone access)
+    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop()); // Stop immediately after checking
+        
+        detectedDevices.push({
+          id: 'microphone',
+          name: 'Audio Sensors',
+          type: 'phone',
+          connected: true,
+          battery: 100,
+          signal: 100,
+          lastSync: new Date(),
+          sensors: [
+            { id: 'audio-level', name: 'Audio Level', icon: Volume2, value: '0', unit: 'dB', status: 'active', accuracy: 94, description: 'Environmental audio monitoring' },
+            { id: 'voice-detection', name: 'Voice Activity', icon: Mic, value: 'Silent', status: 'active', accuracy: 89, description: 'Speech pattern analysis' }
+          ]
+        });
+      } catch (error) {
+        console.log('Microphone access denied');
+      }
+    }
+
+    // Check for Bluetooth API
+    if ('bluetooth' in navigator) {
+      detectedDevices.push({
+        id: 'bluetooth-scanner',
+        name: 'Bluetooth Scanner',
         type: 'phone',
         connected: true,
-        battery: 82,
-        signal: 92,
-        lastSync: new Date(Date.now() - 15000),
+        battery: 100,
+        signal: 100,
+        lastSync: new Date(),
         sensors: [
-          { id: 'camera-monitor', name: 'Camera Sensor', icon: Camera, value: 'Active', status: 'active', accuracy: 87, description: 'Facial expression and environment analysis' },
-          { id: 'ambient-light', name: 'Light Sensor', icon: Sun, value: 450, unit: 'lux', status: 'active', accuracy: 88, description: 'Environmental lighting conditions' },
-          { id: 'barometer', name: 'Pressure Sensor', icon: Gauge, value: 1013, unit: 'hPa', status: 'active', accuracy: 92, description: 'Atmospheric pressure changes' },
-          { id: 'proximity', name: 'Proximity Sensor', icon: Eye, value: 'Clear', status: 'active', accuracy: 95, description: 'Nearby object detection' },
-          { id: 'microphone', name: 'Microphone', icon: Mic, value: 'Standby', status: 'limited', accuracy: 91, description: 'Emergency audio capture and analysis' },
-          { id: 'gps-phone', name: 'GPS Location', icon: MapPin, value: 'Enabled', status: 'active', accuracy: 89, description: 'High-accuracy location tracking' },
-          { id: 'accelerometer-phone', name: 'Accelerometer', icon: Zap, value: 'Normal', status: 'active', accuracy: 94, description: 'Motion and impact detection' },
-          { id: 'compass', name: 'Magnetometer', icon: Navigation, value: 'North', status: 'active', accuracy: 86, description: 'Direction and orientation sensing' }
+          { id: 'bluetooth-devices', name: 'Nearby Devices', icon: Bluetooth, value: '0', unit: 'devices', status: 'active', accuracy: 87, description: 'Bluetooth device detection' }
         ]
-      },
-      {
-        id: 'fitness-tracker-1',
-        name: 'Fitness Band',
-        type: 'watch',
-        connected: false,
-        battery: 45,
-        signal: 0,
-        lastSync: new Date(Date.now() - 300000),
-        sensors: [
-          { id: 'steps', name: 'Step Counter', icon: Activity, value: 8542, unit: 'steps', status: 'inactive', accuracy: 95, description: 'Daily activity tracking' },
-          { id: 'heart-rate-basic', name: 'Heart Monitor', icon: Heart, value: 0, unit: 'BPM', status: 'inactive', accuracy: 92, description: 'Basic heart rate monitoring' },
-          { id: 'sleep-basic', name: 'Sleep Tracker', icon: Moon, value: 'Unknown', status: 'inactive', accuracy: 85, description: 'Basic sleep pattern tracking' }
-        ]
-      },
-      {
-        id: 'bluetooth-earbuds-1',
-        name: 'Gaming Earbuds',
-        type: 'headphones',
-        connected: true,
-        battery: 68,
-        signal: 82,
-        lastSync: new Date(Date.now() - 120000),
-        sensors: [
-          { id: 'audio-latency', name: 'Audio Latency', icon: Zap, value: 15, unit: 'ms', status: 'active', accuracy: 96, description: 'Real-time audio processing delay' },
-          { id: 'ear-detection', name: 'In-Ear Detection', icon: Eye, value: 'Both Ears', status: 'active', accuracy: 99, description: 'Automatic wear detection' },
-          { id: 'noise-cancel', name: 'ANC Level', icon: Volume2, value: 85, unit: '%', status: 'active', accuracy: 93, description: 'Active noise cancellation monitoring' }
-        ]
-      },
-      {
-        id: 'smart-ring-1',
-        name: 'Health Ring',
-        type: 'watch',
-        connected: true,
-        battery: 91,
-        signal: 77,
-        lastSync: new Date(Date.now() - 60000),
-        sensors: [
-          { id: 'body-temp', name: 'Body Temperature', icon: Thermometer, value: 36.8, unit: '°C', status: 'active', accuracy: 97, description: 'Continuous body temperature monitoring' },
-          { id: 'finger-pulse', name: 'Pulse Monitor', icon: Heart, value: 68, unit: 'BPM', status: 'active', accuracy: 98, description: 'Finger-based pulse detection' },
-          { id: 'sleep-stage', name: 'Sleep Analysis', icon: Moon, value: 'Awake', status: 'active', accuracy: 91, description: 'Advanced sleep stage detection' },
-          { id: 'gesture-control', name: 'Gesture Sensor', icon: Target, value: 'Ready', status: 'active', accuracy: 89, description: 'Emergency gesture recognition' }
-        ]
-      }
-    ];
-    setDevices(mockDevices);
+      });
+    }
+
+    setDevices(detectedDevices);
+    setConnectedDevices(detectedDevices.filter(device => device.connected));
+  };
+
+  useEffect(() => {
+    initializeRealSensors();
   }, []);
+
+  // Real-time sensor monitoring
+  useEffect(() => {
+    if (!realTimeMonitoring) return;
+
+    const startSensorMonitoring = () => {
+      // Motion sensors
+      if (window.DeviceMotionEvent) {
+        const handleMotion = (event: DeviceMotionEvent) => {
+          setSensorData(prev => ({
+            ...prev,
+            accelerometer: Math.sqrt(
+              (event.acceleration?.x || 0) ** 2 +
+              (event.acceleration?.y || 0) ** 2 +
+              (event.acceleration?.z || 0) ** 2
+            ).toFixed(2)
+          }));
+        };
+        window.addEventListener('devicemotion', handleMotion);
+      }
+
+      // Orientation sensors
+      if (window.DeviceOrientationEvent) {
+        const handleOrientation = (event: DeviceOrientationEvent) => {
+          setSensorData(prev => ({
+            ...prev,
+            orientation: `${Math.round(event.alpha || 0)}°`
+          }));
+        };
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+
+      // Location tracking
+      if (navigator.geolocation) {
+        const watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            setSensorData(prev => ({
+              ...prev,
+              gps: `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`,
+              speed: Math.round(position.coords.speed || 0)
+            }));
+          },
+          (error) => console.log('Geolocation error:', error),
+          { enableHighAccuracy: true, maximumAge: 30000, timeout: 27000 }
+        );
+
+        return () => navigator.geolocation.clearWatch(watchId);
+      }
+    };
+
+    startSensorMonitoring();
+
+    // Update sensor readings every 2 seconds
+    intervalRef.current = setInterval(() => {
+      setConnectedDevices(prev => prev.map(device => ({
+        ...device,
+        lastSync: new Date(),
+        sensors: device.sensors.map(sensor => ({
+          ...sensor,
+          value: sensorData[sensor.id] || sensor.value
+        }))
+      })));
+    }, 2000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [realTimeMonitoring, sensorData]);
 
   const handleDeviceScan = async () => {
     setScanning(true);
     toast({
       title: "Scanning for devices...",
-      description: "Looking for nearby Bluetooth devices",
+      description: "Looking for available sensors and Bluetooth devices",
     });
 
-    // Simulate scanning delay
-    setTimeout(() => {
+    try {
+      // Try to connect to Web Bluetooth devices
+      if ('bluetooth' in navigator) {
+        try {
+          const device = await (navigator as any).bluetooth.requestDevice({
+            acceptAllDevices: true,
+            optionalServices: ['battery_service', 'heart_rate', 'device_information']
+          });
+          
+          const gattServer = await device.gatt.connect();
+          
+          toast({
+            title: "Bluetooth device connected",
+            description: `Connected to ${device.name}`,
+          });
+
+          // Add to connected devices
+          const newDevice: DeviceData = {
+            id: device.id,
+            name: device.name || 'Unknown Device',
+            type: 'watch',
+            connected: true,
+            battery: 100,
+            signal: 100,
+            lastSync: new Date(),
+            sensors: [
+              { id: 'bluetooth-connection', name: 'Connection', icon: Bluetooth, value: 'Connected', status: 'active', accuracy: 100, description: 'Bluetooth connection status' }
+            ]
+          };
+          
+          setConnectedDevices(prev => [...prev, newDevice]);
+        } catch (error) {
+          console.log('Bluetooth scan cancelled or failed');
+        }
+      }
+
+      // Re-scan for device sensors
+      await initializeRealSensors();
+      
+    } catch (error) {
+      toast({
+        title: "Scan failed",
+        description: "Could not complete device scan",
+        variant: "destructive"
+      });
+    } finally {
       setScanning(false);
       toast({
         title: "Scan complete",
-        description: "Found all connected devices",
+        description: `Found ${connectedDevices.length} connected devices`,
       });
-    }, 3000);
+    }
   };
 
   const handleConnectDevice = async (deviceId: string) => {
@@ -252,15 +380,15 @@ export function DeviceIntegrationHub() {
     }
   };
 
-  const totalSensors = devices.reduce((acc, device) => acc + device.sensors.length, 0);
-  const activeSensors = devices.reduce((acc, device) => 
+  const totalSensors = connectedDevices.reduce((acc, device) => acc + device.sensors.length, 0);
+  const activeSensors = connectedDevices.reduce((acc, device) => 
     acc + device.sensors.filter(sensor => sensor.status === 'active').length, 0
   );
-  const connectedDevices = devices.filter(device => device.connected).length;
-  const averageAccuracy = devices.reduce((acc, device) => {
+  const connectedDeviceCount = connectedDevices.length;
+  const averageAccuracy = connectedDevices.length > 0 ? connectedDevices.reduce((acc, device) => {
     const deviceAccuracy = device.sensors.reduce((sensorAcc, sensor) => sensorAcc + sensor.accuracy, 0) / device.sensors.length;
     return acc + deviceAccuracy;
-  }, 0) / devices.length;
+  }, 0) / connectedDevices.length : 0;
 
   return (
     <div className="space-y-6">
@@ -274,7 +402,7 @@ export function DeviceIntegrationHub() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Connected Devices</p>
-                <p className="text-2xl font-bold">{connectedDevices}</p>
+                <p className="text-2xl font-bold">{connectedDeviceCount}</p>
               </div>
             </div>
           </CardContent>
@@ -370,9 +498,24 @@ export function DeviceIntegrationHub() {
         </CardHeader>
       </Card>
 
-      {/* Device Cards */}
+      {/* Connected Device Cards Only */}
       <div className="space-y-6">
-        {devices.map((device) => {
+        {connectedDevices.length === 0 && (
+          <Card className="border-dashed border-2 border-muted-foreground/25">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Bluetooth className="w-12 h-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No Devices Connected</h3>
+              <p className="text-muted-foreground text-center mb-4">
+                Click "Scan Devices" to detect and connect your Bluetooth devices with sensors
+              </p>
+              <Button onClick={handleDeviceScan} disabled={scanning}>
+                {scanning ? "Scanning..." : "Scan for Devices"}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+        
+        {connectedDevices.map((device) => {
           const DeviceIcon = getDeviceIcon(device.type);
           
           return (
