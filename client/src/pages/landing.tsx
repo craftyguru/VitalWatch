@@ -307,7 +307,6 @@ export default function LandingPage() {
           </nav>
         </div>
       </header>
-      </div>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -327,11 +326,11 @@ export default function LandingPage() {
               </h1>
             </div>
             
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-4xl font-bold text-white max-w-4xl mx-auto">
               The World's First AI-Powered Vital Signs Monitoring That Never Sleeps
             </h2>
             
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
               Advanced artificial intelligence continuously monitors your safety through device sensors, 
               environmental analysis, and biometric data to provide instant emergency response and 
               comprehensive mental health support when you need it most.
@@ -341,19 +340,19 @@ export default function LandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600">{stats.users.toLocaleString()}+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Protected Users</div>
+                <div className="text-sm text-white/70">Protected Users</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">{stats.emergenciesHandled.toLocaleString()}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Emergencies Handled</div>
+                <div className="text-sm text-white/70">Emergencies Handled</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">{stats.averageResponseTime}s</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</div>
+                <div className="text-sm text-white/70">Avg Response Time</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-orange-600">{stats.successRate}%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Success Rate</div>
+                <div className="text-sm text-white/70">Success Rate</div>
               </div>
             </div>
 
@@ -365,7 +364,7 @@ export default function LandingPage() {
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="px-8 py-3">
+              <Button size="lg" variant="outline" className="px-8 py-3 border-white/30 text-white hover:bg-white/10">
                 <PlayCircle className="h-5 w-5 mr-2" />
                 Watch Demo
               </Button>
@@ -386,13 +385,13 @@ export default function LandingPage() {
       </section>
 
       {/* Interactive Features Showcase */}
-      <section className="py-24 bg-white/50 dark:bg-slate-900/50">
+      <section className="py-24 bg-black/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
               Revolutionary Safety Technology
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
               Experience the future of personal safety with AI that understands, predicts, and responds 
               to emergencies faster than humanly possible.
             </p>
@@ -603,6 +602,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }
