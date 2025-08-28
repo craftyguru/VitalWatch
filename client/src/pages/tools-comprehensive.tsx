@@ -122,7 +122,11 @@ export default function ToolsComprehensive() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { sensorData, permissions, requestPermissions, isConnected } = useDeviceSensors();
+  // Simple device status for Railway deployment
+  const sensorData = { accelerometer: { active: false }, battery: { active: false } };
+  const permissions = { geolocation: 'prompt' as PermissionState };
+  const requestPermissions = () => console.log('Permission request placeholder');
+  const isConnected = navigator?.onLine || false;
   const [activeTab, setActiveTab] = useState("overview");
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [voiceCommands, setVoiceCommands] = useState(true);
