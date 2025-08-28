@@ -262,12 +262,8 @@ export default function Home() {
               {/* Header */}
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center space-x-4 mb-4">
-                  <div className="bg-white p-4 rounded-2xl shadow-lg">
-                    <img 
-                      src="/logo.png" 
-                      alt="VitalWatch Logo" 
-                      className="h-8 w-8 object-contain"
-                    />
+                  <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-4 rounded-2xl shadow-lg">
+                    <Brain className="h-8 w-8" />
                   </div>
                   <div className="bg-gradient-to-br from-indigo-500 to-blue-500 text-white p-4 rounded-2xl shadow-lg">
                     <Eye className="h-8 w-8" />
@@ -367,11 +363,7 @@ export default function Home() {
               <div className="text-center">
                 <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-xl px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
                   <Link href="/tools" data-testid="link-main-toolkit">
-                    <img 
-                      src="/logo.png" 
-                      alt="VitalWatch Logo" 
-                      className="h-6 w-6 mr-3 object-contain"
-                    />
+                    <Shield className="h-6 w-6 mr-3" />
                     Enter Complete Toolkit
                     <ArrowRight className="h-6 w-6 ml-3" />
                   </Link>
