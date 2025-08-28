@@ -5,19 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSafeDeviceSensors } from "@/hooks/useSafeDeviceSensors";
 import { 
   Activity,
   Smartphone,
-  Headphones,
-  Watch,
-  Wifi,
   Battery,
-  Signal,
-  Bluetooth,
   Heart,
   Zap,
-  Eye,
-  Ear,
   Move,
   Lightbulb,
   Thermometer,
@@ -26,13 +20,13 @@ import {
   TrendingUp,
   AlertCircle,
   CheckCircle,
-  RotateCcw,
   Settings
 } from "lucide-react";
 
 export function EnhancedSensorMonitoring() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("devices");
+  const { sensorData, permissions, requestPermissions, isConnected } = useSafeDeviceSensors();
   
   // Device sensor states
   const [deviceSensors, setDeviceSensors] = useState({
@@ -71,15 +65,15 @@ export function EnhancedSensorMonitoring() {
     }
   });
 
-  // Environmental monitoring
-  const [environmentalData, setEnvironmentalData] = useState({
-    temperature: 72,
-    humidity: 45,
-    noiseLevel: 35,
-    lightLevel: 350,
-    airQuality: 85,
-    vibration: 2
-  });
+  // Get real environmental data from sensors
+  const environmentalData = {
+    temperature: sensorData.environment.temperature || 72,
+    humidity: sensorData.environment.humidity || 45,
+    noiseLevel: sensorData.environment.noiseLevel || 35,
+    lightLevel: sensorData.ambient.light || 350,
+    airQuality: sensorData.environment.airQuality || 85,
+    vibration: Math.abs(sensorData.accelerometer.x) + Math.abs(sensorData.accelerometer.y) + Math.abs(sensorData.accelerometer.z) || 2
+  };
 
   // Biometric analytics
   const [biometricAnalytics, setBiometricAnalytics] = useState({
