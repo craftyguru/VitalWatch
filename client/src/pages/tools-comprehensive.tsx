@@ -22,93 +22,22 @@ import {
   ArrowLeft,
   Shield,
   AlertTriangle,
-  Wind,
-  Brain,
   Heart,
-  MessageSquare,
-  Phone,
   MapPin,
-  Mic,
-  Volume2,
-  Play,
-  Pause,
-  Square,
   Zap,
-  Settings,
-  Eye,
-  EyeOff,
-  Bell,
-  BellOff,
-  Users,
-  Star,
-  Award,
-  Target,
-  Calendar,
-  Clock,
   Activity,
-  TrendingUp,
   BarChart3,
-  Wifi,
-  WifiOff,
-  Bluetooth,
-  Smartphone,
-  Watch,
-  Car,
-  Home,
-  Lock,
-  Unlock,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  HelpCircle,
-  Plus,
-  Minus,
-  RotateCcw,
-  Download,
-  Upload,
-  Share2,
-  Copy,
-  Edit,
-  Trash2,
-  Search,
-  Filter,
-  MoreVertical,
   Headphones,
-  ChevronRight,
-  ChevronDown,
-  ExternalLink,
-  Globe,
-  Database,
-  CloudUpload,
-  Timer,
-  Camera,
-  Fingerprint,
-  ScanLine,
-  Gauge,
-  Lightbulb,
-  Sparkles,
-  FireExtinguisher,
-  LifeBuoy,
-  Medal,
-  Stethoscope,
-  HeartHandshake,
-  Waves,
-  Snowflake,
-  Sun,
-  Moon,
-  Gamepad2,
-  Music,
-  BookOpen,
-  GraduationCap,
-  Coffee,
-  Dumbbell,
-  Mountain,
-  TreePine,
-  Flower2,
-  Rainbow
+  Wind,
+  MessageSquare,
+  Brain,
+  Clock,
+  Target,
+  Users,
+  TreePine
 } from "lucide-react";
 import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
-// Removed problematic device sensor import
+import { useSafeDeviceSensors } from "@/hooks/useSafeDeviceSensors";
 import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
 
 // Import enhanced components
@@ -122,37 +51,19 @@ export default function ToolsComprehensive() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  // Simple device status for Railway deployment
-  const sensorData = { accelerometer: { active: false }, battery: { active: false } };
-  const permissions = { geolocation: 'prompt' as PermissionState };
-  const requestPermissions = () => console.log('Permission request placeholder');
-  const isConnected = navigator?.onLine || false;
+  const { sensorData, permissions, requestPermissions, isConnected } = useSafeDeviceSensors();
   const [activeTab, setActiveTab] = useState("overview");
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [voiceCommands, setVoiceCommands] = useState(true);
-  const [autoRecord, setAutoRecord] = useState(true);
   const [liveLocation, setLiveLocation] = useState(false);
-  const [breadcrumbTrail, setBreadcrumbTrail] = useState(false);
-  const [geoFenceAlerts, setGeoFenceAlerts] = useState(false);
-  const [aiRiskDetection, setAiRiskDetection] = useState(true);
-  const [aiCallResponder, setAiCallResponder] = useState(false);
-  const [aiCompanionChat, setAiCompanionChat] = useState(true);
-  const [offlineMode, setOfflineMode] = useState(false);
-  const [multiChannelAlert, setMultiChannelAlert] = useState(true);
-  const [emergencyGroupCall, setEmergencyGroupCall] = useState(true);
-  const [networkTrustScore, setNetworkTrustScore] = useState(89);
-  const [safetyStreak, setSafetyStreak] = useState(7);
-  const [responseTime, setResponseTime] = useState(12);
-  const [safetyPoints, setSafetyPoints] = useState(240);
+  const [networkTrustScore] = useState(89);
+  const [safetyStreak] = useState(7);
+  const [responseTime] = useState(12);
+  const [safetyPoints] = useState(240);
 
   // Enhanced state for real functionality
   const [isRecording, setIsRecording] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
-  const [deviceConnections, setDeviceConnections] = useState({
-    wearables: { connected: false, devices: 0 },
-    smartHome: { connected: false, devices: 0 },
-    carIntegration: { connected: false, status: 'offline' }
-  });
 
   // Fetch user settings and data
   const { data: userSettings } = useQuery({
@@ -217,10 +128,6 @@ export default function ToolsComprehensive() {
   // Device integration simulation
   const connectWearables = () => {
     setTimeout(() => {
-      setDeviceConnections(prev => ({
-        ...prev,
-        wearables: { connected: true, devices: 2 }
-      }));
       toast({
         title: "Wearables Connected",
         description: "Heart rate and activity monitoring active",
@@ -231,10 +138,6 @@ export default function ToolsComprehensive() {
 
   const connectSmartHome = () => {
     setTimeout(() => {
-      setDeviceConnections(prev => ({
-        ...prev,
-        smartHome: { connected: true, devices: 5 }
-      }));
       toast({
         title: "Smart Home Connected",
         description: "Emergency lighting and door controls activated",
@@ -302,8 +205,6 @@ export default function ToolsComprehensive() {
 
   // Safety check-in
   const performSafetyCheckIn = () => {
-    setSafetyStreak(prev => prev + 1);
-    setSafetyPoints(prev => prev + 10);
     toast({
       title: "Safety Check-In Complete",
       description: `Streak: ${safetyStreak + 1} days. +10 points earned!`,
