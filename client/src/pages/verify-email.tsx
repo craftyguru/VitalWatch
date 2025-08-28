@@ -182,7 +182,11 @@ export default function VerifyEmail() {
                       className="grid md:grid-cols-3 gap-6 mb-8"
                     >
                       <div className="text-center p-4 bg-slate-700/30 rounded-xl border border-slate-600/30">
-                        <Shield className="h-12 w-12 text-blue-400 mx-auto mb-3" />
+                        <img 
+                          src="/logo.png" 
+                          alt="VitalWatch Logo" 
+                          className="h-12 w-12 mx-auto mb-3 object-contain"
+                        />
                         <h3 className="font-semibold text-white mb-2">AI Protection</h3>
                         <p className="text-slate-300 text-sm">24/7 monitoring with instant threat detection</p>
                       </div>

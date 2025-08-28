@@ -30,7 +30,11 @@ export default function AdvancedSafetyTools() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5 h-auto p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg rounded-2xl border border-slate-200 dark:border-slate-800">
           <TabsTrigger value="emergency" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">
-            <Shield className="h-5 w-5" />
+            <img 
+              src="/logo.png" 
+              alt="VitalWatch Logo" 
+              className="h-5 w-5 object-contain"
+            />
             <span className="text-sm font-medium">Emergency</span>
           </TabsTrigger>
           <TabsTrigger value="monitoring" className="flex flex-col items-center space-y-2 py-4 px-6 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg transition-all">

@@ -162,8 +162,12 @@ export default function AuthPage() {
           </Link>
           
           <div className="flex items-center justify-center mb-4">
-            <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-3 rounded-2xl shadow-lg">
-              <Shield className="h-8 w-8 text-white" />
+            <div className="bg-white p-3 rounded-2xl shadow-lg">
+              <img 
+                src="/logo.png" 
+                alt="VitalWatch Logo" 
+                className="h-8 w-8 object-contain"
+              />
             </div>
           </div>
           

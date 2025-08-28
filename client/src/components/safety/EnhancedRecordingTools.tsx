@@ -330,7 +330,11 @@ export function EnhancedRecordingTools() {
                       <p className="text-xs text-muted-foreground">48kHz, 16-bit</p>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
-                      <Shield className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                      <img 
+                        src="/logo.png" 
+                        alt="VitalWatch Logo" 
+                        className="h-8 w-8 mx-auto mb-2 object-contain"
+                      />
                       <p className="text-sm font-medium">Encrypted</p>
                       <p className="text-xs text-muted-foreground">End-to-end</p>
                     </div>
@@ -427,7 +431,11 @@ export function EnhancedRecordingTools() {
                       <p className="text-xs text-muted-foreground">30 FPS</p>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
-                      <Shield className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                      <img 
+                        src="/logo.png" 
+                        alt="VitalWatch Logo" 
+                        className="h-8 w-8 mx-auto mb-2 object-contain"
+                      />
                       <p className="text-sm font-medium">Secure</p>
                       <p className="text-xs text-muted-foreground">Local storage</p>
                     </div>
