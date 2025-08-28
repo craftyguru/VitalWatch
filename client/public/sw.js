@@ -1,42 +1,38 @@
 const CACHE_NAME = 'vitalwatch-v1';
 const urlsToCache = [
   '/',
+  '/manifest.json',
   '/logo.png',
   '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  '/manifest.json'
+  '/icons/icon-512x512.png'
 ];
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(function(cache) {
+      .then(cache => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then(function(response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
+      .then(response => {
+        // Return cached version or fetch from network
+        return response || fetch(event.request);
       }
     )
   );
 });
 
-// Handle PWA update
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }

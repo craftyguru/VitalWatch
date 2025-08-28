@@ -28,12 +28,25 @@
           navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
               console.log('SW registered: ', registration);
+              
+              // Force a PWA installability check after service worker registration
+              setTimeout(() => {
+                console.log('Checking PWA installability...');
+                console.log('HTTPS:', location.protocol === 'https:' || location.hostname === 'localhost');
+                console.log('Manifest:', !!document.querySelector('link[rel="manifest"]'));
+                console.log('Service Worker:', 'serviceWorker' in navigator);
+              }, 1000);
             })
             .catch((registrationError) => {
               console.log('SW registration failed: ', registrationError);
             });
         });
       }
+      
+      // Add beforeinstallprompt debugging
+      window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('beforeinstallprompt fired!', e);
+      });
     </script>
   </head>
   <body>

@@ -21,31 +21,49 @@ export function SeamlessInstallButton() {
                         (window.navigator as any).standalone ||
                         document.referrer.includes('android-app://');
     
+    console.log('PWA Install Check:', {
+      isStandalone,
+      displayMode: window.matchMedia('(display-mode: standalone)').matches,
+      standalone: (window.navigator as any).standalone,
+      referrer: document.referrer
+    });
+    
     if (isStandalone) {
       setIsInstalled(true);
       return;
     }
 
-    // Listen for the beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      console.log('Install prompt available');
-    };
+    // Force a slight delay to ensure the browser has time to detect PWA criteria
+    const timer = setTimeout(() => {
+      console.log('Checking for install prompt after delay...');
+      
+      // Listen for the beforeinstallprompt event
+      const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+        console.log('Before install prompt event fired!', e);
+        e.preventDefault();
+        setDeferredPrompt(e);
+        console.log('Install prompt available and stored');
+      };
 
-    // Listen for successful installation
-    const handleAppInstalled = () => {
-      setIsInstalled(true);
-      setDeferredPrompt(null);
-      console.log('App installed successfully');
-    };
+      // Listen for successful installation
+      const handleAppInstalled = () => {
+        setIsInstalled(true);
+        setDeferredPrompt(null);
+        console.log('App installed successfully');
+      };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-    window.addEventListener('appinstalled', handleAppInstalled);
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+      window.addEventListener('appinstalled', handleAppInstalled);
+
+      // Manual trigger check for testing
+      if (window.location.search.includes('debug=install')) {
+        console.log('Debug mode: Forcing install button to show');
+        // For debugging purposes
+      }
+    }, 1000);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      clearTimeout(timer);
     };
   }, []);
 
@@ -53,11 +71,12 @@ export function SeamlessInstallButton() {
     console.log('Install button clicked');
     console.log('Deferred prompt available:', !!deferredPrompt);
     console.log('User agent:', navigator.userAgent);
+    console.log('Current URL:', window.location.href);
     
     if (deferredPrompt) {
       try {
         console.log('Triggering native install prompt');
-        // Directly trigger the native browser install prompt (NO custom dialogs)
+        // Directly trigger the native browser install prompt
         await deferredPrompt.prompt();
         const choiceResult = await deferredPrompt.userChoice;
         
@@ -72,25 +91,71 @@ export function SeamlessInstallButton() {
         console.error('Install error:', error);
       }
     } else {
-      // For browsers that don't support beforeinstallprompt yet, show helpful message
-      console.log('No install prompt available');
-      alert('To install VitalWatch:\n\n• Chrome: Look for "Install" icon in the address bar\n• Safari: Use "Add to Home Screen" from the share menu\n• Edge: Use "Install this site as an app" from the menu');
+      // Enhanced instructions for different mobile browsers
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isAndroid = /Android/.test(navigator.userAgent);
+      const isChrome = /Chrome/.test(navigator.userAgent);
+      const isSafari = /Safari/.test(navigator.userAgent) && !isChrome;
+      
+      console.log('Browser detection:', { isIOS, isAndroid, isChrome, isSafari });
+      
+      let instructions = 'To install VitalWatch:\n\n';
+      
+      if (isIOS && isSafari) {
+        instructions += '• Tap the Share button (square with arrow)\n• Select "Add to Home Screen"\n• Tap "Add" to install';
+      } else if (isAndroid && isChrome) {
+        instructions += '• Look for "Install app" in the browser menu\n• Or check the address bar for an install icon\n• Tap "Install" when prompted';
+      } else if (isChrome) {
+        instructions += '• Look for the install icon in the address bar\n• Click "Install VitalWatch"\n• Or check the browser menu for "Install app"';
+      } else {
+        instructions += '• Chrome: Look for "Install" icon in the address bar\n• Safari: Use "Add to Home Screen" from the share menu\n• Edge: Use "Install this site as an app" from the menu';
+      }
+      
+      alert(instructions);
     }
   };
 
-  // Show button even if no prompt is available yet (for debugging)
+  // Always show button for testing on mobile
   if (isInstalled) {
     return null;
   }
 
+  // Check PWA installation criteria
+  const checkPWACriteria = () => {
+    const criteria = {
+      https: location.protocol === 'https:' || location.hostname === 'localhost',
+      manifest: !!document.querySelector('link[rel="manifest"]'),
+      serviceWorker: 'serviceWorker' in navigator,
+      icons: true, // We have icons in manifest
+      displayMode: true // We have display: standalone
+    };
+    
+    console.log('PWA Installation Criteria:', criteria);
+    return criteria;
+  };
+
   return (
-    <Button 
-      onClick={handleInstallClick}
-      className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
-      size="lg"
-    >
-      <Download className="w-5 h-5 mr-2" />
-      {deferredPrompt ? 'Install VitalWatch' : 'Install App'}
-    </Button>
+    <div className="flex flex-col items-center space-y-2">
+      <Button 
+        onClick={handleInstallClick}
+        className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
+        size="lg"
+      >
+        <Download className="w-5 h-5 mr-2" />
+        {deferredPrompt ? 'Install VitalWatch' : 'Install App'}
+      </Button>
+      
+      {/* Debug info for mobile */}
+      {window.location.search.includes('debug') && (
+        <Button 
+          onClick={checkPWACriteria}
+          variant="outline"
+          size="sm"
+          className="text-xs"
+        >
+          Check PWA Criteria
+        </Button>
+      )}
+    </div>
   );
 }
