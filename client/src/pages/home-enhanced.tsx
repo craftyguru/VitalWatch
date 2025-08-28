@@ -167,38 +167,42 @@ export default function Home() {
       
       {/* Enhanced Header */}
       <header className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-lg bg-card/95">
-        <div className="px-4 py-4">
+        <div className="px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl shadow-lg overflow-hidden bg-white">
+            <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-lg overflow-hidden bg-white flex-shrink-0">
                 <img 
                   src="/logo.png" 
                   alt="VitalWatch Logo" 
-                  className="w-10 h-10 object-contain"
+                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
                 />
               </div>
-              <div>
-                <div className="flex items-center space-x-3">
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-purple-600 via-orange-500 to-pink-600 bg-clip-text text-transparent truncate">
                     VitalWatch
                   </h1>
-                  <VersionBadge />
+                  <div className="hidden xs:block">
+                    <VersionBadge />
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
-                  <span className="text-sm text-muted-foreground font-medium">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse flex-shrink-0`} />
+                  <span className="text-xs sm:text-sm text-muted-foreground font-medium truncate">
                     {isConnected ? 'Protected & Connected' : 'Reconnecting...'}
                   </span>
                 </div>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <ThemeToggle />
+            <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
+              <div className="hidden sm:block">
+                <ThemeToggle />
+              </div>
               
               {user && (
-                <div className="flex items-center space-x-3">
-                  <div className="hidden sm:block text-right">
+                <div className="flex items-center space-x-1 sm:space-x-3">
+                  <div className="hidden lg:block text-right">
                     <p className="text-sm font-semibold text-foreground">
                       Welcome back, {userName}
                     </p>
@@ -207,9 +211,9 @@ export default function Home() {
                       <span>You're doing great today</span>
                     </p>
                   </div>
-                  <Avatar className="h-12 w-12 ring-2 ring-primary/20 shadow-md">
+                  <Avatar className="h-10 w-10 sm:h-12 sm:w-12 ring-2 ring-primary/20 shadow-md">
                     <AvatarImage src={(user as any).profileImageUrl} />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground font-bold text-lg">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground font-bold text-sm sm:text-lg">
                       {userName.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -219,18 +223,18 @@ export default function Home() {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400" 
+                      className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400 hidden sm:flex" 
                       asChild
                     >
                       <Link href="/admin" data-testid="link-admin-nav">
-                        <Shield className="h-5 w-5" />
+                        <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
                       </Link>
                     </Button>
                   )}
                   
-                  <Button variant="ghost" size="icon" className="hover:bg-primary/10" asChild>
+                  <Button variant="ghost" size="icon" className="hover:bg-primary/10 hidden sm:flex" asChild>
                     <Link href="/profile" data-testid="link-profile">
-                      <Settings className="h-5 w-5" />
+                      <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Link>
                   </Button>
                   
@@ -238,12 +242,12 @@ export default function Home() {
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400" 
+                    className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 hidden sm:flex" 
                     onClick={handleLogout}
                     disabled={isLoggingOut}
                     data-testid="button-logout"
                   >
-                    <LogOut className="h-5 w-5" />
+                    <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </div>
               )}

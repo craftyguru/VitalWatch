@@ -4,7 +4,7 @@ import { Code, GitBranch, Clock } from 'lucide-react';
 
 export function VersionBadge() {
   // Version information - update this when making major releases
-  const version = "2.4.1";
+  const version = "2.5.0";
   const buildDate = new Date().toISOString().split('T')[0]; // Current date as build date
   const environment = import.meta.env.MODE || 'development';
   const isDevelopment = environment === 'development';
@@ -17,7 +17,7 @@ export function VersionBadge() {
       <TooltipTrigger asChild>
         <Badge 
           variant={isDevelopment ? "secondary" : "default"}
-          className={`text-xs font-mono cursor-help select-none ${
+          className={`text-xs font-mono cursor-help select-none whitespace-nowrap ${
             isDevelopment 
               ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-700' 
               : 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200 border-green-300 dark:border-green-700'
