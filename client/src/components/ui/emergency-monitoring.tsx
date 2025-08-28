@@ -295,7 +295,11 @@ export function EmergencyMonitoring({ onThreatDetected, emergencyContacts }: Eme
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className={`p-2 rounded-lg ${isMonitoring ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'}`}>
-              <Shield className="h-5 w-5" />
+              <img 
+                src="/logo.png" 
+                alt="VitalWatch Logo" 
+                className="h-5 w-5 object-contain"
+              />
             </div>
             <div>
               <CardTitle className="text-lg">AI Emergency Monitoring</CardTitle>
@@ -465,7 +469,11 @@ export function EmergencyMonitoring({ onThreatDetected, emergencyContacts }: Eme
 
         {/* Safety Notice */}
         <div className="text-xs text-muted-foreground text-center bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3">
-          <Shield className="h-4 w-4 mx-auto mb-1 text-blue-600" />
+          <img 
+            src="/logo.png" 
+            alt="VitalWatch Logo" 
+            className="h-4 w-4 mx-auto mb-1 object-contain"
+          />
           This AI monitoring system analyzes audio patterns to detect potential emergencies. 
           It does not replace professional emergency services. Always call 911 for immediate emergencies.
         </div>

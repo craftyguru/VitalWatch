@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { X, Download, Smartphone, Shield } from 'lucide-react';
+import { X, Download, Smartphone } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -103,7 +103,11 @@ export function PWAInstallPrompt() {
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
+                <img 
+                  src="/logo.png" 
+                  alt="VitalWatch Logo" 
+                  className="w-6 h-6 object-contain"
+                />
               </div>
               <div>
                 <h3 className="font-bold text-lg text-gray-900 dark:text-white">

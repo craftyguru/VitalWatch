@@ -55,7 +55,7 @@ export default function ComprehensiveEmergencyMonitoring() {
       id: "safety-streak-7",
       title: "Safety Guardian",
       description: "Complete 7 consecutive daily safety check-ins",
-      icon: <Shield className="h-6 w-6" />,
+      icon: <img src="/logo.png" alt="VitalWatch Logo" className="h-6 w-6 object-contain" />,
       progress: 7,
       maxProgress: 7,
       completed: true,
@@ -156,7 +156,7 @@ export default function ComprehensiveEmergencyMonitoring() {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "Safety": return <Shield className="h-4 w-4" />;
+      case "Safety": return <img src="/logo.png" alt="VitalWatch Logo" className="h-4 w-4 object-contain" />;
       case "Preparedness": return <AlertTriangle className="h-4 w-4" />;
       case "Wellness": return <Heart className="h-4 w-4" />;
       case "Mindfulness": return <Activity className="h-4 w-4" />;
