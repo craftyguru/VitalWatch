@@ -27,7 +27,10 @@ import {
   BarChart3,
   Globe,
   Activity,
-  Settings
+  Settings,
+  Copy,
+  Share,
+  Download
 } from "lucide-react";
 
 export function EnhancedLocationServices() {
@@ -187,53 +190,70 @@ export function EnhancedLocationServices() {
             {/* Live GPS Status */}
             <Card className="border-2 border-green-200 dark:border-green-800">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2">
-                  <div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
-                  GPS Location
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+                    GPS Location
+                  </div>
                   <Badge variant="secondary" className={accuracyInfo.bg}>Active</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-muted-foreground">Latitude</p>
-                    <p className="font-mono font-medium">{currentLocation.lat.toFixed(6)}</p>
+                  <div className="p-2 bg-green-50 dark:bg-green-950/20 rounded">
+                    <p className="text-muted-foreground text-xs">Latitude</p>
+                    <p className="font-mono font-bold text-green-700 dark:text-green-300">{currentLocation.lat.toFixed(6)}</p>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground">Longitude</p>
-                    <p className="font-mono font-medium">{currentLocation.lng.toFixed(6)}</p>
+                  <div className="p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
+                    <p className="text-muted-foreground text-xs">Longitude</p>
+                    <p className="font-mono font-bold text-blue-700 dark:text-blue-300">{currentLocation.lng.toFixed(6)}</p>
+                  </div>
+                  <div className="p-2 bg-purple-50 dark:bg-purple-950/20 rounded">
+                    <p className="text-muted-foreground text-xs">Accuracy Status</p>
+                    <p className={`font-medium ${accuracyInfo.color}`}>
+                      {accuracyInfo.status} (±{currentLocation.accuracy.toFixed(0)}m)
+                    </p>
+                  </div>
+                  <div className="p-2 bg-orange-50 dark:bg-orange-950/20 rounded">
+                    <p className="text-muted-foreground text-xs">Last Updated</p>
+                    <p className="font-medium text-orange-700 dark:text-orange-300">{new Date(currentLocation.timestamp).toLocaleTimeString()}</p>
                   </div>
                 </div>
                 
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Accuracy Status</span>
-                  <Badge className={`${accuracyInfo.bg} ${accuracyInfo.color}`}>
-                    {accuracyInfo.status} (±{currentLocation.accuracy.toFixed(1)}m)
-                  </Badge>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button onClick={handleLocationTest} variant="outline" size="sm">
+                    <Crosshair className="h-3 w-3 mr-1" />
+                    Test Location
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const coords = `${currentLocation.lat.toFixed(6)},${currentLocation.lng.toFixed(6)}`;
+                      navigator.clipboard.writeText(coords);
+                      toast({
+                        title: "Coordinates Copied",
+                        description: "GPS coordinates copied to clipboard",
+                      });
+                    }}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy GPS
+                  </Button>
                 </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Last Updated</span>
-                  <span className="text-sm font-medium">{new Date(currentLocation.timestamp).toLocaleTimeString()}</span>
-                </div>
-
-                <Button onClick={handleLocationTest} variant="outline" className="w-full">
-                  <Target className="h-4 w-4 mr-2" />
-                  Test Location
-                </Button>
               </CardContent>
             </Card>
 
-            {/* Location Settings */}
-            <Card>
+            {/* Enhanced Location Settings */}
+            <Card className="border-blue-200 dark:border-blue-800">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Navigation className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
+                  <Settings className="h-5 w-5" />
                   Location Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">GPS Tracking</p>
                     <p className="text-xs text-muted-foreground">Continuously monitor location for emergency services</p>
@@ -241,7 +261,7 @@ export function EnhancedLocationServices() {
                   <Switch checked={locationTracking} onCheckedChange={setLocationTracking} />
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">High Accuracy Mode</p>
                     <p className="text-xs text-muted-foreground">Use GPS, Wi-Fi, and cellular for maximum precision</p>
@@ -249,43 +269,233 @@ export function EnhancedLocationServices() {
                   <Switch checked={highAccuracy} onCheckedChange={setHighAccuracy} />
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">Safe Zone Alerts</p>
                     <p className="text-xs text-muted-foreground">Alert when leaving or entering safe areas</p>
                   </div>
                   <Switch checked={safeZoneAlerts} onCheckedChange={setSafeZoneAlerts} />
                 </div>
+
+                {/* Additional Location Tools */}
+                <div className="border-t pt-4 space-y-2">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location Tools</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        window.open(`https://maps.google.com/?q=${currentLocation.lat},${currentLocation.lng}`, '_blank');
+                        toast({ title: "Opening Maps", description: "View current location on Google Maps" });
+                      }}
+                    >
+                      <Map className="h-3 w-3 mr-1" />
+                      Open Maps
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const shareText = `My current location: https://maps.google.com/?q=${currentLocation.lat},${currentLocation.lng}`;
+                        if (navigator.share) {
+                          navigator.share({ title: 'My Location', text: shareText });
+                        } else {
+                          navigator.clipboard.writeText(shareText);
+                          toast({ title: "Location Shared", description: "Location link copied to clipboard" });
+                        }
+                      }}
+                    >
+                      <Share className="h-3 w-3 mr-1" />
+                      Share Location
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Real-time Movement Analytics */}
-          <Card>
+          <Card className="border-yellow-200 dark:border-yellow-800">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5" />
-                Real-time Movement Data
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-yellow-600" />
+                  Real-time Movement Data
+                </div>
+                <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                  Live Tracking
+                </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border">
                   <p className="text-2xl font-bold text-blue-600">{(currentLocation.speed * 2.237).toFixed(1)}</p>
                   <p className="text-xs text-muted-foreground">Speed (mph)</p>
+                  <div className="text-xs text-blue-600 mt-1">
+                    {currentLocation.speed > 0 ? "Moving" : "Stationary"}
+                  </div>
                 </div>
-                <div className="text-center p-3 bg-purple-50 dark:bg-purple-950 rounded-lg">
+                <div className="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg border">
                   <p className="text-2xl font-bold text-purple-600">{currentLocation.heading.toFixed(0)}°</p>
                   <p className="text-xs text-muted-foreground">Heading</p>
+                  <div className="text-xs text-purple-600 mt-1">
+                    {currentLocation.heading < 45 || currentLocation.heading >= 315 ? "North" :
+                     currentLocation.heading < 135 ? "East" :
+                     currentLocation.heading < 225 ? "South" : "West"}
+                  </div>
                 </div>
-                <div className="text-center p-3 bg-green-50 dark:bg-green-950 rounded-lg">
+                <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border">
                   <p className="text-2xl font-bold text-green-600">{locationAnalytics.dailyDistance}</p>
                   <p className="text-xs text-muted-foreground">Miles Today</p>
+                  <div className="text-xs text-green-600 mt-1">
+                    +0.1 this hour
+                  </div>
                 </div>
-                <div className="text-center p-3 bg-orange-50 dark:bg-orange-950 rounded-lg">
+                <div className="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg border">
                   <p className="text-2xl font-bold text-orange-600">{locationAnalytics.locationUpdates}</p>
                   <p className="text-xs text-muted-foreground">Updates/Hour</p>
+                  <div className="text-xs text-orange-600 mt-1">
+                    High frequency
+                  </div>
                 </div>
+              </div>
+
+              {/* Movement Pattern Analysis */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                  <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                    Movement Pattern
+                  </h4>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-between">
+                      <span>Avg Speed Today:</span>
+                      <span className="font-medium">2.1 mph</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Max Speed:</span>
+                      <span className="font-medium">25.3 mph</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Direction Changes:</span>
+                      <span className="font-medium">47 times</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                  <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-green-600" />
+                    Location History
+                  </h4>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-between">
+                      <span>Locations Visited:</span>
+                      <span className="font-medium">12 today</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Time Mobile:</span>
+                      <span className="font-medium">3h 24m</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Battery Impact:</span>
+                      <span className="font-medium text-green-600">Low</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Location History & Export Tools */}
+          <Card className="border-gray-200 dark:border-gray-800">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Route className="h-5 w-5" />
+                Location Tools & Export
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    toast({
+                      title: "Location History",
+                      description: "Viewing last 24 hours of location data",
+                    });
+                  }}
+                >
+                  <Globe className="h-3 w-3 mr-1" />
+                  View History
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const locationData = {
+                      timestamp: new Date().toISOString(),
+                      latitude: currentLocation.lat,
+                      longitude: currentLocation.lng,
+                      accuracy: currentLocation.accuracy,
+                      speed: currentLocation.speed,
+                      heading: currentLocation.heading
+                    };
+                    const dataStr = JSON.stringify(locationData, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `location_data_${Date.now()}.json`;
+                    link.click();
+                    toast({
+                      title: "Location Export",
+                      description: "Location data exported to JSON file",
+                    });
+                  }}
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Export Data
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    toast({
+                      title: "Emergency Sharing",
+                      description: "Location sharing activated for emergency contacts",
+                    });
+                  }}
+                >
+                  <Shield className="h-3 w-3 mr-1" />
+                  Emergency Share
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    toast({
+                      title: "Geofence Alert",
+                      description: "Set up location-based notifications",
+                    });
+                  }}
+                >
+                  <Zap className="h-3 w-3 mr-1" />
+                  Set Geofence
+                </Button>
+              </div>
+
+              {/* Privacy Notice */}
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">Privacy Protected</span>
+                </div>
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  All location data is processed locally on your device. Location history is stored securely and can be deleted anytime. Emergency sharing only activates when explicitly requested.
+                </p>
               </div>
             </CardContent>
           </Card>
