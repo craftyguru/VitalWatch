@@ -9,7 +9,6 @@ import { useSafeDeviceSensors } from "@/hooks/useSafeDeviceSensors";
 import { 
   Activity,
   Smartphone,
-  Battery,
   Heart,
   Zap,
   Move,
@@ -20,16 +19,16 @@ import {
   TrendingUp,
   AlertCircle,
   CheckCircle,
-  Settings,
   Watch,
   Headphones,
-  Bluetooth
+  Bluetooth,
+  Volume2
 } from "lucide-react";
 
 export function EnhancedSensorMonitoring() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("devices");
-  const { sensorData, permissions, requestPermissions, isConnected } = useSafeDeviceSensors();
+  const { sensorData } = useSafeDeviceSensors();
   
   // Device sensor states
   const [deviceSensors, setDeviceSensors] = useState({
@@ -79,14 +78,14 @@ export function EnhancedSensorMonitoring() {
   };
 
   // Biometric analytics
-  const [biometricAnalytics, setBiometricAnalytics] = useState({
+  const biometricAnalytics = {
     heartRateVariability: 42,
     stressIndex: 15,
     activityLevel: 78,
     sleepQuality: 87,
     recoveryScore: 93,
     alertness: 82
-  });
+  };
 
   // Real-time sensor updates
   useEffect(() => {
@@ -436,7 +435,7 @@ export function EnhancedSensorMonitoring() {
 
             <Card>
               <CardContent className="p-4 text-center">
-                <Ear className="h-6 w-6 mx-auto mb-2 text-purple-500" />
+                <Volume2 className="h-6 w-6 mx-auto mb-2 text-purple-500" />
                 <div className="text-2xl font-bold">{environmentalData.noiseLevel} dB</div>
                 <p className="text-sm text-muted-foreground">Noise Level</p>
               </CardContent>
