@@ -23,7 +23,7 @@ import {
   type UpdateUserSettings,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, gte, lte } from "drizzle-orm";
+import { eq, desc, and, gte, lte, lt } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -74,6 +74,10 @@ export interface IStorage {
   // User settings
   getUserSettings(userId: string): Promise<UserSettings | undefined>;
   upsertUserSettings(userId: string, settings: UpdateUserSettings): Promise<UserSettings>;
+  
+  // Trial management
+  getExpiredTrialUsers(): Promise<User[]>;
+  getUsersNearTrialExpiration(): Promise<User[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -349,6 +353,38 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return upserted;
+  }
+
+  // Trial management implementations
+  async getExpiredTrialUsers(): Promise<User[]> {
+    const now = new Date();
+    return await db
+      .select()
+      .from(users)
+      .where(
+        and(
+          eq(users.guardianTrialStarted, true),
+          eq(users.subscriptionPlan, 'pro'),
+          lt(users.guardianTrialEndDate, now)
+        )
+      );
+  }
+
+  async getUsersNearTrialExpiration(): Promise<User[]> {
+    const now = new Date();
+    const threeDaysFromNow = new Date(now.getTime() + (3 * 24 * 60 * 60 * 1000));
+    
+    return await db
+      .select()
+      .from(users)
+      .where(
+        and(
+          eq(users.guardianTrialStarted, true),
+          eq(users.subscriptionPlan, 'pro'),
+          gte(users.guardianTrialEndDate, now),
+          lte(users.guardianTrialEndDate, threeDaysFromNow)
+        )
+      );
   }
 }
 
