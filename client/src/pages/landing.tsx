@@ -35,9 +35,7 @@ import {
   Eye
 } from "lucide-react";
 import { Link } from "wouter";
-import { InstallButton } from "@/components/InstallButton";
-import { TestInstallButton } from "@/components/TestInstallButton";
-import { VersionBadge } from "@/components/VersionBadge";
+import { ProfessionalInstallPrompt } from "@/components/ProfessionalInstallPrompt";
 
 export default function LandingPage() {
   const { toast } = useToast();
@@ -286,7 +284,6 @@ export default function LandingPage() {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-300 via-purple-300 to-teal-300 bg-clip-text text-transparent">
                   VitalWatch
                 </h1>
-                <VersionBadge />
               </div>
             </div>
             
@@ -372,7 +369,7 @@ export default function LandingPage() {
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
-              <TestInstallButton />
+              <ProfessionalInstallPrompt />
               <Button 
                 size="lg" 
                 variant="secondary" 

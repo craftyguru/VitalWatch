@@ -1,44 +1,47 @@
-// VitalWatch Service Worker
 const CACHE_NAME = 'vitalwatch-v1';
 const urlsToCache = [
   '/',
-  '/manifest.json',
+  '/logo.png',
   '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/icons/icon-512x512.png',
+  '/manifest.json'
 ];
 
-// Install event
-self.addEventListener('install', (event) => {
+self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
+      .then(function(cache) {
+        console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-// Fetch event
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
+      .then(function(response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }
+    )
   );
 });
 
-// Background sync for offline functionality
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'emergency-sync') {
-    event.waitUntil(syncEmergencyData());
-  }
+// Handle PWA update
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
-
-function syncEmergencyData() {
-  // Sync emergency data when back online
-  return fetch('/api/emergency/sync', {
-    method: 'POST',
-    credentials: 'include'
-  });
-}
