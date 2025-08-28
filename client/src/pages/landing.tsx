@@ -35,7 +35,7 @@ import {
   Eye
 } from "lucide-react";
 import { Link } from "wouter";
-import { ProfessionalInstallPrompt } from "@/components/ProfessionalInstallPrompt";
+import { SeamlessInstallButton } from "@/components/SeamlessInstallButton";
 
 export default function LandingPage() {
   const { toast } = useToast();
@@ -369,7 +369,7 @@ export default function LandingPage() {
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
-              <ProfessionalInstallPrompt />
+              <SeamlessInstallButton />
               <Button 
                 size="lg" 
                 variant="secondary" 

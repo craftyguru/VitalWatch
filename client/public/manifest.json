@@ -4,6 +4,7 @@
   "description": "AI-powered emergency monitoring and mental health support with real-time crisis detection",
   "start_url": "/",
   "display": "standalone",
+  "prefer_related_applications": false,
   "orientation": "portrait-primary",
   "theme_color": "#8b5cf6",
   "background_color": "#ffffff",

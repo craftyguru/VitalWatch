@@ -35,12 +35,11 @@ export function ProfessionalInstallPrompt() {
       e.preventDefault();
       setDeferredPrompt(e);
       
-      // Automatically show install prompt after a delay on mobile
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      if (isMobile && !localStorage.getItem('vitalwatch-install-dismissed')) {
+      // For non-iOS devices, automatically show install prompt after a delay
+      if (!iOS && !localStorage.getItem('vitalwatch-install-dismissed')) {
         setTimeout(() => {
           setShowInstallPrompt(true);
-        }, 3000); // Show after 3 seconds
+        }, 2000); // Show after 2 seconds
       }
     };
 
@@ -63,20 +62,28 @@ export function ProfessionalInstallPrompt() {
   const handleInstallClick = async () => {
     if (deferredPrompt && !isIOS) {
       try {
+        // Hide our custom dialog first
+        setShowInstallPrompt(false);
+        
+        // Trigger the native browser install prompt
         await deferredPrompt.prompt();
         const choiceResult = await deferredPrompt.userChoice;
         
         if (choiceResult.outcome === 'accepted') {
           setIsInstalled(true);
+          localStorage.setItem('vitalwatch-installed', 'true');
+        } else {
+          // If user dismissed, don't show again for a while
+          localStorage.setItem('vitalwatch-install-dismissed', 'true');
         }
         
         setDeferredPrompt(null);
-        setShowInstallPrompt(false);
       } catch (error) {
         console.error('Error during installation:', error);
+        setShowInstallPrompt(false);
       }
     } else if (isIOS) {
-      // For iOS, show simple instructions
+      // For iOS, show instructions in dialog
       setShowInstallPrompt(true);
     }
   };
@@ -175,15 +182,25 @@ export function ProfessionalInstallPrompt() {
                     <span>Tap <strong>"Add"</strong> to install</span>
                   </li>
                 </ol>
+                <div className="flex space-x-2 mt-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={dismissPrompt}
+                    className="flex-1"
+                  >
+                    Got It
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="flex space-x-2">
                 <Button 
                   onClick={handleInstallClick}
                   className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                  size="lg"
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Install Now
+                  Install VitalWatch
                 </Button>
                 <Button 
                   variant="outline" 
