@@ -5,18 +5,55 @@ import { Download, X } from 'lucide-react';
 export function FloatingInstallButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
-    // Show floating button after 3 seconds for testing
+    // Check if already installed
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                         (window.navigator as any).standalone;
+    
+    if (isStandalone) {
+      return; // Don't show if already installed
+    }
+
+    // Listen for the beforeinstallprompt event
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsVisible(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Show floating button after 3 seconds for testing (even without prompt)
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      clearTimeout(timer);
+    };
   }, []);
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      // Native PWA install prompt available
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        setIsVisible(false);
+        setDeferredPrompt(null);
+      }
+    } else {
+      // Show manual instructions
+      setShowInstructions(true);
+    }
+  };
 
   if (!isVisible) return null;
 
@@ -92,12 +129,12 @@ export function FloatingInstallButton() {
   return (
     <div className="fixed bottom-6 right-6 z-40">
       <Button
-        onClick={() => setShowInstructions(true)}
-        className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg"
+        onClick={handleInstall}
+        className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg animate-pulse"
         size="lg"
       >
         <Download className="w-5 h-5 mr-2" />
-        Install App
+        {deferredPrompt ? 'Install Now' : 'Install App'}
       </Button>
     </div>
   );
