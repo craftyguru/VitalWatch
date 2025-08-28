@@ -89,7 +89,7 @@ import {
   Sparkles,
   FireExtinguisher,
   LifeBuoy,
-  Medical,
+  Medal,
   Stethoscope,
   HeartHandshake,
   Waves,

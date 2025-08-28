@@ -80,9 +80,13 @@ export function DeviceIntegrationHub() {
     const detectedDevices: DeviceData[] = [];
 
     // Check for Device Motion API (phone sensors)
-    if ('DeviceMotionEvent' in window && typeof DeviceMotionEvent.requestPermission === 'function') {
+    if ('DeviceMotionEvent' in window) {
       try {
-        const permission = await DeviceMotionEvent.requestPermission();
+        // For iOS 13+ devices, request permission
+        let permission = 'granted';
+        if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+          permission = await (DeviceMotionEvent as any).requestPermission();
+        }
         if (permission === 'granted') {
           detectedDevices.push({
             id: 'device-motion',
@@ -498,121 +502,143 @@ export function DeviceIntegrationHub() {
         </CardHeader>
       </Card>
 
-      {/* Connected Device Cards Only */}
-      <div className="space-y-6">
-        {connectedDevices.length === 0 && (
-          <Card className="border-dashed border-2 border-muted-foreground/25">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Bluetooth className="w-12 h-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No Devices Connected</h3>
-              <p className="text-muted-foreground text-center mb-4">
-                Click "Scan Devices" to detect and connect your Bluetooth devices with sensors
-              </p>
-              <Button onClick={handleDeviceScan} disabled={scanning}>
-                {scanning ? "Scanning..." : "Scan for Devices"}
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-        
-        {connectedDevices.map((device) => {
-          const DeviceIcon = getDeviceIcon(device.type);
-          
-          return (
-            <Card key={device.id} className={`transition-all duration-200 ${device.connected ? 'ring-2 ring-primary/20' : 'opacity-60'}`}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-12 h-12 rounded-xl ${device.connected ? 'bg-primary/10' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center`}>
-                      <DeviceIcon className={`w-6 h-6 ${device.connected ? 'text-primary' : 'text-gray-400'}`} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold flex items-center space-x-2">
-                        <span>{device.name}</span>
-                        {device.connected && (
+      {/* Connected Device Cards - Clean Professional Layout */}
+      {connectedDevices.length === 0 ? (
+        <Card className="border-dashed border-2 border-muted-foreground/25">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+              <Bluetooth className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">No Devices Connected</h3>
+            <p className="text-muted-foreground text-center mb-6 max-w-md">
+              Click "Scan Devices" to detect and connect your Bluetooth devices with sensors for comprehensive monitoring
+            </p>
+            <Button onClick={handleDeviceScan} disabled={scanning} size="lg">
+              {scanning ? (
+                <>
+                  <RotateCcw className="w-4 h-4 mr-2 animate-spin" />
+                  Scanning...
+                </>
+              ) : (
+                <>
+                  <Bluetooth className="w-4 h-4 mr-2" />
+                  Scan for Devices
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-6">
+          {connectedDevices.map((device) => {
+            const DeviceIcon = getDeviceIcon(device.type);
+            
+            return (
+              <Card key={device.id} className="overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200">
+                {/* Device Header */}
+                <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 border-b border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <DeviceIcon className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <h3 className="text-lg font-semibold">{device.name}</h3>
                           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        )}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Last sync: {device.lastSync.toLocaleTimeString()}
-                      </p>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Last sync: {device.lastSync.toLocaleTimeString()}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4">
-                    {device.connected && (
-                      <>
-                        {device.battery && (
-                          <div className="flex items-center space-x-2">
-                            <Battery className="w-4 h-4" />
-                            <span className="text-sm">{device.battery}%</span>
-                          </div>
-                        )}
-                        {device.signal && (
-                          <div className="flex items-center space-x-2">
-                            <Signal className="w-4 h-4" />
-                            <span className="text-sm">{device.signal}%</span>
-                          </div>
-                        )}
-                      </>
-                    )}
-                    <Button
-                      onClick={() => handleConnectDevice(device.id)}
-                      variant={device.connected ? "outline" : "default"}
-                      size="sm"
-                    >
-                      {device.connected ? "Disconnect" : "Connect"}
-                    </Button>
+                    
+                    <div className="flex items-center space-x-6">
+                      <div className="flex items-center space-x-4 text-sm">
+                        <div className="flex items-center space-x-1">
+                          <Battery className="w-4 h-4 text-green-600" />
+                          <span className="font-medium">{device.battery}%</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Signal className="w-4 h-4 text-blue-600" />
+                          <span className="font-medium">{device.signal}%</span>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => handleConnectDevice(device.id)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        Disconnect
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </CardHeader>
 
-              {device.connected && (
-                <CardContent>
-                  <div className="space-y-4">
-                    <Separator />
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      {device.sensors.map((sensor) => {
-                        const SensorIcon = sensor.icon;
-                        
-                        return (
-                          <div key={sensor.id} className="flex items-center justify-between p-3 rounded-lg border">
-                            <div className="flex items-center space-x-3">
-                              <div className={`w-8 h-8 rounded-lg ${getStatusColor(sensor.status)} flex items-center justify-center`}>
-                                <SensorIcon className="w-4 h-4 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex items-center space-x-2">
-                                  <h4 className="font-medium text-sm">{sensor.name}</h4>
-                                  <Badge variant={getStatusBadgeVariant(sensor.status)} className="text-xs">
-                                    {sensor.status}
-                                  </Badge>
-                                </div>
-                                <p className="text-xs text-muted-foreground">{sensor.description}</p>
-                                <div className="flex items-center space-x-2 mt-1">
-                                  <span className="text-lg font-bold">{sensor.value}</span>
-                                  {sensor.unit && <span className="text-sm text-muted-foreground">{sensor.unit}</span>}
-                                  <span className="text-xs text-muted-foreground">({sensor.accuracy}% accuracy)</span>
-                                </div>
-                              </div>
+                {/* Sensor Grid */}
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {device.sensors.map((sensor) => {
+                      const SensorIcon = sensor.icon;
+                      
+                      return (
+                        <div 
+                          key={sensor.id} 
+                          className="relative p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 hover:border-primary/50 transition-colors"
+                        >
+                          {/* Sensor Icon and Status */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className={`w-10 h-10 rounded-lg ${getStatusColor(sensor.status)} flex items-center justify-center shadow-sm`}>
+                              <SensorIcon className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Badge variant={getStatusBadgeVariant(sensor.status)} className="text-xs">
+                                {sensor.status}
+                              </Badge>
+                              <Switch
+                                checked={sensor.status === 'active'}
+                                onCheckedChange={() => handleSensorToggle(device.id, sensor.id)}
+                                size="sm"
+                              />
+                            </div>
+                          </div>
+                          
+                          {/* Sensor Info */}
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm">{sensor.name}</h4>
+                            <p className="text-xs text-muted-foreground leading-relaxed">{sensor.description}</p>
+                            
+                            {/* Reading Display */}
+                            <div className="flex items-baseline space-x-1 pt-2">
+                              <span className="text-2xl font-bold text-foreground">{sensor.value}</span>
+                              {sensor.unit && (
+                                <span className="text-sm font-medium text-muted-foreground">{sensor.unit}</span>
+                              )}
                             </div>
                             
-                            <Switch
-                              checked={sensor.status === 'active'}
-                              onCheckedChange={() => handleSensorToggle(device.id, sensor.id)}
-                            />
+                            {/* Accuracy Bar */}
+                            <div className="flex items-center space-x-2 pt-1">
+                              <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-300"
+                                  style={{ width: `${sensor.accuracy}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium text-muted-foreground">
+                                {sensor.accuracy}%
+                              </span>
+                            </div>
                           </div>
-                        );
-                      })}
-                    </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </CardContent>
-              )}
-            </Card>
-          );
-        })}
-      </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
