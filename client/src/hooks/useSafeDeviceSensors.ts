@@ -62,6 +62,7 @@ export const useSafeDeviceSensors = () => {
 
       // Initialize battery API
       if ('getBattery' in navigator) {
+        setPermissions(prev => ({ ...prev, battery: 'granted' }));
         initializeBatteryAPI();
       }
 

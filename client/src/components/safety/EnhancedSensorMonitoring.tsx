@@ -22,13 +22,14 @@ import {
   Watch,
   Headphones,
   Bluetooth,
-  Volume2
+  Volume2,
+  Settings
 } from "lucide-react";
 
 export function EnhancedSensorMonitoring() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("devices");
-  const { sensorData } = useSafeDeviceSensors();
+  const { sensorData, permissions, requestPermissions, isConnected } = useSafeDeviceSensors();
   
   // Device sensor states
   const [deviceSensors, setDeviceSensors] = useState({
@@ -416,6 +417,39 @@ export function EnhancedSensorMonitoring() {
 
         {/* Environment Tab */}
         <TabsContent value="environment" className="space-y-4">
+          {/* Permission Status */}
+          {(permissions.geolocation !== 'granted' || permissions.accelerometer !== 'granted') && (
+            <Card className="border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                  <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Sensor Permissions Needed</h3>
+                </div>
+                <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-4">
+                  To show real-time sensor data from your device, we need permissions for:
+                </p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className={`h-2 w-2 rounded-full ${permissions.geolocation === 'granted' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <span>Location (for GPS positioning)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className={`h-2 w-2 rounded-full ${permissions.accelerometer === 'granted' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <span>Motion sensors (for movement detection)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className={`h-2 w-2 rounded-full ${permissions.battery === 'granted' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <span>Battery level monitoring</span>
+                  </div>
+                </div>
+                <Button onClick={requestPermissions} className="w-full">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Grant Sensor Permissions
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+          
           <div className="grid gap-4 md:grid-cols-3">
             <Card>
               <CardContent className="p-4 text-center">
