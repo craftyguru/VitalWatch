@@ -1,22 +1,19 @@
-import { useState, useRef, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { apiRequest } from "@/lib/queryClient";
+
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { Slider } from "@/components/ui/slider";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
 import { Link } from "wouter";
 import { 
   ArrowLeft,
@@ -44,17 +41,17 @@ import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
 import AdvancedBreathingExercise from "@/components/ui/advanced-breathing-exercise";
 import EnhancedGroundingExercise from "@/components/ui/enhanced-grounding-exercise";
 import CrisisChatSupport from "@/components/ui/crisis-chat-support";
-import ComprehensiveEmergencyMonitoring from "@/components/ui/comprehensive-emergency-monitoring-placeholder";
+
 import AdvancedSafetyTools from "@/components/ui/advanced-safety-tools";
 
 export default function ToolsComprehensive() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { sensorData, permissions, requestPermissions, isConnected } = useSafeDeviceSensors();
+  const { sensorData, permissions, requestPermissions } = useSafeDeviceSensors();
   const [activeTab, setActiveTab] = useState("overview");
   const [emergencyMode, setEmergencyMode] = useState(false);
-  const [voiceCommands] = useState(true);
+
   const [liveLocation, setLiveLocation] = useState(false);
   const [networkTrustScore] = useState(89);
   const [safetyStreak] = useState(7);
