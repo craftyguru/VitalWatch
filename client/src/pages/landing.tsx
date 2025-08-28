@@ -277,13 +277,15 @@ export default function LandingPage() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg overflow-hidden bg-white">
                 <img 
-                  src="/logo.png" 
+                  src="/attached_assets/image_1756382189793.png" 
                   alt="VitalWatch Logo" 
                   className="w-8 h-8 object-contain"
                 />
               </div>
               <div className="flex items-center space-x-3">
-                <h1 className="text-2xl font-bold text-white">VitalWatch</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-300 via-purple-300 to-teal-300 bg-clip-text text-transparent">
+                  VitalWatch
+                </h1>
                 <VersionBadge />
               </div>
             </div>
@@ -322,12 +324,12 @@ export default function LandingPage() {
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl overflow-hidden bg-white">
                 <img 
-                  src="/logo.png" 
+                  src="/attached_assets/image_1756382189793.png" 
                   alt="VitalWatch Logo" 
                   className="w-16 h-16 object-contain"
                 />
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-teal-400 bg-clip-text text-transparent">
                 VitalWatch
               </h1>
             </div>

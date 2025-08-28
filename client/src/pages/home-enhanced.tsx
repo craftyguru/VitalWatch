@@ -172,14 +172,14 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-2xl shadow-lg overflow-hidden bg-white">
                 <img 
-                  src="/logo.png" 
+                  src="/attached_assets/image_1756382189793.png" 
                   alt="VitalWatch Logo" 
                   className="w-10 h-10 object-contain"
                 />
               </div>
               <div>
                 <div className="flex items-center space-x-3">
-                  <h1 className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
                     VitalWatch
                   </h1>
                   <VersionBadge />
