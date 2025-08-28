@@ -168,11 +168,7 @@ export function EnhancedLocationServices() {
             GPS Tracking
           </TabsTrigger>
           <TabsTrigger value="zones" className="flex items-center gap-2">
-            <img 
-              src="/logo.png" 
-              alt="VitalWatch Logo" 
-              className="h-4 w-4 object-contain"
-            />
+            <Shield className="h-4 w-4" />
             Safe Zones
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
