@@ -277,7 +277,7 @@ export default function LandingPage() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg overflow-hidden bg-white">
                 <img 
-                  src="/attached_assets/image_1756382189793.png" 
+                  src="/vitalwatch-logo.png" 
                   alt="VitalWatch Logo" 
                   className="w-8 h-8 object-contain"
                 />
@@ -324,7 +324,7 @@ export default function LandingPage() {
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl overflow-hidden bg-white">
                 <img 
-                  src="/attached_assets/image_1756382189793.png" 
+                  src="/vitalwatch-logo.png" 
                   alt="VitalWatch Logo" 
                   className="w-16 h-16 object-contain"
                 />

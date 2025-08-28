@@ -166,7 +166,7 @@ export default function Mood() {
             </Button>
             <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden bg-white shadow-sm">
               <img 
-                src="/attached_assets/image_1756382189793.png" 
+                src="/vitalwatch-logo.png" 
                 alt="VitalWatch Logo" 
                 className="w-7 h-7 object-contain"
               />

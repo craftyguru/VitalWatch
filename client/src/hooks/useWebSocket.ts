@@ -16,7 +16,7 @@ export function useWebSocket() {
   const maxReconnectAttempts = 5;
 
   const connect = () => {
-    if (!user?.id) return;
+    if (!user || !(user as any)?.id) return;
 
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -32,7 +32,7 @@ export function useWebSocket() {
         // Authenticate with the server
         wsRef.current?.send(JSON.stringify({
           type: 'auth',
-          userId: user.id,
+          userId: (user as any).id,
         }));
       };
 
@@ -89,14 +89,14 @@ export function useWebSocket() {
   };
 
   useEffect(() => {
-    if (user?.id) {
+    if (user && (user as any)?.id) {
       connect();
     }
 
     return () => {
       disconnect();
     };
-  }, [user?.id]);
+  }, [(user as any)?.id]);
 
   // Ping to keep connection alive
   useEffect(() => {

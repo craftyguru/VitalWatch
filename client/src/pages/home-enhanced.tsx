@@ -172,7 +172,7 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-2xl shadow-lg overflow-hidden bg-white">
                 <img 
-                  src="/attached_assets/image_1756382189793.png" 
+                  src="/vitalwatch-logo.png" 
                   alt="VitalWatch Logo" 
                   className="w-10 h-10 object-contain"
                 />
