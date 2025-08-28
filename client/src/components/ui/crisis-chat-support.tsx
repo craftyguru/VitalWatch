@@ -321,10 +321,8 @@ export default function CrisisChatSupport({
 
         {/* Chat Tab */}
         <TabsContent value="chat" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Main Chat Interface */}
-            <div className="lg:col-span-2">
-              <Card className="h-[400px] flex flex-col">
+          {/* Main Chat Interface - Full Width */}
+          <Card className="h-[400px] flex flex-col">
                 <CardHeader className="pb-2 px-3 pt-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 min-w-0 flex-1">
@@ -431,70 +429,70 @@ export default function CrisisChatSupport({
                   </div>
                 </CardContent>
               </Card>
-            </div>
 
-            {/* Side Panel - Quick Actions */}
-            <div className="space-y-3">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Quick Support</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start text-left h-auto py-2 px-2"
-                    onClick={() => setInputMessage("I'm feeling overwhelmed and need help")}
-                  >
-                    <Heart className="h-3 w-3 mr-2 flex-shrink-0" />
-                    <span className="text-xs break-words">I need immediate support</span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start text-left h-auto py-2 px-2"
-                    onClick={() => setInputMessage("Can you guide me through a breathing exercise?")}
-                  >
-                    <Brain className="h-3 w-3 mr-2 flex-shrink-0" />
-                    <span className="text-xs break-words">Breathing exercises</span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start text-left h-auto py-2 px-2"
-                    onClick={() => setInputMessage("I'm having a panic attack")}
-                  >
-                    <Zap className="h-3 w-3 mr-2 flex-shrink-0" />
-                    <span className="text-xs break-words">Panic attack help</span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start text-left h-auto py-2 px-2"
-                    onClick={() => setInputMessage("I'm having thoughts of self-harm")}
-                  >
-                    <AlertTriangle className="h-3 w-3 mr-2 flex-shrink-0" />
-                    <span className="text-xs break-words">Crisis intervention</span>
-                  </Button>
-                </CardContent>
-              </Card>
+          {/* Quick Actions and Session Info - Below Chat */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Quick Support */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Quick Support</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-left h-auto py-3 px-3"
+                  onClick={() => setInputMessage("I'm feeling overwhelmed and need help")}
+                >
+                  <Heart className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="text-sm break-words">I need immediate support</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-left h-auto py-3 px-3"
+                  onClick={() => setInputMessage("Can you guide me through a breathing exercise?")}
+                >
+                  <Brain className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="text-sm break-words">Breathing exercises</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-left h-auto py-3 px-3"
+                  onClick={() => setInputMessage("I'm having a panic attack")}
+                >
+                  <Zap className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="text-sm break-words">Panic attack help</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-left h-auto py-3 px-3"
+                  onClick={() => setInputMessage("I'm having thoughts of self-harm")}
+                >
+                  <AlertTriangle className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="text-sm break-words">Crisis intervention</span>
+                </Button>
+              </CardContent>
+            </Card>
 
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Session Info</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span>Duration</span>
-                    <span className="font-medium">{currentSession ? Math.floor((Date.now() - parseInt(currentSession)) / 60000) : 0} min</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span>Messages</span>
-                    <span className="font-medium">{messages.length}</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span>Crisis Level</span>
-                    <Badge variant="secondary" className="text-xs">{crisisLevel}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Session Info */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Session Info</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span>Duration</span>
+                  <span className="font-medium">{currentSession ? Math.floor((Date.now() - parseInt(currentSession)) / 60000) : 0} min</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Messages</span>
+                  <span className="font-medium">{messages.length}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Crisis Level</span>
+                  <Badge variant="secondary" className="text-sm">{crisisLevel}</Badge>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
