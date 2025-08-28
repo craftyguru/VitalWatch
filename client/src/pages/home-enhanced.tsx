@@ -262,8 +262,12 @@ export default function Home() {
               {/* Header */}
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center space-x-4 mb-4">
-                  <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-4 rounded-2xl shadow-lg">
-                    <Brain className="h-8 w-8" />
+                  <div className="bg-white p-4 rounded-2xl shadow-lg">
+                    <img 
+                      src="/logo.png" 
+                      alt="VitalWatch Logo" 
+                      className="h-8 w-8 object-contain"
+                    />
                   </div>
                   <div className="bg-gradient-to-br from-indigo-500 to-blue-500 text-white p-4 rounded-2xl shadow-lg">
                     <Eye className="h-8 w-8" />
