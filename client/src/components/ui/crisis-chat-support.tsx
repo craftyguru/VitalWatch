@@ -285,67 +285,59 @@ export default function CrisisChatSupport({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6">
-      {/* Header */}
-      <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 border-teal-200">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-teal-100 dark:bg-teal-900/30 rounded-xl">
-                <MessageCircle className="h-8 w-8 text-teal-600" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl text-teal-900 dark:text-teal-100">
-                  Crisis Chat Support
-                </CardTitle>
-                <p className="text-teal-700 dark:text-teal-300">
-                  AI-powered emotional support and guided crisis intervention available 24/7
-                </p>
-              </div>
+    <div className="w-full space-y-4">
+      {/* Compact Header */}
+      <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 p-4 rounded-lg border border-teal-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
+            <div className="p-2 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex-shrink-0">
+              <MessageCircle className="h-5 w-5 text-teal-600" />
             </div>
-            <div className="flex items-center space-x-2">
-              <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300">
-                <Star className="h-3 w-3 mr-1" />
-                4.9 Rating
-              </Badge>
-              {emergencyMode && (
-                <Badge className="bg-red-100 text-red-800 border-red-300 animate-pulse">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  Emergency Mode
-                </Badge>
-              )}
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg font-semibold text-teal-900 dark:text-teal-100 truncate">
+                Crisis Chat Support
+              </h3>
+              <p className="text-sm text-teal-700 dark:text-teal-300 truncate">
+                AI-powered emotional support and guided crisis intervention available 24/7
+              </p>
             </div>
           </div>
-        </CardHeader>
-      </Card>
+          <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
+            <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300 text-xs">
+              <Star className="h-3 w-3 mr-1" />
+              4.9 Rating
+            </Badge>
+          </div>
+        </div>
+      </div>
 
       <Tabs defaultValue="chat" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="chat">Live Chat</TabsTrigger>
-          <TabsTrigger value="resources">Crisis Resources</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 h-9">
+          <TabsTrigger value="chat" className="text-xs">Live Chat</TabsTrigger>
+          <TabsTrigger value="resources" className="text-xs">Crisis Resources</TabsTrigger>
+          <TabsTrigger value="settings" className="text-xs">Settings</TabsTrigger>
+          <TabsTrigger value="analytics" className="text-xs">Analytics</TabsTrigger>
         </TabsList>
 
         {/* Chat Tab */}
-        <TabsContent value="chat" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <TabsContent value="chat" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Main Chat Interface */}
-            <div className="lg:col-span-3">
-              <Card className="h-[600px] flex flex-col">
-                <CardHeader className="pb-3">
+            <div className="lg:col-span-2">
+              <Card className="h-[400px] flex flex-col">
+                <CardHeader className="pb-2 px-3 pt-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
-                      <span className="font-medium truncate">AI Crisis Counselor</span>
-                      <Badge variant="secondary" className="flex-shrink-0">Online</Badge>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+                      <span className="text-sm font-medium truncate">AI Crisis Counselor</span>
+                      <Badge variant="secondary" className="flex-shrink-0 text-xs">Online</Badge>
                     </div>
                     <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setVoiceMode(!voiceMode)}
-                        className="h-8 w-8 p-0"
+                        className="h-6 w-6 p-0"
                       >
                         {voiceMode ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
                       </Button>
@@ -353,7 +345,7 @@ export default function CrisisChatSupport({
                         variant="outline"
                         size="sm"
                         onClick={() => setAudioEnabled(!audioEnabled)}
-                        className="h-8 w-8 p-0"
+                        className="h-6 w-6 p-0"
                       >
                         {audioEnabled ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
                       </Button>
@@ -363,29 +355,29 @@ export default function CrisisChatSupport({
                 
                 <CardContent className="flex-1 flex flex-col p-0">
                   {/* Messages Area */}
-                  <ScrollArea className="flex-1 p-4">
-                    <div className="space-y-4">
+                  <ScrollArea className="flex-1 p-3">
+                    <div className="space-y-3">
                       {messages.map((message) => (
                         <div
                           key={message.id}
                           className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                          <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
+                          <div className={`max-w-[85%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
                             <div className={`flex items-start space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                              <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+                              <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
                                 {message.sender === 'user' ? (
-                                  <User className="h-4 w-4" />
+                                  <User className="h-3 w-3" />
                                 ) : message.sender === 'ai' ? (
-                                  <Bot className="h-4 w-4" />
+                                  <Bot className="h-3 w-3" />
                                 ) : (
-                                  <Shield className="h-4 w-4" />
+                                  <Shield className="h-3 w-3" />
                                 )}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className={`p-3 rounded-lg border ${getMessageStyle(message)}`}>
-                                  <p className="text-sm break-words">{message.content}</p>
+                                <div className={`p-2 rounded-lg border ${getMessageStyle(message)}`}>
+                                  <p className="text-xs break-words leading-relaxed">{message.content}</p>
                                   {message.type === 'escalation' && (
-                                    <div className="mt-2 pt-2 border-t border-current/20">
+                                    <div className="mt-1 pt-1 border-t border-current/20">
                                       <p className="text-xs font-medium break-words">This message has been flagged for immediate attention.</p>
                                     </div>
                                   )}
@@ -402,14 +394,14 @@ export default function CrisisChatSupport({
                       {isTyping && (
                         <div className="flex justify-start">
                           <div className="flex items-start space-x-2">
-                            <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center">
-                              <Bot className="h-4 w-4" />
+                            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center">
+                              <Bot className="h-3 w-3" />
                             </div>
-                            <div className="bg-blue-100 border border-blue-300 p-3 rounded-lg">
+                            <div className="bg-blue-100 border border-blue-300 p-2 rounded-lg">
                               <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce"></div>
+                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                               </div>
                             </div>
                           </div>
@@ -420,17 +412,17 @@ export default function CrisisChatSupport({
                   </ScrollArea>
                   
                   {/* Input Area */}
-                  <div className="p-4 border-t">
+                  <div className="p-3 border-t">
                     <div className="flex space-x-2">
                       <Input
                         value={inputMessage}
                         onChange={(e) => setInputMessage(e.target.value)}
                         placeholder="Share what's on your mind... I'm here to listen."
                         onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                        className="flex-1"
+                        className="flex-1 text-sm"
                       />
-                      <Button onClick={sendMessage} disabled={!inputMessage.trim()}>
-                        <Send className="h-4 w-4" />
+                      <Button onClick={sendMessage} disabled={!inputMessage.trim()} size="sm">
+                        <Send className="h-3 w-3" />
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2 break-words">
@@ -442,63 +434,63 @@ export default function CrisisChatSupport({
             </div>
 
             {/* Side Panel - Quick Actions */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Quick Support</CardTitle>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Quick Support</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start text-left h-auto py-3 px-3"
+                    className="w-full justify-start text-left h-auto py-2 px-2"
                     onClick={() => setInputMessage("I'm feeling overwhelmed and need help")}
                   >
-                    <Heart className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span className="text-sm break-words">I need immediate support</span>
+                    <Heart className="h-3 w-3 mr-2 flex-shrink-0" />
+                    <span className="text-xs break-words">I need immediate support</span>
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start text-left h-auto py-3 px-3"
+                    className="w-full justify-start text-left h-auto py-2 px-2"
                     onClick={() => setInputMessage("Can you guide me through a breathing exercise?")}
                   >
-                    <Brain className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span className="text-sm break-words">Breathing exercises</span>
+                    <Brain className="h-3 w-3 mr-2 flex-shrink-0" />
+                    <span className="text-xs break-words">Breathing exercises</span>
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start text-left h-auto py-3 px-3"
+                    className="w-full justify-start text-left h-auto py-2 px-2"
                     onClick={() => setInputMessage("I'm having a panic attack")}
                   >
-                    <Zap className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span className="text-sm break-words">Panic attack help</span>
+                    <Zap className="h-3 w-3 mr-2 flex-shrink-0" />
+                    <span className="text-xs break-words">Panic attack help</span>
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start text-left h-auto py-3 px-3"
+                    className="w-full justify-start text-left h-auto py-2 px-2"
                     onClick={() => setInputMessage("I'm having thoughts of self-harm")}
                   >
-                    <AlertTriangle className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span className="text-sm break-words">Crisis intervention</span>
+                    <AlertTriangle className="h-3 w-3 mr-2 flex-shrink-0" />
+                    <span className="text-xs break-words">Crisis intervention</span>
                   </Button>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Session Info</CardTitle>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Session Info</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs">
                     <span>Duration</span>
-                    <span>{currentSession ? Math.floor((Date.now() - parseInt(currentSession)) / 60000) : 0} min</span>
+                    <span className="font-medium">{currentSession ? Math.floor((Date.now() - parseInt(currentSession)) / 60000) : 0} min</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs">
                     <span>Messages</span>
-                    <span>{messages.length}</span>
+                    <span className="font-medium">{messages.length}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs">
                     <span>Crisis Level</span>
-                    <Badge variant="secondary">{crisisLevel}</Badge>
+                    <Badge variant="secondary" className="text-xs">{crisisLevel}</Badge>
                   </div>
                 </CardContent>
               </Card>
