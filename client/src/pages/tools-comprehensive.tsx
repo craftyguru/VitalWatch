@@ -520,100 +520,144 @@ export default function ToolsComprehensive() {
           </TabsContent>
 
           {/* Wellness Analytics Tab */}
-          <TabsContent value="wellness-analytics" className="space-y-8">
-            {/* Comprehensive Mental Health Tools */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Breathing Tools */}
-              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-blue-900 dark:text-blue-100">
-                    <Wind className="h-5 w-5" />
-                    <span>Advanced Breathing Tools</span>
+          <TabsContent value="wellness-analytics" className="space-y-6">
+            {/* Top Level Cards Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Advanced Breathing Tools */}
+              <Card className="overflow-hidden border border-blue-200 dark:border-blue-800 shadow-sm">
+                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 p-4 border-b border-blue-200/50">
+                  <CardTitle className="flex items-center space-x-3 text-blue-900 dark:text-blue-100">
+                    <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                      <Wind className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold">Advanced Breathing Tools</h3>
+                      <p className="text-sm text-blue-700 dark:text-blue-300 font-normal">
+                        Multiple breathing techniques with biometric feedback and personalized coaching
+                      </p>
+                    </div>
                   </CardTitle>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <CardContent className="p-6">
                   <AdvancedBreathingExercise />
                 </CardContent>
               </Card>
 
-              {/* Crisis Chat Support */}
-              <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border-purple-200/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-purple-900 dark:text-purple-100">
-                    <MessageSquare className="h-5 w-5" />
-                    <span>AI Crisis Support</span>
+              {/* AI Crisis Support */}
+              <Card className="overflow-hidden border border-purple-200 dark:border-purple-800 shadow-sm">
+                <div className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 p-4 border-b border-purple-200/50">
+                  <CardTitle className="flex items-center space-x-3 text-purple-900 dark:text-purple-100">
+                    <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                      <MessageSquare className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold">AI Crisis Support</h3>
+                      <p className="text-sm text-purple-700 dark:text-purple-300 font-normal">
+                        AI-powered emotional support and guided crisis intervention available 24/7
+                      </p>
+                    </div>
                   </CardTitle>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <CardContent className="p-6">
                   <CrisisChatSupport />
                 </CardContent>
               </Card>
             </div>
 
-            {/* Enhanced Grounding Exercises */}
-            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200/50">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-green-900 dark:text-green-100">
-                  <TreePine className="h-5 w-5" />
-                  <span>Comprehensive Grounding Techniques</span>
+            {/* Enhanced Grounding Exercises - Full Width */}
+            <Card className="overflow-hidden border border-green-200 dark:border-green-800 shadow-sm">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 border-b border-green-200/50">
+                <CardTitle className="flex items-center space-x-3 text-green-900 dark:text-green-100">
+                  <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                    <TreePine className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">Comprehensive Grounding Techniques</h3>
+                    <p className="text-sm text-green-700 dark:text-green-300 font-normal">
+                      Multiple grounding exercises to help manage anxiety and emotional overwhelm
+                    </p>
+                  </div>
                 </CardTitle>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <CardContent className="p-6">
                 <EnhancedGroundingExercise />
               </CardContent>
             </Card>
 
-            {/* Mood Analytics Dashboard */}
-            <Card className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 border-orange-200/50">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-orange-900 dark:text-orange-100">
-                  <BarChart3 className="h-5 w-5" />
-                  <span>Mood Analytics & Insights</span>
+            {/* Mood Analytics Dashboard - Full Width */}
+            <Card className="overflow-hidden border border-orange-200 dark:border-orange-800 shadow-sm">
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 p-4 border-b border-orange-200/50">
+                <CardTitle className="flex items-center space-x-3 text-orange-900 dark:text-orange-100">
+                  <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+                    <BarChart3 className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">Mood Analytics & Insights</h3>
+                    <p className="text-sm text-orange-700 dark:text-orange-300 font-normal">
+                      Comprehensive mood tracking with AI-powered insights and trend analysis
+                    </p>
+                  </div>
                 </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-orange-600 mb-2">4.2</div>
-                    <div className="text-sm text-muted-foreground">Average Mood</div>
-                    <div className="text-xs text-green-600 mt-1">+0.3 this week</div>
+              </div>
+              <CardContent className="p-6">
+                {/* Analytics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="text-center p-4 rounded-lg bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 border border-orange-200/50">
+                    <div className="text-4xl font-bold text-orange-600 mb-2">4.2</div>
+                    <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Average Mood</div>
+                    <div className="text-xs text-green-600 mt-1 font-medium">+0.3 this week</div>
                   </div>
                   
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">18</div>
-                    <div className="text-sm text-muted-foreground">Mood Entries</div>
-                    <div className="text-xs text-blue-600 mt-1">Last 30 days</div>
+                  <div className="text-center p-4 rounded-lg bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200/50">
+                    <div className="text-4xl font-bold text-blue-600 mb-2">18</div>
+                    <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Mood Entries</div>
+                    <div className="text-xs text-blue-600 mt-1 font-medium">Last 30 days</div>
                   </div>
                   
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">73%</div>
-                    <div className="text-sm text-muted-foreground">Positive Days</div>
-                    <div className="text-xs text-purple-600 mt-1">Above average</div>
+                  <div className="text-center p-4 rounded-lg bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border border-purple-200/50">
+                    <div className="text-4xl font-bold text-purple-600 mb-2">73%</div>
+                    <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Positive Days</div>
+                    <div className="text-xs text-purple-600 mt-1 font-medium">Above average</div>
                   </div>
                 </div>
                 
-                <div className="mt-6 p-4 bg-white/60 dark:bg-slate-800/60 rounded-lg">
-                  <h4 className="font-semibold mb-3">Weekly Trend Analysis</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Monday</span>
-                      <div className="flex items-center space-x-2">
-                        <Progress value={80} className="w-20 h-2" />
-                        <span className="text-sm font-medium">4.0</span>
+                {/* Weekly Trend Analysis */}
+                <div className="p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <h4 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">Weekly Trend Analysis</h4>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-lg border">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Monday</span>
+                      <div className="flex items-center space-x-3">
+                        <Progress value={80} className="w-24 h-2" />
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100 min-w-[2rem] text-right">4.0</span>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Tuesday</span>
-                      <div className="flex items-center space-x-2">
-                        <Progress value={90} className="w-20 h-2" />
-                        <span className="text-sm font-medium">4.5</span>
+                    <div className="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-lg border">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Tuesday</span>
+                      <div className="flex items-center space-x-3">
+                        <Progress value={90} className="w-24 h-2" />
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100 min-w-[2rem] text-right">4.5</span>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Wednesday</span>
-                      <div className="flex items-center space-x-2">
-                        <Progress value={70} className="w-20 h-2" />
-                        <span className="text-sm font-medium">3.5</span>
+                    <div className="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-lg border">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Wednesday</span>
+                      <div className="flex items-center space-x-3">
+                        <Progress value={70} className="w-24 h-2" />
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100 min-w-[2rem] text-right">3.5</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-lg border">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Thursday</span>
+                      <div className="flex items-center space-x-3">
+                        <Progress value={85} className="w-24 h-2" />
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100 min-w-[2rem] text-right">4.2</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-white dark:bg-slate-900 rounded-lg border">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Friday</span>
+                      <div className="flex items-center space-x-3">
+                        <Progress value={95} className="w-24 h-2" />
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100 min-w-[2rem] text-right">4.7</span>
                       </div>
                     </div>
                   </div>
