@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { HelpChatBubble } from "@/components/HelpChatBubble";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
-import { FloatingInstallButton } from "@/components/FloatingInstallButton";
+import { EnhancedInstallPrompt } from "@/components/EnhancedInstallPrompt";
 import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
@@ -55,8 +55,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
-          <PWAInstallPrompt />
-          <FloatingInstallButton />
+          <EnhancedInstallPrompt />
           <HelpChatBubble />
         </TooltipProvider>
       </QueryClientProvider>

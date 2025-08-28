@@ -58,13 +58,23 @@ export function FloatingInstallButton() {
 
   const handleInstall = async () => {
     if (deferredPrompt) {
-      // Native PWA install prompt available
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        setIsVisible(false);
-        setDeferredPrompt(null);
+      try {
+        // Native PWA install prompt available
+        const promptResult = await deferredPrompt.prompt();
+        console.log('Install prompt result:', promptResult);
+        
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('User choice:', outcome);
+        
+        if (outcome === 'accepted') {
+          setShowInstructions(false);
+          setDeferredPrompt(null);
+          localStorage.setItem('vitalwatch-installed', 'true');
+        }
+      } catch (error) {
+        console.error('Install prompt error:', error);
+        // Fallback to manual instructions
+        setShowInstructions(true);
       }
     } else {
       // Show manual instructions
