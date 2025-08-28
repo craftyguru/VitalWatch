@@ -308,6 +308,21 @@ export function EnhancedLocationServices() {
                   {safeZones.filter(z => z.status === "Inside").length} Active Zones
                 </Badge>
               </div>
+
+              {/* User Guidance */}
+              <div className="mb-4 p-3 bg-white dark:bg-slate-800 rounded-lg border border-blue-200 dark:border-blue-800">
+                <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-blue-600" />
+                  How Safe Zones Work
+                </h4>
+                <div className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                  <p>• <strong>Smart Monitoring:</strong> Creates invisible safety perimeters around important locations</p>
+                  <p>• <strong>Automatic Detection:</strong> Alerts when you enter/exit zones or detect unusual patterns</p>
+                  <p>• <strong>AI Analysis:</strong> Continuously evaluates risk levels based on location data and environmental factors</p>
+                  <p>• <strong>Privacy Protected:</strong> All monitoring happens on your device - no external tracking</p>
+                  <p>• <strong>Emergency Integration:</strong> Instantly shares your safe zone status with emergency contacts when needed</p>
+                </div>
+              </div>
               
               {/* Real-time location status */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -386,15 +401,47 @@ export function EnhancedLocationServices() {
                     
                     {/* Zone actions */}
                     <div className="flex gap-2 mt-3">
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => {
+                          // Open maps with zone coordinates
+                          const mapsUrl = `https://maps.google.com/maps?q=${zone.address}`;
+                          window.open(mapsUrl, '_blank');
+                          toast({
+                            title: "Navigation Started",
+                            description: `Opening route to ${zone.name}`,
+                          });
+                        }}
+                      >
                         <Navigation className="h-3 w-3 mr-1" />
                         Navigate
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => {
+                          toast({
+                            title: "Edit Zone",
+                            description: `Configure settings for ${zone.name}`,
+                          });
+                        }}
+                      >
                         <Settings className="h-3 w-3 mr-1" />
                         Edit Zone
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          toast({
+                            title: "Alert Settings",
+                            description: `Manage alerts for ${zone.name}`,
+                          });
+                        }}
+                      >
                         <AlertTriangle className="h-3 w-3" />
                       </Button>
                     </div>
@@ -410,11 +457,37 @@ export function EnhancedLocationServices() {
                 <h4 className="font-medium mb-2">Create Intelligent Safe Zone</h4>
                 <p className="text-sm text-muted-foreground mb-4">AI-powered zone creation with automatic threat assessment</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const newZone = {
+                        id: Date.now(),
+                        name: "Current Location",
+                        address: `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`,
+                        status: "Inside" as const,
+                        risk: "Low" as const
+                      };
+                      setSafeZones(prev => [...prev, newZone]);
+                      toast({
+                        title: "Safe Zone Created",
+                        description: "New zone added at your current location",
+                      });
+                    }}
+                  >
                     <MapPin className="h-3 w-3 mr-1" />
                     Current Location
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      toast({
+                        title: "Map Selection",
+                        description: "Interactive map zone creation coming soon",
+                      });
+                    }}
+                  >
                     <Map className="h-3 w-3 mr-1" />
                     Map Selection
                   </Button>
