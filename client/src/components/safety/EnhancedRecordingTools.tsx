@@ -158,6 +158,11 @@ export function EnhancedRecordingTools() {
 
   const startVideoRecording = async () => {
     try {
+      // Check if getUserMedia is supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Media devices not supported");
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { width: 1920, height: 1080 },
         audio: true
@@ -193,10 +198,13 @@ export function EnhancedRecordingTools() {
         title: stealthMode ? "" : "Video Recording Started",
         description: stealthMode ? "" : "Recording in 1080p quality",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Video recording error:", error);
       toast({
         title: "Recording Failed",
-        description: "Unable to access camera/microphone",
+        description: error.name === "NotAllowedError" 
+          ? "Camera/microphone permission denied. Please allow access and try again."
+          : "Unable to access camera/microphone. Check your device settings.",
         variant: "destructive",
       });
     }

@@ -277,7 +277,7 @@ export default function LandingPage() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg overflow-hidden bg-white">
                 <img 
-                  src="/vitalwatch-logo.png" 
+                  src="/logo.png" 
                   alt="VitalWatch Logo" 
                   className="w-8 h-8 object-contain"
                 />
@@ -307,7 +307,7 @@ export default function LandingPage() {
                 </Button>
               </Link>
               <Link href="/auth/login">
-                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white" data-testid="button-nav-signup">
+                <Button size="sm" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white" data-testid="button-nav-signup">
                   Get Started
                 </Button>
               </Link>
@@ -324,12 +324,12 @@ export default function LandingPage() {
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl overflow-hidden bg-white">
                 <img 
-                  src="/vitalwatch-logo.png" 
+                  src="/logo.png" 
                   alt="VitalWatch Logo" 
                   className="w-16 h-16 object-contain"
                 />
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-teal-400 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 via-orange-500 to-pink-500 bg-clip-text text-transparent">
                 VitalWatch
               </h1>
             </div>
@@ -366,7 +366,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth/login">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3">
+                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3">
                   <Shield className="h-5 w-5 mr-2" />
                   Start Free Trial
                   <ArrowRight className="h-5 w-5 ml-2" />

@@ -26,7 +26,7 @@ export function ProfileHeader({ user, userName, userInitials, onLogout }: Profil
             <div className="flex items-center space-x-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden bg-white shadow-sm">
                 <img 
-                  src="/vitalwatch-logo.png" 
+                  src="/logo.png" 
                   alt="VitalWatch Logo" 
                   className="w-7 h-7 object-contain"
                 />
