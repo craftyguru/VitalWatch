@@ -154,11 +154,7 @@ export function EnhancedThreatAssessment() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img 
-                    src="/logo.png" 
-                    alt="VitalWatch Logo" 
-                    className="h-5 w-5 object-contain"
-                  />
+                  <Shield className="h-5 w-5 text-green-600" />
                   Threat Assessment
                 </div>
                 <Badge variant="secondary" className="bg-green-100 text-green-800">LOW RISK</Badge>
