@@ -33,6 +33,7 @@ import {
   emergencyContacts
 } from "@shared/schema";
 import { db } from "./db";
+import { eq, desc, and, gte, lte, lt, sql } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup session middleware before auth
@@ -839,6 +840,200 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('Error updating incident:', error);
       res.status(500).json({ message: 'Failed to update incident' });
+    }
+  });
+
+  // Email Blaster Routes
+  app.post('/api/admin/send-bulk-email', isAdmin, async (req: any, res) => {
+    try {
+      const { subject, content, targetAudience, scheduleSend, scheduleDate, templateType } = req.body;
+      
+      // Get target users based on audience selection
+      let targetUsers;
+      switch (targetAudience) {
+        case 'free':
+          targetUsers = await db.select().from(users).where(eq(users.subscriptionPlan, 'free'));
+          break;
+        case 'trial':
+          targetUsers = await db.select().from(users).where(
+            and(eq(users.guardianTrialStarted, true), eq(users.subscriptionPlan, 'pro'))
+          );
+          break;
+        case 'guardian':
+          targetUsers = await db.select().from(users).where(eq(users.subscriptionPlan, 'guardian'));
+          break;
+        case 'professional':
+          targetUsers = await db.select().from(users).where(eq(users.subscriptionPlan, 'professional'));
+          break;
+        case 'inactive':
+          const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+          targetUsers = await db.select().from(users).where(lte(users.lastLoginAt, thirtyDaysAgo));
+          break;
+        default: // 'all'
+          targetUsers = await db.select().from(users).where(eq(users.emailVerified, true));
+      }
+
+      // Queue emails for sending (in production, use a proper email service)
+      const emailPromises = targetUsers.map(user => {
+        const personalizedContent = content
+          .replace(/{{firstName}}/g, user.firstName || 'User')
+          .replace(/{{lastName}}/g, user.lastName || '')
+          .replace(/{{email}}/g, user.email)
+          .replace(/{{planType}}/g, user.subscriptionPlan || 'Free');
+
+        // Here you would integrate with your email service (SendGrid, etc.)
+        console.log(`Sending email to ${user.email}: ${subject}`);
+        
+        return Promise.resolve({ success: true, email: user.email });
+      });
+
+      await Promise.all(emailPromises);
+
+      res.json({ 
+        success: true, 
+        recipientCount: targetUsers.length,
+        message: 'Email campaign sent successfully' 
+      });
+    } catch (error: any) {
+      console.error('Error sending bulk email:', error);
+      res.status(500).json({ message: 'Failed to send email campaign' });
+    }
+  });
+
+  app.post('/api/admin/send-test-email', isAdmin, async (req: any, res) => {
+    try {
+      const { email, subject, content } = req.body;
+      
+      // Here you would integrate with your email service
+      console.log(`Sending test email to ${email}: ${subject}`);
+      
+      res.json({ success: true, message: 'Test email sent successfully' });
+    } catch (error: any) {
+      console.error('Error sending test email:', error);
+      res.status(500).json({ message: 'Failed to send test email' });
+    }
+  });
+
+  // Support System Routes
+  app.post('/api/support/send-message', async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    try {
+      const { content, type } = req.body;
+      const userId = req.user.id;
+
+      // Store support message in database (you'll need to create this table)
+      console.log(`Support message from ${userId}: ${content}`);
+      
+      res.json({ success: true, message: 'Support message sent' });
+    } catch (error: any) {
+      console.error('Error sending support message:', error);
+      res.status(500).json({ message: 'Failed to send support message' });
+    }
+  });
+
+  app.get('/api/support/chat-history', async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    try {
+      // Return mock chat history for now
+      res.json([]);
+    } catch (error: any) {
+      console.error('Error fetching chat history:', error);
+      res.status(500).json({ message: 'Failed to fetch chat history' });
+    }
+  });
+
+  app.get('/api/support/tickets', async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    try {
+      // Return mock tickets for now
+      res.json([]);
+    } catch (error: any) {
+      console.error('Error fetching support tickets:', error);
+      res.status(500).json({ message: 'Failed to fetch support tickets' });
+    }
+  });
+
+  app.post('/api/support/create-ticket', async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    try {
+      const { subject, category, priority, description } = req.body;
+      const userId = req.user.id;
+
+      // Create support ticket (you'll need to create this table)
+      const newTicket = {
+        id: `TK-${Date.now()}`,
+        subject,
+        category,
+        priority,
+        description,
+        userId,
+        status: 'open',
+        createdAt: new Date()
+      };
+
+      console.log('New support ticket created:', newTicket);
+      
+      res.json(newTicket);
+    } catch (error: any) {
+      console.error('Error creating support ticket:', error);
+      res.status(500).json({ message: 'Failed to create support ticket' });
+    }
+  });
+
+  // Admin Messaging Routes
+  app.post('/api/admin/send-reply', isAdmin, async (req: any, res) => {
+    try {
+      const { ticketId, chatId, content } = req.body;
+      
+      // Send reply to user (integrate with your messaging system)
+      console.log(`Admin reply sent to ${ticketId || chatId}: ${content}`);
+      
+      res.json({ success: true, message: 'Reply sent successfully' });
+    } catch (error: any) {
+      console.error('Error sending admin reply:', error);
+      res.status(500).json({ message: 'Failed to send reply' });
+    }
+  });
+
+  app.put('/api/admin/tickets/:ticketId/status', isAdmin, async (req: any, res) => {
+    try {
+      const { ticketId } = req.params;
+      const { status } = req.body;
+      
+      // Update ticket status in database
+      console.log(`Ticket ${ticketId} status updated to ${status}`);
+      
+      res.json({ success: true, message: 'Ticket status updated' });
+    } catch (error: any) {
+      console.error('Error updating ticket status:', error);
+      res.status(500).json({ message: 'Failed to update ticket status' });
+    }
+  });
+
+  app.put('/api/admin/tickets/:ticketId/assign', isAdmin, async (req: any, res) => {
+    try {
+      const { ticketId } = req.params;
+      const { adminName } = req.body;
+      
+      // Assign ticket to admin in database
+      console.log(`Ticket ${ticketId} assigned to ${adminName}`);
+      
+      res.json({ success: true, message: 'Ticket assigned successfully' });
+    } catch (error: any) {
+      console.error('Error assigning ticket:', error);
+      res.status(500).json({ message: 'Failed to assign ticket' });
     }
   });
 

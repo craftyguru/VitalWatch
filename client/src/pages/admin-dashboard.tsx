@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EmailBlaster } from "@/components/admin/EmailBlaster";
+import { AdvancedAnalytics } from "@/components/admin/AdvancedAnalytics";
+import { AdminMessaging } from "@/components/admin/AdminMessaging";
 import { 
   Users, 
   Activity, 
@@ -19,7 +22,8 @@ import {
   Clock,
   BarChart3,
   Phone,
-  Send
+  Send,
+  Mail
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -194,10 +198,22 @@ export default function AdminDashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="bg-slate-800/50 border-slate-700">
+          <TabsList className="bg-slate-800/50 border-slate-700 grid grid-cols-8">
             <TabsTrigger value="overview" className="data-[state=active]:bg-purple-500">
               <BarChart3 className="w-4 h-4 mr-2" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-purple-500">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="messaging" className="data-[state=active]:bg-purple-500">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Messaging
+            </TabsTrigger>
+            <TabsTrigger value="email" className="data-[state=active]:bg-purple-500">
+              <Mail className="w-4 h-4 mr-2" />
+              Email
             </TabsTrigger>
             <TabsTrigger value="users" className="data-[state=active]:bg-purple-500">
               <Users className="w-4 h-4 mr-2" />
@@ -213,11 +229,7 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="health" className="data-[state=active]:bg-purple-500">
               <Activity className="w-4 h-4 mr-2" />
-              System Health
-            </TabsTrigger>
-            <TabsTrigger value="sms-test" className="data-[state=active]:bg-purple-500">
-              <Phone className="w-4 h-4 mr-2" />
-              SMS Testing
+              Health
             </TabsTrigger>
           </TabsList>
 
@@ -262,6 +274,27 @@ export default function AdminDashboard() {
                   ))}
                 </CardContent>
               </Card>
+            </div>
+          </TabsContent>
+
+          {/* Advanced Analytics Tab */}
+          <TabsContent value="analytics">
+            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+              <AdvancedAnalytics />
+            </div>
+          </TabsContent>
+
+          {/* Admin Messaging Tab */}
+          <TabsContent value="messaging">
+            <div className="bg-slate-800/50 border border-slate-700 rounded-lg h-[800px]">
+              <AdminMessaging />
+            </div>
+          </TabsContent>
+
+          {/* Email Blaster Tab */}
+          <TabsContent value="email">
+            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+              <EmailBlaster />
             </div>
           </TabsContent>
 
