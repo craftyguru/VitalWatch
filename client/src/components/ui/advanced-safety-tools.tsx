@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EmergencyControls } from "@/components/safety/EmergencyControls";
-import { SensorMonitoring } from "@/components/safety/SensorMonitoring";
-import { LocationServices } from "@/components/safety/LocationServices";
-import { RecordingTools } from "@/components/safety/RecordingTools";
-import { ThreatAssessment } from "@/components/safety/ThreatAssessment";
+import { EnhancedEmergencyControls } from "@/components/safety/EnhancedEmergencyControls";
+import { EnhancedSensorMonitoring } from "@/components/safety/EnhancedSensorMonitoring";
+import { EnhancedLocationServices } from "@/components/safety/EnhancedLocationServices";
+import { EnhancedRecordingTools } from "@/components/safety/EnhancedRecordingTools";
+import { EnhancedThreatAssessment } from "@/components/safety/EnhancedThreatAssessment";
 import { 
   Shield, 
   Activity, 
@@ -53,23 +53,23 @@ export default function AdvancedSafetyTools() {
 
         <div className="mt-8">
           <TabsContent value="emergency" className="space-y-6">
-            <EmergencyControls />
+            <EnhancedEmergencyControls />
           </TabsContent>
 
           <TabsContent value="monitoring" className="space-y-6">
-            <SensorMonitoring />
+            <EnhancedSensorMonitoring />
           </TabsContent>
 
           <TabsContent value="location" className="space-y-6">
-            <LocationServices />
+            <EnhancedLocationServices />
           </TabsContent>
 
           <TabsContent value="recording" className="space-y-6">
-            <RecordingTools />
+            <EnhancedRecordingTools />
           </TabsContent>
 
           <TabsContent value="threats" className="space-y-6">
-            <ThreatAssessment />
+            <EnhancedThreatAssessment />
           </TabsContent>
         </div>
       </Tabs>
