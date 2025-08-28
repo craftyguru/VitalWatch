@@ -110,8 +110,12 @@ export function EnhancedLocationServices() {
     }
 
     return () => {
-      if (locationWatchId && typeof navigator !== 'undefined' && navigator.geolocation) {
-        navigator.geolocation.clearWatch(locationWatchId);
+      if (locationWatchId !== null && typeof navigator !== 'undefined' && navigator.geolocation && navigator.geolocation.clearWatch) {
+        try {
+          navigator.geolocation.clearWatch(locationWatchId);
+        } catch (error) {
+          console.log('Error clearing location watch:', error);
+        }
       }
     };
   }, [locationTracking, highAccuracy]);
