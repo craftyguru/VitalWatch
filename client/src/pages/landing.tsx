@@ -35,6 +35,7 @@ import {
   Eye
 } from "lucide-react";
 import { Link } from "wouter";
+import { InstallButton } from "@/components/InstallButton";
 
 export default function LandingPage() {
   const { toast } = useToast();
