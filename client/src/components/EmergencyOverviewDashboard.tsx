@@ -287,7 +287,7 @@ export function EmergencyOverviewDashboard() {
           <CardTitle className="flex items-center gap-2 text-red-900 dark:text-red-100">
             <Shield className="h-6 w-6 text-red-600" />
             Emergency Quick Access Dashboard
-            <Badge variant="destructive" className="ml-auto">PRIORITY ACCESS</Badge>
+            <Badge variant="destructive" className="ml-auto">PRIORITY</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -438,7 +438,8 @@ export default function Home() {
 
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
         
-
+        {/* Professional Emergency Overview Dashboard */}
+        <EmergencyOverviewDashboard />
         
         {/* Enhanced Emergency Section */}
         <section className="relative">
