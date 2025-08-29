@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { IncognitoProvider } from "@/contexts/IncognitoContext";
 import FloatingChatBubble from "@/components/ui/floating-chat-bubble";
 import { UpdateAvailableToast } from "@/components/UpdateAvailableToast";
 
@@ -53,15 +54,17 @@ function Router() {
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vitalwatch-theme">
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <UpdateAvailableToast />
-          <Router />
+      <IncognitoProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <UpdateAvailableToast />
+            <Router />
 
-          <FloatingChatBubble />
-        </TooltipProvider>
-      </QueryClientProvider>
+            <FloatingChatBubble />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </IncognitoProvider>
     </ThemeProvider>
   );
 }

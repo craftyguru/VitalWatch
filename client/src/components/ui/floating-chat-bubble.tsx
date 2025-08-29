@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, X, Minimize2, LifeBuoy, AlertTriangle, Heart } from "lucide-react";
+import { useIncognito } from "@/contexts/IncognitoContext";
 import CrisisChatSupport from "./crisis-chat-support";
 
 interface FloatingChatBubbleProps {
@@ -11,6 +12,7 @@ interface FloatingChatBubbleProps {
 }
 
 export default function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
+  const { incognitoMode } = useIncognito();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
@@ -104,6 +106,11 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
       default: return 'Chat Support';
     }
   };
+
+  // Hide chat bubble when in incognito mode
+  if (incognitoMode) {
+    return null;
+  }
 
   return (
     <>

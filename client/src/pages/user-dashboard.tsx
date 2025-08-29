@@ -57,6 +57,7 @@ import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
 import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
 import { EmergencyContactManager } from "@/components/EmergencyContactManager";
 import { WellnessOverview } from "@/components/WellnessOverview";
+import { useIncognito } from "@/contexts/IncognitoContext";
 
 // Real-time metrics derived from actual sensor data - NO FALLBACKS
 const useRealTimeMetrics = (realTimeData: any) => {
@@ -78,6 +79,7 @@ const useRealTimeMetrics = (realTimeData: any) => {
 export default function UserDashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { incognitoMode, setIncognitoMode } = useIncognito();
   const { sensorData, permissions, requestPermissions } = useSafeDeviceSensors();
   const { isConnected, lastMessage } = useWebSocket();
   const { capabilities, realTimeData, isScanning } = useRealDeviceScanner();
@@ -95,7 +97,6 @@ export default function UserDashboard() {
   const [breadcrumbActive, setBreadcrumbActive] = useState(false);
   const [audioRecording, setAudioRecording] = useState<MediaRecorder | null>(null);
   const [safetySubTab, setSafetySubTab] = useState("emergency");
-  const [incognitoMode, setIncognitoMode] = useState(false);
   const [cornerTapCount, setCornerTapCount] = useState(0);
   const [tapTimeout, setTapTimeout] = useState<NodeJS.Timeout | null>(null);
 
@@ -906,7 +907,7 @@ export default function UserDashboard() {
       {/* Incognito Mode Overlay */}
       {incognitoMode && (
         <div 
-          className="fixed inset-0 bg-black z-50"
+          className="fixed inset-0 bg-black z-[9999]"
           onClick={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const x = e.clientX;
