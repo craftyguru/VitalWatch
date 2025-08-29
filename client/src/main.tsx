@@ -21,16 +21,33 @@ if ('serviceWorker' in navigator) {
         // Wait for SW to be ready
         await navigator.serviceWorker.ready;
         
-        // Register ALL the sync tags PWABuilder might look for
+        // Register background sync and push notifications
         if ('sync' in reg && 'SyncManager' in window) {
           try {
             await (reg as any).sync.register('background-sync');
             await (reg as any).sync.register('pwabuilder-sync'); 
             await (reg as any).sync.register('user-actions-sync');
-            await (reg as any).sync.register('data-sync');
-            console.log('ALL Background Sync tags registered');
+            console.log('Background Sync registered');
           } catch (err) {
             console.debug('Sync register failed:', err);
+          }
+        }
+        
+        // Request push notification permission
+        if ('Notification' in window && 'PushManager' in window) {
+          try {
+            const permission = await Notification.requestPermission();
+            console.log('Notification permission:', permission);
+            
+            if (permission === 'granted' && reg.pushManager) {
+              const subscription = await reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: null // Add your VAPID key here if needed
+              });
+              console.log('Push subscription created');
+            }
+          } catch (err) {
+            console.debug('Push notification setup failed:', err);
           }
         }
         

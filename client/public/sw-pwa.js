@@ -1,15 +1,42 @@
-/* PWABuilder Background Sync Implementation v2.0 */
-const CACHE_NAME = 'vitalwatch-sync-v1';
+/* PWABuilder Complete PWA Implementation v3.0 */
+const CACHE_NAME = 'vitalwatch-cache-v3';
+const OFFLINE_CACHE = 'vitalwatch-offline-v3';
 const SYNC_STORE = 'sync-requests';
 
-self.addEventListener('install', (e) => {
-  console.log('SW Installing...');
-  self.skipWaiting();
+// Essential files for offline functionality
+const OFFLINE_URLS = [
+  '/',
+  '/offline.html',
+  '/manifest.json',
+  '/assets/vitalwatch-logo.png'
+];
+
+self.addEventListener('install', function(e) {
+  console.log('SW Installing with offline support...');
+  e.waitUntil(
+    caches.open(OFFLINE_CACHE).then(function(cache) {
+      return cache.addAll(OFFLINE_URLS);
+    }).then(function() {
+      return self.skipWaiting();
+    })
+  );
 });
 
-self.addEventListener('activate', (e) => {
+self.addEventListener('activate', function(e) {
   console.log('SW Activating...');
-  e.waitUntil(self.clients.claim());
+  e.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME && cacheName !== OFFLINE_CACHE) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(function() {
+      return self.clients.claim();
+    })
+  );
 });
 
 // Background Sync Storage
@@ -111,15 +138,17 @@ async function syncUserActions() {
   return doBackgroundSync();
 }
 
-// Fetch event handler for background sync
+// Comprehensive fetch handler for offline support and background sync
 self.addEventListener('fetch', function(event) {
-  // Handle API requests that need background sync
-  if (event.request.url.includes('/api/') && 
+  const url = new URL(event.request.url);
+  
+  // Handle API requests with background sync
+  if (url.pathname.includes('/api/') && 
       (event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE')) {
     
     event.respondWith(
       fetch(event.request.clone()).catch(async function() {
-        console.log('Network request failed, queuing for background sync');
+        console.log('API request failed, queuing for background sync');
         
         // Store request for background sync
         const requestData = {
@@ -131,7 +160,6 @@ self.addEventListener('fetch', function(event) {
         };
         
         await backgroundSyncDB.addRequest(requestData);
-        console.log('Request queued for background sync:', requestData.url);
         
         // Register background sync
         if (self.registration && self.registration.sync) {
@@ -139,13 +167,11 @@ self.addEventListener('fetch', function(event) {
             await self.registration.sync.register('background-sync');
             await self.registration.sync.register('pwabuilder-sync');
             await self.registration.sync.register('user-actions-sync');
-            console.log('Background sync registered');
           } catch (err) {
             console.log('Failed to register background sync:', err);
           }
         }
         
-        // Return response indicating data was queued
         return new Response(JSON.stringify({ 
           success: true, 
           queued: true,
@@ -156,8 +182,99 @@ self.addEventListener('fetch', function(event) {
         });
       })
     );
+    return;
   }
   
-  // Let other requests pass through normally
-  return;
+  // Handle navigation requests for offline support
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(function() {
+        return caches.match('/offline.html');
+      })
+    );
+    return;
+  }
+  
+  // Handle other requests with cache-first strategy
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request).then(function(response) {
+        // Cache successful responses
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      }).catch(function() {
+        // Return offline page for failed requests
+        if (event.request.destination === 'document') {
+          return caches.match('/offline.html');
+        }
+      });
+    })
+  );
+});
+
+// Push notification event handler
+self.addEventListener('push', function(event) {
+  console.log('Push notification received');
+  
+  let notificationData = {
+    title: 'VitalWatch',
+    body: 'You have a new notification',
+    icon: '/assets/vitalwatch-logo.png',
+    badge: '/assets/vitalwatch-logo.png',
+    tag: 'vitalwatch-notification'
+  };
+  
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      notificationData = { ...notificationData, ...data };
+    } catch (e) {
+      notificationData.body = event.data.text();
+    }
+  }
+  
+  event.waitUntil(
+    self.registration.showNotification(notificationData.title, {
+      body: notificationData.body,
+      icon: notificationData.icon,
+      badge: notificationData.badge,
+      tag: notificationData.tag,
+      requireInteraction: true,
+      actions: [
+        {
+          action: 'open',
+          title: 'Open VitalWatch'
+        },
+        {
+          action: 'close',
+          title: 'Dismiss'
+        }
+      ]
+    })
+  );
+});
+
+// Handle notification clicks
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  
+  if (event.action === 'open' || !event.action) {
+    event.waitUntil(
+      self.clients.matchAll({ type: 'window' }).then(function(clients) {
+        for (let client of clients) {
+          if (client.url === self.location.origin && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        if (self.clients.openWindow) {
+          return self.clients.openWindow('/');
+        }
+      })
+    );
+  }
 });
