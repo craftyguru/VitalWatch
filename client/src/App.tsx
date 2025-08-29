@@ -20,6 +20,7 @@ import BillingPage from "@/pages/billing";
 import AuthPage from "@/pages/auth";
 import VerifyEmail from "@/pages/verify-email";
 import AdminDashboard from "@/pages/admin-dashboard";
+import PrivacyPolicy from "@/pages/privacy-policy";
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -29,6 +30,8 @@ function Router() {
       <Route path="/auth/login" component={AuthPage} />
       <Route path="/auth/signup" component={AuthPage} />
       <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/privacy" component={PrivacyPolicy} />
       {isLoading || !isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
