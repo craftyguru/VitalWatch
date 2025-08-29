@@ -3,6 +3,7 @@ import {Text, View, Button, FlatList, StyleSheet, SafeAreaView, PermissionsAndro
 import {BleManager, Device} from 'react-native-ble-plx';
 
 const manager = new BleManager();
+const {DeviceHub} = NativeModules;
 
 interface EnhancedDevice {
   id: string;
@@ -13,6 +14,9 @@ interface EnhancedDevice {
   isBonded: boolean;
   services?: string[];
   deviceClass?: string;
+  state?: 'BONDED' | 'CONNECTED' | 'ADVERTISING';
+  kind?: string;
+  isWearable?: boolean;
 }
 
 async function ensureBlePermissions() {
@@ -69,6 +73,11 @@ export default function App() {
   const initializeApp = async () => {
     const hasPermissions = await ensureBlePermissions();
     setPermissionsGranted(hasPermissions);
+    
+    // Load bonded/connected devices immediately
+    if (hasPermissions) {
+      await getAllPhoneDevices();
+    }
   };
 
   const startScan = async () => {
@@ -82,8 +91,8 @@ export default function App() {
     setDevices({});
     console.log('Starting comprehensive device scan...');
     
-    // First, get already paired/bonded devices (including Galaxy Watch!)
-    await getPairedDevices();
+    // First, get bonded & connected devices (including Galaxy Watch!)
+    await getAllPhoneDevices();
     
     // Enhanced BLE scan with better parameters
     manager.startDeviceScan(
@@ -135,18 +144,21 @@ export default function App() {
     }, 20000);
   };
 
-  const getPairedDevices = async () => {
+  const getAllPhoneDevices = async () => {
     try {
-      console.log('Checking for paired devices...');
+      console.log('Getting all phone devices via DeviceHub...');
       
-      // Try to get real paired devices using our native module
-      if (Platform.OS === 'android' && NativeModules.BluetoothModule) {
+      if (Platform.OS === 'android' && DeviceHub) {
         try {
-          const bondedDevices = await NativeModules.BluetoothModule.getBondedDevices();
-          console.log('Found', bondedDevices.length, 'paired devices');
+          const devices = await DeviceHub.getDevices();
+          console.log('Found', devices.length, 'bonded/connected devices');
           
-          bondedDevices.forEach((device: any) => {
+          // Deduplicate by address and process devices
+          const deviceMap = new Map();
+          
+          devices.forEach((device: any) => {
             const deviceName = device.name || 'Unknown Device';
+            const address = device.address;
             
             // Check if it's a watch-like device
             const isWatchLike = deviceName.toLowerCase().includes('watch') ||
@@ -155,37 +167,49 @@ export default function App() {
                                deviceName.toLowerCase().includes('band') ||
                                deviceName.toLowerCase().includes('heart') ||
                                deviceName.toLowerCase().includes('tracker') ||
-                               device.deviceType === 'Wearable Audio Device';
+                               device.isWearable;
             
-            console.log(`Paired device: ${deviceName} (${device.address})${isWatchLike ? ' - WATCH DETECTED!' : ''}`);
+            console.log(`${device.state} device: ${deviceName} (${address}) Type: ${device.type} Kind: ${device.kind}${isWatchLike ? ' - WATCH DETECTED!' : ''}`);
             
-            if (isWatchLike) {
-              const enhancedDevice: EnhancedDevice = {
-                id: device.address,
-                name: `${deviceName} (Paired)`,
-                rssi: -45, // Good signal for paired devices
-                type: 'Paired',
-                isConnected: false,
-                isBonded: true,
-                deviceClass: device.deviceType || 'Unknown'
-              };
-              
-              setDevices(d => ({...d, [device.address]: enhancedDevice}));
+            let displayType: 'BLE' | 'Classic' | 'Paired' = 'Paired';
+            if (device.type === 'LE') displayType = 'BLE';
+            else if (device.type === 'CLASSIC') displayType = 'Classic';
+            
+            const enhancedDevice: EnhancedDevice = {
+              id: address,
+              name: `${deviceName} (${device.state})`,
+              rssi: -40, // Good signal for bonded/connected devices
+              type: displayType,
+              isConnected: device.state === 'CONNECTED',
+              isBonded: device.state === 'BONDED',
+              deviceClass: device.kind || 'Unknown',
+              state: device.state,
+              kind: device.kind,
+              isWearable: device.isWearable
+            };
+            
+            // Use address as unique key, but prefer connected over bonded
+            if (!deviceMap.has(address) || device.state === 'CONNECTED') {
+              deviceMap.set(address, enhancedDevice);
             }
           });
           
+          // Add to state
+          deviceMap.forEach((device) => {
+            setDevices(d => ({...d, [device.id]: device}));
+          });
+          
         } catch (nativeError) {
-          console.error('Native module error:', nativeError);
-          // Fall back to simulated device
+          console.error('DeviceHub error:', nativeError);
           addSimulatedDevice();
         }
       } else {
-        // Fall back to simulated device for iOS or if module not available
+        console.log('DeviceHub not available, adding simulated device');
         addSimulatedDevice();
       }
       
     } catch (error) {
-      console.error('Error getting paired devices:', error);
+      console.error('Error getting bonded/connected devices:', error);
       addSimulatedDevice();
     }
   };
@@ -194,12 +218,15 @@ export default function App() {
     // Add a simulated Galaxy Watch to demonstrate the concept
     const simulatedGalaxyWatch: EnhancedDevice = {
       id: 'simulated-galaxy-watch',
-      name: 'Galaxy Watch5 Pro (Paired)',
+      name: 'Galaxy Watch5 Pro (BONDED)',
       rssi: -45,
       type: 'Paired',
       isConnected: false,
       isBonded: true,
-      deviceClass: 'Wearable Device'
+      deviceClass: 'Wearable Device',
+      state: 'BONDED',
+      kind: 'BOND',
+      isWearable: true
     };
     
     console.log('Added simulated Galaxy Watch to demonstrate paired device detection');
@@ -266,10 +293,17 @@ export default function App() {
 
   const isReady = bleState === 'PoweredOn' && permissionsGranted;
   const deviceList = Object.values(devices);
+  
+  // Group devices by status - exactly as specified
+  const connectedDevices = deviceList.filter(d => d.state === 'CONNECTED').sort((a, b) => a.name.localeCompare(b.name));
+  const bondedDevices = deviceList.filter(d => d.state === 'BONDED').sort((a, b) => a.name.localeCompare(b.name));
+  const nearbyDevices = deviceList.filter(d => d.state === 'ADVERTISING' || !d.state).sort((a, b) => b.rssi - a.rssi);
+  
   const watchDevices = deviceList.filter(d => 
     d.name.toLowerCase().includes('watch') || 
     d.name.toLowerCase().includes('fit') ||
-    d.name.toLowerCase().includes('band')
+    d.name.toLowerCase().includes('band') ||
+    d.isWearable
   );
 
   return (
@@ -295,42 +329,94 @@ export default function App() {
         )}
         
         <Text style={styles.deviceCount}>
-          Found {deviceList.length} devices ({watchDevices.length} watch-like)
-          {deviceList.some(d => d.type === 'Paired') && ' - Including paired devices!'}
+          Total: {deviceList.length} devices | Watches: {watchDevices.length} | Connected: {connectedDevices.length} | Bonded: {bondedDevices.length} | Nearby: {nearbyDevices.length}
         </Text>
         
-        <FlatList
-          data={deviceList}
-          keyExtractor={d => d.id}
-          renderItem={({item}) => (
-            <View style={[
+        {/* Connected Devices (by profile) */}
+        <View style={styles.deviceGroup}>
+          <Text style={styles.groupTitle}>🟢 Connected (by profile) ({connectedDevices.length})</Text>
+          {connectedDevices.map(device => (
+            <View key={device.id} style={[
               styles.deviceItem, 
-              item.name.toLowerCase().includes('watch') && styles.watchDevice,
-              item.type === 'Paired' && styles.pairedDevice
+              device.isWearable && styles.watchDevice,
+              styles.connectedDevice
             ]}>
               <View style={styles.deviceHeader}>
-                <Text style={styles.deviceName}>{item.name}</Text>
-                {item.name.toLowerCase().includes('watch') && (
+                <Text style={styles.deviceName}>{device.name}</Text>
+                {device.isWearable && (
                   <Text style={styles.watchBadge}>WATCH</Text>
                 )}
-                {item.type === 'Paired' && (
-                  <Text style={styles.pairedBadge}>PAIRED</Text>
+                <Text style={styles.connectedBadge}>CONNECTED</Text>
+              </View>
+              <Text style={styles.deviceId}>Address: {device.id}</Text>
+              <Text style={styles.deviceRssi}>Signal: {device.rssi} dBm</Text>
+              <Text style={styles.deviceType}>Type: {device.type} | Profile: {device.kind}</Text>
+              <Text style={styles.connectedText}>✅ Active Connection</Text>
+            </View>
+          ))}
+          {connectedDevices.length === 0 && (
+            <Text style={styles.emptyGroup}>No devices currently connected by profile</Text>
+          )}
+        </View>
+
+        {/* Bonded (Paired) Devices */}
+        <View style={styles.deviceGroup}>
+          <Text style={styles.groupTitle}>🔗 Bonded (paired) ({bondedDevices.length})</Text>
+          {bondedDevices.map(device => (
+            <View key={device.id} style={[
+              styles.deviceItem, 
+              device.isWearable && styles.watchDevice,
+              styles.pairedDevice
+            ]}>
+              <View style={styles.deviceHeader}>
+                <Text style={styles.deviceName}>{device.name}</Text>
+                {device.isWearable && (
+                  <Text style={styles.watchBadge}>WATCH</Text>
+                )}
+                <Text style={styles.pairedBadge}>BONDED</Text>
+              </View>
+              <Text style={styles.deviceId}>Address: {device.id}</Text>
+              <Text style={styles.deviceRssi}>Signal: {device.rssi} dBm</Text>
+              <Text style={styles.deviceType}>Type: {device.type} | Class: {device.deviceClass}</Text>
+              <Text style={styles.bondedText}>🔗 Paired to phone</Text>
+            </View>
+          ))}
+          {bondedDevices.length === 0 && (
+            <Text style={styles.emptyGroup}>No bonded devices found</Text>
+          )}
+        </View>
+
+        {/* Nearby BLE (advertising) */}
+        <View style={styles.deviceGroup}>
+          <Text style={styles.groupTitle}>📡 Nearby BLE (advertising) ({nearbyDevices.length})</Text>
+          {nearbyDevices.map(device => (
+            <View key={device.id} style={[
+              styles.deviceItem, 
+              device.isWearable && styles.watchDevice
+            ]}>
+              <View style={styles.deviceHeader}>
+                <Text style={styles.deviceName}>{device.name}</Text>
+                {device.isWearable && (
+                  <Text style={styles.watchBadge}>WATCH</Text>
                 )}
               </View>
-              <Text style={styles.deviceId}>ID: {item.id}</Text>
-              <Text style={styles.deviceRssi}>Signal: {item.rssi} dBm</Text>
-              <Text style={styles.deviceType}>Type: {item.type} | {item.deviceClass || 'Unknown Class'}</Text>
-              {item.isConnected && (
-                <Text style={styles.connectedText}>✅ Connected ({item.services?.length || 0} services)</Text>
+              <Text style={styles.deviceId}>ID: {device.id}</Text>
+              <Text style={styles.deviceRssi}>Signal: {device.rssi} dBm</Text>
+              <Text style={styles.deviceType}>Type: {device.type} | Advertising</Text>
+              {device.isConnected && (
+                <Text style={styles.connectedText}>✅ Connected ({device.services?.length || 0} services)</Text>
               )}
               <Button 
-                title={item.isConnected ? "Connected" : "Connect"} 
-                onPress={() => connectToDevice(item)}
-                disabled={item.isConnected}
+                title={device.isConnected ? "Connected" : "Connect"} 
+                onPress={() => connectToDevice(device)}
+                disabled={device.isConnected || device.type !== 'BLE'}
               />
             </View>
+          ))}
+          {nearbyDevices.length === 0 && (
+            <Text style={styles.emptyGroup}>No nearby advertising devices found</Text>
           )}
-        />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -396,6 +482,27 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     backgroundColor: '#f0fdf4',
   },
+  connectedDevice: {
+    borderColor: '#059669',
+    borderWidth: 2,
+    backgroundColor: '#ecfdf5',
+  },
+  deviceGroup: {
+    marginBottom: 20,
+  },
+  groupTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#374151',
+  },
+  emptyGroup: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    padding: 16,
+  },
   deviceHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -425,6 +532,22 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 4,
     marginLeft: 4,
+  },
+  connectedBadge: {
+    backgroundColor: '#059669',
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginLeft: 4,
+  },
+  bondedText: {
+    fontSize: 12,
+    color: '#10b981',
+    fontWeight: '600',
+    marginTop: 4,
   },
   deviceId: {
     fontSize: 11,

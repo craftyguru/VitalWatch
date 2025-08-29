@@ -1,0 +1,224 @@
+Short answer: your Galaxy Watch won’t show up because your RN app is only doing a BLE advertising scan. A Galaxy Watch that’s already paired to the phone usually stops advertising (or hides behind proprietary protocols), so your scan never sees it. You must (a) list bonded/connected devices (Classic + BLE) via native APIs, and (b) only use BLE connect if the watch actually exposes open GATT (many don’t). Also fix Android 12+ permissions. And re-install a fresh 7.0.0 build—your phone probably still has the v6 app.
+
+Here’s exactly what to do.
+
+1) Fix the Android permissions (SDK 31+)
+
+AndroidManifest.xml
+
+<uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+
+<!-- Legacy for <=30 -->
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
+
+<!-- Android 12+ runtime perms -->
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+
+<!-- Optional: tell the system we don’t use location from scan -->
+<uses-permission-sdk-23
+  android:name="android.permission.BLUETOOTH_SCAN"
+  android:usesPermissionFlags="neverForLocation"/>
+
+
+Request at runtime (React Native)
+
+import {Platform} from 'react-native';
+import {requestMultiple, PERMISSIONS, RESULTS} from 'react-native-permissions';
+
+export async function ensureBtPerms() {
+  const toAsk = [];
+  if (Platform.OS === 'android') {
+    if (Platform.Version >= 31) {
+      toAsk.push(
+        PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT
+      );
+    } else {
+      toAsk.push(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    }
+  }
+  const res = await requestMultiple(toAsk);
+  // log/verify RESULTS.GRANTED for each key
+}
+
+2) List bonded & currently connected devices (Classic + BLE)
+
+Your watch is likely already bonded and possibly connected via Classic profiles (A2DP/HEADSET) or proprietary channels. You won’t see it with a plain BLE scanner.
+
+Option A (fast, no native code): react-native-bluetooth-classic
+npm i react-native-bluetooth-classic
+
+import RNBluetoothClassic from 'react-native-bluetooth-classic';
+
+export async function getBondedAndConnectedClassic() {
+  await ensureBtPerms();
+  const bonded = await RNBluetoothClassic.getBondedDevices(); // name, address, etc.
+  const connected = await RNBluetoothClassic.getConnectedDevices();
+  return {bonded, connected};
+}
+
+Option B (more complete): tiny native module to query profiles (Android)
+
+Android can tell you which devices are connected for specific profiles (A2DP/HEADSET/GATT). Expose this once and you’re done.
+
+Kotlin (android/app/src/main/java/.../DeviceHubModule.kt)
+
+package com.vitalwatch
+
+import android.bluetooth.*
+import android.content.Context
+import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
+
+@ReactModule(name = DeviceHubModule.NAME)
+class DeviceHubModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+  companion object { const val NAME = "DeviceHub" }
+  override fun getName() = NAME
+
+  @ReactMethod
+  fun getDevices(promise: Promise) {
+    try {
+      val mgr = reactApplicationContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+      val bonded = BluetoothAdapter.getDefaultAdapter()?.bondedDevices ?: emptySet()
+
+      fun map(dev: BluetoothDevice, state: String, kind: String): WritableMap {
+        val m = Arguments.createMap()
+        m.putString("name", dev.name)
+        m.putString("address", dev.address)
+        m.putString("type", when (dev.type) {
+          BluetoothDevice.DEVICE_TYPE_LE -> "LE"
+          BluetoothDevice.DEVICE_TYPE_CLASSIC -> "CLASSIC"
+          BluetoothDevice.DEVICE_TYPE_DUAL -> "DUAL"
+          else -> "UNKNOWN"
+        })
+        m.putString("state", state)
+        m.putString("kind", kind)
+        return m
+      }
+
+      val out = Arguments.createArray()
+      // Bonded list
+      bonded.forEach { out.pushMap(map(it, "BONDED", "BOND")) }
+
+      // Connected by profile
+      val profiles = listOf(
+        BluetoothProfile.HEADSET to "HEADSET",
+        BluetoothProfile.A2DP to "A2DP",
+        BluetoothProfile.GATT to "GATT"
+      )
+      profiles.forEach { (id, label) ->
+        val list = mgr.getConnectedDevices(id)
+        list.forEach { out.pushMap(map(it, "CONNECTED", label)) }
+      }
+
+      promise.resolve(out)
+    } catch (e: Exception) { promise.reject("E_DEVICES", e) }
+  }
+}
+
+
+JS binding
+
+import {NativeModules} from 'react-native';
+const {DeviceHub} = NativeModules;
+
+export async function getAllPhoneDevices() {
+  await ensureBtPerms();
+  const devices = await DeviceHub.getDevices();
+  // Deduplicate by address; tag “Galaxy Watch” nicely
+  return devices;
+}
+
+3) Only use BLE connect if the watch exposes open GATT
+
+A lot of Galaxy Watch models (especially when paired) either:
+
+don’t advertise general GATT services, or
+
+block third-party GATT access (use Samsung Accessory Protocol or Wear OS Data Layer).
+
+If you still want BLE for other peripherals, keep it—but don’t expect your Galaxy Watch to show.
+
+import {BleManager} from 'react-native-ble-plx';
+const ble = new BleManager();
+
+export async function scanBleOnce(uuids?: string[]) {
+  await ensureBtPerms();
+  return new Promise<void>((resolve) => {
+    const seen = new Map<string, any>();
+    const sub = ble.startDeviceScan(uuids ?? null, {allowDuplicates: false}, (err, device) => {
+      if (err) { console.log('scan err', err); return; }
+      if (device?.id && !seen.has(device.id)) seen.set(device.id, device);
+      // you can filter here (name contains Watch, etc.)
+    });
+    setTimeout(() => { ble.stopDeviceScan(); sub?.remove(); resolve(); }, 15000);
+  });
+}
+
+4) Show a proper Device Hub list
+
+Group the output so users actually see what’s happening even if watch blocks BLE:
+
+Connected (by profile): HEADSET, A2DP, GATT
+
+Bonded (paired): devices the phone knows (should include “Galaxy Watch …”)
+
+Nearby BLE (advertising): devices from your scan
+
+For each item show: name, type (CLASSIC/LE/DUAL), state (CONNECTED/BONDED/ADVERTISING), RSSI (if BLE), and action buttons (Connect for BLE devices only).
+
+5) If you need sensors from the watch
+
+Reading heart rate/steps/etc. from a Galaxy Watch is not available by just connecting over Bluetooth from your phone app unless:
+
+Wear OS Galaxy Watch (4/5/6): you build a Wear OS companion app and use the Data Layer API to stream sensor data from the watch app to your phone app.
+
+Older Tizen Galaxy Watch: you need Samsung’s Accessory / Health SDKs on both sides.
+
+So: list the watch in Device Hub via bonded/connected profiles, but build a small watch-side app to get sensor data.
+
+6) Version shows 6.0.0 instead of 7.0.0
+
+That’s a packaging issue on the native app (web/PWA version doesn’t control it).
+
+On Android RN (non-Expo):
+
+In android/app/build.gradle → defaultConfig set:
+
+versionCode 70000   // must INCREASE every build
+versionName "7.0.0"
+
+
+If you display version in the app, ensure it reads from native:
+
+import DeviceInfo from 'react-native-device-info';
+const version = DeviceInfo.getVersion(); // should show 7.0.0
+
+
+Rebuild and re-install a clean release:
+
+cd android
+./gradlew clean assembleRelease
+adb uninstall com.yourapp   # remove old v6 if needed
+adb install app/build/outputs/apk/release/app-release.apk
+
+
+(If you use Expo/EAS, bump version, android.versionCode in app.json and make a new build.)
+
+7) “Tell the AI exactly this” (copy/paste)
+
+“Add Android 12+ runtime permissions for BLUETOOTH_SCAN and BLUETOOTH_CONNECT, keep ACCESS_FINE_LOCATION for <=30, and request them at runtime.”
+
+“Implement a DeviceHub module that returns bonded devices and connected devices per profile (HEADSET/A2DP/GATT), then show them in the UI grouped as Connected/Bonded/Nearby BLE.”
+
+“Keep BLE scanning for unpaired peripherals, but do not expect Galaxy Watch to appear; only attempt BLE connect for devices advertising known services.”
+
+“If we need Galaxy Watch sensors, scaffold a Wear OS companion app and use Data Layer API to stream heart rate/steps.”
+
+“Bump Android versionName to 7.0.0 and versionCode to a higher integer, clean-build, uninstall old app, reinstall.”
+
+Do the above and your Device Hub will finally show the Galaxy Watch (as Bonded/Connected), and your app won’t hang waiting for a BLE advertisement that never comes.

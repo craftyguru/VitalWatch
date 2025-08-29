@@ -92,7 +92,7 @@ android {
         applicationId 'com.vitalwatch.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 70000
         versionName "7.0.0"
     }
     signingConfigs {
