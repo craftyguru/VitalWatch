@@ -983,6 +983,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // File import handler for PWA file_handlers
+  app.post('/import', upload.array('files'), async (req: any, res) => {
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: "No files uploaded" });
+      }
+      
+      // For now, just acknowledge the files were received
+      // In a full implementation, you'd process these files appropriately
+      const fileInfo = req.files.map((file: any) => ({
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size
+      }));
+      
+      res.json({ 
+        message: "Files imported successfully", 
+        files: fileInfo 
+      });
+    } catch (error) {
+      console.error("Error importing files:", error);
+      res.status(500).json({ message: "Failed to import files" });
+    }
+  });
+
   // Crisis resources routes
   app.post('/api/send-crisis-resources', isAuthenticated, async (req: any, res) => {
     try {

@@ -6,6 +6,7 @@
   "description": "AI-powered emergency monitoring and mental health support with real-time crisis detection",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "prefer_related_applications": false,
   "orientation": "portrait-primary",
   "start_in_background": true,
@@ -74,7 +75,13 @@
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icons/icon-384x384.png",
@@ -86,7 +93,13 @@
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512", 
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable.png",
+      "sizes": "512x512", 
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
@@ -157,5 +170,47 @@
   },
   "launch_handler": {
     "client_mode": "focus-existing"
-  }
+  },
+  "handle_links": "preferred",
+  "file_handlers": [
+    {
+      "action": "/import",
+      "accept": {
+        "image/*": [".jpg", ".jpeg", ".png", ".gif"],
+        "audio/*": [".mp3", ".wav", ".m4a"],
+        "video/*": [".mp4", ".mov", ".avi"]
+      },
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Emergency Status",
+      "short_name": "Emergency",
+      "description": "Quick access to emergency features",
+      "tag": "emergency-widget",
+      "ms_ac_template": "/widgets/emergency.json",
+      "data": "/widgets/emergency-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/icons/widget-emergency.png",
+          "sizes": "512x512",
+          "label": "Emergency widget preview"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }
