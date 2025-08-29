@@ -144,7 +144,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/auth/signup', async (req, res) => {
     try {
-      const { firstName, lastName, email, password } = req.body;
+      const { firstName, lastName, email, password, captchaToken } = req.body;
+
+      // Verify CAPTCHA if token is provided
+      if (captchaToken && process.env.RECAPTCHA_SECRET_KEY) {
+        const captchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`,
+        });
+
+        const captchaResult = await captchaResponse.json();
+        
+        if (!captchaResult.success) {
+          return res.status(400).json({ 
+            message: 'CAPTCHA verification failed. Please try again.' 
+          });
+        }
+      } else if (process.env.RECAPTCHA_SECRET_KEY) {
+        // CAPTCHA is configured but no token provided
+        return res.status(400).json({ 
+          message: 'CAPTCHA verification required.' 
+        });
+      }
       
       // Check if user already exists
       const existingUser = await storage.getUserByEmail(email);

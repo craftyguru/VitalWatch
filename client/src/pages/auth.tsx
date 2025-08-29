@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import { 
@@ -16,14 +17,26 @@ import {
   ArrowLeft,
   Heart,
   Brain,
-  Activity
+  Activity,
+  FileText,
+  ShieldCheck
 } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
+import ReCAPTCHA from "react-google-recaptcha";
+import LegalAgreementModal from "@/components/legal/LegalAgreementModal";
 
 export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  
+  // Legal agreement states
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -97,6 +110,33 @@ export default function AuthPage() {
       return;
     }
 
+    if (!agreedToTerms) {
+      toast({
+        title: "Terms Required",
+        description: "You must agree to the Terms of Service",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!agreedToPrivacy) {
+      toast({
+        title: "Privacy Policy Required",
+        description: "You must agree to the Privacy Policy",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!captchaToken) {
+      toast({
+        title: "CAPTCHA Required",
+        description: "Please complete the CAPTCHA verification",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -110,6 +150,7 @@ export default function AuthPage() {
           lastName: signupData.lastName,
           email: signupData.email,
           password: signupData.password,
+          captchaToken
         }),
       });
 
@@ -382,19 +423,85 @@ export default function AuthPage() {
                     </div>
                   </div>
 
+                  {/* CAPTCHA */}
+                  <div className="space-y-3">
+                    <Label className="text-gray-200">Security Verification</Label>
+                    <div className="flex justify-center">
+                      {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                          onChange={(token) => setCaptchaToken(token)}
+                          onExpired={() => setCaptchaToken(null)}
+                          theme="dark"
+                          data-testid="recaptcha"
+                        />
+                      ) : (
+                        <div className="text-xs text-red-400">
+                          CAPTCHA not configured
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Legal Agreement Checkboxes */}
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="terms-checkbox"
+                        checked={agreedToTerms}
+                        onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                        className="mt-1"
+                        data-testid="checkbox-terms"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="terms-checkbox" className="text-sm text-gray-300 cursor-pointer">
+                          I have read and agree to the{" "}
+                          <button
+                            type="button"
+                            onClick={() => setShowTermsModal(true)}
+                            className="text-purple-400 hover:text-purple-300 underline"
+                            data-testid="link-terms"
+                          >
+                            Terms of Service
+                          </button>
+                        </Label>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="privacy-checkbox"
+                        checked={agreedToPrivacy}
+                        onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
+                        className="mt-1"
+                        data-testid="checkbox-privacy"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="privacy-checkbox" className="text-sm text-gray-300 cursor-pointer">
+                          I have read and agree to the{" "}
+                          <button
+                            type="button"
+                            onClick={() => setShowPrivacyModal(true)}
+                            className="text-purple-400 hover:text-purple-300 underline"
+                            data-testid="link-privacy"
+                          >
+                            Privacy Policy
+                          </button>
+                        </Label>
+                      </div>
+                    </div>
+                  </div>
+
                   <Button
                     type="submit"
                     className="w-full bg-purple-600 hover:bg-purple-700"
-                    disabled={isLoading}
+                    disabled={isLoading || !agreedToTerms || !agreedToPrivacy || !captchaToken}
                     data-testid="button-signup-submit"
                   >
                     {isLoading ? "Creating Account..." : "Create Account"}
                   </Button>
                 </form>
-
-                <div className="text-xs text-gray-400 text-center">
-                  By creating an account, you agree to our Terms of Service and Privacy Policy
-                </div>
               </TabsContent>
 
               {/* Email Verification Notice */}
@@ -428,6 +535,21 @@ export default function AuthPage() {
             <p className="text-xs">Mental Health</p>
           </div>
         </div>
+
+        {/* Legal Agreement Modals */}
+        <LegalAgreementModal
+          type="terms"
+          open={showTermsModal}
+          onClose={() => setShowTermsModal(false)}
+          onAgree={() => setAgreedToTerms(true)}
+        />
+        
+        <LegalAgreementModal
+          type="privacy"
+          open={showPrivacyModal}
+          onClose={() => setShowPrivacyModal(false)}
+          onAgree={() => setAgreedToPrivacy(true)}
+        />
       </div>
     </div>
   );
