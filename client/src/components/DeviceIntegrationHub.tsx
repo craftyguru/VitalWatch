@@ -57,39 +57,173 @@ const getNetworkType = () => {
   return effectiveType || 'wifi';
 };
 
-// Scan for wearable devices and smartwatches
-const scanForWearableDevices = async () => {
+// Comprehensive device scanner for all types of connected devices
+const scanForAllConnectedDevices = async () => {
   try {
     if ('bluetooth' in navigator) {
       const device = await (navigator as any).bluetooth.requestDevice({
         filters: [
+          // Health & Fitness Services
           { services: ['heart_rate'] },
           { services: ['battery_service'] },
           { services: ['device_information'] },
+          { services: ['fitness_machine'] },
+          { services: ['body_composition'] },
+          { services: ['weight_scale'] },
+          { services: ['blood_pressure'] },
+          { services: ['glucose'] },
+          { services: ['health_thermometer'] },
+          
+          // Audio Devices
+          { services: ['audio_input'] },
+          { services: ['audio_output'] },
+          { services: ['0000110b-0000-1000-8000-00805f9b34fb'] }, // A2DP
+          { services: ['0000111e-0000-1000-8000-00805f9b34fb'] }, // Hands-Free
+          
+          // Smartwatches & Fitness Bands
           { namePrefix: 'Apple Watch' },
           { namePrefix: 'Galaxy Watch' },
           { namePrefix: 'Fitbit' },
           { namePrefix: 'Garmin' },
           { namePrefix: 'Wear OS' },
           { namePrefix: 'Mi Band' },
-          { namePrefix: 'Amazfit' }
+          { namePrefix: 'Amazfit' },
+          { namePrefix: 'Huawei' },
+          { namePrefix: 'HONOR' },
+          { namePrefix: 'Polar' },
+          { namePrefix: 'Suunto' },
+          { namePrefix: 'Withings' },
+          
+          // Smart Rings
+          { namePrefix: 'Oura' },
+          { namePrefix: 'Galaxy Ring' },
+          { namePrefix: 'Circular' },
+          { namePrefix: 'Motiv' },
+          { namePrefix: 'McLear' },
+          
+          // Headphones & Audio
+          { namePrefix: 'AirPods' },
+          { namePrefix: 'Galaxy Buds' },
+          { namePrefix: 'WH-' }, // Sony headphones
+          { namePrefix: 'WF-' }, // Sony earbuds
+          { namePrefix: 'Bose' },
+          { namePrefix: 'Beats' },
+          { namePrefix: 'JBL' },
+          { namePrefix: 'Sennheiser' },
+          { namePrefix: 'Audio-Technica' },
+          
+          // Health Monitors
+          { namePrefix: 'Omron' },
+          { namePrefix: 'iHealth' },
+          { namePrefix: 'Beurer' },
+          { namePrefix: 'Withings' },
+          { namePrefix: 'QardioArm' },
+          { namePrefix: 'AccuChek' },
+          
+          // Fitness Equipment
+          { namePrefix: 'Peloton' },
+          { namePrefix: 'NordicTrack' },
+          { namePrefix: 'Wahoo' },
+          { namePrefix: 'Zwift' },
+          
+          // Smart Scales
+          { namePrefix: 'Scale' },
+          { namePrefix: 'Body+' },
+          { namePrefix: 'Aria' }
         ],
         optionalServices: [
+          // Core health services
           'heart_rate',
           'battery_service', 
           'device_information',
           'fitness_machine',
           'cycling_power',
           'running_speed_and_cadence',
-          'location_and_navigation'
+          'location_and_navigation',
+          
+          // Body composition & health
+          'body_composition',
+          'weight_scale',
+          'blood_pressure',
+          'glucose',
+          'health_thermometer',
+          'pulse_oximeter',
+          
+          // Audio services
+          'audio_input',
+          'audio_output',
+          '0000110b-0000-1000-8000-00805f9b34fb', // A2DP
+          '0000111e-0000-1000-8000-00805f9b34fb', // Hands-Free
+          '0000110a-0000-1000-8000-00805f9b34fb', // Audio Source
+          '0000110d-0000-1000-8000-00805f9b34fb', // Audio Sink
+          
+          // Sleep & recovery
+          'sleep_monitor',
+          'recovery_tracking',
+          
+          // Environmental sensors
+          'environmental_sensing',
+          'automation_io',
+          'indoor_positioning',
+          
+          // Generic access
+          'generic_access',
+          'generic_attribute'
         ]
       });
       return device;
     }
   } catch (error) {
-    console.log('Wearable scan failed:', error);
+    console.log('Device scan failed:', error);
     return null;
   }
+};
+
+// Determine device type and icon based on name and services
+const getDeviceTypeAndIcon = (device: any) => {
+  const name = device.name?.toLowerCase() || '';
+  const services = device.uuids || [];
+  
+  // Smart Rings
+  if (name.includes('oura') || name.includes('ring') || name.includes('circular') || name.includes('motiv')) {
+    return { type: 'smart-ring', icon: 'target' };
+  }
+  
+  // Audio devices
+  if (name.includes('airpods') || name.includes('buds') || name.includes('headphone') || 
+      name.includes('beats') || name.includes('bose') || name.includes('jbl') ||
+      services.includes('0000110b-0000-1000-8000-00805f9b34fb')) {
+    return { type: 'audio', icon: 'headphones' };
+  }
+  
+  // Health monitors
+  if (name.includes('omron') || name.includes('ihealth') || name.includes('beurer') ||
+      name.includes('qardio') || name.includes('accuchek') ||
+      services.includes('blood_pressure') || services.includes('glucose')) {
+    return { type: 'health-monitor', icon: 'heart' };
+  }
+  
+  // Smart scales
+  if (name.includes('scale') || name.includes('aria') || name.includes('body+') ||
+      services.includes('weight_scale') || services.includes('body_composition')) {
+    return { type: 'smart-scale', icon: 'gauge' };
+  }
+  
+  // Fitness equipment
+  if (name.includes('peloton') || name.includes('nordictrack') || name.includes('wahoo') ||
+      name.includes('zwift') || services.includes('fitness_machine')) {
+    return { type: 'fitness-equipment', icon: 'zap' };
+  }
+  
+  // Smartwatches and fitness bands
+  if (name.includes('watch') || name.includes('band') || name.includes('fit') ||
+      name.includes('garmin') || name.includes('polar') || name.includes('suunto') ||
+      services.includes('heart_rate')) {
+    return { type: 'wearable', icon: 'watch' };
+  }
+  
+  // Default
+  return { type: 'unknown', icon: 'bluetooth' };
 };
 
 export function DeviceIntegrationHub({ sensorData, permissions, requestPermissions }: DeviceIntegrationHubProps) {
@@ -175,11 +309,16 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
     }
   };
 
-  // All devices including phone + any Bluetooth devices
-  const allDevices = [phoneDevice, ...scannerDevices.map(device => ({
-    ...device,
-    type: 'bluetooth'
-  }))];
+  // All devices including phone + any Bluetooth devices with proper typing
+  const allDevices = [phoneDevice, ...scannerDevices.map(device => {
+    const deviceInfo = getDeviceTypeAndIcon(device);
+    return {
+      ...device,
+      type: deviceInfo.type,
+      icon: deviceInfo.icon,
+      category: 'bluetooth'
+    };
+  })];
   
   // Auto-initialize capabilities on mount
   useEffect(() => {
@@ -219,21 +358,22 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       // Scan for regular Bluetooth devices
       await scanForDevices();
       
-      // Scan specifically for wearable devices  
-      const wearable = await scanForWearableDevices();
+      // Scan for all types of connected devices
+      const connectedDevice = await scanForAllConnectedDevices();
       
       // Re-initialize capabilities
       await initializeCapabilities();
       
-      if (wearable) {
+      if (connectedDevice) {
+        const deviceInfo = getDeviceTypeAndIcon(connectedDevice);
         toast({
           title: "Device found",
-          description: `Connected to ${wearable.name}`,
+          description: `Connected to ${connectedDevice.name} (${deviceInfo.type})`,
         });
       } else {
         toast({
           title: "Scan complete",
-          description: "No new wearable devices found. Make sure devices are in pairing mode.",
+          description: "No new devices found. Make sure devices are in pairing mode and discoverable.",
         });
       }
     } catch (error) {
@@ -282,15 +422,33 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className={`${device.type === 'phone' ? 'bg-blue-500' : 'bg-gray-500'} text-white p-2.5 rounded-xl`}>
-                    {device.type === 'phone' ? <Smartphone className="h-5 w-5" /> : <Bluetooth className="h-5 w-5" />}
+                  <div className={`${device.type === 'phone' ? 'bg-blue-500' : 
+                    device.type === 'smart-ring' ? 'bg-purple-500' :
+                    device.type === 'audio' ? 'bg-green-500' :
+                    device.type === 'health-monitor' ? 'bg-red-500' :
+                    device.type === 'smart-scale' ? 'bg-indigo-500' :
+                    device.type === 'wearable' ? 'bg-orange-500' :
+                    'bg-gray-500'} text-white p-2.5 rounded-xl`}>
+                    {device.type === 'phone' ? <Smartphone className="h-5 w-5" /> : 
+                     device.type === 'smart-ring' ? <Target className="h-5 w-5" /> :
+                     device.type === 'audio' ? <Headphones className="h-5 w-5" /> :
+                     device.type === 'health-monitor' ? <Heart className="h-5 w-5" /> :
+                     device.type === 'smart-scale' ? <Gauge className="h-5 w-5" /> :
+                     device.type === 'wearable' ? <Watch className="h-5 w-5" /> :
+                     <Bluetooth className="h-5 w-5" />}
                   </div>
                   <div>
                     <h3 className={`font-semibold ${device.type === 'phone' ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
                       {device.name}
                     </h3>
                     <p className={`text-sm ${device.type === 'phone' ? 'text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'}`}>
-                      {device.type === 'phone' ? 'Primary device with real-time sensors' : 'Bluetooth connected device'}
+                      {device.type === 'phone' ? 'Primary device with real-time sensors' : 
+                       device.type === 'smart-ring' ? 'Smart ring for continuous health monitoring' :
+                       device.type === 'audio' ? 'Audio device with environmental monitoring' :
+                       device.type === 'health-monitor' ? 'Health monitoring device' :
+                       device.type === 'smart-scale' ? 'Smart scale for body composition' :
+                       device.type === 'wearable' ? 'Wearable fitness and health tracker' :
+                       'Connected Bluetooth device'}
                     </p>
                   </div>
                 </div>
@@ -322,7 +480,7 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                       ) : (
                         <Watch className="h-4 w-4 mr-2" />
                       )}
-                      Scan All Devices
+                      Scan Connected Devices
                     </Button>
                   </div>
 
@@ -430,16 +588,71 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                 </div>
               )}
               
-              {/* Bluetooth device info */}
-              {device.type === 'bluetooth' && (
-                <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Bluetooth className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm font-medium">Bluetooth Device</span>
+              {/* Connected device info */}
+              {device.category === 'bluetooth' && (
+                <div className="space-y-3">
+                  <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Bluetooth className="h-4 w-4 text-blue-600" />
+                      <span className="text-sm font-medium capitalize">
+                        {device.type.replace('-', ' ')} Device
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                      <div>Services: {device.services?.length || 0} available</div>
+                      <div>Connection: Bluetooth LE</div>
+                      {device.rssi && <div>Signal: {device.rssi} dBm</div>}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
-                    Services: {device.services?.length || 0} available
-                  </div>
+                  
+                  {/* Device-specific capabilities */}
+                  {device.type === 'smart-ring' && (
+                    <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <Target className="h-4 w-4 text-purple-600" />
+                        <span className="text-sm font-medium text-purple-800 dark:text-purple-200">Smart Ring Features</span>
+                      </div>
+                      <div className="text-xs text-purple-700 dark:text-purple-300">
+                        Sleep tracking, heart rate, activity monitoring
+                      </div>
+                    </div>
+                  )}
+                  
+                  {device.type === 'audio' && (
+                    <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <Headphones className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-800 dark:text-green-200">Audio Device Features</span>
+                      </div>
+                      <div className="text-xs text-green-700 dark:text-green-300">
+                        Audio monitoring, noise detection, voice commands
+                      </div>
+                    </div>
+                  )}
+                  
+                  {device.type === 'health-monitor' && (
+                    <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <Heart className="h-4 w-4 text-red-600" />
+                        <span className="text-sm font-medium text-red-800 dark:text-red-200">Health Monitor Features</span>
+                      </div>
+                      <div className="text-xs text-red-700 dark:text-red-300">
+                        Vital signs, blood pressure, glucose monitoring
+                      </div>
+                    </div>
+                  )}
+                  
+                  {device.type === 'smart-scale' && (
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <Gauge className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Smart Scale Features</span>
+                      </div>
+                      <div className="text-xs text-blue-700 dark:text-blue-300">
+                        Body composition, weight tracking, BMI analysis
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
@@ -454,10 +667,10 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
             <CheckCircle className="h-5 w-5 text-green-500" />
             <div>
               <p className="text-sm font-medium text-green-900 dark:text-green-100">
-                Phone sensors active - scan for Bluetooth devices to add more monitoring capabilities
+                Multi-device ecosystem active - supports rings, watches, headphones, health monitors, and more
               </p>
               <p className="text-xs text-green-700 dark:text-green-300">
-                VitalWatch automatically detects and connects to your phone's built-in sensors
+                VitalWatch connects to 50+ device types including Oura rings, AirPods, fitness bands, smart scales, and health monitors
               </p>
             </div>
           </div>
