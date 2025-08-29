@@ -88,7 +88,7 @@ export default function UserDashboard() {
   const { isConnected, lastMessage } = useWebSocket();
   const { capabilities, realTimeData, isScanning } = useRealDeviceScanner();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("monitor");
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [liveLocation, setLiveLocation] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
@@ -1126,22 +1126,42 @@ export default function UserDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Professional Tab Navigation */}
           <div className="mb-8">
-            <div className="grid w-full grid-cols-5 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
+            <div className="grid w-full grid-cols-4 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
               <button
-                onClick={() => setActiveTab("overview")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
-                  activeTab === "overview" 
+                onClick={() => setActiveTab("monitor")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "monitor" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium">Overview</span>
+                <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Monitor</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  setIncognitoMode(!incognitoMode);
+                  toast({
+                    title: incognitoMode ? "Incognito Mode Disabled" : "Incognito Mode Enabled",
+                    description: incognitoMode ? 
+                      "Interface is now visible." :
+                      "Interface hidden for privacy.",
+                  });
+                }}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                  incognitoMode 
+                    ? "bg-purple-100 dark:bg-purple-900/50 shadow-lg text-purple-800 dark:text-purple-200" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Eye className={`h-4 w-4 sm:h-5 sm:w-5 ${incognitoMode ? 'opacity-50' : ''}`} />
+                <span className="text-xs sm:text-sm font-medium">Incognito</span>
               </button>
               
               <button
                 onClick={() => setActiveTab("safety-tools")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
                   activeTab === "safety-tools" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -1153,48 +1173,21 @@ export default function UserDashboard() {
               </button>
               
               <button
-                onClick={() => setActiveTab("wellness-analytics")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
-                  activeTab === "wellness-analytics" 
-                    ? "bg-background shadow-lg text-foreground" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
-              >
-                <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Wellness Analytics</span>
-                <span className="text-xs sm:text-sm font-medium sm:hidden">Health</span>
-              </button>
-              
-              <button
-                onClick={() => setActiveTab("device-hub")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
-                  activeTab === "device-hub" 
-                    ? "bg-background shadow-lg text-foreground" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
-              >
-                <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Device Hub</span>
-                <span className="text-xs sm:text-sm font-medium sm:hidden">Devices</span>
-              </button>
-              
-              <button
-                onClick={() => setActiveTab("ai-guardian")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
-                  activeTab === "ai-guardian" 
+                onClick={() => setActiveTab("guardian")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "guardian" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
                 <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium hidden sm:inline">AI Guardian</span>
-                <span className="text-xs sm:text-sm font-medium sm:hidden">AI</span>
+                <span className="text-xs sm:text-sm font-medium">Guardian</span>
               </button>
             </div>
           </div>
 
-          {/* Overview Tab Content */}
-          {activeTab === "overview" && (
+          {/* Monitor Tab Content */}
+          {activeTab === "monitor" && (
             <div className="space-y-6">
         
         {/* Welcome Section */}
@@ -2302,9 +2295,14 @@ export default function UserDashboard() {
             </div>
           )}
 
-          {/* Wellness Analytics Tab Content */}
-          {activeTab === "wellness-analytics" && (
+          {/* Guardian Tab Content */}
+          {activeTab === "guardian" && (
             <div className="space-y-6">
+              <AIGuardian 
+                sensorData={sensorData}
+                realTimeData={realTimeData}
+                onPanicTrigger={sendEmergencyAlert}
+              />
               <ComprehensiveWellnessAnalytics 
                 sensorData={sensorData} 
                 permissions={permissions} 
@@ -2315,24 +2313,7 @@ export default function UserDashboard() {
                 permissions={permissions} 
                 requestPermissions={requestPermissions} 
               />
-            </div>
-          )}
-
-          {/* Device Hub Tab Content */}
-          {activeTab === "device-hub" && (
-            <div className="space-y-6">
               <DeviceIntegrationHub />
-            </div>
-          )}
-
-          {/* AI Guardian Tab Content */}
-          {activeTab === "ai-guardian" && (
-            <div className="space-y-6">
-              <AIGuardian 
-                sensorData={sensorData}
-                realTimeData={realTimeData}
-                onPanicTrigger={sendEmergencyAlert}
-              />
             </div>
           )}
         </Tabs>
