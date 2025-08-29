@@ -894,7 +894,7 @@ export default function UserDashboard() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Professional Tab Navigation */}
           <div className="mb-8">
@@ -920,7 +920,8 @@ export default function UserDashboard() {
                 }`}
               >
                 <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium">Safety Tools</span>
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Safety Tools</span>
+                <span className="text-xs sm:text-sm font-medium sm:hidden">Safety</span>
               </button>
               
               <button
@@ -932,7 +933,8 @@ export default function UserDashboard() {
                 }`}
               >
                 <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium">Wellness Analytics</span>
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Wellness Analytics</span>
+                <span className="text-xs sm:text-sm font-medium sm:hidden">Health</span>
               </button>
               
               <button
@@ -944,7 +946,8 @@ export default function UserDashboard() {
                 }`}
               >
                 <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm font-medium">Device Hub</span>
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Device Hub</span>
+                <span className="text-xs sm:text-sm font-medium sm:hidden">Devices</span>
               </button>
             </div>
           </div>
@@ -954,12 +957,12 @@ export default function UserDashboard() {
             <div className="space-y-6">
         
         {/* Welcome Section */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2">
               Good day, {userName}! 👋
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Your wellness journey continues with personalized insights and support
             </p>
           </div>
@@ -979,7 +982,7 @@ export default function UserDashboard() {
         />
 
         {/* Wellness Dashboard */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           
           {/* Enhanced Wellness Card */}
           <Card className="lg:col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200/50">

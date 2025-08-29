@@ -135,35 +135,37 @@ export function ComprehensiveWellnessAnalytics({ sensorData, permissions, reques
     <div className="space-y-6">
       {/* Header Controls */}
       <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200/50">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center space-x-2">
-              <BarChart3 className="h-6 w-6 text-blue-600" />
-              <span>Comprehensive Wellness Analytics</span>
+              <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+              <span className="text-base sm:text-lg">Wellness Analytics</span>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-24 sm:w-32 text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1h">Last Hour</SelectItem>
-                  <SelectItem value="24h">24 Hours</SelectItem>
-                  <SelectItem value="7d">7 Days</SelectItem>
-                  <SelectItem value="30d">30 Days</SelectItem>
+                  <SelectItem value="1h">1h</SelectItem>
+                  <SelectItem value="24h">24h</SelectItem>
+                  <SelectItem value="7d">7d</SelectItem>
+                  <SelectItem value="30d">30d</SelectItem>
                 </SelectContent>
               </Select>
               <Button 
                 onClick={runAIAnalysis} 
                 disabled={isAnalyzing}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm"
+                size="sm"
               >
                 {isAnalyzing ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                 ) : (
-                  <Brain className="h-4 w-4" />
+                  <Brain className="h-3 w-3 sm:h-4 sm:w-4" />
                 )}
-                <span>{isAnalyzing ? 'Analyzing...' : 'AI Analysis'}</span>
+                <span className="hidden sm:inline">{isAnalyzing ? 'Analyzing...' : 'AI Analysis'}</span>
+                <span className="sm:hidden">{isAnalyzing ? '...' : 'AI'}</span>
               </Button>
             </div>
           </CardTitle>
@@ -171,13 +173,31 @@ export function ComprehensiveWellnessAnalytics({ sensorData, permissions, reques
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="biometrics">Biometrics</TabsTrigger>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
-          <TabsTrigger value="ai-insights">AI Insights</TabsTrigger>
-          <TabsTrigger value="environmental">Environmental</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto">
+          <TabsTrigger value="overview" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
+            <span className="hidden sm:inline">Overview</span>
+            <span className="sm:hidden">Home</span>
+          </TabsTrigger>
+          <TabsTrigger value="biometrics" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
+            <span className="hidden sm:inline">Biometrics</span>
+            <span className="sm:hidden">Bio</span>
+          </TabsTrigger>
+          <TabsTrigger value="trends" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
+            <span className="hidden sm:inline">Trends</span>
+            <span className="sm:hidden">📈</span>
+          </TabsTrigger>
+          <TabsTrigger value="ai-insights" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
+            <span className="hidden sm:inline">AI Insights</span>
+            <span className="sm:hidden">AI</span>
+          </TabsTrigger>
+          <TabsTrigger value="environmental" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
+            <span className="hidden sm:inline">Environmental</span>
+            <span className="sm:hidden">Env</span>
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
+            <span className="hidden sm:inline">Reports</span>
+            <span className="sm:hidden">📊</span>
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
