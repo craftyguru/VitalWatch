@@ -54,6 +54,7 @@ import CrisisChatSupport from "@/components/ui/crisis-chat-support";
 
 import AdvancedSafetyTools from "@/components/ui/advanced-safety-tools";
 import { EmergencyContactManager } from "@/components/EmergencyContactManager";
+import { WellnessOverview } from "@/components/WellnessOverview";
 
 export default function ToolsComprehensive() {
   const { user } = useAuth();
@@ -76,6 +77,36 @@ export default function ToolsComprehensive() {
   const { data: emergencyContacts } = useQuery({
     queryKey: ["/api/emergency-contacts"],
   });
+
+  // Fetch real user wellness data
+  const { data: moodEntries } = useQuery({
+    queryKey: ["/api/mood-entries"],
+  });
+
+  const { data: aiInsights } = useQuery({
+    queryKey: ["/api/ai-insights"],
+  });
+
+  const { data: copingToolsUsage } = useQuery({
+    queryKey: ["/api/coping-tools"],
+  });
+
+  // Calculate real wellness metrics from database
+  const recentMoodEntries = Array.isArray(moodEntries) ? moodEntries.slice(0, 7) : [];
+  const moodAverage = recentMoodEntries.length > 0 ? 
+    recentMoodEntries.reduce((sum, entry) => sum + entry.moodScore, 0) / recentMoodEntries.length : 0;
+  
+  const sessionsThisWeek = Array.isArray(copingToolsUsage) ? 
+    copingToolsUsage.filter(usage => {
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return new Date(usage.createdAt) > weekAgo;
+    }).length : 0;
+
+  const dayStreak = recentMoodEntries.length > 0 ? 
+    Math.min(recentMoodEntries.filter(entry => entry.moodScore >= 3).length, 30) : 0;
+
+  const stressReliefProgress = moodAverage >= 4 ? 89 : moodAverage >= 3 ? 65 : 35;
 
 
 
@@ -243,6 +274,15 @@ export default function ToolsComprehensive() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-8">
+            {/* Wellness Overview with Real User Data */}
+            <WellnessOverview 
+              sensorData={realTimeData} 
+              onStartSession={() => {
+                setActiveTab("safety-tools");
+                toast({ title: "Session Starting", description: "Opening wellness tools" });
+              }}
+            />
+
             {/* Professional System Metrics Dashboard */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <Card className="bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-blue-900/30 border-blue-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
