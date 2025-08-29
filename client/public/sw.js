@@ -6,14 +6,33 @@ const EMERGENCY_CACHE = 'vitalwatch-emergency-v6.0.0';
 
 // Critical resources that must be cached for emergency functionality
 const CRITICAL_RESOURCES = [
-  '/'
+  '/',
+  '/offline.html',
+  '/manifest.json',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/logo.png'
 ];
 
 // Emergency-specific resources (only cache non-API URLs)
-const EMERGENCY_RESOURCES = [];
+const EMERGENCY_RESOURCES = [
+  '/home?action=emergency',
+  '/mood',
+  '/tools?tool=breathing'
+];
 
 // Assets that can be cached opportunistically  
-const CACHE_ASSETS = [];
+const CACHE_ASSETS = [
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
+  '/icons/icon-384x384.png',
+  '/icons/shortcut-emergency.png',
+  '/icons/shortcut-mood.png',
+  '/icons/shortcut-breathing.png'
+];
 
 // Install event - cache critical resources
 self.addEventListener('install', event => {

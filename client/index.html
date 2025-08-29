@@ -47,6 +47,19 @@
       window.addEventListener('beforeinstallprompt', (e) => {
         console.log('beforeinstallprompt fired!', e);
       });
+      
+      // Ensure external links open in new tab/window (PWA requirement)
+      document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link && link.href) {
+          const url = new URL(link.href, window.location.origin);
+          // If it's an external link, ensure it opens in new window
+          if (url.origin !== window.location.origin && !link.target) {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+          }
+        }
+      });
     </script>
   </head>
   <body>
