@@ -12,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { 
   Heart,
   BarChart3,
@@ -106,6 +107,7 @@ export default function UserDashboard() {
   const [safetySubTab, setSafetySubTab] = useState("emergency");
   const [cornerTapCount, setCornerTapCount] = useState(0);
   const [tapTimeout, setTapTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [showIncognitoWarning, setShowIncognitoWarning] = useState(false);
 
 
   // Fetch user data
@@ -195,6 +197,33 @@ export default function UserDashboard() {
         { enableHighAccuracy: true }
       );
     }
+  };
+
+  // Handle incognito toggle with first-time warning
+  const handleIncognitoToggle = () => {
+    // Check if user has seen the warning before
+    const hasSeenWarning = localStorage.getItem('incognito-warning-seen') === 'true';
+    
+    if (!hasSeenWarning && !incognitoMode) {
+      // Show warning for first-time users
+      setShowIncognitoWarning(true);
+    } else {
+      // Direct toggle for returning users
+      setIncognitoMode(!incognitoMode);
+    }
+  };
+
+  const confirmIncognitoActivation = () => {
+    // Mark warning as seen and activate incognito
+    localStorage.setItem('incognito-warning-seen', 'true');
+    setShowIncognitoWarning(false);
+    setIncognitoMode(true);
+    
+    toast({
+      title: "Incognito Mode Activated",
+      description: "Remember: Tap any corner 3 times to exit",
+      duration: 5000,
+    });
   };
 
   // Emergency panic functionality
@@ -1127,7 +1156,7 @@ export default function UserDashboard() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    onClick={() => setIncognitoMode(!incognitoMode)}
+                    onClick={handleIncognitoToggle}
                     className={`h-8 w-8 p-0 border-purple-200 ${incognitoMode ? 'bg-purple-100 text-purple-800' : 'text-purple-700'} hover:bg-purple-50`}
                     title={incognitoMode ? "Exit Incognito Mode" : "Enter Incognito Mode"}
                   >
@@ -1233,7 +1262,7 @@ export default function UserDashboard() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  onClick={() => setIncognitoMode(!incognitoMode)}
+                  onClick={handleIncognitoToggle}
                   className={`border-purple-200 ${incognitoMode ? 'bg-purple-100 text-purple-800' : 'text-purple-700'} hover:bg-purple-50`}
                   title={incognitoMode ? "Exit Incognito Mode" : "Enter Incognito Mode"}
                 >
@@ -2540,6 +2569,49 @@ export default function UserDashboard() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Incognito Warning Dialog */}
+      <AlertDialog open={showIncognitoWarning} onOpenChange={setShowIncognitoWarning}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5 text-purple-600" />
+              First Time Using Incognito Mode
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-left space-y-3">
+              <p>Incognito mode will make your screen completely black to protect your privacy.</p>
+              
+              <div className="bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                <p className="text-amber-700 dark:text-amber-300 text-sm font-medium mb-2">
+                  ⚠️ Important: How to Exit
+                </p>
+                <p className="text-amber-700 dark:text-amber-300 text-sm">
+                  To exit incognito mode, <strong>tap any corner of the screen 3 times quickly</strong>. This prevents accidental exits.
+                </p>
+              </div>
+              
+              <p className="text-sm text-muted-foreground">
+                This warning will only show once. Ready to activate incognito mode?
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => setShowIncognitoWarning(false)}
+              data-testid="button-cancel-incognito"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmIncognitoActivation}
+              className="bg-purple-600 hover:bg-purple-700"
+              data-testid="button-confirm-incognito"
+            >
+              Activate Incognito
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Floating Panic Button - Bottom Left */}
       <div className="fixed bottom-4 left-4 z-50">
