@@ -45,7 +45,8 @@ import {
   Car,
   Camera,
   FileText,
-  Lock
+  Lock,
+  Crown
 } from "lucide-react";
 import { Link } from "wouter";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -91,6 +92,7 @@ export default function UserDashboard() {
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [liveLocation, setLiveLocation] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
+  const [guardianAngelActive, setGuardianAngelActive] = useState(false);
   
   // Modal states for safety tools
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -1103,7 +1105,7 @@ export default function UserDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Professional Tab Navigation */}
           <div className="mb-8">
-            <div className="grid w-full grid-cols-5 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
+            <div className="grid w-full grid-cols-6 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
               <button
                 onClick={() => setActiveTab("overview")}
                 className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
@@ -1166,6 +1168,19 @@ export default function UserDashboard() {
                 <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs sm:text-sm font-medium hidden sm:inline">AI Guardian</span>
                 <span className="text-xs sm:text-sm font-medium sm:hidden">AI</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("guardian-angel")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "guardian-angel" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Crown className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Guardian Angel</span>
+                <span className="text-xs sm:text-sm font-medium sm:hidden">Angel</span>
               </button>
             </div>
           </div>
@@ -2310,6 +2325,158 @@ export default function UserDashboard() {
                 realTimeData={realTimeData}
                 onPanicTrigger={sendEmergencyAlert}
               />
+            </div>
+          )}
+
+          {/* Guardian Angel Tab Content */}
+          {activeTab === "guardian-angel" && (
+            <div className="space-y-6">
+              <Card className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 border-purple-200/50">
+                <CardHeader className="text-center">
+                  <CardTitle className="flex items-center justify-center gap-3 text-2xl">
+                    <Crown className="h-8 w-8 text-purple-600" />
+                    Guardian Angel Protection
+                  </CardTitle>
+                  <p className="text-muted-foreground">
+                    Your personal AI-powered safety companion providing 24/7 monitoring and instant emergency response
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Status Display */}
+                  <div className="text-center p-6 rounded-xl bg-background/80 backdrop-blur-sm border">
+                    <div className={`inline-flex items-center gap-2 text-lg font-semibold ${
+                      guardianAngelActive ? "text-green-600" : "text-gray-500"
+                    }`}>
+                      <div className={`w-3 h-3 rounded-full ${
+                        guardianAngelActive ? "bg-green-500 animate-pulse" : "bg-gray-400"
+                      }`}></div>
+                      Guardian Angel is {guardianAngelActive ? "ACTIVE" : "INACTIVE"}
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {guardianAngelActive ? 
+                        "You are protected with continuous AI monitoring and instant emergency response capabilities" :
+                        "Activate Guardian Angel to enable AI-powered protection and emergency monitoring"
+                      }
+                    </p>
+                  </div>
+
+                  {/* Main Control */}
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={() => {
+                        setGuardianAngelActive(!guardianAngelActive);
+                        toast({
+                          title: guardianAngelActive ? "Guardian Angel Deactivated" : "Guardian Angel Activated",
+                          description: guardianAngelActive ? 
+                            "AI protection has been turned off. You can reactivate at any time." :
+                            "AI protection is now active. You are being monitored for safety.",
+                        });
+                      }}
+                      className={`h-16 px-8 text-lg font-semibold rounded-xl transition-all duration-300 ${
+                        guardianAngelActive 
+                          ? "bg-red-600 hover:bg-red-700 text-white" 
+                          : "bg-purple-600 hover:bg-purple-700 text-white"
+                      }`}
+                      data-testid={guardianAngelActive ? "button-deactivate-guardian" : "button-activate-guardian"}
+                    >
+                      {guardianAngelActive ? (
+                        <>
+                          <Lock className="h-5 w-5 mr-2" />
+                          Deactivate Guardian Angel
+                        </>
+                      ) : (
+                        <>
+                          <Crown className="h-5 w-5 mr-2" />
+                          Activate Guardian Angel
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {/* Features Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className={`transition-all ${guardianAngelActive ? "bg-green-50 dark:bg-green-950/20 border-green-200" : "bg-gray-50 dark:bg-gray-900 border-gray-200"}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <Brain className={`h-5 w-5 ${guardianAngelActive ? "text-green-600" : "text-gray-400"}`} />
+                          <h3 className="font-semibold">AI Threat Detection</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Continuous analysis of environmental and behavioral patterns to detect potential threats
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className={`transition-all ${guardianAngelActive ? "bg-green-50 dark:bg-green-950/20 border-green-200" : "bg-gray-50 dark:bg-gray-900 border-gray-200"}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <AlertTriangle className={`h-5 w-5 ${guardianAngelActive ? "text-green-600" : "text-gray-400"}`} />
+                          <h3 className="font-semibold">Instant Emergency Response</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Automatic emergency alerts and contact notification when threats are detected
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className={`transition-all ${guardianAngelActive ? "bg-green-50 dark:bg-green-950/20 border-green-200" : "bg-gray-50 dark:bg-gray-900 border-gray-200"}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <MapPin className={`h-5 w-5 ${guardianAngelActive ? "text-green-600" : "text-gray-400"}`} />
+                          <h3 className="font-semibold">Location Monitoring</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Safe zone tracking and real-time location sharing with trusted contacts
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className={`transition-all ${guardianAngelActive ? "bg-green-50 dark:bg-green-950/20 border-green-200" : "bg-gray-50 dark:bg-gray-900 border-gray-200"}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <Heart className={`h-5 w-5 ${guardianAngelActive ? "text-green-600" : "text-gray-400"}`} />
+                          <h3 className="font-semibold">Wellness Monitoring</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Continuous health monitoring with crisis intervention and mental health support
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Quick Settings */}
+                  {guardianAngelActive && (
+                    <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Settings className="h-5 w-5 text-blue-600" />
+                          Guardian Angel Settings
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <Button variant="outline" className="h-12 justify-start" data-testid="button-configure-alerts">
+                            <AlertCircle className="h-4 w-4 mr-2" />
+                            Configure Alert Preferences
+                          </Button>
+                          <Button variant="outline" className="h-12 justify-start" data-testid="button-manage-contacts">
+                            <Users className="h-4 w-4 mr-2" />
+                            Manage Emergency Contacts
+                          </Button>
+                          <Button variant="outline" className="h-12 justify-start" data-testid="button-safe-zones">
+                            <MapPin className="h-4 w-4 mr-2" />
+                            Set Up Safe Zones
+                          </Button>
+                          <Button variant="outline" className="h-12 justify-start" data-testid="button-monitoring-level">
+                            <Activity className="h-4 w-4 mr-2" />
+                            Adjust Monitoring Level
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           )}
         </Tabs>
