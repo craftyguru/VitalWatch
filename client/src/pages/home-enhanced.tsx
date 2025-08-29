@@ -443,7 +443,13 @@ export default function Home() {
                       <Users className="h-5 w-5 text-red-600" />
                       <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">Safety Network</h3>
                     </div>
-                    <Button variant="outline" size="sm" asChild className="border-red-200 text-red-700 hover:bg-red-50">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      asChild 
+                      className="border-red-200 text-red-700 hover:bg-red-50"
+                      data-testid="button-manage-contacts"
+                    >
                       <Link href="/contacts" data-testid="link-contacts">
                         <Plus className="h-4 w-4 mr-1" />
                         Manage
@@ -503,8 +509,12 @@ export default function Home() {
                       <p className="text-sm text-red-700 dark:text-red-300 mb-4 max-w-sm mx-auto">
                         Add trusted contacts who will be notified during emergencies. We recommend adding at least 2-3 people.
                       </p>
-                      <Button asChild className="bg-red-600 hover:bg-red-700 text-white">
-                        <Link href="/contacts">
+                      <Button 
+                        asChild 
+                        className="bg-red-600 hover:bg-red-700 text-white"
+                        data-testid="button-add-first-contact"
+                      >
+                        <Link href="/contacts" data-testid="link-add-contact">
                           <Plus className="h-4 w-4 mr-2" />
                           Add Your First Contact
                         </Link>
