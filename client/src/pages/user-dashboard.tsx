@@ -40,7 +40,12 @@ import {
   Wind,
   MessageSquare,
   TreePine,
-  Headphones
+  Headphones,
+  Settings,
+  Car,
+  Camera,
+  FileText,
+  Lock
 } from "lucide-react";
 import { Link } from "wouter";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -89,6 +94,7 @@ export default function UserDashboard() {
   const [emergencyTimer, setEmergencyTimer] = useState<number | null>(null);
   const [breadcrumbActive, setBreadcrumbActive] = useState(false);
   const [audioRecording, setAudioRecording] = useState<MediaRecorder | null>(null);
+  const [safetySubTab, setSafetySubTab] = useState("emergency");
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -445,6 +451,110 @@ export default function UserDashboard() {
       setAudioRecording(null);
     }
   };
+
+  // Panic Button Settings Content
+  const generatePanicSettingsContent = () => (
+    <div className="space-y-6">
+      <div className="bg-red-50 dark:bg-red-950/20 p-6 rounded-lg">
+        <h3 className="font-semibold text-red-900 dark:text-red-100 mb-4">Panic Button Configuration</h3>
+        
+        {/* Emergency Contact Settings */}
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+              Primary Emergency Contact
+            </label>
+            <select className="w-full p-3 border border-red-200 rounded-lg bg-white dark:bg-gray-800 text-red-900 dark:text-red-100">
+              <option>Select primary contact...</option>
+              {emergencyContacts && emergencyContacts.map((contact: any) => (
+                <option key={contact.id} value={contact.id}>
+                  {contact.name} - {contact.phone}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+              Emergency Message Template
+            </label>
+            <textarea 
+              className="w-full p-3 border border-red-200 rounded-lg bg-white dark:bg-gray-800 text-red-900 dark:text-red-100"
+              rows={3}
+              defaultValue="🚨 EMERGENCY: I need immediate help. Location and details will follow automatically."
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                Audio Recording Duration
+              </label>
+              <select className="w-full p-3 border border-red-200 rounded-lg bg-white dark:bg-gray-800 text-red-900 dark:text-red-100">
+                <option value="30">30 seconds</option>
+                <option value="60">1 minute</option>
+                <option value="120">2 minutes</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                Breadcrumb Interval
+              </label>
+              <select className="w-full p-3 border border-red-200 rounded-lg bg-white dark:bg-gray-800 text-red-900 dark:text-red-100">
+                <option value="30">Every 30 seconds</option>
+                <option value="60">Every minute</option>
+                <option value="120">Every 2 minutes</option>
+              </select>
+            </div>
+          </div>
+          
+          {/* Toggle Options */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border">
+              <span className="text-sm font-medium text-red-800 dark:text-red-200">Include GPS Location</span>
+              <input type="checkbox" defaultChecked className="h-4 w-4 text-red-600" />
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border">
+              <span className="text-sm font-medium text-red-800 dark:text-red-200">Send Audio Recording</span>
+              <input type="checkbox" defaultChecked className="h-4 w-4 text-red-600" />
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border">
+              <span className="text-sm font-medium text-red-800 dark:text-red-200">Include Biometric Data</span>
+              <input type="checkbox" defaultChecked className="h-4 w-4 text-red-600" />
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border">
+              <span className="text-sm font-medium text-red-800 dark:text-red-200">AI Situation Analysis</span>
+              <input type="checkbox" defaultChecked className="h-4 w-4 text-red-600" />
+            </div>
+          </div>
+          
+          <div className="flex space-x-3 pt-4">
+            <Button className="flex-1 bg-red-600 hover:bg-red-700 text-white">
+              Save Settings
+            </Button>
+            <Button variant="outline" className="flex-1">
+              Test Panic Button
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Quick Setup Guide */}
+      <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+        <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Setup Guide</h4>
+        <ol className="text-sm text-blue-800 dark:text-blue-200 space-y-2">
+          <li>1. Add at least one emergency contact</li>
+          <li>2. Test your settings with a non-emergency test</li>
+          <li>3. Make sure location services are enabled</li>
+          <li>4. Verify microphone permissions for audio recording</li>
+        </ol>
+      </div>
+    </div>
+  );
 
   // Safety tool content generators
   const generateBreathingContent = () => (
@@ -1263,8 +1373,85 @@ export default function UserDashboard() {
           {/* Safety Tools Tab Content */}
           {activeTab === "safety-tools" && (
             <div className="space-y-6">
-              {/* Emergency Quick Access Panel */}
-              <Card className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200/50 shadow-xl">
+              {/* Safety Sub-Tab Navigation */}
+              <Card className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border-gray-200/50">
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <Button
+                      variant={safetySubTab === "emergency" ? "default" : "outline"}
+                      onClick={() => setSafetySubTab("emergency")}
+                      className="flex flex-col items-center p-3 h-auto"
+                    >
+                      <Target className="h-4 w-4 mb-1" />
+                      <span className="text-xs">Emergency</span>
+                    </Button>
+                    
+                    <Button
+                      variant={safetySubTab === "monitoring" ? "default" : "outline"}
+                      onClick={() => setSafetySubTab("monitoring")}
+                      className="flex flex-col items-center p-3 h-auto"
+                    >
+                      <Eye className="h-4 w-4 mb-1" />
+                      <span className="text-xs">Monitoring</span>
+                    </Button>
+                    
+                    <Button
+                      variant={safetySubTab === "personal" ? "default" : "outline"}
+                      onClick={() => setSafetySubTab("personal")}
+                      className="flex flex-col items-center p-3 h-auto"
+                    >
+                      <Shield className="h-4 w-4 mb-1" />
+                      <span className="text-xs">Personal</span>
+                    </Button>
+                    
+                    <Button
+                      variant={safetySubTab === "travel" ? "default" : "outline"}
+                      onClick={() => setSafetySubTab("travel")}
+                      className="flex flex-col items-center p-3 h-auto"
+                    >
+                      <Activity className="h-4 w-4 mb-1" />
+                      <span className="text-xs">Travel & Digital</span>
+                    </Button>
+                    
+                    <Button
+                      variant={safetySubTab === "legal" ? "default" : "outline"}
+                      onClick={() => setSafetySubTab("legal")}
+                      className="flex flex-col items-center p-3 h-auto"
+                    >
+                      <Users className="h-4 w-4 mb-1" />
+                      <span className="text-xs">Contacts & Legal</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Emergency & Quick Access Sub-Tab */}
+              {safetySubTab === "emergency" && (
+                <div className="space-y-6">
+                  {/* Panic Button Settings */}
+                  <Card className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200/50 shadow-xl">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="flex items-center space-x-3 text-red-900 dark:text-red-100">
+                        <div className="bg-gradient-to-br from-red-500 to-orange-500 p-2 rounded-xl">
+                          <Settings className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Panic Button Settings</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Button 
+                        variant="outline" 
+                        className="w-full mb-4"
+                        onClick={() => openModal("panic-settings", generatePanicSettingsContent())}
+                      >
+                        Configure Panic Button
+                      </Button>
+                      {generatePanicSettingsContent()}
+                    </CardContent>
+                  </Card>
+
+                  {/* Emergency Quick Access Panel */}
+                  <Card className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200/50 shadow-xl">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center space-x-3 text-red-900 dark:text-red-100">
@@ -1323,8 +1510,13 @@ export default function UserDashboard() {
                   </div>
                 </CardContent>
               </Card>
+                </div>
+              )}
 
-              {/* Environmental Safety Monitoring */}
+              {/* Monitoring & Detection Sub-Tab */}
+              {safetySubTab === "monitoring" && (
+                <div className="space-y-6">
+                  {/* Environmental Safety Monitoring */}
               <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200/50">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-3 text-green-900 dark:text-green-100">
@@ -2014,8 +2206,198 @@ export default function UserDashboard() {
                 </CardContent>
               </Card>
 
-              {/* Emergency Contact Manager */}
-              <EmergencyContactManager />
+                </div>
+              )}
+
+              {/* Personal Safety Sub-Tab */}
+              {safetySubTab === "personal" && (
+                <div className="space-y-6">
+                  {/* Medical Emergency Preparedness */}
+                  <Card className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-red-900 dark:text-red-100">
+                        <div className="bg-gradient-to-br from-red-500 to-orange-500 p-2 rounded-xl">
+                          <Heart className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Medical Emergency Preparedness</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200" onClick={() => openModal("medical-emergency", generateMedicalEmergencyContent())}>
+                          <Heart className="h-5 w-5 text-red-600 mb-1" />
+                          <span className="text-xs">Emergency Guide</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("allergy-alert", generateMedicalEmergencyContent())}>
+                          <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Allergy Alert</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("first-aid", generateMedicalEmergencyContent())}>
+                          <Shield className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">First Aid</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Communication Safety */}
+                  <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 border-cyan-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-cyan-900 dark:text-cyan-100">
+                        <div className="bg-gradient-to-br from-cyan-500 to-blue-500 p-2 rounded-xl">
+                          <MessageSquare className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Communication Safety</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-cyan-200" onClick={() => openModal("safe-communication", generateCommunicationSafetyContent())}>
+                          <MessageSquare className="h-5 w-5 text-cyan-600 mb-1" />
+                          <span className="text-xs">Safe Communication</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("crisis-chat", generateCommunicationSafetyContent())}>
+                          <Headphones className="h-5 w-5 text-purple-600 mb-1" />
+                          <span className="text-xs">Crisis Support</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("anonymous-reporting", generateCommunicationSafetyContent())}>
+                          <Shield className="h-5 w-5 text-green-600 mb-1" />
+                          <span className="text-xs">Anonymous Report</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Personal Protection */}
+                  <Card className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30 border-rose-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-rose-900 dark:text-rose-100">
+                        <div className="bg-gradient-to-br from-rose-500 to-pink-500 p-2 rounded-xl">
+                          <Shield className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Personal Protection & Self-Defense</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("situational-awareness", generatePersonalProtectionContent())}>
+                          <Eye className="h-4 w-4 mr-2" />
+                          Situational Awareness
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("de-escalation", generatePersonalProtectionContent())}>
+                          <MessageSquare className="h-4 w-4 mr-2" />
+                          De-escalation
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("self-defense", generatePersonalProtectionContent())}>
+                          <Shield className="h-4 w-4 mr-2" />
+                          Self-Defense
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("escape-route", generatePersonalProtectionContent())}>
+                          <MapPin className="h-4 w-4 mr-2" />
+                          Escape Routes
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* Travel & Digital Sub-Tab */}
+              {safetySubTab === "travel" && (
+                <div className="space-y-6">
+                  {/* Digital Privacy & Security */}
+                  <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border-purple-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-purple-900 dark:text-purple-100">
+                        <div className="bg-gradient-to-br from-purple-500 to-indigo-500 p-2 rounded-xl">
+                          <Lock className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Digital Privacy & Security</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("digital-privacy", generateDigitalPrivacyContent())}>
+                          <Lock className="h-5 w-5 text-purple-600 mb-1" />
+                          <span className="text-xs">Privacy Tools</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("secure-communication", generateDigitalPrivacyContent())}>
+                          <MessageSquare className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">Secure Chat</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("data-protection", generateDigitalPrivacyContent())}>
+                          <Shield className="h-5 w-5 text-green-600 mb-1" />
+                          <span className="text-xs">Data Protection</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Travel & Transportation Safety */}
+                  <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 border-indigo-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-indigo-900 dark:text-indigo-100">
+                        <div className="bg-gradient-to-br from-indigo-500 to-blue-500 p-2 rounded-xl">
+                          <MapPin className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Travel & Transportation Safety</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-indigo-200" onClick={() => openModal("travel-safety", generateTravelSafetyContent())}>
+                          <MapPin className="h-5 w-5 text-indigo-600 mb-1" />
+                          <span className="text-xs">Travel Safety</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("safe-routes", generateTravelSafetyContent())}>
+                          <Activity className="h-5 w-5 text-green-600 mb-1" />
+                          <span className="text-xs">Safe Routes</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("transportation", generateTravelSafetyContent())}>
+                          <Car className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Transportation</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* Contacts & Legal Sub-Tab */}
+              {safetySubTab === "legal" && (
+                <div className="space-y-6">
+                  {/* Legal & Documentation Safety */}
+                  <Card className="bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-950/30 dark:to-slate-950/30 border-gray-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-gray-900 dark:text-gray-100">
+                        <div className="bg-gradient-to-br from-gray-500 to-slate-500 p-2 rounded-xl">
+                          <FileText className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Legal & Documentation Safety</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-gray-200" onClick={() => openModal("legal-documentation", generateLegalContent())}>
+                          <FileText className="h-5 w-5 text-gray-600 mb-1" />
+                          <span className="text-xs">Legal Docs</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("evidence-collection", generateLegalContent())}>
+                          <Camera className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">Evidence Collection</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("legal-hotline", generateLegalContent())}>
+                          <Phone className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Legal Hotline</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Emergency Contact Manager */}
+                  <EmergencyContactManager />
+                </div>
+              )}
             </div>
           )}
 
