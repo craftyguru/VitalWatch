@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, X, Minimize2, LifeBuoy, AlertTriangle, Heart } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { MessageCircle, X, Minimize2, LifeBuoy, AlertTriangle, Heart, Phone, Users, Plus, Trash2 } from "lucide-react";
 import CrisisChatSupport from "./crisis-chat-support";
 
 interface FloatingChatBubbleProps {
@@ -25,6 +32,56 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
     }
   ]);
   const [helpInput, setHelpInput] = useState("");
+  const [newContact, setNewContact] = useState({
+    name: "",
+    phoneNumber: "",
+    relationship: ""
+  });
+
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Fetch emergency contacts
+  const { data: emergencyContacts = [] } = useQuery({
+    queryKey: ['/api/emergency-contacts'],
+  });
+
+  // Add emergency contact mutation
+  const addContactMutation = useMutation({
+    mutationFn: async (contactData: { name: string; phoneNumber: string; relationship: string }) => {
+      const response = await apiRequest('POST', '/api/emergency-contacts', contactData);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/emergency-contacts'] });
+      setNewContact({ name: "", phoneNumber: "", relationship: "" });
+      toast({
+        title: "Contact Added",
+        description: "Emergency contact has been added successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to Add Contact",
+        description: "There was an error adding the emergency contact.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Delete emergency contact mutation
+  const deleteContactMutation = useMutation({
+    mutationFn: async (contactId: string) => {
+      await apiRequest('DELETE', `/api/emergency-contacts/${contactId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/emergency-contacts'] });
+      toast({
+        title: "Contact Removed",
+        description: "Emergency contact has been removed.",
+      });
+    }
+  });
 
   // Simulate notification for urgent situations (in real app, this would come from crisis detection)
   useEffect(() => {
@@ -85,6 +142,19 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
     } else {
       return 'I can help you with mood tracking, emergency contacts, coping tools, billing, and profile settings. What specific feature would you like to learn about?';
     }
+  };
+
+  const handleAddContact = () => {
+    if (!newContact.name.trim() || !newContact.phoneNumber.trim() || !newContact.relationship.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all contact fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    addContactMutation.mutate(newContact);
   };
 
   const getBubbleColor = () => {
@@ -192,14 +262,18 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
             
             {/* Tab Navigation */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="help" className="flex items-center gap-2">
-                  <LifeBuoy className="h-4 w-4" />
-                  Help & Support
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="help" className="flex items-center gap-1 text-xs">
+                  <LifeBuoy className="h-3 w-3" />
+                  Help
                 </TabsTrigger>
-                <TabsTrigger value="crisis" className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" />
-                  Crisis Support
+                <TabsTrigger value="contacts" className="flex items-center gap-1 text-xs">
+                  <Users className="h-3 w-3" />
+                  Contacts
+                </TabsTrigger>
+                <TabsTrigger value="crisis" className="flex items-center gap-1 text-xs">
+                  <Heart className="h-3 w-3" />
+                  Crisis
                   {hasNotification && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>}
                 </TabsTrigger>
               </TabsList>
@@ -251,6 +325,111 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
                       >
                         Send
                       </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="contacts" className="flex-1 flex flex-col m-0 p-4">
+                  <div className="flex-1 flex flex-col space-y-4">
+                    {/* Add New Contact Form */}
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm flex items-center gap-2">
+                          <Plus className="h-4 w-4" />
+                          Add Emergency Contact
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div>
+                          <Label htmlFor="contact-name" className="text-xs">Name</Label>
+                          <Input
+                            id="contact-name"
+                            value={newContact.name}
+                            onChange={(e) => setNewContact({...newContact, name: e.target.value})}
+                            placeholder="Contact name"
+                            className="text-sm"
+                            data-testid="input-contact-name"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="contact-phone" className="text-xs">Phone Number</Label>
+                          <Input
+                            id="contact-phone"
+                            value={newContact.phoneNumber}
+                            onChange={(e) => setNewContact({...newContact, phoneNumber: e.target.value})}
+                            placeholder="+1 (555) 123-4567"
+                            className="text-sm"
+                            data-testid="input-contact-phone"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="contact-relationship" className="text-xs">Relationship</Label>
+                          <Select
+                            value={newContact.relationship}
+                            onValueChange={(value) => setNewContact({...newContact, relationship: value})}
+                          >
+                            <SelectTrigger className="text-sm" data-testid="select-relationship">
+                              <SelectValue placeholder="Select relationship" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="family">Family Member</SelectItem>
+                              <SelectItem value="friend">Close Friend</SelectItem>
+                              <SelectItem value="partner">Partner/Spouse</SelectItem>
+                              <SelectItem value="colleague">Colleague</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button
+                          onClick={handleAddContact}
+                          disabled={addContactMutation.isPending}
+                          className="w-full text-sm"
+                          data-testid="button-add-contact"
+                        >
+                          {addContactMutation.isPending ? "Adding..." : "Add Contact"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* Emergency Contacts List */}
+                    <div className="flex-1 space-y-2">
+                      <h3 className="text-sm font-semibold">Your Emergency Contacts ({emergencyContacts.length})</h3>
+                      {emergencyContacts.length === 0 ? (
+                        <div className="text-center p-4 text-sm text-gray-500">
+                          <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                          <p>No emergency contacts added yet.</p>
+                          <p className="text-xs mt-1">Add trusted contacts who will be notified during emergencies.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                          {emergencyContacts.map((contact: any) => (
+                            <Card key={contact.id} className="p-3">
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <Phone className="h-3 w-3 text-gray-500" />
+                                    <span className="text-sm font-medium">{contact.name}</span>
+                                    <Badge variant="outline" className="text-xs">
+                                      {contact.relationship}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-xs text-gray-600 mt-1">{contact.phoneNumber}</p>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => deleteContactMutation.mutate(contact.id)}
+                                  disabled={deleteContactMutation.isPending}
+                                  className="h-6 w-6 p-0"
+                                  data-testid={`button-delete-contact-${contact.id}`}
+                                >
+                                  <Trash2 className="h-3 w-3 text-red-500" />
+                                </Button>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </TabsContent>
