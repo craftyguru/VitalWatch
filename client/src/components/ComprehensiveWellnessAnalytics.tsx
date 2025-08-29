@@ -757,7 +757,7 @@ export function ComprehensiveWellnessAnalytics({ sensorData, permissions, reques
                   </p>
                   <div className="flex space-x-2">
                     <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                      Start Breathing Exercise
+                      View Wellness Tools
                     </Button>
                     <Button size="sm" variant="outline">
                       More Details

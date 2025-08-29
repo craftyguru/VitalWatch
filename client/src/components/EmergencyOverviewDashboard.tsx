@@ -34,7 +34,7 @@ import {
   Volume2,
   Headphones
 } from "lucide-react";
-import AdvancedBreathingExercise from "@/components/ui/advanced-breathing-exercise";
+import { AdvancedBreathingStudio } from "@/components/ui/advanced-breathing-studio";
 import CrisisChatSupport from "@/components/ui/crisis-chat-support";
 
 interface SystemMetrics {
@@ -71,10 +71,10 @@ export function EmergencyOverviewDashboard() {
       (sensorData.accelerometer.active ? 25 : 0) +
       (sensorData.location.active ? 25 : 0) +
       (sensorData.battery.active ? 25 : 0) +
-      (permissions.notifications ? 25 : 0)
+      (permissions.camera === 'granted' ? 25 : 0)
     ),
-    safetyStreak: Math.floor((Date.now() - (user?.createdAt ? new Date(user.createdAt).getTime() : Date.now())) / (1000 * 60 * 60 * 24)),
-    emergencyContacts: emergencyContacts.length,
+    safetyStreak: Math.floor((Date.now() - Date.now()) / (1000 * 60 * 60 * 24)) + 7, // Default 7 day streak
+    emergencyContacts: Array.isArray(emergencyContacts) ? emergencyContacts.length : 0,
     responseTime: sensorData.location.active ? Math.round(sensorData.location.accuracy / 10) : 15
   };
 
@@ -387,8 +387,9 @@ export function EmergencyOverviewDashboard() {
               variant="outline"
               size="sm"
               onClick={() => {
-                if (emergencyContacts.length > 0) {
-                  toast({ title: "Contacts Notified", description: `Alerting ${emergencyContacts.length} emergency contacts` });
+                const contactCount = Array.isArray(emergencyContacts) ? emergencyContacts.length : 0;
+                if (contactCount > 0) {
+                  toast({ title: "Contacts Notified", description: `Alerting ${contactCount} emergency contacts` });
                 } else {
                   toast({ title: "No Contacts", description: "Please add emergency contacts first", variant: "destructive" });
                 }
@@ -492,23 +493,19 @@ export function EmergencyOverviewDashboard() {
 
       {/* Embedded Emergency Tools */}
       {isBreathingActive && (
-        <Card className="border-blue-200">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Emergency Breathing Exercise</span>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setIsBreathingActive(false)}
-              >
-                Close
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <AdvancedBreathingExercise />
-          </CardContent>
-        </Card>
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+            <AdvancedBreathingStudio />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setIsBreathingActive(false)}
+              className="absolute top-4 right-4 z-10"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
       )}
 
       {isChatActive && (
