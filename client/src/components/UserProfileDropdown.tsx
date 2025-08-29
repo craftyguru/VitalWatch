@@ -178,13 +178,15 @@ export function UserProfileDropdown({ onLogout, isLoggingOut }: UserProfileDropd
             </DropdownMenuItem>
           </Link>
 
-          <DropdownMenuItem className="cursor-pointer p-3 hover:bg-gray-50 dark:hover:bg-gray-800">
-            <Settings className="mr-3 h-4 w-4 text-gray-500" />
-            <div className="flex-1">
-              <div className="text-sm font-medium">App Settings</div>
-              <div className="text-xs text-gray-500">Notifications, privacy & more</div>
-            </div>
-            <ChevronRight className="h-4 w-4 text-gray-400" />
+          <DropdownMenuItem className="cursor-pointer p-3 hover:bg-gray-50 dark:hover:bg-gray-800" asChild>
+            <Link href="/app-settings">
+              <Settings className="mr-3 h-4 w-4 text-gray-500" />
+              <div className="flex-1">
+                <div className="text-sm font-medium">App Settings</div>
+                <div className="text-xs text-gray-500">Notifications, privacy & more</div>
+              </div>
+              <ChevronRight className="h-4 w-4 text-gray-400" />
+            </Link>
           </DropdownMenuItem>
         </div>
 

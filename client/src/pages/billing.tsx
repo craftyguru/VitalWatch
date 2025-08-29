@@ -119,7 +119,7 @@ export default function BillingPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
-            <Link href="/home">
+            <Link href="/dashboard">
               <Button variant="ghost" size="icon" className="hover:bg-blue-100 dark:hover:bg-blue-900">
                 <ArrowLeft className="h-5 w-5" />
               </Button>

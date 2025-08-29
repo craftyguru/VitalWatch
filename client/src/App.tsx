@@ -39,6 +39,7 @@ function Router() {
           <Route path="/mood" component={Mood} />
           <Route path="/contacts" component={ContactsEnhanced} />
           <Route path="/profile" component={ProfileEnhanced} />
+          <Route path="/app-settings" component={ProfileEnhanced} />
           <Route path="/billing" component={BillingPage} />
           <Route path="/landing" component={Landing} />
           {(user as any)?.isAdmin && <Route path="/admin" component={AdminDashboard} />}
