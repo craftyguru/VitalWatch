@@ -1,120 +1,252 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Button, FlatList, StyleSheet, SafeAreaView, PermissionsAndroid, Platform} from 'react-native';
+import {Text, View, Button, FlatList, StyleSheet, SafeAreaView, PermissionsAndroid, Platform, Alert} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
 
 const manager = new BleManager();
 
-async function ensureBlePermissions() {
-  if (Platform.OS !== 'android') return;
+interface EnhancedDevice {
+  id: string;
+  name: string;
+  rssi: number;
+  type: 'BLE' | 'Classic';
+  isConnected: boolean;
+  isBonded: boolean;
+  services?: string[];
+}
 
-  if (Platform.Version >= 31) {
-    await PermissionsAndroid.requestMultiple([
-      'android.permission.BLUETOOTH_SCAN',
-      'android.permission.BLUETOOTH_CONNECT',
-      'android.permission.ACCESS_FINE_LOCATION', // still needed by some OEMs for scans
-    ]);
-  } else {
-    await PermissionsAndroid.request(
+async function ensureBlePermissions() {
+  if (Platform.OS !== 'android') return true;
+
+  try {
+    const permissions = Platform.Version >= 31 ? [
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    ] : [
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    ];
+
+    const results = await PermissionsAndroid.requestMultiple(permissions);
+    
+    const allGranted = Object.values(results).every(
+      result => result === PermissionsAndroid.RESULTS.GRANTED
     );
+    
+    if (!allGranted) {
+      Alert.alert(
+        'Permissions Required',
+        'VitalWatch needs Bluetooth and location permissions to find your connected devices.',
+        [{ text: 'OK' }]
+      );
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Permission error:', error);
+    return false;
   }
 }
 
 export default function App() {
-  const [devices, setDevices] = useState<Record<string, Device>>({});
+  const [devices, setDevices] = useState<Record<string, EnhancedDevice>>({});
   const [scanning, setScanning] = useState(false);
   const [bleState, setBleState] = useState('Unknown');
+  const [permissionsGranted, setPermissionsGranted] = useState(false);
 
   useEffect(() => {
-    ensureBlePermissions();
+    initializeApp();
     const sub = manager.onStateChange((s) => {
       setBleState(s);
-      if (s === 'PoweredOn') console.log('BLE ready');
+      if (s === 'PoweredOn') {
+        console.log('BLE ready - can now scan for devices');
+      }
     }, true);
     return () => { sub.remove(); manager.destroy(); };
   }, []);
+
+  const initializeApp = async () => {
+    const hasPermissions = await ensureBlePermissions();
+    setPermissionsGranted(hasPermissions);
+  };
 
   const startScan = async () => {
     if (scanning) return;
     
     // Ensure permissions before scanning
-    await ensureBlePermissions();
+    const hasPermissions = await ensureBlePermissions();
+    if (!hasPermissions) return;
     
     setScanning(true);
     setDevices({});
-    console.log('Starting BLE scan...');
+    console.log('Starting comprehensive device scan...');
     
-    manager.startDeviceScan(null, { allowDuplicates: false }, (error, device) => {
-      if (error) { 
-        console.warn('Scan error:', error); 
-        setScanning(false); 
-        return; 
+    // Enhanced BLE scan with better parameters
+    manager.startDeviceScan(
+      null, // No service filters to catch all devices
+      { 
+        allowDuplicates: true, // Allow duplicates to get fresh RSSI
+        scanMode: 'LowLatency' as any // Aggressive scanning
+      }, 
+      (error, device) => {
+        if (error) { 
+          console.warn('Scan error:', error); 
+          setScanning(false); 
+          return; 
+        }
+        
+        // Enhanced device filtering and detection
+        if (device && (device.name || device.localName)) {
+          const deviceName = device.name || device.localName || 'Unknown Device';
+          
+          // Look for watch-like devices specifically
+          const isWatchLike = deviceName.toLowerCase().includes('watch') ||
+                             deviceName.toLowerCase().includes('fit') ||
+                             deviceName.toLowerCase().includes('band') ||
+                             deviceName.toLowerCase().includes('heart') ||
+                             deviceName.toLowerCase().includes('activity') ||
+                             deviceName.toLowerCase().includes('tracker');
+          
+          console.log(`Found device: ${deviceName} (${device.id}) RSSI: ${device.rssi}${isWatchLike ? ' - WATCH DETECTED!' : ''}`);
+          
+          const enhancedDevice: EnhancedDevice = {
+            id: device.id,
+            name: deviceName,
+            rssi: device.rssi || -100,
+            type: 'BLE',
+            isConnected: false,
+            isBonded: false
+          };
+          
+          setDevices(d => ({...d, [device.id]: enhancedDevice}));
+        }
       }
-      if (device?.name) {
-        console.log('Found device:', device.name, device.id);
-        setDevices(d => ({...d, [device.id]: device}));
-      }
-    });
+    );
     
+    // Longer scan duration to catch more devices
     setTimeout(() => { 
-      console.log('Stopping scan');
+      console.log('Stopping scan after 20 seconds');
       manager.stopDeviceScan(); 
       setScanning(false); 
-    }, 12000);
+    }, 20000);
   };
 
-  const connectToDevice = async (device: Device) => {
+  const connectToDevice = async (deviceInfo: EnhancedDevice) => {
     try {
-      console.log('Connecting to:', device.name);
-      const connectedDevice = await device.connect();
-      await connectedDevice.discoverAllServicesAndCharacteristics();
+      console.log('Attempting to connect to:', deviceInfo.name);
       
-      const services = await connectedDevice.services();
-      console.log('Services found:', services.length);
+      // Get fresh device reference
+      const device = await manager.connectToDevice(deviceInfo.id, { requestMTU: 185 });
+      await device.discoverAllServicesAndCharacteristics();
+      
+      const services = await device.services();
+      console.log('Services discovered:', services.length);
+      
+      const serviceUUIDs: string[] = [];
       
       for (const service of services) {
-        console.log('Service UUID:', service.uuid);
-        if (service.uuid.toLowerCase().includes('180d')) {
-          console.log('Found Heart Rate Service!');
+        const uuid = service.uuid.toLowerCase();
+        serviceUUIDs.push(uuid);
+        console.log('Service UUID:', uuid);
+        
+        if (uuid.includes('180d')) {
+          console.log('✅ Found Heart Rate Service!');
         }
-        if (service.uuid.toLowerCase().includes('180f')) {
-          console.log('Found Battery Service!');
+        if (uuid.includes('180f')) {
+          console.log('✅ Found Battery Service!');
+        }
+        if (uuid.includes('181a')) {
+          console.log('✅ Found Environmental Sensing Service!');
+        }
+        if (uuid.includes('180a')) {
+          console.log('✅ Found Device Information Service!');
         }
       }
+      
+      // Update device info with connection status and services
+      setDevices(prev => ({
+        ...prev,
+        [deviceInfo.id]: {
+          ...prev[deviceInfo.id],
+          isConnected: true,
+          services: serviceUUIDs
+        }
+      }));
+      
+      Alert.alert(
+        'Connected Successfully!',
+        `Connected to ${deviceInfo.name}\nFound ${services.length} services`,
+        [{ text: 'OK' }]
+      );
+      
     } catch (error) {
       console.error('Connection error:', error);
+      Alert.alert(
+        'Connection Failed',
+        `Could not connect to ${deviceInfo.name}\n\nError: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        [{ text: 'OK' }]
+      );
     }
   };
+
+  const isReady = bleState === 'PoweredOn' && permissionsGranted;
+  const deviceList = Object.values(devices);
+  const watchDevices = deviceList.filter(d => 
+    d.name.toLowerCase().includes('watch') || 
+    d.name.toLowerCase().includes('fit') ||
+    d.name.toLowerCase().includes('band')
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>VitalWatch BLE Test</Text>
-        <Text style={styles.subtitle}>Bluetooth State: {bleState}</Text>
+        <Text style={styles.title}>VitalWatch Device Scanner</Text>
+        <Text style={styles.subtitle}>
+          Bluetooth: {bleState} | Permissions: {permissionsGranted ? 'OK' : 'Missing'}
+        </Text>
       </View>
       
       <View style={styles.content}>
         <Button 
-          title={scanning ? 'Scanning…' : 'Scan for BLE Devices'} 
+          title={scanning ? 'Scanning for 20s…' : 'Scan for ALL Bluetooth Devices'} 
           onPress={startScan} 
-          disabled={bleState !== 'PoweredOn'}
+          disabled={!isReady || scanning}
         />
         
+        {!isReady && (
+          <Text style={styles.warningText}>
+            {!permissionsGranted ? 'Grant permissions first' : 'Turn on Bluetooth'}
+          </Text>
+        )}
+        
         <Text style={styles.deviceCount}>
-          Found {Object.keys(devices).length} devices
+          Found {deviceList.length} devices ({watchDevices.length} watch-like)
         </Text>
         
         <FlatList
-          data={Object.values(devices)}
+          data={deviceList}
           keyExtractor={d => d.id}
           renderItem={({item}) => (
-            <View style={styles.deviceItem}>
-              <Text style={styles.deviceName}>{item.name}</Text>
+            <View style={[
+              styles.deviceItem, 
+              item.name.toLowerCase().includes('watch') && styles.watchDevice
+            ]}>
+              <View style={styles.deviceHeader}>
+                <Text style={styles.deviceName}>{item.name}</Text>
+                {item.name.toLowerCase().includes('watch') && (
+                  <Text style={styles.watchBadge}>WATCH</Text>
+                )}
+              </View>
               <Text style={styles.deviceId}>ID: {item.id}</Text>
-              <Text style={styles.deviceRssi}>RSSI: {item.rssi} dBm</Text>
+              <Text style={styles.deviceRssi}>Signal: {item.rssi} dBm</Text>
+              <Text style={styles.deviceType}>Type: {item.type}</Text>
+              {item.isConnected && (
+                <Text style={styles.connectedText}>✅ Connected ({item.services?.length || 0} services)</Text>
+              )}
               <Button 
-                title="Connect" 
+                title={item.isConnected ? "Connected" : "Connect"} 
                 onPress={() => connectToDevice(item)}
+                disabled={item.isConnected}
               />
             </View>
           )}
@@ -140,19 +272,28 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: 'white',
     marginTop: 4,
+    textAlign: 'center',
   },
   content: {
     flex: 1,
     padding: 24,
+  },
+  warningText: {
+    fontSize: 14,
+    color: '#ff6b6b',
+    textAlign: 'center',
+    marginTop: 8,
+    fontWeight: '600',
   },
   deviceCount: {
     fontSize: 16,
     marginTop: 16,
     marginBottom: 16,
     textAlign: 'center',
+    fontWeight: '600',
   },
   deviceItem: {
     backgroundColor: 'white',
@@ -165,18 +306,50 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  watchDevice: {
+    borderColor: '#3b82f6',
+    borderWidth: 2,
+    backgroundColor: '#f0f8ff',
+  },
+  deviceHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
   deviceName: {
     fontSize: 16,
     fontWeight: 'bold',
+    flex: 1,
+  },
+  watchBadge: {
+    backgroundColor: '#3b82f6',
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
   },
   deviceId: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#666',
-    marginTop: 4,
+    marginTop: 2,
   },
   deviceRssi: {
     fontSize: 12,
     color: '#666',
+    marginTop: 2,
+  },
+  deviceType: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 8,
+  },
+  connectedText: {
+    fontSize: 12,
+    color: '#28a745',
+    fontWeight: '600',
     marginBottom: 8,
   },
 });
