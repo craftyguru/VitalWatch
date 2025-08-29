@@ -1,0 +1,1222 @@
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-e5f359bbb487a8bd.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+VitalWatch:1 The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+VitalWatch:1 The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+VitalWatch:1 The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-e5f359bbb487a8bd.js:38 [LaunchDarkly] LaunchDarkly client initialized
+analytics.tiktok.com/i18n/pixel/events.js?sdkid=D004GE3C77U8PIVDSDJG&lib=ttq:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+web-client-content-script.js:2 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    at HTMLIFrameElement.<anonymous> (web-client-content-script.js:2:534973)
+www.googletagmanager.com/gtag/js?id=AW-11411994397:1  Failed to load resource: net::ERR_UNSAFE_REDIRECT
+www.google-analytics.com/analytics.js:1  Failed to load resource: net::ERR_UNSAFE_REDIRECT
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0905300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A080F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0B0F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A010F900BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+attached_assets/image_1756449081095.png:1  Failed to load resource: the server responded with a status of 404 ()
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+framework-eb1a6f382428a8f8.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-eb1a6f382428a8f8.js:1
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+web-client-content-script.js:2 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    at HTMLIFrameElement.<anonymous> (web-client-content-script.js:2:534973)
+VitalWatch:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A080F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0E0F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+client:536 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/?token=KvHS_6We3NJ9' failed: 
+setupWebSocket @ VM20272 client:536
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/:1  Failed to load resource: net::ERR_FAILED
+main.tsx:5 VitalWatch main.tsx loading...
+main.tsx:11 Root element found, creating React root...
+main.tsx:13 React root created, rendering App...
+main.tsx:19 App rendered successfully!
+SeamlessInstallButton.tsx:27 PWA Install Check: Object
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/:40 SW registered:  ServiceWorkerRegistration
+chunk-RPCDYKBN.js:521 Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/components/ui/badge.tsx:35:18)
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1929:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:199:13
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Popper (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1921:11)
+    at Tooltip (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:108:5)
+    at VersionBadge
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at header
+    at div
+    at div
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+    at Route (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:323:16)
+    at Switch (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:379:17)
+    at Router (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/App.tsx:41:48)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at TooltipProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:64:5)
+    at QueryClientProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=202ea3ce:2805:3)
+    at IncognitoProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/IncognitoContext.tsx:20:37)
+    at ThemeProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/ThemeContext.tsx:25:3)
+    at App
+printWarning @ VM19128 chunk-RPCDYKBN.js:521
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/:44 Checking PWA installability...
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/:45 HTTPS: true
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/:46 Manifest: true
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/:47 Service Worker: true
+useWebSocket.ts:58 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: WebSocket is closed before the connection is established.
+disconnect @ VM19227 useWebSocket.ts:58
+chunk-RPCDYKBN.js:16670 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at useRealDeviceScanner.ts:266:32
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=202ea3ce:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=202ea3ce:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=202ea3ce:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=202ea3ce:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=202ea3ce:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=202ea3ce:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=202ea3ce:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=202ea3ce:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=202ea3ce:19416:13)
+chunk-RPCDYKBN.js:14032 The above error occurred in the <UserDashboard> component:
+
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ VM19128 chunk-RPCDYKBN.js:14032
+chunk-RPCDYKBN.js:9129 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at useRealDeviceScanner.ts:266:32
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=202ea3ce:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=202ea3ce:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=202ea3ce:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=202ea3ce:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=202ea3ce:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=202ea3ce:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=202ea3ce:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=202ea3ce:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=202ea3ce:19416:13)
+useWebSocket.ts:46 WebSocket error: Event
+wsRef.current.onerror @ VM19227 useWebSocket.ts:46
+useWebSocket.ts:35 WebSocket disconnected
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM19227 useWebSocket.ts:46
+useWebSocket.ts:35 WebSocket disconnected
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+(anonymous) @ VM19227 useWebSocket.ts:41
+useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM19227 useWebSocket.ts:46
+useWebSocket.ts:35 WebSocket disconnected
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+(anonymous) @ VM19227 useWebSocket.ts:41
+useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM19227 useWebSocket.ts:46
+useWebSocket.ts:35 WebSocket disconnected
+client:536 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/?token=KvHS_6We3NJ9' failed: 
+setupWebSocket @ VM20272 client:536
+client:560 [vite] server connection lost. Polling for restart...
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+(anonymous) @ VM19227 useWebSocket.ts:41
+useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM19227 useWebSocket.ts:46
+useWebSocket.ts:35 WebSocket disconnected
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+(anonymous) @ sw.js:25
+Promise.then
+(anonymous) @ sw.js:23
+client:736  GET https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/ net::ERR_FAILED
+ping @ VM20272 client:736
+waitForSuccessfulPing @ VM20272 client:749
+(anonymous) @ VM20272 client:561
+useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM19227 useWebSocket.ts:16
+(anonymous) @ VM19227 useWebSocket.ts:41
+useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM19227 useWebSocket.ts:46
+useWebSocket.ts:35 WebSocket disconnected
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A080F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+(anonymous) @ sw.js:25
+Promise.then
+(anonymous) @ sw.js:23
+VM20466 main.tsx:5 VitalWatch main.tsx loading...
+VM20466 main.tsx:11 Root element found, creating React root...
+VM20466 main.tsx:13 React root created, rendering App...
+VM20466 main.tsx:19 App rendered successfully!
+VM20545 SeamlessInstallButton.tsx:27 PWA Install Check: {isStandalone: false, displayMode: false, standalone: undefined, referrer: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-84…rkspace_iframe.html?initialPath=%2F&id=%3Ar2kr%3A'}
+VM20460:6 SW registered:  ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/', …}
+VM20471 chunk-RPCDYKBN.js:521 Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/components/ui/badge.tsx:35:18)
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1929:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:199:13
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Popper (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1921:11)
+    at Tooltip (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:108:5)
+    at VersionBadge
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at header
+    at div
+    at div
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+    at Route (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:323:16)
+    at Switch (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:379:17)
+    at Router (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/App.tsx:41:48)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at TooltipProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:64:5)
+    at QueryClientProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=202ea3ce:2805:3)
+    at IncognitoProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/IncognitoContext.tsx:20:37)
+    at ThemeProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/ThemeContext.tsx:25:3)
+    at App
+printWarning @ VM20471 chunk-RPCDYKBN.js:521
+error @ VM20471 chunk-RPCDYKBN.js:505
+validateFunctionComponentInDev @ VM20471 chunk-RPCDYKBN.js:15013
+mountIndeterminateComponent @ VM20471 chunk-RPCDYKBN.js:14988
+beginWork @ VM20471 chunk-RPCDYKBN.js:15914
+beginWork$1 @ VM20471 chunk-RPCDYKBN.js:19753
+performUnitOfWork @ VM20471 chunk-RPCDYKBN.js:19198
+workLoopSync @ VM20471 chunk-RPCDYKBN.js:19137
+renderRootSync @ VM20471 chunk-RPCDYKBN.js:19116
+performSyncWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18874
+flushSyncCallbacks @ VM20471 chunk-RPCDYKBN.js:9119
+(anonymous) @ VM20471 chunk-RPCDYKBN.js:18627
+setTimeout
+scheduleFn @ VM20475 @tanstack_react-query.js:555
+flush @ VM20475 @tanstack_react-query.js:569
+batch @ VM20475 @tanstack_react-query.js:587
+dispatch_fn @ VM20475 @tanstack_react-query.js:996
+setData @ VM20475 @tanstack_react-query.js:696
+onSuccess @ VM20475 @tanstack_react-query.js:897
+resolve @ VM20475 @tanstack_react-query.js:456
+Promise.then
+run @ VM20475 @tanstack_react-query.js:498
+start @ VM20475 @tanstack_react-query.js:536
+fetch @ VM20475 @tanstack_react-query.js:926
+executeFetch_fn @ VM20475 @tanstack_react-query.js:2211
+onSubscribe @ VM20475 @tanstack_react-query.js:1898
+subscribe @ VM20475 @tanstack_react-query.js:24
+(anonymous) @ VM20475 @tanstack_react-query.js:3022
+subscribeToStore @ VM20471 chunk-RPCDYKBN.js:11984
+commitHookEffectListMount @ VM20471 chunk-RPCDYKBN.js:16915
+commitPassiveMountOnFiber @ VM20471 chunk-RPCDYKBN.js:18156
+commitPassiveMountEffects_complete @ VM20471 chunk-RPCDYKBN.js:18129
+commitPassiveMountEffects_begin @ VM20471 chunk-RPCDYKBN.js:18119
+commitPassiveMountEffects @ VM20471 chunk-RPCDYKBN.js:18109
+flushPassiveEffectsImpl @ VM20471 chunk-RPCDYKBN.js:19490
+flushPassiveEffects @ VM20471 chunk-RPCDYKBN.js:19447
+performSyncWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18868
+flushSyncCallbacks @ VM20471 chunk-RPCDYKBN.js:9119
+commitRootImpl @ VM20471 chunk-RPCDYKBN.js:19432
+commitRoot @ VM20471 chunk-RPCDYKBN.js:19277
+finishConcurrentRender @ VM20471 chunk-RPCDYKBN.js:18805
+performConcurrentWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18718
+workLoop @ VM20471 chunk-RPCDYKBN.js:197
+flushWork @ VM20471 chunk-RPCDYKBN.js:176
+performWorkUntilDeadline @ VM20471 chunk-RPCDYKBN.js:384
+VM20547 useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM20547 useWebSocket.ts:16
+(anonymous) @ VM20547 useWebSocket.ts:70
+commitHookEffectListMount @ VM20471 chunk-RPCDYKBN.js:16915
+commitPassiveMountOnFiber @ VM20471 chunk-RPCDYKBN.js:18156
+commitPassiveMountEffects_complete @ VM20471 chunk-RPCDYKBN.js:18129
+commitPassiveMountEffects_begin @ VM20471 chunk-RPCDYKBN.js:18119
+commitPassiveMountEffects @ VM20471 chunk-RPCDYKBN.js:18109
+flushPassiveEffectsImpl @ VM20471 chunk-RPCDYKBN.js:19490
+flushPassiveEffects @ VM20471 chunk-RPCDYKBN.js:19447
+commitRootImpl @ VM20471 chunk-RPCDYKBN.js:19416
+commitRoot @ VM20471 chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ VM20471 chunk-RPCDYKBN.js:9119
+(anonymous) @ VM20471 chunk-RPCDYKBN.js:18627
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:70
+commitHookEffectListMount @ chunk-RPCDYKBN.js:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js:19447
+commitRootImpl @ chunk-RPCDYKBN.js:19416
+commitRoot @ chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js:9119
+(anonymous) @ chunk-RPCDYKBN.js:18627
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:70
+commitHookEffectListMount @ chunk-RPCDYKBN.js:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js:19447
+commitRootImpl @ chunk-RPCDYKBN.js:19416
+commitRoot @ chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js:9119
+(anonymous) @ chunk-RPCDYKBN.js:18627
+VM20547 useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM20547 useWebSocket.ts:46
+VM20547 useWebSocket.ts:35 WebSocket disconnected
+VM20460:10 Checking PWA installability...
+VM20460:11 HTTPS: true
+VM20460:12 Manifest: true
+VM20460:13 Service Worker: true
+VM20547 useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM20547 useWebSocket.ts:16
+(anonymous) @ VM20547 useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+VM20547 useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM20547 useWebSocket.ts:46
+VM20547 useWebSocket.ts:35 WebSocket disconnected
+sw.js:327 VitalWatch Service Worker loaded successfully
+sw.js:33 VitalWatch Service Worker installing...
+sw.js:39 Caching critical resources
+sw.js:44 Caching emergency resources
+sw.js:56 VitalWatch Service Worker activating...
+sw.js:63 Deleting old cache: vitalwatch-v3.0.0
+VM20547 useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM20547 useWebSocket.ts:16
+(anonymous) @ VM20547 useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+VM20547 useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM20547 useWebSocket.ts:46
+VM20547 useWebSocket.ts:35 WebSocket disconnected
+VM20547 useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM20547 useWebSocket.ts:16
+(anonymous) @ VM20547 useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+VM20547 useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM20547 useWebSocket.ts:46
+VM20547 useWebSocket.ts:35 WebSocket disconnected
+VM20547 useWebSocket.ts:16 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ VM20547 useWebSocket.ts:16
+(anonymous) @ VM20547 useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+VM20547 useWebSocket.ts:46 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ VM20547 useWebSocket.ts:46
+VM20547 useWebSocket.ts:35 WebSocket disconnected
+VM20463 client:536 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/?token=XcArJVLOPd0M' failed: 
+setupWebSocket @ VM20463 client:536
+(anonymous) @ VM20463 client:531
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/?token=XcArJVLOPd0M' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/?token=XcArJVLOPd0M' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+VM20463 client:560 [vite] server connection lost. Polling for restart...
+VM20471 chunk-RPCDYKBN.js:16670 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at VM20548 useRealDeviceScanner.ts:266:32
+    at safelyCallDestroy (VM20471 chunk-RPCDYKBN.js:16748:13)
+    at commitHookEffectListUnmount (VM20471 chunk-RPCDYKBN.js:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (VM20471 chunk-RPCDYKBN.js:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (VM20471 chunk-RPCDYKBN.js:18245:13)
+    at commitPassiveUnmountEffects_begin (VM20471 chunk-RPCDYKBN.js:18181:19)
+    at commitPassiveUnmountEffects (VM20471 chunk-RPCDYKBN.js:18169:11)
+    at flushPassiveEffectsImpl (VM20471 chunk-RPCDYKBN.js:19489:11)
+    at flushPassiveEffects (VM20471 chunk-RPCDYKBN.js:19447:22)
+    at commitRootImpl (VM20471 chunk-RPCDYKBN.js:19416:13)
+(anonymous) @ VM20548 useRealDeviceScanner.ts:266
+safelyCallDestroy @ VM20471 chunk-RPCDYKBN.js:16748
+commitHookEffectListUnmount @ VM20471 chunk-RPCDYKBN.js:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ VM20471 chunk-RPCDYKBN.js:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ VM20471 chunk-RPCDYKBN.js:18245
+commitPassiveUnmountEffects_begin @ VM20471 chunk-RPCDYKBN.js:18181
+commitPassiveUnmountEffects @ VM20471 chunk-RPCDYKBN.js:18169
+flushPassiveEffectsImpl @ VM20471 chunk-RPCDYKBN.js:19489
+flushPassiveEffects @ VM20471 chunk-RPCDYKBN.js:19447
+commitRootImpl @ VM20471 chunk-RPCDYKBN.js:19416
+commitRoot @ VM20471 chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ VM20471 chunk-RPCDYKBN.js:9119
+(anonymous) @ VM20471 chunk-RPCDYKBN.js:18627
+VM20471 chunk-RPCDYKBN.js:14032 The above error occurred in the <UserDashboard> component:
+
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ VM20471 chunk-RPCDYKBN.js:14032
+update.callback @ VM20471 chunk-RPCDYKBN.js:14052
+callCallback @ VM20471 chunk-RPCDYKBN.js:11248
+commitUpdateQueue @ VM20471 chunk-RPCDYKBN.js:11265
+commitLayoutEffectOnFiber @ VM20471 chunk-RPCDYKBN.js:17093
+commitLayoutMountEffects_complete @ VM20471 chunk-RPCDYKBN.js:17980
+commitLayoutEffects_begin @ VM20471 chunk-RPCDYKBN.js:17969
+commitLayoutEffects @ VM20471 chunk-RPCDYKBN.js:17920
+commitRootImpl @ VM20471 chunk-RPCDYKBN.js:19353
+commitRoot @ VM20471 chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ VM20471 chunk-RPCDYKBN.js:9119
+(anonymous) @ VM20471 chunk-RPCDYKBN.js:18627
+VM20471 chunk-RPCDYKBN.js:9129 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at VM20548 useRealDeviceScanner.ts:266:32
+    at safelyCallDestroy (VM20471 chunk-RPCDYKBN.js:16748:13)
+    at commitHookEffectListUnmount (VM20471 chunk-RPCDYKBN.js:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (VM20471 chunk-RPCDYKBN.js:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (VM20471 chunk-RPCDYKBN.js:18245:13)
+    at commitPassiveUnmountEffects_begin (VM20471 chunk-RPCDYKBN.js:18181:19)
+    at commitPassiveUnmountEffects (VM20471 chunk-RPCDYKBN.js:18169:11)
+    at flushPassiveEffectsImpl (VM20471 chunk-RPCDYKBN.js:19489:11)
+    at flushPassiveEffects (VM20471 chunk-RPCDYKBN.js:19447:22)
+    at commitRootImpl (VM20471 chunk-RPCDYKBN.js:19416:13)
+(anonymous) @ VM20548 useRealDeviceScanner.ts:266
+safelyCallDestroy @ VM20471 chunk-RPCDYKBN.js:16748
+commitHookEffectListUnmount @ VM20471 chunk-RPCDYKBN.js:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ VM20471 chunk-RPCDYKBN.js:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ VM20471 chunk-RPCDYKBN.js:18245
+commitPassiveUnmountEffects_begin @ VM20471 chunk-RPCDYKBN.js:18181
+commitPassiveUnmountEffects @ VM20471 chunk-RPCDYKBN.js:18169
+flushPassiveEffectsImpl @ VM20471 chunk-RPCDYKBN.js:19489
+flushPassiveEffects @ VM20471 chunk-RPCDYKBN.js:19447
+commitRootImpl @ VM20471 chunk-RPCDYKBN.js:19416
+commitRoot @ VM20471 chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ VM20471 chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ VM20471 chunk-RPCDYKBN.js:9119
+(anonymous) @ VM20471 chunk-RPCDYKBN.js:18627
+VM20463 client:736  GET https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/ 404 (Not Found)
+ping @ VM20463 client:736
+waitForSuccessfulPing @ VM20463 client:749
+(anonymous) @ VM20463 client:561
+  GET https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/ 404 (Not Found)
+ping @ client:736
+waitForSuccessfulPing @ client:749
+(anonymous) @ client:561
+  GET https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/ 404 (Not Found)
+ping @ client:736
+waitForSuccessfulPing @ client:749
+(anonymous) @ client:561
+main.tsx:5 VitalWatch main.tsx loading...
+main.tsx:12 Root element found, creating React root...
+main.tsx:14 React root created, rendering App...
+main.tsx:16 App rendered successfully!
+safetytools:40 SW registered:  ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/', …}
+chunk-RPCDYKBN.js?v=202ea3ce:521 Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/components/ui/badge.tsx:35:18)
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1929:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:199:13
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Popper (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1921:11)
+    at Tooltip (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:108:5)
+    at VersionBadge
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at header
+    at div
+    at SafetyTools (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/safety-tools.tsx:39:20)
+    at Route (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:323:16)
+    at Switch (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:379:17)
+    at Router (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/App.tsx:41:48)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at TooltipProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:64:5)
+    at QueryClientProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=202ea3ce:2805:3)
+    at IncognitoProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/IncognitoContext.tsx:20:37)
+    at ThemeProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/ThemeContext.tsx:25:3)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=202ea3ce:521
+error @ chunk-RPCDYKBN.js?v=202ea3ce:505
+validateFunctionComponentInDev @ chunk-RPCDYKBN.js?v=202ea3ce:15013
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=202ea3ce:14988
+beginWork @ chunk-RPCDYKBN.js?v=202ea3ce:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=202ea3ce:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=202ea3ce:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=202ea3ce:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=202ea3ce:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=202ea3ce:555
+flush @ @tanstack_react-query.js?v=202ea3ce:569
+batch @ @tanstack_react-query.js?v=202ea3ce:587
+dispatch_fn @ @tanstack_react-query.js?v=202ea3ce:996
+setData @ @tanstack_react-query.js?v=202ea3ce:696
+onSuccess @ @tanstack_react-query.js?v=202ea3ce:897
+resolve @ @tanstack_react-query.js?v=202ea3ce:456
+Promise.then
+run @ @tanstack_react-query.js?v=202ea3ce:498
+start @ @tanstack_react-query.js?v=202ea3ce:536
+fetch @ @tanstack_react-query.js?v=202ea3ce:926
+executeFetch_fn @ @tanstack_react-query.js?v=202ea3ce:2211
+onSubscribe @ @tanstack_react-query.js?v=202ea3ce:1898
+subscribe @ @tanstack_react-query.js?v=202ea3ce:24
+(anonymous) @ @tanstack_react-query.js?v=202ea3ce:3022
+subscribeToStore @ chunk-RPCDYKBN.js?v=202ea3ce:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=202ea3ce:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=202ea3ce:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19432
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=202ea3ce:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18718
+workLoop @ chunk-RPCDYKBN.js?v=202ea3ce:197
+flushWork @ chunk-RPCDYKBN.js?v=202ea3ce:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=202ea3ce:384
+safetytools:44 Checking PWA installability...
+safetytools:45 HTTPS: true
+safetytools:46 Manifest: true
+safetytools:47 Service Worker: true
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:93
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=202ea3ce:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=202ea3ce:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19416
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:70
+commitHookEffectListMount @ chunk-RPCDYKBN.js:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js:19447
+commitRootImpl @ chunk-RPCDYKBN.js:19416
+commitRoot @ chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js:9119
+(anonymous) @ chunk-RPCDYKBN.js:18627
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:70
+commitHookEffectListMount @ chunk-RPCDYKBN.js:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js:19447
+commitRootImpl @ chunk-RPCDYKBN.js:19416
+commitRoot @ chunk-RPCDYKBN.js:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js:9119
+(anonymous) @ chunk-RPCDYKBN.js:18627
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useBackgroundMonitoring.ts:43 Notification permission denied, continuing with basic monitoring
+startMonitoring @ useBackgroundMonitoring.ts:43
+await in startMonitoring
+onClick @ user-dashboard.tsx:1146
+callCallback2 @ chunk-RPCDYKBN.js?v=202ea3ce:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=202ea3ce:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=202ea3ce:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=202ea3ce:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=202ea3ce:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=202ea3ce:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=202ea3ce:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=202ea3ce:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=202ea3ce:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=202ea3ce:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=202ea3ce:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=202ea3ce:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=202ea3ce:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=202ea3ce:5449
+The script has an unsupported MIME type ('text/html').
+useBackgroundMonitoring.ts:119 Failed to start background monitoring: SecurityError: Failed to register a ServiceWorker for scope ('https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/') with script ('https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/service-worker.js'): The script has an unsupported MIME type ('text/html').
+startMonitoring @ useBackgroundMonitoring.ts:119
+await in startMonitoring
+onClick @ user-dashboard.tsx:1146
+callCallback2 @ chunk-RPCDYKBN.js?v=202ea3ce:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=202ea3ce:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=202ea3ce:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=202ea3ce:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=202ea3ce:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=202ea3ce:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=202ea3ce:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=202ea3ce:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=202ea3ce:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=202ea3ce:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=202ea3ce:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=202ea3ce:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=202ea3ce:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=202ea3ce:5449
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+ WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:16
+(anonymous) @ useWebSocket.ts:41
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+main.tsx:5 VitalWatch main.tsx loading...
+main.tsx:12 Root element found, creating React root...
+main.tsx:14 React root created, rendering App...
+main.tsx:16 App rendered successfully!
+SeamlessInstallButton.tsx:24 PWA Install Check: {isStandalone: false, displayMode: false, standalone: undefined, referrer: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-84…rkspace_iframe.html?initialPath=%2F&id=%3Ar2kr%3A'}
+main.tsx:5 VitalWatch main.tsx loading...
+main.tsx:12 Root element found, creating React root...
+main.tsx:14 React root created, rendering App...
+main.tsx:16 App rendered successfully!
+SeamlessInstallButton.tsx:24 PWA Install Check: {isStandalone: false, displayMode: false, standalone: undefined, referrer: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-84…rkspace_iframe.html?initialPath=%2F&id=%3Ar2kr%3A'}
+(index):40 SW registered:  ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/', …}
+chunk-RPCDYKBN.js?v=202ea3ce:521 Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/components/ui/badge.tsx:35:18)
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1929:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:199:13
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Popper (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1921:11)
+    at Tooltip (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:108:5)
+    at VersionBadge
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at header
+    at div
+    at div
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+    at Route (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:323:16)
+    at Switch (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:379:17)
+    at Router (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/App.tsx:41:48)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at TooltipProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:64:5)
+    at QueryClientProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=202ea3ce:2805:3)
+    at IncognitoProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/IncognitoContext.tsx:20:37)
+    at ThemeProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/ThemeContext.tsx:25:3)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=202ea3ce:521
+error @ chunk-RPCDYKBN.js?v=202ea3ce:505
+validateFunctionComponentInDev @ chunk-RPCDYKBN.js?v=202ea3ce:15013
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=202ea3ce:14988
+beginWork @ chunk-RPCDYKBN.js?v=202ea3ce:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=202ea3ce:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=202ea3ce:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=202ea3ce:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=202ea3ce:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=202ea3ce:555
+flush @ @tanstack_react-query.js?v=202ea3ce:569
+batch @ @tanstack_react-query.js?v=202ea3ce:587
+dispatch_fn @ @tanstack_react-query.js?v=202ea3ce:996
+setData @ @tanstack_react-query.js?v=202ea3ce:696
+onSuccess @ @tanstack_react-query.js?v=202ea3ce:897
+resolve @ @tanstack_react-query.js?v=202ea3ce:456
+Promise.then
+run @ @tanstack_react-query.js?v=202ea3ce:498
+start @ @tanstack_react-query.js?v=202ea3ce:536
+fetch @ @tanstack_react-query.js?v=202ea3ce:926
+executeFetch_fn @ @tanstack_react-query.js?v=202ea3ce:2211
+onSubscribe @ @tanstack_react-query.js?v=202ea3ce:1898
+subscribe @ @tanstack_react-query.js?v=202ea3ce:24
+(anonymous) @ @tanstack_react-query.js?v=202ea3ce:3022
+subscribeToStore @ chunk-RPCDYKBN.js?v=202ea3ce:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=202ea3ce:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=202ea3ce:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19432
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=202ea3ce:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18718
+workLoop @ chunk-RPCDYKBN.js?v=202ea3ce:197
+flushWork @ chunk-RPCDYKBN.js?v=202ea3ce:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=202ea3ce:384
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:93
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=202ea3ce:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=202ea3ce:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19416
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+(index):44 Checking PWA installability...
+(index):45 HTTPS: true
+(index):46 Manifest: true
+(index):47 Service Worker: true
+useWebSocket.ts:78 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: WebSocket is closed before the connection is established.
+disconnect @ useWebSocket.ts:78
+(anonymous) @ useWebSocket.ts:97
+safelyCallDestroy @ chunk-RPCDYKBN.js?v=202ea3ce:16748
+commitHookEffectListUnmount @ chunk-RPCDYKBN.js?v=202ea3ce:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18245
+commitPassiveUnmountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18181
+commitPassiveUnmountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18169
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19489
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19416
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+chunk-RPCDYKBN.js?v=202ea3ce:16670 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at useRealDeviceScanner.ts:333:32
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=202ea3ce:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=202ea3ce:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=202ea3ce:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=202ea3ce:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=202ea3ce:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=202ea3ce:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=202ea3ce:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=202ea3ce:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=202ea3ce:19416:13)
+(anonymous) @ useRealDeviceScanner.ts:333
+safelyCallDestroy @ chunk-RPCDYKBN.js?v=202ea3ce:16748
+commitHookEffectListUnmount @ chunk-RPCDYKBN.js?v=202ea3ce:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18245
+commitPassiveUnmountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18181
+commitPassiveUnmountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18169
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19489
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19416
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+chunk-RPCDYKBN.js?v=202ea3ce:14032 The above error occurred in the <UserDashboard> component:
+
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=202ea3ce:14032
+update.callback @ chunk-RPCDYKBN.js?v=202ea3ce:14052
+callCallback @ chunk-RPCDYKBN.js?v=202ea3ce:11248
+commitUpdateQueue @ chunk-RPCDYKBN.js?v=202ea3ce:11265
+commitLayoutEffectOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:17093
+commitLayoutMountEffects_complete @ chunk-RPCDYKBN.js?v=202ea3ce:17980
+commitLayoutEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:17969
+commitLayoutEffects @ chunk-RPCDYKBN.js?v=202ea3ce:17920
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19353
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+chunk-RPCDYKBN.js?v=202ea3ce:9129 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at useRealDeviceScanner.ts:333:32
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=202ea3ce:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=202ea3ce:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=202ea3ce:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=202ea3ce:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=202ea3ce:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=202ea3ce:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=202ea3ce:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=202ea3ce:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=202ea3ce:19416:13)
+(anonymous) @ useRealDeviceScanner.ts:333
+safelyCallDestroy @ chunk-RPCDYKBN.js?v=202ea3ce:16748
+commitHookEffectListUnmount @ chunk-RPCDYKBN.js?v=202ea3ce:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-RPCDYKBN.js?v=202ea3ce:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18245
+commitPassiveUnmountEffects_begin @ chunk-RPCDYKBN.js?v=202ea3ce:18181
+commitPassiveUnmountEffects @ chunk-RPCDYKBN.js?v=202ea3ce:18169
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19489
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=202ea3ce:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=202ea3ce:19416
+commitRoot @ chunk-RPCDYKBN.js?v=202ea3ce:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=202ea3ce:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=202ea3ce:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=202ea3ce:18627
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
