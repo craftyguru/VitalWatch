@@ -48,12 +48,12 @@ if ('serviceWorker' in navigator) {
       }
         
         // Listen for updates to the service worker
-        if (reg.waiting) {
+        if (registration.waiting) {
           console.log('VitalWatch: New service worker is waiting to activate');
         }
         
-        reg.addEventListener('updatefound', function() {
-          const newWorker = reg.installing;
+        registration.addEventListener('updatefound', function() {
+          const newWorker = registration.installing;
           if (newWorker) {
             newWorker.addEventListener('statechange', function() {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
@@ -74,7 +74,6 @@ if ('serviceWorker' in navigator) {
       .catch(function(registrationError) {
         console.log('VitalWatch SW registration failed: ', registrationError);
       });
-  });
 }
 
 try {
