@@ -40,7 +40,7 @@ function Router() {
           <Route path="/profile" component={ProfileEnhanced} />
           <Route path="/billing" component={BillingPage} />
           <Route path="/landing" component={Landing} />
-          {user?.isAdmin && <Route path="/admin" component={AdminDashboard} />}
+          {(user as any)?.isAdmin && <Route path="/admin" component={AdminDashboard} />}
         </>
       )}
       <Route component={NotFound} />
