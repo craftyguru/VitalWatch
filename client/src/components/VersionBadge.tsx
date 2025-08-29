@@ -4,7 +4,7 @@ import { Code, GitBranch, Clock } from 'lucide-react';
 
 export function VersionBadge() {
   // Version information - update this when making major releases
-  const version = "6.0.0";
+  const version = "7.0.0";
   const buildDate = new Date().toISOString().split('T')[0]; // Current date as build date
   const environment = 'production';
   const isDevelopment = false;
