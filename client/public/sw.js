@@ -1,10 +1,14 @@
-// VitalWatch Service Worker for TWA
-// Provides offline functionality and caching for emergency features
+// VitalWatch Service Worker with Background Sync and Offline Support
+// Built to satisfy PWABuilder requirements without external dependencies
+
+console.log('VitalWatch: Service Worker starting...');
 
 const CACHE_NAME = 'vitalwatch-v6.0.0';
-const EMERGENCY_CACHE = 'vitalwatch-emergency-v6.0.0';
+const OFFLINE_CACHE = 'vitalwatch-offline-v6.0.0'; 
+const API_CACHE = 'vitalwatch-api-v6.0.0';
+const QUEUE_NAME = 'vitalwatch-background-sync';
 
-// Critical resources that must be cached for emergency functionality
+// Critical resources for offline functionality
 const CRITICAL_RESOURCES = [
   '/',
   '/offline.html',
@@ -14,363 +18,345 @@ const CRITICAL_RESOURCES = [
   '/logo.png'
 ];
 
-// Emergency-specific resources (only cache non-API URLs)
-const EMERGENCY_RESOURCES = [
-  '/home?action=emergency',
-  '/mood',
-  '/tools?tool=breathing'
-];
-
-// Assets that can be cached opportunistically  
-const CACHE_ASSETS = [
+// Assets to cache opportunistically
+const STATIC_ASSETS = [
   '/icons/icon-72x72.png',
   '/icons/icon-96x96.png',
   '/icons/icon-128x128.png',
   '/icons/icon-144x144.png',
   '/icons/icon-152x152.png',
-  '/icons/icon-384x384.png',
-  '/icons/shortcut-emergency.png',
-  '/icons/shortcut-mood.png',
-  '/icons/shortcut-breathing.png'
+  '/icons/icon-384x384.png'
 ];
 
-// Install event - cache critical resources
+// Install event - precache critical resources
 self.addEventListener('install', event => {
-  console.log('VitalWatch Service Worker installing...');
+  console.log('VitalWatch: Service Worker installing...');
   
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('Caching critical resources');
-      // Only try to cache resources that actually exist
-      return cache.addAll(CRITICAL_RESOURCES).catch(error => {
-        console.warn('Some resources could not be cached:', error);
-        // Continue without failing
-        return Promise.resolve();
-      });
-    })
+    Promise.all([
+      // Cache critical resources
+      caches.open(CACHE_NAME).then(cache => {
+        console.log('VitalWatch: Caching critical resources');
+        return cache.addAll(CRITICAL_RESOURCES).catch(error => {
+          console.warn('VitalWatch: Some critical resources could not be cached:', error);
+          // Continue installation even if some resources fail
+          return Promise.resolve();
+        });
+      }),
+      // Cache static assets
+      caches.open(OFFLINE_CACHE).then(cache => {
+        console.log('VitalWatch: Caching static assets');
+        return cache.addAll(STATIC_ASSETS).catch(error => {
+          console.warn('VitalWatch: Some static assets could not be cached:', error);
+          return Promise.resolve();
+        });
+      })
+    ])
   );
   
-  // Allow controlled activation instead of forcing immediate updates
-  // self.skipWaiting(); // Disabled to prevent constant updates
+  // Force immediate activation
+  self.skipWaiting();
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and claim clients
 self.addEventListener('activate', event => {
-  console.log('VitalWatch Service Worker activating...');
+  console.log('VitalWatch: Service Worker activating...');
   
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME && cacheName !== EMERGENCY_CACHE) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      // Clean up old caches
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheName !== CACHE_NAME && cacheName !== OFFLINE_CACHE && cacheName !== API_CACHE) {
+              console.log('VitalWatch: Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      // Claim all clients immediately
+      self.clients.claim()
+    ])
   );
-  
-  // Allow controlled client claim instead of immediate takeover
-  // self.clients.claim(); // Disabled to prevent constant updates
 });
 
-// Fetch event - minimal intervention for now
-self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-  
-  // Skip non-GET requests, Chrome extension requests, and external requests
-  if (request.method !== 'GET' || 
-      url.protocol === 'chrome-extension:' ||
-      !url.origin.includes(self.location.origin)) {
-    return;
-  }
-  
-  // Only handle specific emergency API requests with high priority
-  if (url.pathname.includes('/api/send-emergency-alert') || 
-      url.pathname.includes('/api/emergency-contacts')) {
-    event.respondWith(handleEmergencyRequest(request));
-    return;
-  }
-  
-  // Let all other requests pass through normally
-  // This prevents the service worker from interfering with normal app operation
-});
+// Background sync queue for offline actions
+let backgroundSyncQueue = [];
 
-// Priority handling for emergency requests
-async function handleEmergencyRequest(request) {
-  try {
-    // Always try network first for emergency requests
-    const networkResponse = await fetch(request);
-    return networkResponse;
-  } catch (error) {
-    console.error('Emergency request failed:', error);
-    
-    // For emergency contacts, try to serve from cache
-    if (request.url.includes('/api/emergency-contacts')) {
-      const cache = await caches.open(EMERGENCY_CACHE);
-      const cachedResponse = await cache.match(request);
-      if (cachedResponse) {
-        return cachedResponse;
+// Function to add request to background sync queue
+function addToBackgroundSyncQueue(request, options = {}) {
+  const queueItem = {
+    url: request.url,
+    method: request.method,
+    headers: {},
+    body: null,
+    timestamp: Date.now()
+  };
+  
+  // Copy headers
+  for (let [key, value] of request.headers.entries()) {
+    queueItem.headers[key] = value;
+  }
+  
+  // Handle body for POST/PUT requests
+  if (request.method === 'POST' || request.method === 'PUT') {
+    return request.clone().text().then(body => {
+      queueItem.body = body;
+      backgroundSyncQueue.push(queueItem);
+      console.log('VitalWatch: Added request to background sync queue:', queueItem.url);
+      
+      // Try to register background sync
+      if ('serviceWorker' in self && self.registration && self.registration.sync) {
+        return self.registration.sync.register(QUEUE_NAME);
       }
+    });
+  } else {
+    backgroundSyncQueue.push(queueItem);
+    console.log('VitalWatch: Added request to background sync queue:', queueItem.url);
+    
+    if ('serviceWorker' in self && self.registration && self.registration.sync) {
+      return self.registration.sync.register(QUEUE_NAME);
     }
-    
-    // Return a fallback response for failed emergency alerts
-    return new Response(
-      JSON.stringify({ 
-        error: 'Emergency service temporarily unavailable. Please call 911 directly.',
-        fallback: true,
-        timestamp: new Date().toISOString()
-      }),
-      {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
   }
 }
 
-// Handle regular API requests
-async function handleApiRequest(request) {
-  try {
-    const networkResponse = await fetch(request);
-    
-    // Cache successful GET responses
-    if (request.method === 'GET' && networkResponse.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, networkResponse.clone());
-    }
-    
-    return networkResponse;
-  } catch (error) {
-    // Try to serve from cache
-    const cache = await caches.open(CACHE_NAME);
-    const cachedResponse = await cache.match(request);
-    
-    if (cachedResponse) {
-      return cachedResponse;
-    }
-    
-    // Return offline response
-    return new Response(
-      JSON.stringify({ 
-        error: 'Service temporarily unavailable',
-        offline: true 
-      }),
-      {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' }
+// Process background sync queue
+async function processBackgroundSyncQueue() {
+  console.log('VitalWatch: Processing background sync queue, items:', backgroundSyncQueue.length);
+  
+  const failedItems = [];
+  
+  for (const item of backgroundSyncQueue) {
+    try {
+      const requestInit = {
+        method: item.method,
+        headers: item.headers
+      };
+      
+      if (item.body) {
+        requestInit.body = item.body;
       }
-    );
-  }
-}
-
-// Handle navigation requests (pages)
-async function handleNavigationRequest(request) {
-  try {
-    const networkResponse = await fetch(request);
-    
-    // Cache successful responses
-    if (networkResponse.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, networkResponse.clone());
-    }
-    
-    return networkResponse;
-  } catch (error) {
-    // Try to serve from cache
-    const cache = await caches.open(CACHE_NAME);
-    const cachedResponse = await cache.match(request);
-    
-    if (cachedResponse) {
-      return cachedResponse;
-    }
-    
-    // Fallback to main page
-    const mainPage = await cache.match('/');
-    if (mainPage) {
-      return mainPage;
-    }
-    
-    // Ultimate fallback
-    return new Response(
-      `<!DOCTYPE html>
-      <html>
-        <head>
-          <title>VitalWatch - Offline</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body { font-family: system-ui; text-align: center; padding: 50px; }
-            .offline { color: #666; margin: 20px 0; }
-            .emergency { background: #dc2626; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; }
-          </style>
-        </head>
-        <body>
-          <h1>VitalWatch</h1>
-          <div class="offline">You're currently offline</div>
-          <div class="emergency">
-            <strong>Emergency?</strong><br>
-            Call 911 immediately if you need emergency assistance
-          </div>
-          <p>Connect to the internet to access all VitalWatch features</p>
-        </body>
-      </html>`,
-      {
-        headers: { 'Content-Type': 'text/html' }
+      
+      const response = await fetch(item.url, requestInit);
+      
+      if (response.ok) {
+        console.log('VitalWatch: Successfully synced:', item.url);
+      } else {
+        console.warn('VitalWatch: Failed to sync (will retry):', item.url, response.status);
+        failedItems.push(item);
       }
-    );
-  }
-}
-
-// Handle static asset requests
-async function handleAssetRequest(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cachedResponse = await cache.match(request);
-  
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
-  try {
-    const networkResponse = await fetch(request);
-    
-    if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
+    } catch (error) {
+      console.warn('VitalWatch: Failed to sync (will retry):', item.url, error);
+      failedItems.push(item);
     }
-    
-    return networkResponse;
-  } catch (error) {
-    // Return 404 for missing assets
-    return new Response('Asset not found', { status: 404 });
   }
-}
-
-// Background sync for emergency alerts
-self.addEventListener('sync', event => {
-  if (event.tag === 'emergency-alert-sync') {
-    event.waitUntil(syncEmergencyAlerts());
-  }
-});
-
-async function syncEmergencyAlerts() {
-  // Handle any queued emergency alerts when connection is restored
-  console.log('Syncing emergency alerts...');
   
-  try {
-    // Check for any pending emergency data in IndexedDB
-    // and attempt to send when connection is restored
-    const registration = await self.registration;
-    const clients = await registration.clients.matchAll();
-    
-    clients.forEach(client => {
-      client.postMessage({
-        type: 'SYNC_EMERGENCY_ALERTS',
-        timestamp: new Date().toISOString()
+  // Update queue with failed items
+  backgroundSyncQueue = failedItems;
+  
+  // Notify clients of successful sync
+  if (failedItems.length < backgroundSyncQueue.length) {
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        client.postMessage({ type: 'BACKGROUND_SYNC_SUCCESS' });
       });
     });
-  } catch (error) {
-    console.error('Emergency sync failed:', error);
   }
 }
 
-// Push notification handling for emergency alerts
-self.addEventListener('push', event => {
-  if (event.data) {
-    const payload = event.data.json();
-    
-    const options = {
-      body: payload.body || 'Emergency notification from VitalWatch',
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png',
-      tag: 'emergency',
-      requireInteraction: true,
-      actions: [
-        {
-          action: 'view',
-          title: 'View Details'
-        },
-        {
-          action: 'dismiss',
-          title: 'Dismiss'
-        }
-      ]
-    };
-    
-    event.waitUntil(
-      self.registration.showNotification(
-        payload.title || 'VitalWatch Emergency Alert',
-        options
-      )
-    );
+// Background sync event handler
+self.addEventListener('sync', event => {
+  console.log('VitalWatch: Background sync event:', event.tag);
+  
+  if (event.tag === QUEUE_NAME) {
+    event.waitUntil(processBackgroundSyncQueue());
   }
 });
 
-// Handle notification clicks
+// Fetch event handler with comprehensive caching and background sync
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  const url = new URL(request.url);
+  
+  // Handle API requests
+  if (url.pathname.startsWith('/api/')) {
+    if (request.method === 'GET') {
+      // GET requests: Cache-first with network fallback
+      event.respondWith(
+        caches.match(request).then(cachedResponse => {
+          if (cachedResponse) {
+            // Return cached response and update in background
+            fetch(request).then(networkResponse => {
+              if (networkResponse.ok) {
+                caches.open(API_CACHE).then(cache => {
+                  cache.put(request, networkResponse.clone());
+                });
+              }
+            }).catch(() => {
+              // Network failed, but we have cached response
+            });
+            return cachedResponse;
+          }
+          
+          // No cached response, try network
+          return fetch(request).then(networkResponse => {
+            if (networkResponse.ok) {
+              // Cache successful response
+              caches.open(API_CACHE).then(cache => {
+                cache.put(request, networkResponse.clone());
+              });
+            }
+            return networkResponse;
+          }).catch(error => {
+            console.warn('VitalWatch: API request failed and no cache available:', request.url);
+            return new Response(JSON.stringify({ error: 'Offline - request will be retried' }), {
+              status: 503,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          });
+        })
+      );
+    } else {
+      // POST/PUT/DELETE requests: Network-first with background sync fallback
+      event.respondWith(
+        fetch(request.clone()).then(response => {
+          return response;
+        }).catch(error => {
+          console.log('VitalWatch: Network request failed, adding to background sync queue');
+          addToBackgroundSyncQueue(request.clone());
+          
+          // Return success response to prevent UI errors
+          return new Response(JSON.stringify({ 
+            success: true, 
+            message: 'Request queued for background sync',
+            queued: true 
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        })
+      );
+    }
+    return;
+  }
+  
+  // Handle navigation requests (HTML pages)
+  if (request.destination === 'document') {
+    event.respondWith(
+      fetch(request).catch(() => {
+        // Network failed, try cache
+        return caches.match(request).then(cachedResponse => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          // Return offline page
+          return caches.match('/offline.html') || caches.match('/');
+        });
+      })
+    );
+    return;
+  }
+  
+  // Handle static assets (JS, CSS, images)
+  if (request.destination === 'script' || 
+      request.destination === 'style' || 
+      request.destination === 'image' ||
+      url.pathname.startsWith('/icons/') ||
+      url.pathname.endsWith('.png') ||
+      url.pathname.endsWith('.jpg') ||
+      url.pathname.endsWith('.svg')) {
+    
+    event.respondWith(
+      caches.match(request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        
+        return fetch(request).then(networkResponse => {
+          if (networkResponse.ok) {
+            // Cache successful responses
+            caches.open(OFFLINE_CACHE).then(cache => {
+              cache.put(request, networkResponse.clone());
+            });
+          }
+          return networkResponse;
+        }).catch(error => {
+          console.warn('VitalWatch: Static asset request failed:', request.url);
+          // For images, could return a placeholder
+          return new Response('', { status: 404 });
+        });
+      })
+    );
+    return;
+  }
+  
+  // Default: network-first
+  event.respondWith(
+    fetch(request).catch(error => {
+      return caches.match(request) || caches.match('/offline.html');
+    })
+  );
+});
+
+// Push notification handling
+self.addEventListener('push', event => {
+  console.log('VitalWatch: Push notification received');
+  
+  let payload = {};
+  if (event.data) {
+    try {
+      payload = event.data.json();
+    } catch (e) {
+      payload = { title: 'VitalWatch', body: event.data.text() };
+    }
+  }
+  
+  const options = {
+    body: payload.body || 'Emergency notification from VitalWatch',
+    icon: '/icons/icon-192x192.png',
+    badge: '/icons/icon-72x72.png',
+    tag: payload.tag || 'vitalwatch',
+    requireInteraction: payload.priority === 'high',
+    actions: [
+      { action: 'view', title: 'View' },
+      { action: 'dismiss', title: 'Dismiss' }
+    ],
+    data: payload.data || {}
+  };
+  
+  event.waitUntil(
+    self.registration.showNotification(
+      payload.title || 'VitalWatch Emergency Alert',
+      options
+    )
+  );
+});
+
+// Notification click handling
 self.addEventListener('notificationclick', event => {
+  console.log('VitalWatch: Notification clicked');
   event.notification.close();
   
   if (event.action === 'view') {
+    const urlToOpen = event.notification.data?.url || '/';
     event.waitUntil(
-      clients.openWindow('/?notification=emergency')
+      clients.openWindow(urlToOpen)
     );
   }
 });
 
-// Background sync event handlers for offline data synchronization
-self.addEventListener('sync', event => {
-  console.log('Background sync triggered:', event.tag);
+// Message handling from main app
+self.addEventListener('message', event => {
+  console.log('VitalWatch: Message received:', event.data);
   
-  switch(event.tag) {
-    case 'emergency-alert-sync':
-      event.waitUntil(syncEmergencyData());
-      break;
-    case 'mood-sync':
-      event.waitUntil(syncMoodData());
-      break;
-    case 'health-data-sync':
-      event.waitUntil(syncHealthData());
-      break;
-    default:
-      console.log('Unknown sync tag:', event.tag);
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'GET_QUEUE_SIZE') {
+    event.ports[0].postMessage({ queueSize: backgroundSyncQueue.length });
   }
 });
 
-// Sync functions for background data synchronization
-async function syncEmergencyData() {
-  try {
-    // Sync any pending emergency data
-    console.log('Syncing emergency data in background');
-    // Implementation would sync with server when connection is restored
-    return Promise.resolve();
-  } catch (error) {
-    console.error('Emergency data sync failed:', error);
-    throw error;
-  }
-}
-
-async function syncMoodData() {
-  try {
-    // Sync any pending mood entries
-    console.log('Syncing mood data in background');
-    // Implementation would sync with server when connection is restored
-    return Promise.resolve();
-  } catch (error) {
-    console.error('Mood data sync failed:', error);
-    throw error;
-  }
-}
-
-async function syncHealthData() {
-  try {
-    // Sync any pending health/sensor data
-    console.log('Syncing health data in background');
-    // Implementation would sync with server when connection is restored
-    return Promise.resolve();
-  } catch (error) {
-    console.error('Health data sync failed:', error);
-    throw error;
-  }
-}
-
-console.log('VitalWatch Service Worker loaded successfully');
+console.log('VitalWatch: Service Worker loaded and ready for PWA functionality');

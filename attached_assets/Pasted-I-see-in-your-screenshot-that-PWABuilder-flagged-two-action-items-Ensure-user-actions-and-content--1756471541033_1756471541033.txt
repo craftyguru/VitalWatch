@@ -1,0 +1,67 @@
+I see in your screenshot that PWABuilder flagged two action items:
+
+Ensure user actions and content is always in sync even if network connection is lost with background sync
+→ This means your PWA doesn’t currently use Background Sync (or another method) to re-send user actions (like saving a journal entry, sending a message, etc.) once the device reconnects to the internet. Without it, if a user does something offline and closes the app before regaining connection, that action might be lost.
+
+Allow users to use your app without internet connection
+→ This means your app doesn’t yet have an offline fallback (like caching your key pages, assets, or providing an offline experience). For example, caching your dashboard shell, last-seen journal entries, or a friendly “You’re offline” page.
+
+Do you need to fix these?
+
+If your app is intended for the Play Store / Microsoft Store: Yes, it’s strongly recommended. Stores increasingly require good offline support for PWAs. It improves installability and approval chances.
+
+If your app relies heavily on internet-only features (like live trading dashboards or emergency contact triggers): You can technically skip full offline use, but at least an offline fallback page is expected.
+
+If you want a smooth user experience: Fixing both gives your users resilience—entries, mood logs, or emergency contacts won’t fail just because of a weak signal.
+
+How to fix them
+
+Background Sync
+
+Use the Background Sync API in your service worker.
+
+Queue requests (like POSTs) with workbox-background-sync or a custom IndexedDB store.
+
+When the user reconnects, the service worker automatically retries.
+
+import { BackgroundSyncPlugin } from 'workbox-background-sync';
+import { registerRoute } from 'workbox-routing';
+import { NetworkOnly } from 'workbox-strategies';
+
+const bgSyncPlugin = new BackgroundSyncPlugin('offlineQueue', {
+  maxRetentionTime: 24 * 60, // Retry for 24 hours
+});
+
+registerRoute(
+  /\/api\/.*\/*.json/,
+  new NetworkOnly({ plugins: [bgSyncPlugin] }),
+  'POST'
+);
+
+
+Offline Support
+
+Cache your static shell (/index.html, CSS, JS) using workbox-precaching.
+
+Add a fallback route (e.g., /offline.html).
+
+Optionally cache “last viewed” data with IndexedDB so users can see something offline.
+
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { StaleWhileRevalidate } from 'workbox-strategies';
+
+precacheAndRoute(self.__WB_MANIFEST);
+
+registerRoute(
+  ({ request }) => request.destination === 'document',
+  new StaleWhileRevalidate({
+    cacheName: 'pages',
+  })
+);
+
+
+✅ Bottom line:
+Yes, you should fix them—especially if you want smooth Google Play Store approval and a better user experience. They’re not hard blockers, but ignoring them could cause rejection or poor offline reliability.
+
+Do you want me to write you a ready-to-drop-in Workbox service worker for your app that fixes both warnings?
