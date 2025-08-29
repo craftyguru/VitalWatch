@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import HomeEnhanced from "@/pages/home-enhanced";
+import UserDashboard from "@/pages/user-dashboard";
+import SafetyTools from "@/pages/safety-tools";
 import Mood from "@/pages/mood";
 import ToolsComprehensive from "@/pages/tools-comprehensive";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
@@ -32,8 +34,10 @@ function Router() {
         <Route path="/" component={Landing} />
       ) : (
         <>
-          <Route path="/" component={HomeEnhanced} />
-          <Route path="/dashboard" component={HomeEnhanced} />
+          <Route path="/" component={UserDashboard} />
+          <Route path="/userdash" component={UserDashboard} />
+          <Route path="/dashboard" component={UserDashboard} />
+          <Route path="/safetytools" component={SafetyTools} />
           <Route path="/mood" component={Mood} />
           <Route path="/tools" component={ToolsComprehensive} />
           <Route path="/contacts" component={ContactsEnhanced} />
