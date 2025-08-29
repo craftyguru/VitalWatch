@@ -1075,6 +1075,27 @@ export default function UserDashboard() {
                 </Link>
               </Button>
 
+              {/* Guardian Angel Toggle */}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => {
+                  setGuardianAngelActive(!guardianAngelActive);
+                  toast({
+                    title: guardianAngelActive ? "Guardian Angel Deactivated" : "Guardian Angel Activated",
+                    description: guardianAngelActive ? 
+                      "AI protection has been turned off." :
+                      "AI protection is now active.",
+                  });
+                }}
+                className={`border-purple-200 ${guardianAngelActive ? 'bg-purple-100 text-purple-800' : 'text-purple-700'} hover:bg-purple-50 hidden sm:flex`}
+                title={guardianAngelActive ? "Deactivate Guardian Angel" : "Activate Guardian Angel"}
+                data-testid={guardianAngelActive ? "button-deactivate-guardian-nav" : "button-activate-guardian-nav"}
+              >
+                <Crown className={`h-4 w-4 mr-1 ${guardianAngelActive ? 'animate-pulse' : ''}`} />
+                {guardianAngelActive ? 'Active' : 'Guardian'}
+              </Button>
+
               {/* User Menu */}
               <div className="flex items-center space-x-1">
                 <div className="relative group">
