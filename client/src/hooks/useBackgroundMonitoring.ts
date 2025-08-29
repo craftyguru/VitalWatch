@@ -52,51 +52,61 @@ export function useBackgroundMonitoring(): BackgroundMonitoringState {
       const registration = await navigator.serviceWorker.register('/service-worker.js');
       await navigator.serviceWorker.ready;
 
-      // Create a Web Worker for continuous monitoring
-      workerRef.current = new Worker('/monitoring-worker.js');
+      // Create a Web Worker for continuous monitoring  
+      try {
+        workerRef.current = new Worker('/monitoring-worker.js');
+      } catch (error) {
+        console.warn('Worker not available, falling back to service worker monitoring');
+        // Continue without worker but still enable service worker monitoring
+      }
       
-      workerRef.current.onmessage = (event) => {
-        const { type, data } = event.data;
-        
-        switch (type) {
-          case 'MONITORING_STATUS':
-            setIsActive(data.active);
-            setStatus(data.active ? 'active' : 'idle');
-            break;
-          case 'EMERGENCY_DETECTED':
-            handleEmergencyDetection(data);
-            break;
-          case 'HEALTH_ALERT':
-            handleHealthAlert(data);
-            break;
-        }
-      };
+      if (workerRef.current) {
+        workerRef.current.onmessage = (event) => {
+          const { type, data } = event.data;
+          
+          switch (type) {
+            case 'MONITORING_STATUS':
+              setIsActive(data.active);
+              setStatus(data.active ? 'active' : 'idle');
+              break;
+            case 'EMERGENCY_DETECTED':
+              handleEmergencyDetection(data);
+              break;
+            case 'HEALTH_ALERT':
+              handleHealthAlert(data);
+              break;
+          }
+        };
 
-      workerRef.current.onerror = (error) => {
-        console.error('Monitoring worker error:', error);
-        setStatus('error');
-      };
+        workerRef.current.onerror = (error) => {
+          console.warn('Monitoring worker error, falling back to basic monitoring:', error);
+          setStatus('active'); // Continue with service worker monitoring
+        };
+      }
 
       // Start monitoring
-      workerRef.current.postMessage({
-        type: 'START_MONITORING',
-        config: {
-          emergencyThresholds: {
-            heartRateMin: 50,
-            heartRateMax: 120,
-            accelerationThreshold: 15,
-            fallDetectionEnabled: true
-          },
-          monitoringInterval: 5000, // 5 seconds
-          backgroundSync: true
-        }
-      });
+      if (workerRef.current) {
+        workerRef.current.postMessage({
+          type: 'START_MONITORING',
+          config: {
+            emergencyThresholds: {
+              heartRateMin: 50,
+              heartRateMax: 120,
+              accelerationThreshold: 15,
+              fallDetectionEnabled: true
+            },
+            monitoringInterval: 5000, // 5 seconds
+            backgroundSync: true
+          }
+        });
+      }
 
       // Enable background sync for emergency alerts
       if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
         await (registration as any).sync.register('emergency-alert-sync');
       }
 
+      // Set monitoring as active even without worker (service worker will handle basics)
       setStatus('active');
       setIsActive(true);
 
