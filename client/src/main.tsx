@@ -4,30 +4,30 @@ import "./index.css";
 
 console.log("VitalWatch main.tsx loading...");
 
-// Register Service Worker for comprehensive PWA functionality
+// Register PWA Service Worker for PWABuilder detection
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    try {
-      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
-      console.log('VitalWatch SW registered: ', registration);
+  // Make sure this path serves from the site root
+  navigator.serviceWorker.register('/sw-pwa.js', { scope: '/' })
+    .then(async (reg) => {
+      console.log('VitalWatch PWA SW registered: ', reg);
       
-      // Register background sync immediately for PWABuilder detection
-      if ('sync' in registration && 'SyncManager' in window) {
+      // Explicit tag registration so scanners can see it
+      if ('sync' in reg && 'SyncManager' in window) {
         try {
-          await (registration as any).sync.register('pwabuilder-sync');
-          console.log('Background sync registered for PWABuilder detection');
-        } catch (syncError) {
-          console.log('Background sync registration failed:', syncError);
+          await (reg as any).sync.register('pwabuilder-sync');
+          console.log('Background Sync tag registered');
+        } catch (err) {
+          console.debug('Sync register failed (likely blocked or unsupported):', err);
         }
       }
       
       // Listen for updates to the service worker
-      if (registration.waiting) {
+      if (reg.waiting) {
         console.log('VitalWatch: New service worker is waiting to activate');
       }
       
-      registration.addEventListener('updatefound', () => {
-        const newWorker = registration.installing;
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
@@ -43,12 +43,11 @@ if ('serviceWorker' in navigator) {
           console.log('VitalWatch: Background sync completed successfully', event.data);
         }
       });
-
-
-    } catch (registrationError) {
+      
+    })
+    .catch((registrationError) => {
       console.log('VitalWatch SW registration failed: ', registrationError);
-    }
-  });
+    });
 }
 
 try {
