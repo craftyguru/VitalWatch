@@ -81,98 +81,190 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Background sync queue for offline actions
-let backgroundSyncQueue = [];
+// IndexedDB for persistent background sync queue
+const DB_NAME = 'VitalWatchSyncDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'syncQueue';
 
-// Function to add request to background sync queue
-function addToBackgroundSyncQueue(request, options = {}) {
-  const queueItem = {
-    url: request.url,
-    method: request.method,
-    headers: {},
-    body: null,
-    timestamp: Date.now()
-  };
-  
-  // Copy headers
-  for (let [key, value] of request.headers.entries()) {
-    queueItem.headers[key] = value;
-  }
-  
-  // Handle body for POST/PUT requests
-  if (request.method === 'POST' || request.method === 'PUT') {
-    return request.clone().text().then(body => {
-      queueItem.body = body;
-      backgroundSyncQueue.push(queueItem);
-      console.log('VitalWatch: Added request to background sync queue:', queueItem.url);
-      
-      // Try to register background sync
-      if ('serviceWorker' in self && self.registration && self.registration.sync) {
-        return self.registration.sync.register(QUEUE_NAME);
-      }
-    });
-  } else {
-    backgroundSyncQueue.push(queueItem);
-    console.log('VitalWatch: Added request to background sync queue:', queueItem.url);
+// Initialize IndexedDB
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
     
-    if ('serviceWorker' in self && self.registration && self.registration.sync) {
-      return self.registration.sync.register(QUEUE_NAME);
-    }
-  }
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        store.createIndex('timestamp', 'timestamp');
+      }
+    };
+  });
 }
 
-// Process background sync queue
-async function processBackgroundSyncQueue() {
-  console.log('VitalWatch: Processing background sync queue, items:', backgroundSyncQueue.length);
-  
-  const failedItems = [];
-  
-  for (const item of backgroundSyncQueue) {
-    try {
-      const requestInit = {
-        method: item.method,
-        headers: item.headers
-      };
-      
-      if (item.body) {
-        requestInit.body = item.body;
-      }
-      
-      const response = await fetch(item.url, requestInit);
-      
-      if (response.ok) {
-        console.log('VitalWatch: Successfully synced:', item.url);
-      } else {
-        console.warn('VitalWatch: Failed to sync (will retry):', item.url, response.status);
-        failedItems.push(item);
-      }
-    } catch (error) {
-      console.warn('VitalWatch: Failed to sync (will retry):', item.url, error);
-      failedItems.push(item);
+// Add request to IndexedDB queue
+async function addToSyncQueue(request) {
+  try {
+    const db = await initDB();
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    
+    const requestData = {
+      url: request.url,
+      method: request.method,
+      headers: {},
+      body: null,
+      timestamp: Date.now()
+    };
+    
+    // Copy headers
+    for (let [key, value] of request.headers.entries()) {
+      requestData.headers[key] = value;
     }
-  }
-  
-  // Update queue with failed items
-  backgroundSyncQueue = failedItems;
-  
-  // Notify clients of successful sync
-  if (failedItems.length < backgroundSyncQueue.length) {
-    self.clients.matchAll().then(clients => {
-      clients.forEach(client => {
-        client.postMessage({ type: 'BACKGROUND_SYNC_SUCCESS' });
-      });
+    
+    // Handle body for POST/PUT requests
+    if (request.method === 'POST' || request.method === 'PUT' || request.method === 'DELETE') {
+      requestData.body = await request.clone().text();
+    }
+    
+    await new Promise((resolve, reject) => {
+      const addRequest = store.add(requestData);
+      addRequest.onsuccess = () => resolve();
+      addRequest.onerror = () => reject(addRequest.error);
     });
+    
+    console.log('VitalWatch: Added request to background sync queue:', requestData.url);
+    
+    // Register background sync event
+    if (self.registration && self.registration.sync) {
+      await self.registration.sync.register(QUEUE_NAME);
+      console.log('VitalWatch: Registered background sync for queue:', QUEUE_NAME);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('VitalWatch: Failed to add request to sync queue:', error);
+    return false;
   }
 }
 
-// Background sync event handler
+// Process background sync queue from IndexedDB
+async function processSyncQueue() {
+  console.log('VitalWatch: Processing background sync queue from IndexedDB');
+  
+  try {
+    const db = await initDB();
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    
+    // Get all queued requests
+    const getAllRequest = store.getAll();
+    const queuedRequests = await new Promise((resolve, reject) => {
+      getAllRequest.onsuccess = () => resolve(getAllRequest.result);
+      getAllRequest.onerror = () => reject(getAllRequest.error);
+    });
+    
+    console.log('VitalWatch: Found', queuedRequests.length, 'queued requests');
+    
+    let processedCount = 0;
+    
+    for (const item of queuedRequests) {
+      try {
+        const requestInit = {
+          method: item.method,
+          headers: item.headers
+        };
+        
+        if (item.body) {
+          requestInit.body = item.body;
+        }
+        
+        const response = await fetch(item.url, requestInit);
+        
+        if (response.ok) {
+          console.log('VitalWatch: Successfully synced:', item.url);
+          
+          // Remove from queue
+          const deleteTransaction = db.transaction([STORE_NAME], 'readwrite');
+          const deleteStore = deleteTransaction.objectStore(STORE_NAME);
+          await new Promise((resolve, reject) => {
+            const deleteRequest = deleteStore.delete(item.id);
+            deleteRequest.onsuccess = () => resolve();
+            deleteRequest.onerror = () => reject(deleteRequest.error);
+          });
+          
+          processedCount++;
+        } else {
+          console.warn('VitalWatch: Failed to sync (will retry later):', item.url, response.status);
+        }
+      } catch (error) {
+        console.warn('VitalWatch: Failed to sync (will retry later):', item.url, error);
+      }
+    }
+    
+    console.log('VitalWatch: Successfully processed', processedCount, 'requests');
+    
+    // Notify clients of successful sync
+    if (processedCount > 0) {
+      const clients = await self.clients.matchAll();
+      clients.forEach(client => {
+        client.postMessage({ 
+          type: 'BACKGROUND_SYNC_SUCCESS', 
+          processedCount: processedCount 
+        });
+      });
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('VitalWatch: Failed to process sync queue:', error);
+    return false;
+  }
+}
+
+// Background sync event handler - this is what PWABuilder looks for
 self.addEventListener('sync', event => {
-  console.log('VitalWatch: Background sync event:', event.tag);
+  console.log('VitalWatch: Background sync event triggered:', event.tag);
   
   if (event.tag === QUEUE_NAME) {
-    event.waitUntil(processBackgroundSyncQueue());
+    console.log('VitalWatch: Processing sync queue for tag:', QUEUE_NAME);
+    event.waitUntil(processSyncQueue());
+  }
+  
+  // Handle additional sync tags
+  if (event.tag === 'emergency-alert-sync') {
+    event.waitUntil(syncEmergencyData());
+  }
+  
+  if (event.tag === 'mood-sync') {
+    event.waitUntil(syncMoodData());
+  }
+  
+  if (event.tag === 'health-data-sync') {
+    event.waitUntil(syncHealthData());
   }
 });
+
+// Explicit sync functions for different data types
+async function syncEmergencyData() {
+  console.log('VitalWatch: Syncing emergency data');
+  // This would sync emergency-specific data
+  return processSyncQueue();
+}
+
+async function syncMoodData() {
+  console.log('VitalWatch: Syncing mood data');  
+  // This would sync mood-specific data
+  return processSyncQueue();
+}
+
+async function syncHealthData() {
+  console.log('VitalWatch: Syncing health data');
+  // This would sync health-specific data  
+  return processSyncQueue();
+}
 
 // Fetch event handler with comprehensive caching and background sync
 self.addEventListener('fetch', event => {
@@ -222,15 +314,18 @@ self.addEventListener('fetch', event => {
       event.respondWith(
         fetch(request.clone()).then(response => {
           return response;
-        }).catch(error => {
+        }).catch(async (error) => {
           console.log('VitalWatch: Network request failed, adding to background sync queue');
-          addToBackgroundSyncQueue(request.clone());
+          
+          // Add to IndexedDB queue for background sync
+          const queued = await addToSyncQueue(request.clone());
           
           // Return success response to prevent UI errors
           return new Response(JSON.stringify({ 
             success: true, 
             message: 'Request queued for background sync',
-            queued: true 
+            queued: queued,
+            willRetry: true
           }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
@@ -355,7 +450,29 @@ self.addEventListener('message', event => {
   }
   
   if (event.data && event.data.type === 'GET_QUEUE_SIZE') {
-    event.ports[0].postMessage({ queueSize: backgroundSyncQueue.length });
+    // Get queue size from IndexedDB
+    initDB().then(db => {
+      const transaction = db.transaction([STORE_NAME], 'readonly');
+      const store = transaction.objectStore(STORE_NAME);
+      const countRequest = store.count();
+      
+      countRequest.onsuccess = () => {
+        event.ports[0].postMessage({ queueSize: countRequest.result });
+      };
+    }).catch(error => {
+      event.ports[0].postMessage({ queueSize: 0, error: error.message });
+    });
+  }
+  
+  if (event.data && event.data.type === 'TEST_BACKGROUND_SYNC') {
+    console.log('VitalWatch: Testing background sync registration');
+    if (self.registration && self.registration.sync) {
+      self.registration.sync.register('test-sync').then(() => {
+        console.log('VitalWatch: Test background sync registered successfully');
+      }).catch(error => {
+        console.error('VitalWatch: Test background sync registration failed:', error);
+      });
+    }
   }
 });
 

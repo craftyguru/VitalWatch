@@ -30,9 +30,27 @@ if ('serviceWorker' in navigator) {
       // Listen for messages from the service worker
       navigator.serviceWorker.addEventListener('message', event => {
         if (event.data && event.data.type === 'BACKGROUND_SYNC_SUCCESS') {
-          console.log('VitalWatch: Background sync completed successfully');
+          console.log('VitalWatch: Background sync completed successfully', event.data);
         }
       });
+
+      // Test background sync capability
+      try {
+        if ('sync' in registration) {
+          console.log('VitalWatch: Background sync is supported');
+          
+          // Test background sync registration
+          (registration as any).sync.register('vitalwatch-queue').then(() => {
+            console.log('VitalWatch: Background sync test registration successful');
+          }).catch((error: any) => {
+            console.error('VitalWatch: Background sync test registration failed:', error);
+          });
+        } else {
+          console.warn('VitalWatch: Background sync is not supported in this browser');
+        }
+      } catch (error) {
+        console.warn('VitalWatch: Background sync check failed:', error);
+      }
 
     } catch (registrationError) {
       console.log('VitalWatch SW registration failed: ', registrationError);
