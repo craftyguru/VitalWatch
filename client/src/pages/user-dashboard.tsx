@@ -46,8 +46,7 @@ import {
   Camera,
   FileText,
   Lock,
-  Crown,
-  Menu
+  Crown
 } from "lucide-react";
 import { Link } from "wouter";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -94,7 +93,6 @@ export default function UserDashboard() {
   const [liveLocation, setLiveLocation] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
   const [guardianAngelActive, setGuardianAngelActive] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Modal states for safety tools
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -107,18 +105,6 @@ export default function UserDashboard() {
   const [cornerTapCount, setCornerTapCount] = useState(0);
   const [tapTimeout, setTapTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (mobileMenuOpen && !target.closest('[data-mobile-menu]')) {
-        setMobileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [mobileMenuOpen]);
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -1039,127 +1025,110 @@ export default function UserDashboard() {
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-1 sm:space-x-2 ml-2">
-              {/* Mobile Menu Toggle */}
-              <div className="sm:hidden relative" data-mobile-menu>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="h-8 w-8 p-0"
-                >
-                  <Menu className="h-4 w-4" />
-                </Button>
-                
-                {/* Mobile Dropdown Menu */}
-                {mobileMenuOpen && (
-                  <div className="absolute right-0 top-10 w-48 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-50" data-mobile-menu>
-                    <div className="p-2 space-y-1">
-                      {/* Background Monitoring Toggle */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={async () => {
-                          setMobileMenuOpen(false);
-                          if (backgroundMonitoringActive) {
-                            stopMonitoring();
-                            toast({ title: "Background monitoring stopped" });
-                          } else {
-                            try {
-                              await startMonitoring();
-                              toast({ 
-                                title: "Background monitoring active", 
-                                description: "VitalWatch will continue monitoring even when you use other apps. Enable notifications for emergency alerts." 
-                              });
-                            } catch (error) {
-                              toast({ 
-                                title: "Failed to start monitoring", 
-                                description: "Could not start background monitoring. Please try again.", 
-                                variant: "destructive" 
-                              });
-                            }
-                          }
-                        }}
-                        className={`w-full justify-start ${backgroundMonitoringActive ? 'bg-green-100 text-green-800' : 'text-green-700'}`}
-                      >
-                        <Activity className={`h-4 w-4 mr-2 ${backgroundMonitoringActive ? 'animate-pulse' : ''}`} />
-                        {backgroundMonitoringActive ? 'Stop Monitor' : 'Start Monitor'}
-                      </Button>
-
-                      {/* Incognito Mode Toggle */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          setIncognitoMode(!incognitoMode);
-                        }}
-                        className={`w-full justify-start ${incognitoMode ? 'bg-purple-100 text-purple-800' : 'text-purple-700'}`}
-                      >
-                        <Eye className={`h-4 w-4 mr-2 ${incognitoMode ? 'opacity-50' : ''}`} />
-                        {incognitoMode ? 'Exit Incognito' : 'Incognito Mode'}
-                      </Button>
-                      
-                      {/* Emergency Access Button */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        asChild 
-                        className="w-full justify-start text-red-700"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Link href="/safetytools">
-                          <Shield className="h-4 w-4 mr-2" />
-                          Safety Tools
-                        </Link>
-                      </Button>
-
-                      {/* Guardian Angel Toggle */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          setGuardianAngelActive(!guardianAngelActive);
-                          toast({
-                            title: guardianAngelActive ? "Guardian Angel Deactivated" : "Guardian Angel Activated",
-                            description: guardianAngelActive ? 
-                              "AI protection has been turned off." :
-                              "AI protection is now active.",
+              {/* Mobile Icon Navigation */}
+              <div className="flex sm:hidden items-center space-x-1">
+                {/* Background Monitoring Toggle */}
+                <div className="flex flex-col items-center">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={async () => {
+                      if (backgroundMonitoringActive) {
+                        stopMonitoring();
+                        toast({ title: "Background monitoring stopped" });
+                      } else {
+                        try {
+                          await startMonitoring();
+                          toast({ 
+                            title: "Background monitoring active", 
+                            description: "VitalWatch will continue monitoring even when you use other apps. Enable notifications for emergency alerts." 
                           });
-                        }}
-                        className={`w-full justify-start ${guardianAngelActive ? 'bg-purple-100 text-purple-800' : 'text-purple-700'}`}
-                        data-testid={guardianAngelActive ? "button-deactivate-guardian-nav-mobile" : "button-activate-guardian-nav-mobile"}
-                      >
-                        <Crown className={`h-4 w-4 mr-2 ${guardianAngelActive ? 'animate-pulse' : ''}`} />
-                        {guardianAngelActive ? 'Deactivate Guardian' : 'Activate Guardian'}
-                      </Button>
-                      
-                      <div className="border-t border-gray-200 dark:border-slate-600 my-1"></div>
-                      
-                      {/* Theme Toggle */}
-                      <div className="flex items-center justify-between px-3 py-2">
-                        <span className="text-sm font-medium">Theme</span>
-                        <ThemeToggle />
-                      </div>
-                      
-                      {/* Logout */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          handleLogout();
-                        }}
-                        disabled={isLoggingOut}
-                        className="w-full justify-start text-red-600"
-                        data-testid="button-logout-mobile"
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Sign Out
-                      </Button>
-                    </div>
+                        } catch (error) {
+                          toast({ 
+                            title: "Failed to start monitoring", 
+                            description: "Could not start background monitoring. Please try again.", 
+                            variant: "destructive" 
+                          });
+                        }
+                      }
+                    }}
+                    className={`h-8 w-8 p-0 border-green-200 ${backgroundMonitoringActive ? 'bg-green-100 text-green-800' : 'text-green-700'} hover:bg-green-50`}
+                    title={backgroundMonitoringActive ? "Stop Background Monitoring" : "Start Background Monitoring"}
+                  >
+                    <Activity className={`h-3 w-3 ${backgroundMonitoringActive ? 'animate-pulse' : ''}`} />
+                  </Button>
+                  <span className="text-xs text-muted-foreground mt-0.5 leading-none">Monitor</span>
+                </div>
+
+                {/* Incognito Mode Toggle */}
+                <div className="flex flex-col items-center">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setIncognitoMode(!incognitoMode)}
+                    className={`h-8 w-8 p-0 border-purple-200 ${incognitoMode ? 'bg-purple-100 text-purple-800' : 'text-purple-700'} hover:bg-purple-50`}
+                    title={incognitoMode ? "Exit Incognito Mode" : "Enter Incognito Mode"}
+                  >
+                    <Eye className={`h-3 w-3 ${incognitoMode ? 'opacity-50' : ''}`} />
+                  </Button>
+                  <span className="text-xs text-muted-foreground mt-0.5 leading-none">Incognito</span>
+                </div>
+                
+                {/* Emergency Access Button */}
+                <div className="flex flex-col items-center">
+                  <Button variant="outline" size="sm" asChild className="h-8 w-8 p-0 border-red-200 text-red-700 hover:bg-red-50">
+                    <Link href="/safetytools">
+                      <Shield className="h-3 w-3" />
+                    </Link>
+                  </Button>
+                  <span className="text-xs text-muted-foreground mt-0.5 leading-none">Safety</span>
+                </div>
+
+                {/* Guardian Angel Toggle */}
+                <div className="flex flex-col items-center">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      setGuardianAngelActive(!guardianAngelActive);
+                      toast({
+                        title: guardianAngelActive ? "Guardian Angel Deactivated" : "Guardian Angel Activated",
+                        description: guardianAngelActive ? 
+                          "AI protection has been turned off." :
+                          "AI protection is now active.",
+                      });
+                    }}
+                    className={`h-8 w-8 p-0 border-purple-200 ${guardianAngelActive ? 'bg-purple-100 text-purple-800' : 'text-purple-700'} hover:bg-purple-50`}
+                    title={guardianAngelActive ? "Deactivate Guardian Angel" : "Activate Guardian Angel"}
+                    data-testid={guardianAngelActive ? "button-deactivate-guardian-nav-mobile" : "button-activate-guardian-nav-mobile"}
+                  >
+                    <Crown className={`h-3 w-3 ${guardianAngelActive ? 'animate-pulse' : ''}`} />
+                  </Button>
+                  <span className="text-xs text-muted-foreground mt-0.5 leading-none">Guardian</span>
+                </div>
+
+                {/* Theme Toggle */}
+                <div className="flex flex-col items-center">
+                  <div className="h-8 w-8 flex items-center justify-center">
+                    <ThemeToggle />
                   </div>
-                )}
+                  <span className="text-xs text-muted-foreground mt-0.5 leading-none">Theme</span>
+                </div>
+
+                {/* Logout */}
+                <div className="flex flex-col items-center">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400" 
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    data-testid="button-logout-mobile"
+                  >
+                    <LogOut className="h-3 w-3" />
+                  </Button>
+                  <span className="text-xs text-muted-foreground mt-0.5 leading-none">Sign Out</span>
+                </div>
               </div>
 
               {/* Desktop Navigation - Hidden on Mobile */}
