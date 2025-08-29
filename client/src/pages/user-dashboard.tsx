@@ -62,6 +62,7 @@ import { useIncognito } from "@/contexts/IncognitoContext";
 import { useBackgroundMonitoring } from "@/hooks/useBackgroundMonitoring";
 import AIGuardian from "@/components/AIGuardian";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
+import { EventHistoryDashboard } from "@/components/EventHistoryDashboard";
 
 // Real-time metrics derived from actual sensor data - NO FALLBACKS
 const useRealTimeMetrics = (realTimeData: any) => {
@@ -1675,7 +1676,7 @@ export default function UserDashboard() {
               {/* Safety Sub-Tab Navigation */}
               <Card className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border-gray-200/50">
                 <CardContent className="p-4">
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
                     <Button
                       variant={safetySubTab === "emergency" ? "default" : "outline"}
                       onClick={() => setSafetySubTab("emergency")}
@@ -1719,6 +1720,15 @@ export default function UserDashboard() {
                     >
                       <Users className="h-4 w-4 mb-1" />
                       <span className="text-xs">Contacts & Legal</span>
+                    </Button>
+                    
+                    <Button
+                      variant={safetySubTab === "history" ? "default" : "outline"}
+                      onClick={() => setSafetySubTab("history")}
+                      className="flex flex-col items-center p-3 h-auto"
+                    >
+                      <Clock className="h-4 w-4 mb-1" />
+                      <span className="text-xs">Event History</span>
                     </Button>
                   </div>
                 </CardContent>
@@ -2469,6 +2479,13 @@ export default function UserDashboard() {
 
                   {/* Emergency Contact Manager */}
                   <EmergencyContactManager />
+                </div>
+              )}
+              
+              {/* Event History Sub-Tab */}
+              {safetySubTab === "history" && (
+                <div className="space-y-6">
+                  <EventHistoryDashboard />
                 </div>
               )}
             </div>
