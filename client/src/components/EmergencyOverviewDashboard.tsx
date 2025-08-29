@@ -202,7 +202,7 @@ export function EmergencyOverviewDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Emergency Mode Overlay */}
       {isEmergencyMode && (
         <div className="fixed inset-0 bg-red-600/20 backdrop-blur-sm z-40 flex items-center justify-center">

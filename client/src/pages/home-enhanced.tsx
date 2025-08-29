@@ -436,7 +436,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
+      <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
         
         {/* Professional Emergency Overview Dashboard */}
         <EmergencyOverviewDashboard />
@@ -760,8 +760,6 @@ export default function Home() {
             </CardContent>
           </Card>
         </section>
-
-
 
         {/* Quick Relief Tools */}
         <section>
