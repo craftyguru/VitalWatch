@@ -1323,11 +1323,13 @@ export default function UserDashboard() {
               Your wellness journey continues with personalized insights and support
             </p>
           </div>
-          <Button variant="outline" asChild className="hidden sm:flex">
-            <Link href="/safetytools">
-              <Shield className="h-4 w-4 mr-2" />
-              Safety Dashboard
-            </Link>
+          <Button 
+            variant="outline" 
+            onClick={() => setActiveTab("safety-tools")}
+            className="hidden sm:flex"
+          >
+            <Shield className="h-4 w-4 mr-2" />
+            Safety Dashboard
           </Button>
         </div>
 
