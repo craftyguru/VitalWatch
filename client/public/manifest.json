@@ -1,7 +1,7 @@
 {
   "name": "VitalWatch - Emergency Protection",
   "short_name": "VitalWatch",
-  "version": "4.0.0",
+  "version": "6.0.0",
   "description": "AI-powered emergency monitoring and mental health support with real-time crisis detection",
   "start_url": "/",
   "display": "standalone",

@@ -1,8 +1,8 @@
 // VitalWatch Service Worker for TWA
 // Provides offline functionality and caching for emergency features
 
-const CACHE_NAME = 'vitalwatch-v1.0.0';
-const EMERGENCY_CACHE = 'vitalwatch-emergency-v1.0.0';
+const CACHE_NAME = 'vitalwatch-v6.0.0';
+const EMERGENCY_CACHE = 'vitalwatch-emergency-v6.0.0';
 
 // Critical resources that must be cached for emergency functionality
 const CRITICAL_RESOURCES = [

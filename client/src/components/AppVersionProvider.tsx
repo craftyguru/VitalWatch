@@ -24,7 +24,7 @@ interface VersionProviderProps {
 
 export function VersionProvider({ children }: VersionProviderProps) {
   const [versionInfo, setVersionInfo] = useState<VersionInfo>({
-    version: "2.4.1",
+    version: "6.0.0",
     buildDate: new Date().toISOString().split('T')[0],
     environment: import.meta.env.MODE || 'development',
     commitHash: "a7f3d92",

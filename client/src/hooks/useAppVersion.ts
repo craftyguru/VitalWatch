@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const APP_VERSION = '5.0.0';
+const APP_VERSION = '6.0.0';
 
 export function useAppVersion() {
   const [currentVersion, setCurrentVersion] = useState(APP_VERSION);
