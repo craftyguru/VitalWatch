@@ -1,0 +1,88 @@
+Short answer: almost—those look like planner logs, not proof it actually works yet. Do these to be truly “good”:
+
+✅ Must-do checklist
+
+Use a Dev Client (not Expo Go)
+react-native-ble-plx won’t run in Expo Go. Build a dev client:
+
+cd mobile
+npx expo prebuild
+npx expo run:android   # builds & installs a dev client on your phone
+
+
+(For iOS later: npx expo run:ios on a Mac.)
+
+Confirm Android BLE permissions (Android 12+ needs the new ones). In mobile/app.json (or app.config.js):
+
+{
+  "expo": {
+    "name": "VitalWatch",
+    "slug": "vitalwatch",
+    "android": {
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    }
+  }
+}
+
+
+Sanity test code (replace App.tsx contents briefly to verify scan/connect):
+
+import React, {useEffect, useState} from 'react';
+import {Text, View, Button, FlatList} from 'react-native';
+import {BleManager, Device} from 'react-native-ble-plx';
+
+const manager = new BleManager();
+
+export default function App() {
+  const [devices, setDevices] = useState<Record<string, Device>>({});
+  const [scanning, setScanning] = useState(false);
+
+  useEffect(() => {
+    const sub = manager.onStateChange((s) => {
+      if (s === 'PoweredOn') console.log('BLE ready');
+    }, true);
+    return () => { sub.remove(); manager.destroy(); };
+  }, []);
+
+  const startScan = () => {
+    if (scanning) return;
+    setScanning(true);
+    manager.startDeviceScan(null, { allowDuplicates: false }, (error, device) => {
+      if (error) { console.warn(error); setScanning(false); return; }
+      if (device?.name) setDevices(d => ({...d, [device.id]: device}));
+    });
+    setTimeout(() => { manager.stopDeviceScan(); setScanning(false); }, 12000);
+  };
+
+  return (
+    <View style={{padding: 24}}>
+      <Button title={scanning ? 'Scanning…' : 'Scan for BLE'} onPress={startScan} />
+      <FlatList
+        data={Object.values(devices)}
+        keyExtractor={d => d.id}
+        renderItem={({item}) => <Text>{item.name} • {item.id}</Text>}
+      />
+    </View>
+  );
+}
+
+
+Run on a physical Android phone (Bluetooth on, location on), then:
+
+Tap Scan for BLE → your watch should appear if it exposes BLE GATT publicly.
+
+If it never appears, the watch is likely behind a proprietary companion app → you’ll need vendor SDK or Health Connect instead of direct BLE.
+
+Optional next wins
+
+Add Service/Characteristic UUID filters for faster discovery.
+
+Read Heart Rate (0x180D/0x2A37) & Battery (0x180F/0x2A19) if your watch supports them.
+
+Plan production build via EAS (eas build -p android).

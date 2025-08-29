@@ -17,7 +17,8 @@
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "VitalWatch needs Bluetooth to connect to your fitness devices and health monitors for real-time monitoring.",
         "NSBluetoothPeripheralUsageDescription": "VitalWatch needs Bluetooth to connect to your fitness devices and health monitors for real-time monitoring."
-      }
+      },
+      "bundleIdentifier": "com.vitalwatch.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,12 +27,11 @@
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "BLUETOOTH",
-        "BLUETOOTH_ADMIN",
-        "BLUETOOTH_CONNECT",
-        "BLUETOOTH_SCAN",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION"
       ],
       "package": "com.vitalwatch.app"
     },
