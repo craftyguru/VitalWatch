@@ -57,126 +57,20 @@ const getNetworkType = () => {
   return effectiveType || 'wifi';
 };
 
-// Comprehensive device scanner for all types of connected devices
-const scanForAllConnectedDevices = async () => {
+// Comprehensive device scanner for already connected devices (no pairing dialogs)
+const scanForAlreadyConnectedDevices = async () => {
   try {
     if ('bluetooth' in navigator) {
-      const device = await (navigator as any).bluetooth.requestDevice({
-        filters: [
-          // Health & Fitness Services
-          { services: ['heart_rate'] },
-          { services: ['battery_service'] },
-          { services: ['device_information'] },
-          { services: ['fitness_machine'] },
-          { services: ['body_composition'] },
-          { services: ['weight_scale'] },
-          { services: ['blood_pressure'] },
-          { services: ['glucose'] },
-          { services: ['health_thermometer'] },
-          
-          // Audio Devices
-          { services: ['audio_input'] },
-          { services: ['audio_output'] },
-          { services: ['0000110b-0000-1000-8000-00805f9b34fb'] }, // A2DP
-          { services: ['0000111e-0000-1000-8000-00805f9b34fb'] }, // Hands-Free
-          
-          // Smartwatches & Fitness Bands
-          { namePrefix: 'Apple Watch' },
-          { namePrefix: 'Galaxy Watch' },
-          { namePrefix: 'Fitbit' },
-          { namePrefix: 'Garmin' },
-          { namePrefix: 'Wear OS' },
-          { namePrefix: 'Mi Band' },
-          { namePrefix: 'Amazfit' },
-          { namePrefix: 'Huawei' },
-          { namePrefix: 'HONOR' },
-          { namePrefix: 'Polar' },
-          { namePrefix: 'Suunto' },
-          { namePrefix: 'Withings' },
-          
-          // Smart Rings
-          { namePrefix: 'Oura' },
-          { namePrefix: 'Galaxy Ring' },
-          { namePrefix: 'Circular' },
-          { namePrefix: 'Motiv' },
-          { namePrefix: 'McLear' },
-          
-          // Headphones & Audio
-          { namePrefix: 'AirPods' },
-          { namePrefix: 'Galaxy Buds' },
-          { namePrefix: 'WH-' }, // Sony headphones
-          { namePrefix: 'WF-' }, // Sony earbuds
-          { namePrefix: 'Bose' },
-          { namePrefix: 'Beats' },
-          { namePrefix: 'JBL' },
-          { namePrefix: 'Sennheiser' },
-          { namePrefix: 'Audio-Technica' },
-          
-          // Health Monitors
-          { namePrefix: 'Omron' },
-          { namePrefix: 'iHealth' },
-          { namePrefix: 'Beurer' },
-          { namePrefix: 'Withings' },
-          { namePrefix: 'QardioArm' },
-          { namePrefix: 'AccuChek' },
-          
-          // Fitness Equipment
-          { namePrefix: 'Peloton' },
-          { namePrefix: 'NordicTrack' },
-          { namePrefix: 'Wahoo' },
-          { namePrefix: 'Zwift' },
-          
-          // Smart Scales
-          { namePrefix: 'Scale' },
-          { namePrefix: 'Body+' },
-          { namePrefix: 'Aria' }
-        ],
-        optionalServices: [
-          // Core health services
-          'heart_rate',
-          'battery_service', 
-          'device_information',
-          'fitness_machine',
-          'cycling_power',
-          'running_speed_and_cadence',
-          'location_and_navigation',
-          
-          // Body composition & health
-          'body_composition',
-          'weight_scale',
-          'blood_pressure',
-          'glucose',
-          'health_thermometer',
-          'pulse_oximeter',
-          
-          // Audio services
-          'audio_input',
-          'audio_output',
-          '0000110b-0000-1000-8000-00805f9b34fb', // A2DP
-          '0000111e-0000-1000-8000-00805f9b34fb', // Hands-Free
-          '0000110a-0000-1000-8000-00805f9b34fb', // Audio Source
-          '0000110d-0000-1000-8000-00805f9b34fb', // Audio Sink
-          
-          // Sleep & recovery
-          'sleep_monitor',
-          'recovery_tracking',
-          
-          // Environmental sensors
-          'environmental_sensing',
-          'automation_io',
-          'indoor_positioning',
-          
-          // Generic access
-          'generic_access',
-          'generic_attribute'
-        ]
-      });
-      return device;
+      // Get already connected/paired devices instead of requesting new ones
+      const existingDevices = await (navigator as any).bluetooth.getDevices();
+      console.log('Found already connected devices:', existingDevices);
+      return existingDevices;
     }
   } catch (error) {
-    console.log('Device scan failed:', error);
-    return null;
+    console.log('Could not access connected devices:', error);
+    return [];
   }
+  return [];
 };
 
 // Determine device type and icon based on name and services
@@ -358,22 +252,21 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       // Scan for regular Bluetooth devices
       await scanForDevices();
       
-      // Scan for all types of connected devices
-      const connectedDevice = await scanForAllConnectedDevices();
+      // Scan for all types of already connected devices  
+      const connectedDevices = await scanForAlreadyConnectedDevices();
       
       // Re-initialize capabilities
       await initializeCapabilities();
       
-      if (connectedDevice) {
-        const deviceInfo = getDeviceTypeAndIcon(connectedDevice);
+      if (connectedDevices && connectedDevices.length > 0) {
         toast({
-          title: "Device found",
-          description: `Connected to ${connectedDevice.name} (${deviceInfo.type})`,
+          title: "Devices found!",
+          description: `Found ${connectedDevices.length} connected device${connectedDevices.length > 1 ? 's' : ''}`,
         });
       } else {
         toast({
           title: "Scan complete",
-          description: "No new devices found. Make sure devices are in pairing mode and discoverable.",
+          description: "No connected devices found. Connect devices via your phone's Bluetooth settings first.",
         });
       }
     } catch (error) {
