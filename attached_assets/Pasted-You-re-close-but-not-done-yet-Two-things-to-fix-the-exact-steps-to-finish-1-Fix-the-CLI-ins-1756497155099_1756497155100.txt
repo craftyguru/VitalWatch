@@ -1,0 +1,74 @@
+You’re close, but not “done” yet. Two things to fix + the exact steps to finish:
+
+1) Fix the CLI install + configure EAS
+
+Your log shows npx install -g @expo/cli eas-cli (that’s invalid). Do this instead in Replit shell:
+
+npm i -g @expo/cli eas-cli
+cd mobile
+expo login              # or: npx expo login
+eas login               # optional, if prompted
+eas build:configure     # creates eas.json if missing
+
+
+Then make sure your eas.json has a dev-client profile like this:
+
+{
+  "cli": { "version": ">= 11.0.0" },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "android": { "buildType": "apk" }
+    },
+    "production": {
+      "android": { "buildType": "app-bundle" }
+    }
+  }
+}
+
+
+Now kick a cloud build (Replit can’t do native builds locally):
+
+eas build -p android --profile development
+
+
+When it finishes, open the build URL, download the .apk, and install it on your Android phone (allow “Install unknown apps”).
+
+2) Request Android 12+ BLE permissions at runtime
+
+Even with manifest perms, Android 12+ needs runtime grants or scanning returns nothing. Add this once in your RN app (e.g., App.tsx):
+
+import { PermissionsAndroid, Platform } from 'react-native';
+
+async function ensureBlePermissions() {
+  if (Platform.OS !== 'android') return;
+
+  if (Platform.Version >= 31) {
+    await PermissionsAndroid.requestMultiple([
+      'android.permission.BLUETOOTH_SCAN',
+      'android.permission.BLUETOOTH_CONNECT',
+      'android.permission.ACCESS_FINE_LOCATION', // still needed by some OEMs for scans
+    ]);
+  } else {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+  }
+}
+
+
+Call ensureBlePermissions() before you start scanning.
+
+Final quick checklist
+
+ npm i -g @expo/cli eas-cli (not the broken command)
+
+ eas build:configure + dev profile with "developmentClient": true
+
+ eas build -p android --profile development → install APK on phone
+
+ Bluetooth and Location turned on in Android quick settings
+
+ Call ensureBlePermissions() at app start
+
+ Run your scan → if your watch exposes public BLE GATT, it should appear

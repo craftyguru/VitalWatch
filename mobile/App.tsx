@@ -1,8 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Button, FlatList, StyleSheet, SafeAreaView} from 'react-native';
+import {Text, View, Button, FlatList, StyleSheet, SafeAreaView, PermissionsAndroid, Platform} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
 
 const manager = new BleManager();
+
+async function ensureBlePermissions() {
+  if (Platform.OS !== 'android') return;
+
+  if (Platform.Version >= 31) {
+    await PermissionsAndroid.requestMultiple([
+      'android.permission.BLUETOOTH_SCAN',
+      'android.permission.BLUETOOTH_CONNECT',
+      'android.permission.ACCESS_FINE_LOCATION', // still needed by some OEMs for scans
+    ]);
+  } else {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+  }
+}
 
 export default function App() {
   const [devices, setDevices] = useState<Record<string, Device>>({});
@@ -10,6 +26,7 @@ export default function App() {
   const [bleState, setBleState] = useState('Unknown');
 
   useEffect(() => {
+    ensureBlePermissions();
     const sub = manager.onStateChange((s) => {
       setBleState(s);
       if (s === 'PoweredOn') console.log('BLE ready');
@@ -17,8 +34,12 @@ export default function App() {
     return () => { sub.remove(); manager.destroy(); };
   }, []);
 
-  const startScan = () => {
+  const startScan = async () => {
     if (scanning) return;
+    
+    // Ensure permissions before scanning
+    await ensureBlePermissions();
+    
     setScanning(true);
     setDevices({});
     console.log('Starting BLE scan...');
