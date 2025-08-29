@@ -95,6 +95,7 @@ export default function UserDashboard() {
   const [breadcrumbActive, setBreadcrumbActive] = useState(false);
   const [audioRecording, setAudioRecording] = useState<MediaRecorder | null>(null);
   const [safetySubTab, setSafetySubTab] = useState("emergency");
+  const [incognitoMode, setIncognitoMode] = useState(false);
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -343,7 +344,7 @@ export default function UserDashboard() {
   };
 
   const sendEmergencyAlert = async () => {
-    if (!emergencyContacts || emergencyContacts.length === 0) {
+    if (!emergencyContacts || (Array.isArray(emergencyContacts) && emergencyContacts.length === 0)) {
       toast({
         title: "No Emergency Contacts",
         description: "Please add emergency contacts first.",
@@ -422,7 +423,7 @@ export default function UserDashboard() {
           biometrics: currentBiometrics,
           audioBlob: audioBlob ? await audioBlob.arrayBuffer() : null,
           timestamp: new Date().toISOString(),
-          contactId: emergencyContacts[0]?.id || null
+          contactId: (Array.isArray(emergencyContacts) && emergencyContacts[0]) ? emergencyContacts[0].id : null
         };
 
         await fetch('/api/breadcrumb-update', {
@@ -466,11 +467,11 @@ export default function UserDashboard() {
             </label>
             <select className="w-full p-3 border border-red-200 rounded-lg bg-white dark:bg-gray-800 text-red-900 dark:text-red-100">
               <option>Select primary contact...</option>
-              {emergencyContacts && emergencyContacts.map((contact: any) => (
+              {emergencyContacts && Array.isArray(emergencyContacts) ? emergencyContacts.map((contact: any) => (
                 <option key={contact.id} value={contact.id}>
                   {contact.name} - {contact.phone}
                 </option>
-              ))}
+              )) : null}
             </select>
           </div>
           
@@ -900,6 +901,24 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Incognito Mode Overlay */}
+      {incognitoMode && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-40 flex items-center justify-center">
+          <div className="text-center text-white p-8">
+            <Eye className="h-16 w-16 mx-auto mb-4 opacity-50" />
+            <h2 className="text-2xl font-semibold mb-2">VitalWatch Running</h2>
+            <p className="text-gray-300 mb-6">Monitoring in background mode</p>
+            <Button 
+              onClick={() => setIncognitoMode(false)}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              Exit Hidden Mode
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      <div className={incognitoMode ? 'opacity-10 pointer-events-none' : ''}>
       {/* Enhanced Header */}
       <header className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-lg bg-card/95">
         <div className="px-3 sm:px-4 py-2 sm:py-4">
@@ -970,6 +989,18 @@ export default function UserDashboard() {
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-1 sm:space-x-2 ml-2">
+              {/* Incognito Mode Toggle */}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setIncognitoMode(!incognitoMode)}
+                className={`border-purple-200 ${incognitoMode ? 'bg-purple-100 text-purple-800' : 'text-purple-700'} hover:bg-purple-50 hidden sm:flex`}
+                title={incognitoMode ? "Exit Incognito Mode" : "Enter Incognito Mode"}
+              >
+                <Eye className={`h-4 w-4 mr-1 ${incognitoMode ? 'opacity-50' : ''}`} />
+                {incognitoMode ? 'Hidden' : 'Incognito'}
+              </Button>
+              
               {/* Emergency Access Button */}
               <Button variant="outline" size="sm" asChild className="border-red-200 text-red-700 hover:bg-red-50 hidden sm:flex">
                 <Link href="/safetytools">
@@ -2249,6 +2280,7 @@ export default function UserDashboard() {
             <span className="text-xs font-bold">PANIC</span>
           </Button>
         )}
+      </div>
       </div>
     </div>
   );
