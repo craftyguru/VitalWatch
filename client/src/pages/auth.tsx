@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,18 @@ export default function AuthPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -425,17 +437,20 @@ export default function AuthPage() {
 
                   {/* CAPTCHA */}
                   <div className="space-y-3">
-                    <Label className="text-gray-200">Security Verification</Label>
-                    <div className="flex justify-center">
+                    <Label className="text-gray-200 text-sm">Security Verification</Label>
+                    <div className="flex justify-center overflow-x-auto">
                       {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
-                        <ReCAPTCHA
-                          ref={recaptchaRef}
-                          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                          onChange={(token) => setCaptchaToken(token)}
-                          onExpired={() => setCaptchaToken(null)}
-                          theme="dark"
-                          data-testid="recaptcha"
-                        />
+                        <div className="transform scale-90 sm:scale-100 origin-center">
+                          <ReCAPTCHA
+                            ref={recaptchaRef}
+                            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                            onChange={(token) => setCaptchaToken(token)}
+                            onExpired={() => setCaptchaToken(null)}
+                            theme="dark"
+                            size={isMobile ? "compact" : "normal"}
+                            data-testid="recaptcha"
+                          />
+                        </div>
                       ) : (
                         <div className="text-xs text-red-400">
                           CAPTCHA not configured
@@ -445,50 +460,52 @@ export default function AuthPage() {
                   </div>
 
                   {/* Legal Agreement Checkboxes */}
-                  <div className="space-y-3">
-                    <div className="flex items-start space-x-3">
-                      <Checkbox
-                        id="terms-checkbox"
-                        checked={agreedToTerms}
-                        onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                        className="mt-1"
-                        data-testid="checkbox-terms"
-                      />
-                      <div className="flex-1">
-                        <Label htmlFor="terms-checkbox" className="text-sm text-gray-300 cursor-pointer">
-                          I have read and agree to the{" "}
-                          <button
-                            type="button"
-                            onClick={() => setShowTermsModal(true)}
-                            className="text-purple-400 hover:text-purple-300 underline"
-                            data-testid="link-terms"
-                          >
-                            Terms of Service
-                          </button>
-                        </Label>
+                  <div className="space-y-4">
+                    <div className="bg-gray-800/50 rounded-lg p-4 space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <Checkbox
+                          id="terms-checkbox"
+                          checked={agreedToTerms}
+                          onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                          className="mt-0.5 flex-shrink-0"
+                          data-testid="checkbox-terms"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <Label htmlFor="terms-checkbox" className="text-xs sm:text-sm text-gray-300 cursor-pointer leading-relaxed">
+                            I have read and agree to the{" "}
+                            <button
+                              type="button"
+                              onClick={() => setShowTermsModal(true)}
+                              className="text-purple-400 hover:text-purple-300 underline font-medium"
+                              data-testid="link-terms"
+                            >
+                              Terms of Service
+                            </button>
+                          </Label>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-start space-x-3">
-                      <Checkbox
-                        id="privacy-checkbox"
-                        checked={agreedToPrivacy}
-                        onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
-                        className="mt-1"
-                        data-testid="checkbox-privacy"
-                      />
-                      <div className="flex-1">
-                        <Label htmlFor="privacy-checkbox" className="text-sm text-gray-300 cursor-pointer">
-                          I have read and agree to the{" "}
-                          <button
-                            type="button"
-                            onClick={() => setShowPrivacyModal(true)}
-                            className="text-purple-400 hover:text-purple-300 underline"
-                            data-testid="link-privacy"
-                          >
-                            Privacy Policy
-                          </button>
-                        </Label>
+                      <div className="flex items-start space-x-3">
+                        <Checkbox
+                          id="privacy-checkbox"
+                          checked={agreedToPrivacy}
+                          onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
+                          className="mt-0.5 flex-shrink-0"
+                          data-testid="checkbox-privacy"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <Label htmlFor="privacy-checkbox" className="text-xs sm:text-sm text-gray-300 cursor-pointer leading-relaxed">
+                            I have read and agree to the{" "}
+                            <button
+                              type="button"
+                              onClick={() => setShowPrivacyModal(true)}
+                              className="text-purple-400 hover:text-purple-300 underline font-medium"
+                              data-testid="link-privacy"
+                            >
+                              Privacy Policy
+                            </button>
+                          </Label>
+                        </div>
                       </div>
                     </div>
                   </div>

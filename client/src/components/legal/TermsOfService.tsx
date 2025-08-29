@@ -2,9 +2,9 @@ import React from 'react';
 
 export default function TermsOfService() {
   return (
-    <div className="prose prose-sm max-w-none text-gray-700 dark:text-gray-300">
-      <h1 className="text-2xl font-bold mb-6">Terms of Service</h1>
-      <p className="text-sm text-gray-500 mb-8">Last updated: {new Date().toLocaleDateString()}</p>
+    <div className="prose prose-xs sm:prose-sm max-w-none text-gray-700 dark:text-gray-300">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Terms of Service</h1>
+      <p className="text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8">Last updated: {new Date().toLocaleDateString()}</p>
       
       <h2>1. Acceptance of Terms</h2>
       <p>
