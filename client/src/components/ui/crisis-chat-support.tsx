@@ -194,6 +194,14 @@ export default function CrisisChatSupport({
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+      
+      // Keep focus on chat area
+      setTimeout(() => {
+        const chatInput = document.querySelector('[data-testid="input-message"]') as HTMLInputElement;
+        if (chatInput) {
+          chatInput.focus();
+        }
+      }, 100);
     }
   };
 
@@ -224,11 +232,18 @@ export default function CrisisChatSupport({
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Only scroll messages within the chat container, not the entire page
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest'
+      });
+    }
   }, [messages]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6" data-testid="crisis-chat-support">
+    <div className="w-full max-w-4xl mx-auto space-y-6 relative" data-testid="crisis-chat-support" style={{ scrollMarginTop: '2rem' }}>
       <Card className="border-2 border-red-200 dark:border-red-800">
         <CardHeader className="text-center space-y-4">
           <div className="flex items-center justify-center gap-2">
@@ -257,7 +272,7 @@ export default function CrisisChatSupport({
               <TabsTrigger value="settings" data-testid="tab-settings">Settings</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="chat" className="space-y-4">
+            <TabsContent value="chat" className="space-y-4" id="crisis-chat-content">
               {!currentSession ? (
                 <div className="text-center space-y-4">
                   <div className="p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
@@ -279,8 +294,8 @@ export default function CrisisChatSupport({
                   </div>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  <ScrollArea className="h-96 w-full border rounded-lg p-4">
+                <div className="space-y-4 sticky top-4">
+                  <ScrollArea className="h-96 w-full border rounded-lg p-4 relative overflow-hidden">
                     <div className="space-y-4">
                       {loadingMessages && (
                         <div className="text-center py-4">
@@ -308,7 +323,7 @@ export default function CrisisChatSupport({
                                 {formatMessageTime(message.timestamp)}
                               </span>
                               {message.urgency && message.urgency !== 'low' && (
-                                <Badge size="sm" className={getUrgencyColor(message.urgency)}>
+                                <Badge className={getUrgencyColor(message.urgency)}>
                                   {message.urgency}
                                 </Badge>
                               )}
@@ -332,7 +347,7 @@ export default function CrisisChatSupport({
                     </div>
                   </ScrollArea>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 sticky bottom-0 bg-background pt-2">
                     <Input
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
@@ -341,6 +356,17 @@ export default function CrisisChatSupport({
                       disabled={sendMessageMutation.isPending || isTyping}
                       className="flex-1"
                       data-testid="input-message"
+                      onFocus={(e) => {
+                        // Prevent page scroll when input is focused
+                        e.preventDefault();
+                        const chatContainer = document.getElementById('crisis-chat-content');
+                        if (chatContainer) {
+                          chatContainer.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                          });
+                        }
+                      }}
                     />
                     <Button
                       onClick={toggleVoiceMode}
@@ -351,7 +377,16 @@ export default function CrisisChatSupport({
                       {voiceMode ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
                     </Button>
                     <Button
-                      onClick={sendMessage}
+                      onClick={() => {
+                        sendMessage();
+                        // Keep input focused after sending
+                        setTimeout(() => {
+                          const chatInput = document.querySelector('[data-testid="input-message"]') as HTMLInputElement;
+                          if (chatInput) {
+                            chatInput.focus();
+                          }
+                        }, 100);
+                      }}
                       disabled={!inputMessage.trim() || sendMessageMutation.isPending || isTyping}
                       data-testid="button-send-message"
                     >
