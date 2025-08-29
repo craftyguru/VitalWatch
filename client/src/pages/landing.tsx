@@ -373,7 +373,7 @@ export default function LandingPage() {
               </Link>
               
               <div className="flex flex-col items-center space-y-3">
-                <SeamlessInstallButton />
+                <SeamlessInstallButton showAutoPrompt={true} />
                 
                 {/* Mobile deployment notice */}
                 {(window.location.hostname.includes('replit.dev') || window.location.hostname.includes('replit.app')) && (
