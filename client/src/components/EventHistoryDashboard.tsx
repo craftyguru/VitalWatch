@@ -67,6 +67,11 @@ interface EventRecord {
     triggers: string[];
     recommendations: string[];
   };
+  audioRecording?: {
+    filename: string;
+    duration?: number;
+    url?: string;
+  };
 }
 
 export function EventHistoryDashboard() {
@@ -80,156 +85,35 @@ export function EventHistoryDashboard() {
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
   const [showExportDialog, setShowExportDialog] = useState(false);
 
-  // Sample event data - in production this would come from the database
-  const sampleEvents: EventRecord[] = [
-    {
-      id: 'incident-001',
-      type: 'panic_button',
-      title: 'Panic Button Activated',
-      description: 'Manual panic button press during evening walk',
-      severity: 'high',
-      status: 'resolved',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      location: {
-        lat: 37.7749,
-        lng: -122.4194,
-        address: '123 Main St, San Francisco, CA'
-      },
-      biometrics: {
-        heartRate: 145,
-        stressLevel: 89,
-        activityLevel: 92
-      },
-      response: {
-        contactsNotified: 3,
-        responseTime: 45,
-        resolved: true,
-        notes: 'False alarm - user accidentally triggered button'
-      }
-    },
-    {
-      id: 'guardian-002',
-      type: 'guardian_ai',
-      title: 'Anomalous Behavior Pattern Detected',
-      description: 'AI detected unusual movement patterns and elevated stress indicators',
-      severity: 'medium',
-      status: 'resolved',
-      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-      biometrics: {
-        heartRate: 98,
-        stressLevel: 72,
-        activityLevel: 15
-      },
-      aiAnalysis: {
-        confidence: 0.78,
-        triggers: ['Irregular movement', 'Elevated heart rate', 'Location isolation'],
-        recommendations: ['Check-in protocol', 'Breathing exercise suggestion', 'Contact availability check']
-      },
-      response: {
-        contactsNotified: 1,
-        resolved: true,
-        notes: 'User confirmed safety via app response'
-      }
-    },
-    {
-      id: 'auto-003',
-      type: 'auto_detected',
-      title: 'Fall Detection Alert',
-      description: 'Automatic fall detected by device sensors',
-      severity: 'critical',
-      status: 'resolved',
-      timestamp: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 days ago
-      location: {
-        lat: 37.7849,
-        lng: -122.4094,
-        address: 'Golden Gate Park, San Francisco, CA'
-      },
-      biometrics: {
-        heartRate: 156,
-        stressLevel: 95,
-        activityLevel: 5
-      },
-      deviceData: {
-        accelerometer: { x: -2.3, y: 8.9, z: -0.5 },
-        impact: 'severe'
-      },
-      response: {
-        contactsNotified: 5,
-        responseTime: 12,
-        resolved: true,
-        notes: 'User responded quickly, minor injury reported to contacts'
-      }
-    },
-    {
-      id: 'mood-004',
-      type: 'mood_alert',
-      title: 'Mental Health Risk Assessment',
-      description: 'Concerning mood pattern identified through AI analysis',
-      severity: 'medium',
-      status: 'active',
-      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      aiAnalysis: {
-        confidence: 0.82,
-        triggers: ['Declining mood trend', 'Reduced activity', 'Sleep pattern disruption'],
-        recommendations: ['Professional consultation', 'Mood tracking increase', 'Support network activation']
-      },
-      response: {
-        contactsNotified: 0,
-        resolved: false,
-        notes: 'Monitoring in progress'
-      }
-    },
-    {
-      id: 'crisis-005',
-      type: 'crisis_chat',
-      title: 'Crisis Chat Session Escalation',
-      description: 'High-risk conversation escalated to human counselor',
-      severity: 'high',
-      status: 'resolved',
-      timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
-      aiAnalysis: {
-        confidence: 0.91,
-        triggers: ['Self-harm indicators', 'Crisis language', 'Emotional distress'],
-        recommendations: ['Immediate human intervention', 'Safety plan activation', 'Emergency contact alert']
-      },
-      response: {
-        contactsNotified: 2,
-        responseTime: 8,
-        resolved: true,
-        notes: 'Successfully connected to crisis counselor, situation stabilized'
-      }
-    }
-  ];
+  // Fetch real user events from database
+  const { data: userEvents = [], isLoading } = useQuery({
+    queryKey: ['/api/events', { dateRange, type: selectedFilter }],
+    enabled: !!user,
+  });
 
-  // Filtering logic
+  // Transform database events to EventRecord format
+  const events: EventRecord[] = userEvents.map((event: any) => ({
+    ...event,
+    timestamp: new Date(event.createdAt || event.timestamp),
+  }));
+
+  // Filtering logic for real user data
   const filteredEvents = useMemo(() => {
-    let events = sampleEvents;
-
-    // Date range filtering
-    if (dateRange !== 'all') {
-      const days = parseInt(dateRange.replace('d', ''));
-      const cutoff = subDays(new Date(), days);
-      events = events.filter(event => event.timestamp > cutoff);
-    }
-
-    // Type filtering
-    if (selectedFilter !== 'all') {
-      events = events.filter(event => event.type === selectedFilter);
-    }
-
-    // Search filtering
+    if (!events.length) return [];
+    
+    // Search filtering (other filters handled by API query)
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      events = events.filter(event => 
-        event.title.toLowerCase().includes(query) ||
+      return events.filter(event => 
+        event.title?.toLowerCase().includes(query) ||
         event.description?.toLowerCase().includes(query) ||
-        event.status.toLowerCase().includes(query) ||
-        event.severity.toLowerCase().includes(query)
+        event.status?.toLowerCase().includes(query) ||
+        event.severity?.toLowerCase().includes(query)
       );
     }
 
     return events.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-  }, [sampleEvents, dateRange, selectedFilter, searchQuery]);
+  }, [events, searchQuery]);
 
   // Analytics calculations
   const analytics = useMemo(() => {
@@ -277,6 +161,41 @@ export function EventHistoryDashboard() {
       case 'crisis_chat': return <Heart className="w-4 h-4 text-purple-600" />;
       case 'mood_alert': return <Activity className="w-4 h-4 text-yellow-600" />;
       default: return <Clock className="w-4 h-4 text-gray-600" />;
+    }
+  };
+
+  const downloadAudioRecording = async (audioRecording: { filename: string; duration?: number; url?: string }) => {
+    try {
+      if (audioRecording.url) {
+        // Direct download from URL
+        const a = document.createElement('a');
+        a.href = audioRecording.url;
+        a.download = audioRecording.filename;
+        a.click();
+      } else {
+        // Fetch from API
+        const response = await fetch(`/api/events/audio/${audioRecording.filename}`);
+        if (!response.ok) throw new Error('Failed to fetch audio');
+        
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = audioRecording.filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      
+      toast({
+        title: "Download Started",
+        description: `Audio recording: ${audioRecording.filename}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Download Failed",
+        description: "Unable to download audio recording",
+        variant: "destructive"
+      });
     }
   };
 
@@ -438,13 +357,27 @@ export function EventHistoryDashboard() {
 
         {/* Timeline View */}
         <TabsContent value="timeline" className="space-y-4">
-          {filteredEvents.length === 0 ? (
+          {isLoading ? (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Loading Events</h3>
+                <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+                  Fetching your safety event history...
+                </p>
+              </CardContent>
+            </Card>
+          ) : filteredEvents.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                 <Clock className="w-12 h-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">No Events Found</h3>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  {searchQuery ? 'No Events Match Your Search' : 'No Events Yet'}
+                </h3>
                 <p className="text-gray-500 dark:text-gray-400 max-w-sm">
-                  {searchQuery ? 'No events match your search criteria.' : 'No events found for the selected time range.'}
+                  {searchQuery 
+                    ? 'Try adjusting your search terms or filters.' 
+                    : 'Your safety events and Guardian AI activities will appear here once you start using VitalWatch.'}
                 </p>
               </CardContent>
             </Card>
@@ -494,6 +427,23 @@ export function EventHistoryDashboard() {
                                 {event.response.contactsNotified} contacted
                               </span>
                             )}
+                            {event.audioRecording && (
+                              <span className="flex items-center gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    downloadAudioRecording(event.audioRecording!);
+                                  }}
+                                  className="h-5 p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                                  data-testid={`button-download-audio-${event.id}`}
+                                >
+                                  <Download className="w-3 h-3 mr-1" />
+                                  Audio ({event.audioRecording.duration}s)
+                                </Button>
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -508,388 +458,250 @@ export function EventHistoryDashboard() {
 
         {/* Analytics View */}
         <TabsContent value="analytics" className="space-y-6">
-          {/* Event Type Breakdown */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5" />
-                Event Type Breakdown
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(analytics.typeBreakdown).map(([type, count]) => (
-                  <div key={type} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {getEventTypeIcon(type)}
-                      <span className="capitalize font-medium">
-                        {type.replace('_', ' ')}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Progress 
-                        value={analytics.totalEvents > 0 ? (count / analytics.totalEvents) * 100 : 0} 
-                        className="w-24" 
-                      />
-                      <span className="text-sm font-semibold min-w-8 text-right">{count}</span>
-                    </div>
+          {isLoading ? (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Loading Analytics</h3>
+                <p className="text-gray-500 dark:text-gray-400 max-w-sm">Analyzing your safety data...</p>
+              </CardContent>
+            </Card>
+          ) : filteredEvents.length === 0 ? (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <BarChart3 className="w-12 h-12 text-gray-400 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">No Analytics Data</h3>
+                <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+                  Analytics will appear here once you have safety events to analyze.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Event Type Breakdown */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5" />
+                    Event Type Breakdown
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {Object.entries(analytics.typeBreakdown).map(([type, count]) => (
+                      <div key={type} className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {getEventTypeIcon(type)}
+                          <span className="capitalize font-medium">
+                            {type.replace('_', ' ')}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Progress 
+                            value={analytics.totalEvents > 0 ? (count / analytics.totalEvents) * 100 : 0} 
+                            className="w-24" 
+                          />
+                          <span className="text-sm font-semibold min-w-8 text-right">{count}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </CardContent>
+              </Card>
+
+              {/* Response Performance */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Response Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Average Response Time</span>
+                        <span className="font-bold text-lg">{analytics.avgResponseTime.toFixed(1)}s</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Resolution Rate</span>
+                        <span className="font-bold text-lg text-green-600">{analytics.resolutionRate.toFixed(1)}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Critical Events</span>
+                        <span className="font-bold text-lg text-red-600">{analytics.criticalEvents}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Recent Activity */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Recent Activity Trends</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">This Week</span>
+                        <span className="font-bold">
+                          {filteredEvents.filter(e => 
+                            e.timestamp > subDays(new Date(), 7)
+                          ).length} events
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Active Monitoring</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200">
+                          Running
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Guardian AI Status</span>
+                        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200">
+                          Active
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Response Performance */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Response Performance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Average Response Time</span>
-                    <span className="font-bold text-lg">{analytics.avgResponseTime.toFixed(1)}s</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Resolution Rate</span>
-                    <span className="font-bold text-lg text-green-600">{analytics.resolutionRate.toFixed(1)}%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Critical Events</span>
-                    <span className="font-bold text-lg text-red-600">{analytics.criticalEvents}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Recent Activity Trends</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">This Week</span>
-                    <span className="font-bold">
-                      {filteredEvents.filter(e => 
-                        e.timestamp > subDays(new Date(), 7)
-                      ).length} events
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Active Monitoring</span>
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200">
-                      Running
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Guardian AI Status</span>
-                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200">
-                      Active
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            </>
+          )}
         </TabsContent>
 
         {/* AI Insights View */}
         <TabsContent value="insights" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="w-5 h-5 text-blue-500" />
-                AI Analysis & Patterns
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {/* Pattern Analysis */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">Identified Patterns</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                        <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
-                        <div>
-                          <div className="font-medium text-yellow-800 dark:text-yellow-200">Evening Activity Pattern</div>
-                          <div className="text-sm text-yellow-700 dark:text-yellow-300">60% of incidents occur between 6-9 PM</div>
-                          <div className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">Recommendation: Enhanced monitoring during evening hours</div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
-                        <div>
-                          <div className="font-medium text-blue-800 dark:text-blue-200">Stress Correlation</div>
-                          <div className="text-sm text-blue-700 dark:text-blue-300">Events correlate with elevated stress (&gt;70)</div>
-                          <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Suggestion: Proactive stress management tools</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">AI Recommendations</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-800">
-                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                        <div>
-                          <div className="font-medium text-green-800 dark:text-green-200">Safety Improvement</div>
-                          <div className="text-sm text-green-700 dark:text-green-300">Consider adding more emergency contacts</div>
-                          <div className="text-xs text-green-600 dark:text-green-400 mt-1">Current: 3 contacts | Recommended: 5+</div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                        <Settings className="w-5 h-5 text-purple-600 mt-0.5" />
-                        <div>
-                          <div className="font-medium text-purple-800 dark:text-purple-200">System Optimization</div>
-                          <div className="text-sm text-purple-700 dark:text-purple-300">Reduce false positive rate by 15%</div>
-                          <div className="text-xs text-purple-600 dark:text-purple-400 mt-1">Adjust sensitivity thresholds</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Risk Assessment */}
-                <div className="mt-8">
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Current Risk Assessment</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="border-green-200 dark:border-green-800">
-                      <CardContent className="p-4 text-center">
-                        <div className="text-3xl font-bold text-green-600 mb-1">LOW</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Current Risk Level</div>
-                        <div className="mt-2 text-xs text-green-700 dark:text-green-300">
-                          Based on recent patterns and activity
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-blue-200 dark:border-blue-800">
-                      <CardContent className="p-4 text-center">
-                        <div className="text-3xl font-bold text-blue-600 mb-1">94%</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">System Confidence</div>
-                        <div className="mt-2 text-xs text-blue-700 dark:text-blue-300">
-                          AI Guardian monitoring accuracy
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-orange-200 dark:border-orange-800">
-                      <CardContent className="p-4 text-center">
-                        <div className="text-3xl font-bold text-orange-600 mb-1">23</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Days Safe</div>
-                        <div className="mt-2 text-xs text-orange-700 dark:text-orange-300">
-                          Since last critical event
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* Event Detail Dialog */}
-      <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-3">
-              {selectedEvent && getEventTypeIcon(selectedEvent.type)}
-              {selectedEvent?.title}
-              <Badge className={`ml-auto ${selectedEvent && getSeverityColor(selectedEvent.severity)}`}>
-                {selectedEvent?.severity.toUpperCase()}
-              </Badge>
-            </DialogTitle>
-          </DialogHeader>
-          
-          {selectedEvent && (
-            <div className="space-y-6">
-              {/* Event Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Event Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Date & Time:</span>
-                      <span className="font-medium">{format(selectedEvent.timestamp, 'PPp')}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Type:</span>
-                      <span className="font-medium capitalize">{selectedEvent.type.replace('_', ' ')}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Status:</span>
-                      <Badge variant={selectedEvent.status === 'resolved' ? 'default' : 'destructive'}>
-                        {selectedEvent.status}
-                      </Badge>
-                    </div>
-                    {selectedEvent.response?.responseTime && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Response Time:</span>
-                        <span className="font-medium">{selectedEvent.response.responseTime}s</span>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Location & Biometrics */}
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Context Data</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {selectedEvent.location && (
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400">Location:</span>
-                        <div className="mt-1 text-sm bg-gray-50 dark:bg-gray-900 p-2 rounded">
-                          {selectedEvent.location.address}
-                        </div>
-                      </div>
-                    )}
-                    {selectedEvent.biometrics && (
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400">Biometrics:</span>
-                        <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
-                          {selectedEvent.biometrics.heartRate && (
-                            <div className="text-center p-2 bg-red-50 dark:bg-red-950/20 rounded">
-                              <div className="font-semibold text-red-600">{selectedEvent.biometrics.heartRate}</div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400">BPM</div>
-                            </div>
-                          )}
-                          {selectedEvent.biometrics.stressLevel && (
-                            <div className="text-center p-2 bg-orange-50 dark:bg-orange-950/20 rounded">
-                              <div className="font-semibold text-orange-600">{selectedEvent.biometrics.stressLevel}</div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400">Stress</div>
-                            </div>
-                          )}
-                          {selectedEvent.biometrics.activityLevel && (
-                            <div className="text-center p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
-                              <div className="font-semibold text-blue-600">{selectedEvent.biometrics.activityLevel}</div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400">Activity</div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* AI Analysis (if available) */}
-              {selectedEvent.aiAnalysis && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Brain className="w-5 h-5 text-blue-500" />
-                      AI Guardian Analysis
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+          {isLoading ? (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Loading AI Insights</h3>
+                <p className="text-gray-500 dark:text-gray-400 max-w-sm">Analyzing your data patterns...</p>
+              </CardContent>
+            </Card>
+          ) : filteredEvents.length === 0 ? (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <Brain className="w-12 h-12 text-gray-400 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">No AI Insights Available</h3>
+                <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+                  AI insights will be generated once you have sufficient safety event data for analysis.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-blue-500" />
+                  AI Analysis & Patterns
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Real AI Insights based on user data */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-gray-600 dark:text-gray-400">Confidence Level:</span>
-                        <div className="flex items-center gap-2">
-                          <Progress value={selectedEvent.aiAnalysis.confidence * 100} className="w-20" />
-                          <span className="font-semibold">{(selectedEvent.aiAnalysis.confidence * 100).toFixed(0)}%</span>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400 font-medium">Triggers Detected:</span>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {selectedEvent.aiAnalysis.triggers.map((trigger, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {trigger}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400 font-medium">Recommendations:</span>
-                        <div className="mt-2 space-y-2">
-                          {selectedEvent.aiAnalysis.recommendations.map((rec, index) => (
-                            <div key={index} className="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
-                              <Star className="w-4 h-4 text-blue-500 mt-0.5" />
-                              <span className="text-sm">{rec}</span>
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100">Data Insights</h4>
+                      <div className="space-y-3">
+                        {filteredEvents.some(e => e.type === 'panic_button') && (
+                          <div className="flex items-start gap-3 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                            <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5" />
+                            <div>
+                              <div className="font-medium text-amber-800 dark:text-amber-200">Manual Activations</div>
+                              <div className="text-sm text-amber-700 dark:text-amber-300">
+                                {filteredEvents.filter(e => e.type === 'panic_button').length} panic button activations recorded
+                              </div>
                             </div>
-                          ))}
-                        </div>
+                          </div>
+                        )}
+                        
+                        {filteredEvents.some(e => e.type === 'guardian_ai') && (
+                          <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <Brain className="w-5 h-5 text-blue-600 mt-0.5" />
+                            <div>
+                              <div className="font-medium text-blue-800 dark:text-blue-200">AI Detection Events</div>
+                              <div className="text-sm text-blue-700 dark:text-blue-300">
+                                {filteredEvents.filter(e => e.type === 'guardian_ai').length} situations detected by Guardian AI
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
 
-              {/* Response Summary */}
-              {selectedEvent.response && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-green-500" />
-                      Response Summary
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Contacts Notified:</span>
-                        <span className="font-medium">{selectedEvent.response.contactsNotified}</span>
-                      </div>
-                      {selectedEvent.response.responseTime && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">Response Time:</span>
-                          <span className="font-medium">{selectedEvent.response.responseTime} seconds</span>
-                        </div>
-                      )}
-                      <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Resolution Status:</span>
-                        <Badge variant={selectedEvent.response.resolved ? 'default' : 'destructive'}>
-                          {selectedEvent.response.resolved ? 'Resolved' : 'Ongoing'}
-                        </Badge>
-                      </div>
-                      {selectedEvent.response.notes && (
-                        <div>
-                          <span className="text-gray-600 dark:text-gray-400">Notes:</span>
-                          <div className="mt-1 p-3 bg-gray-50 dark:bg-gray-900 rounded text-sm">
-                            {selectedEvent.response.notes}
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100">Safety Recommendations</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-800">
+                          <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-green-800 dark:text-green-200">Response Performance</div>
+                            <div className="text-sm text-green-700 dark:text-green-300">
+                              {analytics.resolutionRate.toFixed(0)}% resolution rate - {analytics.resolutionRate >= 80 ? 'Excellent' : analytics.resolutionRate >= 60 ? 'Good' : 'Needs improvement'}
+                            </div>
                           </div>
                         </div>
-                      )}
+                        
+                        {analytics.avgResponseTime > 0 && (
+                          <div className="flex items-start gap-3 p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                            <Settings className="w-5 h-5 text-purple-600 mt-0.5" />
+                            <div>
+                              <div className="font-medium text-purple-800 dark:text-purple-200">Response Time Analysis</div>
+                              <div className="text-sm text-purple-700 dark:text-purple-300">
+                                Average response: {analytics.avgResponseTime.toFixed(0)}s
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  </div>
 
-              {/* Action Buttons */}
-              <div className="flex justify-end space-x-3 pt-4 border-t">
-                <Button variant="outline" size="sm">
-                  <Archive className="w-4 h-4 mr-1" />
-                  Archive Event
-                </Button>
-                <Button variant="outline" size="sm">
-                  <FileText className="w-4 h-4 mr-1" />
-                  Generate Report
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Delete Event
-                </Button>
-              </div>
-            </div>
+                  {/* Risk Assessment based on real data */}
+                  <div className="mt-8">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Current Status</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Card className={`${analytics.criticalEvents === 0 ? 'border-green-200 dark:border-green-800' : 'border-amber-200 dark:border-amber-800'}`}>
+                        <CardContent className="p-4 text-center">
+                          <div className={`text-3xl font-bold ${analytics.criticalEvents === 0 ? 'text-green-600' : 'text-amber-600'} mb-1`}>
+                            {analytics.criticalEvents === 0 ? 'LOW' : 'MEDIUM'}
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">Current Risk Level</div>
+                          <div className="mt-2 text-xs text-gray-700 dark:text-gray-300">
+                            Based on recent event patterns
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-blue-200 dark:border-blue-800">
+                        <CardContent className="p-4 text-center">
+                          <div className="text-3xl font-bold text-blue-600 mb-1">{analytics.totalEvents}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">Total Events</div>
+                          <div className="mt-2 text-xs text-gray-700 dark:text-gray-300">
+                            All recorded incidents
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-purple-200 dark:border-purple-800">
+                        <CardContent className="p-4 text-center">
+                          <div className="text-3xl font-bold text-purple-600 mb-1">
+                            {analytics.resolutionRate > 0 ? analytics.resolutionRate.toFixed(0) + '%' : 'N/A'}
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">Resolution Rate</div>
+                          <div className="mt-2 text-xs text-gray-700 dark:text-gray-300">
+                            Successfully resolved incidents
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
-        </DialogContent>
-      </Dialog>
+        </TabsContent>
+      </Tabs>
 
       {/* Export Dialog */}
       <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
@@ -899,47 +711,139 @@ export function EventHistoryDashboard() {
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Export your event history data for backup or analysis purposes.
+              Choose format to export your event history data.
             </p>
-            <div className="grid grid-cols-1 gap-3">
-              <Button 
-                variant="outline" 
+            <div className="flex space-x-2">
+              <Button
                 onClick={() => {
                   exportData('csv');
                   setShowExportDialog(false);
                 }}
-                className="justify-start"
+                variant="outline"
+                className="flex-1"
               >
                 <FileText className="w-4 h-4 mr-2" />
-                Export as CSV (Excel Compatible)
+                Export as CSV
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
                 onClick={() => {
                   exportData('json');
                   setShowExportDialog(false);
                 }}
-                className="justify-start"
+                variant="outline"
+                className="flex-1"
               >
                 <FileText className="w-4 h-4 mr-2" />
-                Export as JSON (Technical Data)
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  toast({
-                    title: "PDF Export",
-                    description: "PDF export feature coming soon!",
-                  });
-                  setShowExportDialog(false);
-                }}
-                className="justify-start"
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                Export as PDF Report (Coming Soon)
+                Export as JSON
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Event Detail Dialog */}
+      <Dialog open={selectedEvent !== null} onOpenChange={() => setSelectedEvent(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {selectedEvent && getEventTypeIcon(selectedEvent.type)}
+              {selectedEvent?.title}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedEvent && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge className={getSeverityColor(selectedEvent.severity)}>
+                  {selectedEvent.severity.toUpperCase()}
+                </Badge>
+                <Badge 
+                  variant={selectedEvent.status === 'resolved' ? 'default' : selectedEvent.status === 'active' ? 'destructive' : 'secondary'}
+                >
+                  {selectedEvent.status.toUpperCase()}
+                </Badge>
+              </div>
+              
+              <p className="text-gray-600 dark:text-gray-400">{selectedEvent.description}</p>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium">Timestamp:</span>
+                  <p>{format(selectedEvent.timestamp, 'PPpp')}</p>
+                </div>
+                {selectedEvent.location && (
+                  <div>
+                    <span className="font-medium">Location:</span>
+                    <p>{selectedEvent.location.address || `${selectedEvent.location.lat}, ${selectedEvent.location.lng}`}</p>
+                  </div>
+                )}
+                {selectedEvent.response && (
+                  <div>
+                    <span className="font-medium">Response:</span>
+                    <p>{selectedEvent.response.contactsNotified} contacts notified</p>
+                    {selectedEvent.response.responseTime && <p>Response time: {selectedEvent.response.responseTime}s</p>}
+                  </div>
+                )}
+                {selectedEvent.biometrics && (
+                  <div>
+                    <span className="font-medium">Biometrics:</span>
+                    {selectedEvent.biometrics.heartRate && <p>Heart Rate: {selectedEvent.biometrics.heartRate} BPM</p>}
+                    {selectedEvent.biometrics.stressLevel && <p>Stress Level: {selectedEvent.biometrics.stressLevel}%</p>}
+                  </div>
+                )}
+              </div>
+
+              {selectedEvent.audioRecording && (
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Audio Recording:</span>
+                    <Button
+                      onClick={() => downloadAudioRecording(selectedEvent.audioRecording!)}
+                      size="sm"
+                      variant="outline"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      Download Audio ({selectedEvent.audioRecording.duration}s)
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {selectedEvent.aiAnalysis && (
+                <div className="border-t pt-4">
+                  <h4 className="font-medium mb-2">AI Analysis</h4>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-sm font-medium">Confidence:</span>
+                      <span className="text-sm ml-2">{(selectedEvent.aiAnalysis.confidence * 100).toFixed(0)}%</span>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium">Triggers:</span>
+                      <ul className="text-sm ml-4 list-disc">
+                        {selectedEvent.aiAnalysis.triggers.map((trigger, index) => (
+                          <li key={index}>{trigger}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium">Recommendations:</span>
+                      <ul className="text-sm ml-4 list-disc">
+                        {selectedEvent.aiAnalysis.recommendations.map((rec, index) => (
+                          <li key={index}>{rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedEvent.response?.notes && (
+                <div className="border-t pt-4">
+                  <span className="font-medium">Notes:</span>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{selectedEvent.response.notes}</p>
+                </div>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

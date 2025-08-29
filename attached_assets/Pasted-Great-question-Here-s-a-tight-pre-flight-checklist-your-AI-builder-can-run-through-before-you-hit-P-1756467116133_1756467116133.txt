@@ -1,0 +1,143 @@
+Great question. Here’s a tight pre-flight checklist your AI builder can run through before you hit PWABuilder / Play.
+
+Web app (PWA) checks
+
+Manifest.json
+
+id (stable string, e.g. /), name, short_name (≤12 chars), description
+
+start_url is within scope (both absolute or both root-relative)
+
+display: "standalone" (or "fullscreen"), orientation as needed
+
+theme_color and background_color set (match your brand)
+
+Icons: 192×192 and 512×512 PNGs + a maskable icon ("purpose": "any maskable")
+
+(Optional but nice) shortcuts, screenshots, categories
+
+Service worker
+
+Registers at/above your scope
+
+Caching strategy set (static assets pre-cache + runtime cache)
+
+Offline fallback page (custom 200 page instead of a browser error)
+
+No dev-only settings (skipWaiting() used consciously, no console spam)
+
+Installability & quality
+
+Lighthouse PWA score ≥ 90 (installable, manifest + SW detected)
+
+HTTPS only; no mixed content
+
+Critical routes fast (LCP < 2.5s on 4G, basic image compression)
+
+Routing
+
+SPA deep links return 200 + app shell (no 404 from server on refresh)
+
+External links open in a new tab (don’t trap users in your scope)
+
+Trusted Web Activity (TWA) specifics
+
+Digital Asset Links
+
+Publish /.well-known/assetlinks.json with the SHA-256 of your Play App Signing certificate (not the upload key, unless you’re using that to sign the final build).
+
+If you’ve tested with a different cert, include multiple statements (both fingerprints) in the same assetlinks.json.
+
+Must return HTTP 200, Content-Type: application/json, no redirects.
+
+Example for your builder to fill:
+
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.yourdomain.twa",
+      "sha256_cert_fingerprints": [
+        "AA:BB:CC:...:ZZ"
+      ]
+    }
+  }
+]
+
+
+Origin & scope
+
+TWA launch URL uses the same origin you own (matches what’s in assetlinks).
+
+Ensure first route after launch is public (no login wall on first paint), or show a branded signed-out page.
+
+Android package inputs (what PWABuilder needs from you)
+
+Package ID (e.g., app.yourdomain.twa) — stable forever.
+
+App name (≤30) and short label (≤12 if you want clean launcher text).
+
+Splash screen colors, icon, background (PWABuilder will generate; make sure your maskable icon looks good).
+
+Delegation: enable Notification/Geolocation/Camera delegation in PWABuilder so web APIs work inside TWA.
+
+Signing
+
+Prefer Play App Signing. Keep the upload key safe; get the App Signing cert SHA-256 from Play Console → App integrity → “App signing certificate”.
+
+Use that SHA-256 in assetlinks.json.
+
+Play Console content you should prep
+
+Privacy policy URL (public, loads over HTTPS, explains data use)
+
+Data safety form answers (what you collect, why, and if data is processed client-side)
+
+Store graphics
+
+Icon 512×512 PNG
+
+Feature graphic 1024×500
+
+3–8 phone screenshots (and tablet if you support it)
+
+Contact email (works + monitored)
+
+Content rating questionnaire completed
+
+Target audience & ads disclosure (even if no ads)
+
+Quick self-tests your builder can automate
+
+Fetch /.well-known/assetlinks.json: assert 200, valid JSON, contains your package name + cert fingerprint.
+
+Compare cert fingerprint in assetlinks to the one in Play App signing (exact match, colon-separated uppercase).
+
+Run chrome://inspect Lighthouse (CLI or DevTools) and fail build if:
+
+No service worker or manifest errors
+
+PWA “Installable” not satisfied
+
+Curl a few deep links (/dashboard, /login, etc.): verify HTTP 200 + correct HTML shell.
+
+Open TWA (local build) and test:
+
+Push notifications permission + receive flow (if used)
+
+External link behavior (opens outside scope)
+
+Back button returns to prior in-app history, then exits app
+
+Common gotchas to fix now
+
+assetlinks.json behind CDN redirect or wrong MIME → TWA won’t verify.
+
+start_url has query strings that escape scope (e.g., tracking params + wrong scope).
+
+Only round icons provided → missing maskable makes bad crops on splash/launcher.
+
+Service worker path /sw.js while scope is /app/ → SW won’t control routes.
+
+Mixed content from hardcoded http:// image/CDN links.

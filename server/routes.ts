@@ -377,6 +377,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Events API - serves event history for Event History Dashboard
+  app.get('/api/events', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { dateRange, type } = req.query;
+      
+      // Build query conditions
+      let whereConditions = [eq(emergencyIncidents.userId, userId)];
+      
+      // Add date filtering
+      if (dateRange && dateRange !== 'all') {
+        const days = parseInt(dateRange.toString().replace('d', ''));
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        whereConditions.push(gte(emergencyIncidents.createdAt, cutoffDate));
+      }
+      
+      // Add type filtering
+      if (type && type !== 'all') {
+        whereConditions.push(eq(emergencyIncidents.type, type));
+      }
+      
+      // Fetch events (using emergency incidents as the base)
+      const incidents = await db.select().from(emergencyIncidents)
+        .where(and(...whereConditions))
+        .orderBy(desc(emergencyIncidents.createdAt));
+      
+      // Transform incidents to event format
+      const events = incidents.map(incident => ({
+        id: incident.id.toString(),
+        type: incident.type,
+        title: incident.title || `${incident.type.replace('_', ' ')} Event`,
+        description: incident.description,
+        severity: incident.severity,
+        status: incident.status,
+        timestamp: incident.createdAt,
+        location: incident.location ? {
+          lat: incident.location.lat,
+          lng: incident.location.lng,
+          address: incident.location.address
+        } : null,
+        biometrics: incident.biometrics,
+        response: incident.response,
+        aiAnalysis: incident.aiAnalysis,
+        audioRecording: incident.audioRecording ? {
+          filename: incident.audioRecording.filename,
+          duration: incident.audioRecording.duration,
+          url: incident.audioRecording.url
+        } : null
+      }));
+      
+      res.json(events);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({ message: "Failed to fetch events" });
+    }
+  });
+
+  // Audio download endpoint for event recordings
+  app.get('/api/events/audio/:filename', isAuthenticated, async (req: any, res) => {
+    try {
+      const { filename } = req.params;
+      const userId = req.user.id;
+      
+      // Verify the audio file belongs to the user
+      const incident = await db.select()
+        .from(emergencyIncidents)
+        .where(and(
+          eq(emergencyIncidents.userId, userId),
+          sql`audio_recording->>'filename' = ${filename}`
+        ))
+        .limit(1);
+        
+      if (incident.length === 0) {
+        return res.status(404).json({ message: "Audio file not found" });
+      }
+      
+      // If the file has a URL, redirect to it, otherwise serve from storage
+      const audioData = incident[0].audioRecording;
+      if (audioData && audioData.url) {
+        return res.redirect(audioData.url);
+      }
+      
+      // Try to get file from storage service
+      const audioBuffer = await storageService.downloadFile(filename);
+      if (!audioBuffer) {
+        return res.status(404).json({ message: "Audio file not available" });
+      }
+      
+      res.set({
+        'Content-Type': 'audio/mpeg',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Length': audioBuffer.length
+      });
+      
+      res.send(audioBuffer);
+    } catch (error) {
+      console.error("Error downloading audio:", error);
+      res.status(500).json({ message: "Failed to download audio" });
+    }
+  });
+
   // Breadcrumb trail for continuous emergency updates
   app.post('/api/breadcrumb-update', isAuthenticated, async (req: any, res) => {
     try {
