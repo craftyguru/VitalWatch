@@ -24,6 +24,10 @@ export default function LegalAgreementModal({ type, open, onClose, onAgree }: Le
     if (open) {
       setHasScrolledToBottom(false);
       setAgreeClicked(false);
+      // Also check scroll position after content loads
+      setTimeout(() => {
+        checkIfScrolledToBottom();
+      }, 100);
     }
   }, [open]);
 
@@ -31,9 +35,23 @@ export default function LegalAgreementModal({ type, open, onClose, onAgree }: Le
     if (!viewportRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = viewportRef.current;
-    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
     
-    if (isAtBottom && !hasScrolledToBottom) {
+    // If content is shorter than container, no scrolling needed
+    const noScrollNeeded = scrollHeight <= clientHeight + 5;
+    
+    // Check if scrolled to bottom with tolerance
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 30; // 30px tolerance
+    
+    console.log('Scroll check:', { 
+      scrollTop, 
+      scrollHeight, 
+      clientHeight, 
+      isAtBottom, 
+      noScrollNeeded,
+      shouldEnable: isAtBottom || noScrollNeeded 
+    });
+    
+    if ((isAtBottom || noScrollNeeded) && !hasScrolledToBottom) {
       setHasScrolledToBottom(true);
     }
   };
@@ -67,20 +85,15 @@ export default function LegalAgreementModal({ type, open, onClose, onAgree }: Le
         </DialogHeader>
 
         <div className="flex-1 relative min-h-0">
-          <ScrollArea 
-            className="h-full pr-2 sm:pr-4"
-            ref={scrollAreaRef}
+          <div 
+            ref={viewportRef}
+            onScroll={checkIfScrolledToBottom}
+            className="h-full overflow-y-auto pr-2 sm:pr-4"
           >
-            <div 
-              ref={viewportRef}
-              onScroll={checkIfScrolledToBottom}
-              className="max-h-full overflow-y-auto"
-            >
-              <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
-                {type === 'terms' ? <TermsOfService /> : <PrivacyPolicy />}
-              </div>
+            <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
+              {type === 'terms' ? <TermsOfService /> : <PrivacyPolicy />}
             </div>
-          </ScrollArea>
+          </div>
 
           {/* Scroll to bottom indicator */}
           {!hasScrolledToBottom && (
