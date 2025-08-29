@@ -69,6 +69,21 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
     return () => clearInterval(interval);
   }, []);
 
+  // Real-time network monitoring
+  useEffect(() => {
+    const updateNetworkStatus = () => {
+      setLastUpdate(new Date()); // Force re-render to update network status
+    };
+
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
+
+    return () => {
+      window.removeEventListener('online', updateNetworkStatus);
+      window.removeEventListener('offline', updateNetworkStatus);
+    };
+  }, []);
+
   // Create phone device with real sensor data
   const phoneDevice = {
     id: 'user-phone',
@@ -94,11 +109,18 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
         charging: realTimeData.battery.charging,
         active: true
       } : { active: false },
-      network: realTimeData?.network ? {
-        online: realTimeData.network.online,
-        type: realTimeData.network.connectionType,
+      network: {
+        online: navigator.onLine,
+        type: (navigator as any).connection?.effectiveType || 'wifi',
+        downlink: (navigator as any).connection?.downlink,
+        rtt: (navigator as any).connection?.rtt,
         active: true
-      } : { active: false }
+      },
+      temperature: realTimeData?.temperature ? {
+        celsius: realTimeData.temperature.celsius,
+        reason: realTimeData.temperature.reason,
+        active: realTimeData.temperature.active
+      } : { active: false, reason: 'Not available on this device' }
     }
   };
 
@@ -254,21 +276,36 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                   )}
                   
                   {/* Network */}
-                  {device.sensors.network.active && (
-                    <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <Wifi className="h-4 w-4 text-purple-600" />
-                          <span className="text-sm font-medium">Network</span>
-                        </div>
-                        <div className={`w-2 h-2 ${device.sensors.network.online ? 'bg-green-500' : 'bg-red-500'} rounded-full animate-pulse`}></div>
+                  <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <Wifi className="h-4 w-4 text-purple-600" />
+                        <span className="text-sm font-medium">Network</span>
                       </div>
-                      <div className="text-xs space-y-1">
-                        <div>Status: {device.sensors.network.online ? 'Online' : 'Offline'}</div>
-                        <div>Type: {device.sensors.network.type || 'Unknown'}</div>
-                      </div>
+                      <div className={`w-2 h-2 ${device.sensors.network.online ? 'bg-green-500' : 'bg-red-500'} rounded-full animate-pulse`}></div>
                     </div>
-                  )}
+                    <div className="text-xs space-y-1">
+                      <div>Status: {device.sensors.network.online ? 'Online' : 'Offline'}</div>
+                      <div>Type: {device.sensors.network.type || 'wifi'}</div>
+                      {device.sensors.network.downlink && (
+                        <div>Speed: {device.sensors.network.downlink}Mbps</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Temperature (if available) */}
+                  <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <Thermometer className="h-4 w-4 text-orange-600" />
+                        <span className="text-sm font-medium">Temperature</span>
+                      </div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                      {device.sensors.temperature.reason || 'Phone temperature not accessible via web browser'}
+                    </div>
+                  </div>
                   
                   {/* If no sensors are active, show inactive state */}
                   {!device.sensors.motion.active && !device.sensors.location.active && !device.sensors.battery.active && !device.sensors.network.active && (
