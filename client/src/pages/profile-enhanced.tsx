@@ -13,6 +13,7 @@ import { SecuritySettings } from "@/components/profile/SecuritySettings";
 import { NotificationSettings } from "@/components/profile/NotificationSettings";
 import { SubscriptionManagement } from "@/components/profile/SubscriptionManagement";
 import { DataExport } from "@/components/profile/DataExport";
+import { EditProfileModal } from "@/components/profile/EditProfileModal";
 import { 
   User,
   Shield,
@@ -30,6 +31,7 @@ export default function ProfileEnhanced() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   // Fetch user settings
   const { data: userSettings, isLoading: settingsLoading } = useQuery({
@@ -97,6 +99,10 @@ export default function ProfileEnhanced() {
     window.location.href = "/api/logout";
   };
 
+  const handleEditProfile = () => {
+    setIsEditProfileOpen(true);
+  };
+
   const userName = user ? `${(user as any).firstName || ''} ${(user as any).lastName || ''}`.trim() || (user as any).email?.split('@')[0] || "User" : "User";
   const userInitials = userName.split(' ').map((n: string) => n[0]).join('').slice(0, 2);
 
@@ -127,6 +133,7 @@ export default function ProfileEnhanced() {
         userName={userName}
         userInitials={userInitials}
         onLogout={handleLogout}
+        onEditProfile={handleEditProfile}
       />
 
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -214,6 +221,12 @@ export default function ProfileEnhanced() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal 
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+      />
     </div>
   );
 }

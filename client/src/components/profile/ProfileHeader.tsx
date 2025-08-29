@@ -10,16 +10,17 @@ interface ProfileHeaderProps {
   userName: string;
   userInitials: string;
   onLogout: () => void;
+  onEditProfile?: () => void;
 }
 
-export function ProfileHeader({ user, userName, userInitials, onLogout }: ProfileHeaderProps) {
+export function ProfileHeader({ user, userName, userInitials, onLogout, onEditProfile }: ProfileHeaderProps) {
   return (
     <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon" asChild className="hover:bg-blue-100 dark:hover:bg-blue-900">
-              <Link href="/home">
+              <Link href="/dashboard">
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
@@ -58,7 +59,12 @@ export function ProfileHeader({ user, userName, userInitials, onLogout }: Profil
           </div>
           
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" className="hidden md:flex">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="hidden md:flex"
+              onClick={onEditProfile}
+            >
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
             </Button>
