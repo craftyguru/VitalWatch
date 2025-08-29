@@ -7,6 +7,8 @@
   "display": "standalone",
   "prefer_related_applications": false,
   "orientation": "portrait-primary",
+  "start_in_background": true,
+  "background_sync": ["emergency-alert-sync"],
   "theme_color": "#8b5cf6",
   "background_color": "#ffffff",
   "scope": "/",

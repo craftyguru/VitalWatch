@@ -58,6 +58,7 @@ import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
 import { EmergencyContactManager } from "@/components/EmergencyContactManager";
 import { WellnessOverview } from "@/components/WellnessOverview";
 import { useIncognito } from "@/contexts/IncognitoContext";
+import { useBackgroundMonitoring } from "@/hooks/useBackgroundMonitoring";
 
 // Real-time metrics derived from actual sensor data - NO FALLBACKS
 const useRealTimeMetrics = (realTimeData: any) => {
@@ -81,6 +82,7 @@ export default function UserDashboard() {
   const { toast } = useToast();
   const { incognitoMode, setIncognitoMode } = useIncognito();
   const { sensorData, permissions, requestPermissions } = useSafeDeviceSensors();
+  const { isActive: backgroundMonitoringActive, startMonitoring, stopMonitoring, status: monitoringStatus } = useBackgroundMonitoring();
   const { isConnected, lastMessage } = useWebSocket();
   const { capabilities, realTimeData, isScanning } = useRealDeviceScanner();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -1019,6 +1021,30 @@ export default function UserDashboard() {
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-1 sm:space-x-2 ml-2">
+              {/* Background Monitoring Toggle */}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={async () => {
+                  if (backgroundMonitoringActive) {
+                    stopMonitoring();
+                    toast({ title: "Background monitoring stopped" });
+                  } else {
+                    try {
+                      await startMonitoring();
+                      toast({ title: "Background monitoring active", description: "VitalWatch will continue monitoring even when you use other apps" });
+                    } catch (error) {
+                      toast({ title: "Failed to start monitoring", description: "Please enable notifications for background monitoring", variant: "destructive" });
+                    }
+                  }
+                }}
+                className={`border-green-200 ${backgroundMonitoringActive ? 'bg-green-100 text-green-800' : 'text-green-700'} hover:bg-green-50 hidden sm:flex`}
+                title={backgroundMonitoringActive ? "Stop Background Monitoring" : "Start Background Monitoring"}
+              >
+                <Activity className={`h-4 w-4 mr-1 ${backgroundMonitoringActive ? 'animate-pulse' : ''}`} />
+                {backgroundMonitoringActive ? 'Monitoring' : 'Monitor'}
+              </Button>
+
               {/* Incognito Mode Toggle */}
               <Button 
                 variant="outline" 
