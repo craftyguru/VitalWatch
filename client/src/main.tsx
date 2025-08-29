@@ -34,22 +34,21 @@ if ('serviceWorker' in navigator) {
         }
       });
 
-      // Test background sync capability
-      try {
-        if ('sync' in registration) {
-          console.log('VitalWatch: Background sync is supported');
-          
-          // Test background sync registration
-          (registration as any).sync.register('vitalwatch-queue').then(() => {
-            console.log('VitalWatch: Background sync test registration successful');
-          }).catch((error: any) => {
-            console.error('VitalWatch: Background sync test registration failed:', error);
+      // PWABuilder background sync detection
+      if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        navigator.serviceWorker.ready
+          .then(reg => {
+            // Register PWABuilder detection tag
+            return (reg as any).sync.register('pwabuilder-sync');
+          })
+          .then(() => {
+            console.log('VitalWatch: PWABuilder sync detection registered successfully');
+          })
+          .catch(() => {
+            console.log('VitalWatch: PWABuilder sync detection failed (may not be supported)');
           });
-        } else {
-          console.warn('VitalWatch: Background sync is not supported in this browser');
-        }
-      } catch (error) {
-        console.warn('VitalWatch: Background sync check failed:', error);
+      } else {
+        console.log('VitalWatch: Background sync not supported in this browser');
       }
 
     } catch (registrationError) {
