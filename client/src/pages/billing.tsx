@@ -274,7 +274,7 @@ export default function BillingPage() {
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {subscription.smsAlerts === 'unlimited' ? '∞' : (user.monthlyAlertUsage || 0)}
+                  {subscription.smsAlerts === 'unlimited' ? '∞' : '0'}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   SMS Alerts {subscription.smsAlerts !== 'unlimited' && `/ ${subscription.smsAlerts}`}

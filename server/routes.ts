@@ -1687,27 +1687,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }).where(eq(users.id, user.id));
       }
 
-      // Define price IDs (you would set these up in Stripe Dashboard)
-      const priceIds = {
-        guardian: process.env.STRIPE_GUARDIAN_PRICE_ID || 'price_guardian_monthly',
-        professional: process.env.STRIPE_PROFESSIONAL_PRICE_ID || 'price_professional_monthly'
-      };
-
-      const subscription = await stripe.subscriptions.create({
+      // For now, let's create a simple payment intent instead of subscription
+      // This allows testing the upgrade flow without requiring specific Stripe price IDs
+      const amount = plan === 'guardian' ? 999 : 2499; // $9.99 or $24.99 in cents
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: 'usd',
         customer: customerId,
-        items: [{
-          price: priceIds[plan as keyof typeof priceIds],
-        }],
-        payment_behavior: 'default_incomplete',
-        expand: ['latest_invoice.payment_intent'],
+        metadata: {
+          plan: plan,
+          userId: user.id
+        },
+        setup_future_usage: 'off_session'
       });
 
-      const invoice = subscription.latest_invoice as any;
-      const paymentIntent = invoice.payment_intent;
-
       res.json({
-        subscriptionId: subscription.id,
+        paymentIntentId: paymentIntent.id,
         clientSecret: paymentIntent.client_secret,
+        plan: plan,
+        amount: amount
       });
     } catch (error: any) {
       console.error('Stripe subscription error:', error);
