@@ -86,16 +86,19 @@ interface PredictiveAlert {
   priority: 'low' | 'medium' | 'high';
 }
 
+import { useSafeDeviceSensors } from '@/hooks/useSafeDeviceSensors';
+
 export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }: AIGuardianProps) {
+  const { sensorData: deviceSensors, requestPermissions } = useSafeDeviceSensors();
   const [isActive, setIsActive] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'vitals' | 'analytics' | 'incidents' | 'settings'>('overview');
   
-  // Enhanced threat assessment
+  // Enhanced threat assessment - starts with no assessment until monitoring begins
   const [threatLevel, setThreatLevel] = useState<ThreatLevel>({
     level: 'safe',
-    confidence: 0.95,
-    reasons: ['All sensors within normal parameters', 'No behavioral anomalies detected', 'Environmental conditions stable'],
-    recommendations: ['Continue normal activities', 'Maintain current monitoring settings']
+    confidence: 0.0,
+    reasons: ['Monitoring not active - start Guardian to begin assessment'],
+    recommendations: ['Activate AI Guardian to begin real-time monitoring']
   });
   
   // Enhanced threshold settings
@@ -124,101 +127,70 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
     predictiveAnalysis: true
   });
 
-  // Comprehensive sensor readings
-  const [currentReadings, setCurrentReadings] = useState({
-    // Core vitals
-    heartRate: realTimeData?.heartRate?.bpm || 72,
-    temperature: 98.6,
-    stressLevel: 25,
-    bloodOxygen: 98,
-    respiratoryRate: 16,
+  // Real-time sensor readings from device
+  const getCurrentReadings = () => ({
+    // Core vitals - using real sensor data where available
+    heartRate: deviceSensors.heartRate.bpm || null,
+    temperature: deviceSensors.environment.temperature || null,
+    stressLevel: null, // Not available from device sensors
+    bloodOxygen: null, // Not available from device sensors
+    respiratoryRate: null, // Not available from device sensors
     
-    // Motion & Activity
-    motion: realTimeData?.motion ? Math.sqrt(
-      Math.pow(realTimeData.motion.acceleration.x, 2) +
-      Math.pow(realTimeData.motion.acceleration.y, 2) +
-      Math.pow(realTimeData.motion.acceleration.z, 2)
-    ) : 9.8,
-    stepCount: 5240,
-    activityLevel: 65,
-    posture: 'upright',
+    // Motion & Activity - real sensor data
+    motion: deviceSensors.accelerometer.active ? Math.sqrt(
+      Math.pow(deviceSensors.accelerometer.x, 2) +
+      Math.pow(deviceSensors.accelerometer.y, 2) +
+      Math.pow(deviceSensors.accelerometer.z, 2)
+    ) : null,
+    stepCount: null, // Not available from basic device sensors
+    activityLevel: deviceSensors.accelerometer.active ? Math.min(100, Math.abs(deviceSensors.accelerometer.x + deviceSensors.accelerometer.y + deviceSensors.accelerometer.z) * 10) : null,
+    posture: null, // Would require advanced analysis
     
-    // Environmental
-    audioLevel: 45,
-    lightLevel: 65,
-    airQuality: 85,
-    humidity: 45,
-    ambientTemperature: 72,
-    uvIndex: 3,
+    // Environmental - real sensor data
+    audioLevel: deviceSensors.environment.noiseLevel || null,
+    lightLevel: deviceSensors.ambient.light || null,
+    airQuality: deviceSensors.environment.airQuality || null,
+    humidity: deviceSensors.environment.humidity || null,
+    ambientTemperature: deviceSensors.environment.temperature || null,
+    uvIndex: null, // Not available from basic device sensors
     
-    // Location & Context
-    location: realTimeData?.location || null,
-    locationContext: 'indoor',
-    weatherConditions: 'clear',
-    timeOfDay: 'afternoon',
+    // Location & Context - real sensor data
+    location: deviceSensors.location.active ? {
+      latitude: deviceSensors.location.lat,
+      longitude: deviceSensors.location.lng,
+      accuracy: deviceSensors.location.accuracy
+    } : null,
+    locationContext: null, // Would require location analysis
+    weatherConditions: null, // Would require weather API
+    timeOfDay: new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening',
     
-    // Device status
-    batteryLevel: realTimeData?.battery?.level || 85,
-    networkStrength: 4,
-    deviceTemperature: 95,
-    signalQuality: 'excellent'
+    // Device status - real sensor data
+    batteryLevel: deviceSensors.battery.level || null,
+    batteryCharging: deviceSensors.battery.charging || false,
+    networkStrength: null, // Not available from basic APIs
+    deviceTemperature: null, // Not available from basic APIs
+    signalQuality: null // Not available from basic APIs
   });
 
-  // Incident logging
-  const [incidents, setIncidents] = useState<IncidentLog[]>([
-    {
-      id: '1',
-      timestamp: new Date(Date.now() - 3600000),
-      type: 'auto',
-      severity: 'medium',
-      description: 'Elevated heart rate detected during physical activity',
-      sensorData: { heartRate: 145, activity: 'running' },
-      actionTaken: 'Monitored for 10 minutes, returned to normal',
-      resolved: true
-    },
-    {
-      id: '2',
-      timestamp: new Date(Date.now() - 7200000),
-      type: 'anomaly',
-      severity: 'low',
-      description: 'Unusual motion pattern - possible stumble',
-      sensorData: { motion: 18.2, stability: 'low' },
-      actionTaken: 'User check-in completed successfully',
-      resolved: true
-    }
-  ]);
+  const [currentReadings, setCurrentReadings] = useState(getCurrentReadings());
 
-  // Predictive alerts
-  const [predictiveAlerts, setPredictiveAlerts] = useState<PredictiveAlert[]>([
-    {
-      id: '1',
-      type: 'health',
-      prediction: 'Potential fatigue based on activity patterns',
-      confidence: 0.78,
-      timeframe: 'next 2 hours',
-      preventiveActions: ['Take a 15-minute rest break', 'Hydrate adequately', 'Consider light stretching'],
-      priority: 'medium'
-    },
-    {
-      id: '2',
-      type: 'environmental',
-      prediction: 'Air quality may decline due to weather patterns',
-      confidence: 0.65,
-      timeframe: 'next 4 hours',
-      preventiveActions: ['Close windows', 'Use air purifier if available', 'Limit outdoor activities'],
-      priority: 'low'
-    }
-  ]);
+  // Real incident logging - starts empty
+  const [incidents, setIncidents] = useState<IncidentLog[]>([]);
+
+  // Real predictive alerts - starts empty, populated by AI analysis
+  const [predictiveAlerts, setPredictiveAlerts] = useState<PredictiveAlert[]>([]);
 
   const [aiAnalysis, setAiAnalysis] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [monitoringStats, setMonitoringStats] = useState({
-    uptime: '2h 34m',
-    analysesPerformed: 847,
-    anomaliesDetected: 3,
+    uptime: '0h 0m',
+    analysesPerformed: 0,
+    anomaliesDetected: 0,
     falsePositives: 0,
-    predictiveAccuracy: 94.2
+    predictiveAccuracy: 0
   });
+
+  const [startTime, setStartTime] = useState<Date | null>(null);
 
   const analysisIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const patternAnalysisRef = useRef<NodeJS.Timeout | null>(null);
@@ -226,6 +198,19 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
   // Professional monitoring functions
   const startGuardian = async () => {
     setIsActive(true);
+    setStartTime(new Date());
+    
+    // Request sensor permissions if not already granted
+    await requestPermissions();
+    
+    // Reset monitoring stats
+    setMonitoringStats({
+      uptime: '0h 0m',
+      analysesPerformed: 0,
+      anomaliesDetected: 0,
+      falsePositives: 0,
+      predictiveAccuracy: 0
+    });
     
     // Start continuous analysis
     analysisIntervalRef.current = setInterval(() => {
@@ -353,13 +338,14 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
     }
   };
 
-  // Generate predictive insights
+  // Generate predictive insights based on real sensor data
   const generatePredictiveInsights = () => {
-    // Simulate predictive analysis
     const currentTime = new Date().getHours();
+    const newAlerts: PredictiveAlert[] = [];
     
-    if (currentTime > 20 && currentReadings.activityLevel > 70) {
-      const newAlert: PredictiveAlert = {
+    // Only generate insights if we have real sensor data
+    if (currentReadings.activityLevel !== null && currentTime > 20 && currentReadings.activityLevel > 70) {
+      newAlerts.push({
         id: Date.now().toString(),
         type: 'health',
         prediction: 'High activity late in evening may affect sleep quality',
@@ -367,9 +353,37 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
         timeframe: 'tonight',
         preventiveActions: ['Begin wind-down routine', 'Reduce screen time', 'Practice relaxation exercises'],
         priority: 'medium'
-      };
-      
-      setPredictiveAlerts(prev => [newAlert, ...prev.slice(0, 4)]);
+      });
+    }
+    
+    // Low battery warning
+    if (currentReadings.batteryLevel !== null && currentReadings.batteryLevel < 30) {
+      newAlerts.push({
+        id: (Date.now() + 1).toString(),
+        type: 'safety',
+        prediction: 'Device battery running low - emergency response may be impacted',
+        confidence: 0.95,
+        timeframe: 'next 1-2 hours',
+        preventiveActions: ['Charge device immediately', 'Reduce screen brightness', 'Close unnecessary apps'],
+        priority: 'high'
+      });
+    }
+    
+    // Environmental air quality warning
+    if (currentReadings.airQuality !== null && currentReadings.airQuality < 40) {
+      newAlerts.push({
+        id: (Date.now() + 2).toString(),
+        type: 'environmental',
+        prediction: 'Poor air quality detected - respiratory issues possible',
+        confidence: 0.75,
+        timeframe: 'current',
+        preventiveActions: ['Move to better ventilated area', 'Consider wearing mask', 'Limit outdoor activities'],
+        priority: 'medium'
+      });
+    }
+    
+    if (newAlerts.length > 0) {
+      setPredictiveAlerts(prev => [...newAlerts, ...prev.slice(0, 5 - newAlerts.length)]);
     }
   };
 
@@ -388,49 +402,63 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
     setIncidents(prev => [newIncident, ...prev.slice(0, 19)]); // Keep last 20 incidents
   };
 
-  // Enhanced fallback analysis
+  // Enhanced fallback analysis with null-safe checks
   const performFallbackAnalysis = () => {
     const reasons: string[] = [];
     const recommendations: string[] = [];
     let level: ThreatLevel['level'] = 'safe';
     let confidence = 0.8;
+    let hasValidData = false;
 
     // Comprehensive vitals analysis
-    if (currentReadings.heartRate < thresholds.heartRateMin) {
-      reasons.push('Heart rate below normal range - possible bradycardia');
-      level = 'warning';
-    } else if (currentReadings.heartRate > thresholds.heartRateMax) {
-      reasons.push('Elevated heart rate detected');
-      level = 'caution';
+    if (currentReadings.heartRate !== null) {
+      hasValidData = true;
+      if (currentReadings.heartRate < thresholds.heartRateMin) {
+        reasons.push('Heart rate below normal range - possible bradycardia');
+        level = 'warning';
+      } else if (currentReadings.heartRate > thresholds.heartRateMax) {
+        reasons.push('Elevated heart rate detected');
+        level = 'caution';
+      }
     }
 
-    if (currentReadings.temperature > thresholds.temperatureMax) {
+    if (currentReadings.temperature !== null && currentReadings.temperature > thresholds.temperatureMax) {
+      hasValidData = true;
       reasons.push('Elevated body temperature detected');
       level = 'warning';
     }
 
-    if (currentReadings.stressLevel > thresholds.stressLevelMax) {
-      reasons.push('High stress levels detected');
-      level = level === 'safe' ? 'caution' : level;
-    }
-
     // Motion and fall detection
-    if (currentReadings.motion > thresholds.motionThreshold) {
-      reasons.push('Sudden high acceleration - possible fall or impact');
-      level = 'critical';
-      confidence = 0.9;
+    if (currentReadings.motion !== null) {
+      hasValidData = true;
+      if (currentReadings.motion > thresholds.motionThreshold) {
+        reasons.push('Sudden high acceleration - possible fall or impact');
+        level = 'critical';
+        confidence = 0.9;
+      }
     }
 
     // Environmental factors
-    if (currentReadings.airQuality < thresholds.airQualityMin) {
+    if (currentReadings.airQuality !== null && currentReadings.airQuality < thresholds.airQualityMin) {
+      hasValidData = true;
       reasons.push('Poor air quality detected');
       level = level === 'safe' ? 'caution' : level;
     }
 
     // Device and connectivity
-    if (currentReadings.batteryLevel < thresholds.batteryLevelMin) {
-      reasons.push('Low device battery - emergency response capability may be affected');
-      level = level === 'safe' ? 'caution' : level;
+    if (currentReadings.batteryLevel !== null) {
+      hasValidData = true;
+      if (currentReadings.batteryLevel < thresholds.batteryLevelMin) {
+        reasons.push('Low device battery - emergency response capability may be affected');
+        level = level === 'safe' ? 'caution' : level;
+      }
+    }
+
+    // If no valid sensor data is available
+    if (!hasValidData) {
+      reasons.push('Limited sensor data available - requesting device permissions');
+      recommendations.push('Enable device sensors for comprehensive monitoring');
+      confidence = 0.3;
     }
 
     // Generate recommendations
@@ -472,66 +500,35 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
     }
   };
 
-  // Update comprehensive sensor readings with realistic variations
+  // Update sensor readings from real device data
   useEffect(() => {
     if (isActive) {
       const interval = setInterval(() => {
-        setCurrentReadings(prev => ({
-          ...prev,
-          // Core vitals with realistic variation
-          heartRate: realTimeData?.heartRate?.bpm || Math.max(50, Math.min(150, prev.heartRate + (Math.random() - 0.5) * 8)),
-          temperature: Math.max(96, Math.min(102, prev.temperature + (Math.random() - 0.5) * 0.2)),
-          stressLevel: Math.max(0, Math.min(100, prev.stressLevel + (Math.random() - 0.5) * 10)),
-          bloodOxygen: Math.max(85, Math.min(100, prev.bloodOxygen + (Math.random() - 0.5) * 2)),
-          
-          // Motion and activity
-          motion: realTimeData?.motion ? Math.sqrt(
-            Math.pow(realTimeData.motion.acceleration.x, 2) +
-            Math.pow(realTimeData.motion.acceleration.y, 2) +
-            Math.pow(realTimeData.motion.acceleration.z, 2)
-          ) : Math.max(0, prev.motion + (Math.random() - 0.5) * 3),
-          stepCount: prev.stepCount + Math.floor(Math.random() * 3),
-          activityLevel: Math.max(0, Math.min(100, prev.activityLevel + (Math.random() - 0.5) * 15)),
-          
-          // Environmental
-          audioLevel: Math.max(20, Math.min(100, prev.audioLevel + (Math.random() - 0.5) * 15)),
-          lightLevel: Math.max(0, Math.min(100, prev.lightLevel + (Math.random() - 0.5) * 10)),
-          airQuality: Math.max(0, Math.min(100, prev.airQuality + (Math.random() - 0.5) * 5)),
-          humidity: Math.max(20, Math.min(80, prev.humidity + (Math.random() - 0.5) * 5)),
-          
-          // Device status
-          batteryLevel: Math.max(0, prev.batteryLevel - (Math.random() * 0.1))
-        }));
-      }, 3000); // Update every 3 seconds
+        setCurrentReadings(getCurrentReadings());
+      }, 1000); // Update every second
 
       return () => clearInterval(interval);
     }
-  }, [isActive, realTimeData]);
+  }, [isActive, deviceSensors]);
 
   // Update monitoring uptime
   useEffect(() => {
-    if (isActive) {
+    if (isActive && startTime) {
       const uptimeInterval = setInterval(() => {
-        setMonitoringStats(prev => {
-          const currentUptime = prev.uptime;
-          const [hours, minutes] = currentUptime.split('h ')[0] === currentUptime 
-            ? [0, parseInt(currentUptime.split('m')[0])]
-            : [parseInt(currentUptime.split('h')[0]), parseInt(currentUptime.split('h ')[1].split('m')[0])];
-          
-          const newMinutes = minutes + 1;
-          const newHours = hours + Math.floor(newMinutes / 60);
-          const finalMinutes = newMinutes % 60;
-          
-          return {
-            ...prev,
-            uptime: `${newHours}h ${finalMinutes}m`
-          };
-        });
+        const now = new Date();
+        const diffMs = now.getTime() - startTime.getTime();
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        
+        setMonitoringStats(prev => ({
+          ...prev,
+          uptime: `${hours}h ${minutes}m`
+        }));
       }, 60000); // Update every minute
 
       return () => clearInterval(uptimeInterval);
     }
-  }, [isActive]);
+  }, [isActive, startTime]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -810,11 +807,11 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                         <Heart className="h-5 w-5 text-red-500" />
                         <span className="font-medium">Heart Rate</span>
                       </div>
-                      <span className="text-2xl font-bold">{Math.round(currentReadings.heartRate)}</span>
+                      <span className="text-2xl font-bold">{currentReadings.heartRate !== null ? Math.round(currentReadings.heartRate) : 'N/A'}</span>
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">BPM</div>
                     <Progress 
-                      value={(currentReadings.heartRate / 180) * 100} 
+                      value={currentReadings.heartRate !== null ? (currentReadings.heartRate / 180) * 100 : 0} 
                       className="h-2"
                     />
                     <div className="text-xs mt-1 text-muted-foreground">
@@ -830,11 +827,11 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                         <Thermometer className="h-5 w-5 text-blue-500" />
                         <span className="font-medium">Temperature</span>
                       </div>
-                      <span className="text-2xl font-bold">{currentReadings.temperature.toFixed(1)}°</span>
+                      <span className="text-2xl font-bold">{currentReadings.temperature !== null ? currentReadings.temperature.toFixed(1) + '°' : 'N/A'}</span>
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">Fahrenheit</div>
                     <Progress 
-                      value={((currentReadings.temperature - 95) / 10) * 100} 
+                      value={currentReadings.temperature !== null ? ((currentReadings.temperature - 95) / 10) * 100 : 0} 
                       className="h-2"
                     />
                     <div className="text-xs mt-1 text-muted-foreground">
@@ -850,11 +847,11 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                         <Brain className="h-5 w-5 text-purple-500" />
                         <span className="font-medium">Stress Level</span>
                       </div>
-                      <span className="text-2xl font-bold">{Math.round(currentReadings.stressLevel)}%</span>
+                      <span className="text-2xl font-bold">{currentReadings.stressLevel !== null ? Math.round(currentReadings.stressLevel) + '%' : 'N/A'}</span>
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">Current</div>
                     <Progress 
-                      value={currentReadings.stressLevel} 
+                      value={currentReadings.stressLevel !== null ? currentReadings.stressLevel : 0} 
                       className="h-2"
                     />
                     <div className="text-xs mt-1 text-muted-foreground">
@@ -870,11 +867,11 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                         <Activity className="h-5 w-5 text-green-500" />
                         <span className="font-medium">Blood Oxygen</span>
                       </div>
-                      <span className="text-2xl font-bold">{Math.round(currentReadings.bloodOxygen)}%</span>
+                      <span className="text-2xl font-bold">{currentReadings.bloodOxygen !== null ? Math.round(currentReadings.bloodOxygen) + '%' : 'N/A'}</span>
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">SpO2</div>
                     <Progress 
-                      value={currentReadings.bloodOxygen} 
+                      value={currentReadings.bloodOxygen !== null ? currentReadings.bloodOxygen : 0} 
                       className="h-2"
                     />
                     <div className="text-xs mt-1 text-muted-foreground">
@@ -890,11 +887,11 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                         <Activity className="h-5 w-5 text-cyan-500" />
                         <span className="font-medium">Respiratory</span>
                       </div>
-                      <span className="text-2xl font-bold">{Math.round(currentReadings.respiratoryRate)}</span>
+                      <span className="text-2xl font-bold">{currentReadings.respiratoryRate !== null ? Math.round(currentReadings.respiratoryRate) : 'N/A'}</span>
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">BPM</div>
                     <Progress 
-                      value={(currentReadings.respiratoryRate / 30) * 100} 
+                      value={currentReadings.respiratoryRate !== null ? (currentReadings.respiratoryRate / 30) * 100 : 0} 
                       className="h-2"
                     />
                     <div className="text-xs mt-1 text-muted-foreground">
@@ -910,15 +907,15 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                         <Target className="h-5 w-5 text-orange-500" />
                         <span className="font-medium">Activity</span>
                       </div>
-                      <span className="text-2xl font-bold">{Math.round(currentReadings.activityLevel)}%</span>
+                      <span className="text-2xl font-bold">{currentReadings.activityLevel !== null ? Math.round(currentReadings.activityLevel) + '%' : 'N/A'}</span>
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">Level</div>
                     <Progress 
-                      value={currentReadings.activityLevel} 
+                      value={currentReadings.activityLevel !== null ? currentReadings.activityLevel : 0} 
                       className="h-2"
                     />
                     <div className="text-xs mt-1 text-muted-foreground">
-                      Steps: {currentReadings.stepCount.toLocaleString()}
+                      Steps: {currentReadings.stepCount !== null ? currentReadings.stepCount.toLocaleString() : 'N/A'}
                     </div>
                   </CardContent>
                 </Card>
@@ -936,22 +933,22 @@ export default function AIGuardian({ sensorData, onPanicTrigger, realTimeData }:
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="text-center p-4 border rounded-lg">
                       <Volume2 className="h-5 w-5 mx-auto mb-2 text-blue-500" />
-                      <div className="text-lg font-bold">{Math.round(currentReadings.audioLevel)} dB</div>
+                      <div className="text-lg font-bold">{currentReadings.audioLevel !== null ? Math.round(currentReadings.audioLevel) + ' dB' : 'N/A'}</div>
                       <div className="text-xs text-muted-foreground">Audio Level</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
                       <Eye className="h-5 w-5 mx-auto mb-2 text-yellow-500" />
-                      <div className="text-lg font-bold">{Math.round(currentReadings.lightLevel)}%</div>
+                      <div className="text-lg font-bold">{currentReadings.lightLevel !== null ? Math.round(currentReadings.lightLevel) + '%' : 'N/A'}</div>
                       <div className="text-xs text-muted-foreground">Light Level</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
                       <CloudRain className="h-5 w-5 mx-auto mb-2 text-green-500" />
-                      <div className="text-lg font-bold">{Math.round(currentReadings.airQuality)}%</div>
+                      <div className="text-lg font-bold">{currentReadings.airQuality !== null ? Math.round(currentReadings.airQuality) + '%' : 'N/A'}</div>
                       <div className="text-xs text-muted-foreground">Air Quality</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
                       <Thermometer className="h-5 w-5 mx-auto mb-2 text-red-500" />
-                      <div className="text-lg font-bold">{Math.round(currentReadings.ambientTemperature)}°F</div>
+                      <div className="text-lg font-bold">{currentReadings.ambientTemperature !== null ? Math.round(currentReadings.ambientTemperature) + '°F' : 'N/A'}</div>
                       <div className="text-xs text-muted-foreground">Ambient Temp</div>
                     </div>
                   </div>
