@@ -378,7 +378,7 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                   </div>
 
                   {/* Motion Sensor */}
-                  {device.sensors.motion.active && (
+                  {'sensors' in device && device.sensors.motion.active && (
                     <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
@@ -388,15 +388,15 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       </div>
                       <div className="grid grid-cols-3 gap-2 text-xs">
-                        <div>X: {device.sensors.motion.acceleration?.x?.toFixed(2) || '0.00'}</div>
-                        <div>Y: {device.sensors.motion.acceleration?.y?.toFixed(2) || '0.00'}</div>
-                        <div>Z: {device.sensors.motion.acceleration?.z?.toFixed(2) || '0.00'}</div>
+                        <div>X: {'sensors' in device && device.sensors.motion.acceleration?.x?.toFixed(2) || '0.00'}</div>
+                        <div>Y: {'sensors' in device && device.sensors.motion.acceleration?.y?.toFixed(2) || '0.00'}</div>
+                        <div>Z: {'sensors' in device && device.sensors.motion.acceleration?.z?.toFixed(2) || '0.00'}</div>
                       </div>
                     </div>
                   )}
                   
                   {/* Location */}
-                  {device.sensors.location.active && (
+                  {'sensors' in device && device.sensors.location.active && (
                     <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
@@ -406,15 +406,15 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                       </div>
                       <div className="text-xs space-y-1">
-                        <div>Lat: {device.sensors.location.latitude?.toFixed(6) || 'N/A'}</div>
-                        <div>Lng: {device.sensors.location.longitude?.toFixed(6) || 'N/A'}</div>
-                        <div>Accuracy: ±{device.sensors.location.accuracy?.toFixed(0) || 'N/A'}m</div>
+                        <div>Lat: {'sensors' in device && device.sensors.location.latitude?.toFixed(6) || 'N/A'}</div>
+                        <div>Lng: {'sensors' in device && device.sensors.location.longitude?.toFixed(6) || 'N/A'}</div>
+                        <div>Accuracy: ±{'sensors' in device && device.sensors.location.accuracy?.toFixed(0) || 'N/A'}m</div>
                       </div>
                     </div>
                   )}
                   
                   {/* Battery */}
-                  {device.sensors.battery.active && (
+                  {'sensors' in device && device.sensors.battery.active && (
                     <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
@@ -424,10 +424,10 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                         <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                       </div>
                       <div className="text-xs space-y-1">
-                        <div>Level: {device.sensors.battery.level}%</div>
-                        <div>Status: {device.sensors.battery.charging ? 'Charging' : 'Discharging'}</div>
+                        <div>Level: {'sensors' in device && device.sensors.battery.level}%</div>
+                        <div>Status: {'sensors' in device && device.sensors.battery.charging ? 'Charging' : 'Discharging'}</div>
                       </div>
-                      <Progress value={device.sensors.battery.level} className="h-2 mt-2" />
+                      <Progress value={'sensors' in device ? device.sensors.battery.level : 0} className="h-2 mt-2" />
                     </div>
                   )}
                   
@@ -438,15 +438,15 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                         <Wifi className="h-4 w-4 text-purple-600" />
                         <span className="text-sm font-medium">Network</span>
                       </div>
-                      <div className={`w-2 h-2 ${device.sensors.network.online ? 'bg-green-500' : 'bg-red-500'} rounded-full animate-pulse`}></div>
+                      <div className={`w-2 h-2 ${'sensors' in device && device.sensors.network.online ? 'bg-green-500' : 'bg-red-500'} rounded-full animate-pulse`}></div>
                     </div>
                     <div className="text-xs space-y-1">
-                      <div>Status: {device.sensors.network.online ? 'Online' : 'Offline'}</div>
-                      <div>Type: {device.sensors.network.type?.toUpperCase() || 'WiFi'}</div>
-                      {device.sensors.network.downlink && (
+                      <div>Status: {'sensors' in device && device.sensors.network.online ? 'Online' : 'Offline'}</div>
+                      <div>Type: {'sensors' in device && device.sensors.network.type?.toUpperCase() || 'WiFi'}</div>
+                      {'sensors' in device && device.sensors.network.downlink && (
                         <div>Speed: {device.sensors.network.downlink}Mbps</div>
                       )}
-                      {device.sensors.network.rtt && (
+                      {'sensors' in device && device.sensors.network.rtt && (
                         <div>Latency: {device.sensors.network.rtt}ms</div>
                       )}
                     </div>
@@ -462,12 +462,12 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                       <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400">
-                      {device.sensors.temperature.reason || 'Phone temperature not accessible via web browser'}
+                      {'sensors' in device && device.sensors.temperature.reason || 'Phone temperature not accessible via web browser'}
                     </div>
                   </div>
                   
                   {/* If no sensors are active, show inactive state */}
-                  {!device.sensors.motion.active && !device.sensors.location.active && !device.sensors.battery.active && !device.sensors.network.active && (
+                  {'sensors' in device && !device.sensors.motion.active && !device.sensors.location.active && !device.sensors.battery.active && !device.sensors.network.active && (
                     <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200">
                       <div className="flex items-center space-x-2 text-yellow-800 dark:text-yellow-200">
                         <AlertCircle className="h-4 w-4" />

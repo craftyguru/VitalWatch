@@ -1,0 +1,72 @@
+I see what’s happening — PWABuilder is flagging 3 missing core PWA features in your app:
+
+Background Sync
+→ Ensure that user actions and content are saved even if the network is lost, then retried once connection resumes.
+
+Offline Support
+→ Cache core assets and allow at least some functionality without internet.
+
+Push Notifications
+→ Let users receive notifications even if your app is closed.
+
+Here’s what you can tell your builder to fix, step by step:
+
+1. Background Sync
+
+✅ Fix:
+
+In sw.js, register a background sync event with self.registration.sync.register('sync-tag').
+
+Use IndexedDB (or local storage fallback) to queue requests while offline.
+
+Inside self.addEventListener('sync', …) process the queued requests when back online.
+
+2. Offline Support
+
+✅ Fix:
+
+In sw.js, use a cache-first strategy for static assets (index.html, CSS, JS, icons).
+
+Add a fallback offline page (offline.html) for when no network is available.
+
+Example:
+
+const CACHE_NAME = "v1";
+const urlsToCache = ["/", "/index.html", "/offline.html", "/styles.css", "/main.js"];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request).then(res => res || caches.match("/offline.html")))
+  );
+});
+
+3. Push Notifications
+
+✅ Fix:
+
+Ask for Notification + PushManager permission in your frontend.
+
+Use a push service (Firebase Cloud Messaging or Web Push API).
+
+In sw.js, handle push events to show notifications even if the app is closed.
+
+self.addEventListener("push", event => {
+  const data = event.data.json();
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icons/icon-192.png"
+    })
+  );
+});
+
+
+📌 If you tell your builder:
+
+“Make sure the service worker has background sync with IndexedDB queue, offline caching with a fallback page, and push notification support via Web Push or Firebase. These 3 fixes should clear the PWABuilder action items.”

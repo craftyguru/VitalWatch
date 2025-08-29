@@ -1,91 +1,93 @@
-/* PWABuilder Complete PWA Implementation v3.0 */
-const CACHE_NAME = 'vitalwatch-cache-v3';
-const OFFLINE_CACHE = 'vitalwatch-offline-v3';
-const SYNC_STORE = 'sync-requests';
-
-// Essential files for offline functionality
-const OFFLINE_URLS = [
-  '/',
-  '/offline.html',
-  '/manifest.json',
-  '/assets/vitalwatch-logo.png'
+/* PWABuilder Compatible Implementation v4.0 */
+const CACHE_NAME = "vitalwatch-v1";
+const urlsToCache = [
+  "/",
+  "/index.html", 
+  "/offline.html",
+  "/manifest.json",
+  "/logo.png",
+  "/assets/vitalwatch-logo.png"
 ];
 
-self.addEventListener('install', function(e) {
-  console.log('SW Installing with offline support...');
-  e.waitUntil(
-    caches.open(OFFLINE_CACHE).then(function(cache) {
-      return cache.addAll(OFFLINE_URLS);
-    }).then(function() {
+// Install event - cache essential resources
+self.addEventListener("install", event => {
+  console.log('SW installing...');
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    }).then(() => {
       return self.skipWaiting();
     })
   );
 });
 
-self.addEventListener('activate', function(e) {
-  console.log('SW Activating...');
-  e.waitUntil(
-    caches.keys().then(function(cacheNames) {
+// Activate event - clean up old caches
+self.addEventListener("activate", event => {
+  console.log('SW activating...');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheName !== CACHE_NAME && cacheName !== OFFLINE_CACHE) {
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
         })
       );
-    }).then(function() {
+    }).then(() => {
       return self.clients.claim();
     })
   );
 });
 
-// Background Sync Storage
-const backgroundSyncDB = {
-  async open() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open('VitalWatchSync', 1);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result);
-      request.onupgradeneeded = (e) => {
-        const db = e.target.result;
-        if (!db.objectStoreNames.contains(SYNC_STORE)) {
-          db.createObjectStore(SYNC_STORE, { keyPath: 'id', autoIncrement: true });
-        }
-      };
-    });
-  },
-  
-  async addRequest(request) {
-    const db = await this.open();
-    const tx = db.transaction([SYNC_STORE], 'readwrite');
-    const store = tx.objectStore(SYNC_STORE);
-    await store.add(request);
-  },
-  
-  async getAllRequests() {
-    const db = await this.open();
-    const tx = db.transaction([SYNC_STORE], 'readonly');
-    const store = tx.objectStore(SYNC_STORE);
-    return new Promise((resolve, reject) => {
-      const request = store.getAll();
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  },
-  
-  async clearRequests() {
-    const db = await this.open();
-    const tx = db.transaction([SYNC_STORE], 'readwrite');
-    const store = tx.objectStore(SYNC_STORE);
-    await store.clear();
-  }
-};
+// Background Sync with IndexedDB
+const DB_NAME = 'VitalWatchSync';
+const DB_VERSION = 1;
+const STORE_NAME = 'sync-requests';
 
-// PWABuilder Background Sync Event Handler
-self.addEventListener('sync', function(event) {
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
+}
+
+async function addToQueue(requestData) {
+  const db = await openDB();
+  const tx = db.transaction([STORE_NAME], 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+  return store.add(requestData);
+}
+
+async function getAllFromQueue() {
+  const db = await openDB();
+  const tx = db.transaction([STORE_NAME], 'readonly');
+  const store = tx.objectStore(STORE_NAME);
+  return new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function clearQueue() {
+  const db = await openDB();
+  const tx = db.transaction([STORE_NAME], 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+  return store.clear();
+}
+
+// Background Sync Event Handler
+self.addEventListener('sync', event => {
   console.log('Background sync event fired:', event.tag);
   
-  if (event.tag === 'background-sync') {
+  if (event.tag === 'sync-tag') {
     event.waitUntil(doBackgroundSync());
   }
   
@@ -93,29 +95,28 @@ self.addEventListener('sync', function(event) {
     event.waitUntil(doBackgroundSync());
   }
   
-  if (event.tag === 'user-actions-sync') {
-    event.waitUntil(syncUserActions());
+  if (event.tag === 'background-sync') {
+    event.waitUntil(doBackgroundSync());
   }
 });
 
-// Main background sync function
 async function doBackgroundSync() {
-  console.log('Performing background sync...');
+  console.log('Processing background sync...');
   try {
-    const requests = await backgroundSyncDB.getAllRequests();
-    console.log('Found', requests.length, 'requests to sync');
+    const requests = await getAllFromQueue();
+    console.log('Found queued requests:', requests.length);
     
     for (const request of requests) {
-      await fetch(request.url, {
+      const response = await fetch(request.url, {
         method: request.method,
         headers: request.headers,
         body: request.body
       });
-      console.log('Synced:', request.url);
+      console.log('Synced request:', request.url, response.status);
     }
     
-    await backgroundSyncDB.clearRequests();
-    console.log('Background sync completed successfully');
+    await clearQueue();
+    console.log('Background sync completed');
     
     // Notify clients
     const clients = await self.clients.matchAll();
@@ -132,25 +133,18 @@ async function doBackgroundSync() {
   }
 }
 
-// Sync user actions function
-async function syncUserActions() {
-  console.log('Syncing user actions...');
-  return doBackgroundSync();
-}
-
-// Comprehensive fetch handler for offline support and background sync
-self.addEventListener('fetch', function(event) {
+// Fetch event handler with offline support
+self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   
-  // Handle API requests with background sync
+  // Handle API requests for background sync
   if (url.pathname.includes('/api/') && 
       (event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE')) {
     
     event.respondWith(
-      fetch(event.request.clone()).catch(async function() {
+      fetch(event.request.clone()).catch(async () => {
         console.log('API request failed, queuing for background sync');
         
-        // Store request for background sync
         const requestData = {
           url: event.request.url,
           method: event.request.method,
@@ -159,14 +153,15 @@ self.addEventListener('fetch', function(event) {
           timestamp: Date.now()
         };
         
-        await backgroundSyncDB.addRequest(requestData);
+        await addToQueue(requestData);
         
         // Register background sync
         if (self.registration && self.registration.sync) {
           try {
-            await self.registration.sync.register('background-sync');
+            await self.registration.sync.register('sync-tag');
             await self.registration.sync.register('pwabuilder-sync');
-            await self.registration.sync.register('user-actions-sync');
+            await self.registration.sync.register('background-sync');
+            console.log('Background sync registered');
           } catch (err) {
             console.log('Failed to register background sync:', err);
           }
@@ -185,65 +180,42 @@ self.addEventListener('fetch', function(event) {
     return;
   }
   
-  // Handle navigation requests for offline support
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(function() {
-        return caches.match('/offline.html');
-      })
-    );
-    return;
-  }
-  
-  // Handle other requests with cache-first strategy
+  // Offline support with cache-first strategy
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request).then(function(response) {
-        // Cache successful responses
-        if (response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(event.request, responseClone);
-          });
+    fetch(event.request).catch(() => {
+      return caches.match(event.request).then(response => {
+        if (response) {
+          return response;
         }
-        return response;
-      }).catch(function() {
-        // Return offline page for failed requests
-        if (event.request.destination === 'document') {
+        
+        // For navigation requests, return offline page
+        if (event.request.mode === 'navigate') {
           return caches.match('/offline.html');
         }
+        
+        // For other requests, try cache first
+        return caches.match('/offline.html');
       });
     })
   );
 });
 
-// Push notification event handler
-self.addEventListener('push', function(event) {
+// Push Notifications Support
+self.addEventListener("push", event => {
   console.log('Push notification received');
   
-  let notificationData = {
+  const data = event.data ? event.data.json() : {
     title: 'VitalWatch',
     body: 'You have a new notification',
-    icon: '/assets/vitalwatch-logo.png',
-    badge: '/assets/vitalwatch-logo.png',
-    tag: 'vitalwatch-notification'
+    icon: '/assets/vitalwatch-logo.png'
   };
   
-  if (event.data) {
-    try {
-      const data = event.data.json();
-      notificationData = { ...notificationData, ...data };
-    } catch (e) {
-      notificationData.body = event.data.text();
-    }
-  }
-  
   event.waitUntil(
-    self.registration.showNotification(notificationData.title, {
-      body: notificationData.body,
-      icon: notificationData.icon,
-      badge: notificationData.badge,
-      tag: notificationData.tag,
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: data.icon || '/assets/vitalwatch-logo.png',
+      badge: '/assets/vitalwatch-logo.png',
+      tag: 'vitalwatch-notification',
       requireInteraction: true,
       actions: [
         {
@@ -251,7 +223,7 @@ self.addEventListener('push', function(event) {
           title: 'Open VitalWatch'
         },
         {
-          action: 'close',
+          action: 'close', 
           title: 'Dismiss'
         }
       ]
@@ -260,12 +232,12 @@ self.addEventListener('push', function(event) {
 });
 
 // Handle notification clicks
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', event => {
   event.notification.close();
   
   if (event.action === 'open' || !event.action) {
     event.waitUntil(
-      self.clients.matchAll({ type: 'window' }).then(function(clients) {
+      self.clients.matchAll({ type: 'window' }).then(clients => {
         for (let client of clients) {
           if (client.url === self.location.origin && 'focus' in client) {
             return client.focus();

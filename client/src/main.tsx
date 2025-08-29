@@ -4,52 +4,48 @@ import "./index.css";
 
 console.log("VitalWatch main.tsx loading...");
 
-// Force clear old SW and register new one for PWABuilder
+// PWABuilder Compatible Service Worker Registration
 if ('serviceWorker' in navigator) {
-  // Force unregister any existing service workers first
-  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    for(let registration of registrations) {
-      registration.unregister();
-      console.log('Unregistered old SW:', registration.scope);
-    }
-    
-    // Register fresh service worker
-    navigator.serviceWorker.register('/sw-pwa.js?v=' + Date.now(), { scope: '/' })
-      .then(async function(reg) {
-        console.log('VitalWatch PWA SW v2.0 registered:', reg);
-        
-        // Wait for SW to be ready
-        await navigator.serviceWorker.ready;
-        
-        // Register background sync and push notifications
-        if ('sync' in reg && 'SyncManager' in window) {
-          try {
-            await (reg as any).sync.register('background-sync');
-            await (reg as any).sync.register('pwabuilder-sync'); 
-            await (reg as any).sync.register('user-actions-sync');
-            console.log('Background Sync registered');
-          } catch (err) {
-            console.debug('Sync register failed:', err);
-          }
+  navigator.serviceWorker.register('/sw-pwa.js?v=' + Date.now(), { scope: '/' })
+    .then(async function(registration) {
+      console.log('VitalWatch SW registered:', registration);
+      
+      // Wait for SW to be ready
+      await navigator.serviceWorker.ready;
+      
+      // Background Sync Registration
+      if ('sync' in registration && 'SyncManager' in window) {
+        try {
+          await (registration as any).sync.register('sync-tag');
+          await (registration as any).sync.register('pwabuilder-sync');
+          await (registration as any).sync.register('background-sync');
+          console.log('Background sync registered');
+        } catch (err) {
+          console.debug('Sync registration failed:', err);
         }
-        
-        // Request push notification permission
-        if ('Notification' in window && 'PushManager' in window) {
-          try {
-            const permission = await Notification.requestPermission();
-            console.log('Notification permission:', permission);
-            
-            if (permission === 'granted' && reg.pushManager) {
-              const subscription = await reg.pushManager.subscribe({
+      }
+      
+      // Push Notification Setup
+      if ('Notification' in window && 'PushManager' in window) {
+        try {
+          const permission = await Notification.requestPermission();
+          console.log('Notification permission:', permission);
+          
+          if (permission === 'granted' && registration.pushManager) {
+            try {
+              const subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: null // Add your VAPID key here if needed
+                applicationServerKey: null
               });
               console.log('Push subscription created');
+            } catch (subscribeError) {
+              console.log('Push subscription failed:', subscribeError);
             }
-          } catch (err) {
-            console.debug('Push notification setup failed:', err);
           }
+        } catch (err) {
+          console.debug('Push notification setup failed:', err);
         }
+      }
         
         // Listen for updates to the service worker
         if (reg.waiting) {
