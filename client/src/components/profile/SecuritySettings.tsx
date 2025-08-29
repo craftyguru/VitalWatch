@@ -107,33 +107,33 @@ export function SecuritySettings({ form, isLoading }: SecuritySettingsProps) {
                 </FormItem>
               )}
             />
+            
+            <Separator />
+            
+            <FormField
+              control={form.control}
+              name="locationSharingEnabled"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base flex items-center space-x-2">
+                      <Globe className="h-4 w-4" />
+                      <span>Location Sharing</span>
+                    </FormLabel>
+                    <FormDescription>
+                      Share location with emergency contacts during alerts
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </Form>
-          
-          <Separator />
-          
-          <FormField
-            control={form.control}
-            name="locationSharingEnabled"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel className="text-base flex items-center space-x-2">
-                    <Globe className="h-4 w-4" />
-                    <span>Location Sharing</span>
-                  </FormLabel>
-                  <FormDescription>
-                    Share location with emergency contacts during alerts
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
           
           <div className="flex items-center justify-between">
             <div className="space-y-1">

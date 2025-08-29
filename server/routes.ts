@@ -1747,20 +1747,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const [user] = await db.select().from(users).where(eq(users.stripeCustomerId, customerId));
           
           if (user) {
-            // Update user subscription status
+            // Update user subscription status - payment confirmed!
             const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
-            const planName = subscription.items.data[0].price.nickname || 'guardian';
+            const priceId = subscription.items.data[0].price.id;
+            
+            // Determine plan based on price ID
+            let planType = 'guardian';
+            if (priceId === process.env.STRIPE_PROFESSIONAL_PRICE_ID) {
+              planType = 'professional';
+            }
             
             await db.update(users).set({
-              subscriptionPlan: planName === 'professional' ? 'professional' : 'guardian',
-              subscriptionStatus: 'active',
-              stripeSubscriptionId: subscription.id
+              subscriptionPlan: planType,
+              subscriptionStatus: 'active', // Confirmed paid subscription
+              stripeSubscriptionId: subscription.id,
+              guardianTrialStarted: false, // End trial since payment received
+              updatedAt: new Date()
             }).where(eq(users.id, user.id));
           }
           break;
 
         case 'invoice.payment_failed':
-          // Handle failed payments
+          const failedInvoice = event.data.object as any;
+          const failedCustomerId = failedInvoice.customer;
+          
+          // Find user and mark subscription as unpaid
+          const [failedUser] = await db.select().from(users).where(eq(users.stripeCustomerId, failedCustomerId));
+          
+          if (failedUser) {
+            await db.update(users).set({
+              subscriptionStatus: 'cancelled', // Payment failed - downgrade
+              updatedAt: new Date()
+            }).where(eq(users.id, failedUser.id));
+          }
+          break;
+
+        case 'customer.subscription.deleted':
+          const deletedSub = event.data.object as any;
+          const deletedCustomerId = deletedSub.customer;
+          
+          // User cancelled subscription - downgrade to free
+          const [cancelledUser] = await db.select().from(users).where(eq(users.stripeCustomerId, deletedCustomerId));
+          
+          if (cancelledUser) {
+            await db.update(users).set({
+              subscriptionPlan: 'free',
+              subscriptionStatus: 'cancelled',
+              stripeSubscriptionId: null,
+              updatedAt: new Date()
+            }).where(eq(users.id, cancelledUser.id));
+          }
           break;
 
         default:

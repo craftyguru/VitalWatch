@@ -23,33 +23,46 @@ export function useSubscription(): SubscriptionFeatures {
         canUseAdvancedFeatures: false,
         isProTrial: false,
         trialDaysLeft: 0,
-        planName: 'Free'
+        planName: 'Essential'
       };
     }
 
-    // Check if user is in Pro trial
-    const isProTrial = user.subscriptionPlan === 'pro' && user.guardianTrialStarted;
+    // Check trial status based on actual database fields
+    const isInTrial = user.guardianTrialStarted && user.subscriptionStatus === 'trial';
     const trialEndDate = user.guardianTrialEndDate ? new Date(user.guardianTrialEndDate) : null;
     const now = new Date();
     const trialDaysLeft = trialEndDate 
       ? Math.max(0, Math.ceil((trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
       : 0;
 
-    // If trial expired, treat as free user
-    const isTrialExpired = isProTrial && trialDaysLeft <= 0;
-    const effectivePlan = isTrialExpired ? 'free' : user.subscriptionPlan;
+    // Check if user has active paid subscription (Stripe confirmed)
+    const hasPaidSubscription = user.subscriptionStatus === 'active' && user.stripeSubscriptionId;
+    
+    // Determine effective plan based on payment status
+    let effectivePlan = user.subscriptionPlan || 'free';
+    
+    // If trial expired and no paid subscription, downgrade to free
+    const isTrialExpired = isInTrial && trialDaysLeft <= 0;
+    if (isTrialExpired && !hasPaidSubscription) {
+      effectivePlan = 'free';
+    }
+    
+    // If subscription cancelled or expired, downgrade to free
+    if (user.subscriptionStatus === 'cancelled' || user.subscriptionStatus === 'expired') {
+      effectivePlan = 'free';
+    }
 
+    // Return features based on actual payment/trial status
     switch (effectivePlan) {
-      case 'pro':
       case 'guardian':
         return {
-          smsAlerts: effectivePlan === 'pro' ? 'unlimited' : 500,
+          smsAlerts: 500, // Guardian plan gets 500 SMS/month
           aiInteractions: 'unlimited',
           emergencyContacts: 'unlimited',
           canUseAdvancedFeatures: true,
-          isProTrial: isProTrial && trialDaysLeft > 0,
-          trialDaysLeft,
-          planName: isProTrial ? 'Pro Trial' : 'Guardian'
+          isProTrial: isInTrial && trialDaysLeft > 0,
+          trialDaysLeft: isInTrial ? trialDaysLeft : 0,
+          planName: (isInTrial && trialDaysLeft > 0) ? 'Pro Trial' : 'Guardian'
         };
       
       case 'professional':
@@ -65,9 +78,9 @@ export function useSubscription(): SubscriptionFeatures {
       
       default: // free
         return {
-          smsAlerts: 0,
-          aiInteractions: 10,
-          emergencyContacts: 3,
+          smsAlerts: 0, // No SMS alerts on free plan
+          aiInteractions: 10, // Limited AI interactions
+          emergencyContacts: 3, // Limited emergency contacts
           canUseAdvancedFeatures: false,
           isProTrial: false,
           trialDaysLeft: 0,
