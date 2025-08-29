@@ -83,7 +83,7 @@ Be thorough but concise. Your assessment may trigger automatic emergency respons
       ],
       response_format: { type: "json_object" },
       temperature: 0.3, // Lower temperature for more consistent, reliable assessments
-      max_tokens: 1000
+      max_completion_tokens: 1000
     });
 
     const analysis = JSON.parse(response.choices[0].message.content || '{}');
@@ -284,7 +284,7 @@ Use the comprehensive VitalWatch knowledge base to provide accurate, helpful res
         }
       ],
       temperature: 0.7,
-      max_tokens: 800
+      max_completion_tokens: 800
     });
 
     return response.choices[0].message.content || "I'm here to help with VitalWatch. Could you please rephrase your question?";
