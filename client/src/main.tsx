@@ -4,50 +4,64 @@ import "./index.css";
 
 console.log("VitalWatch main.tsx loading...");
 
-// Register PWA Service Worker for PWABuilder detection
+// Force clear old SW and register new one for PWABuilder
 if ('serviceWorker' in navigator) {
-  // Make sure this path serves from the site root
-  navigator.serviceWorker.register('/sw-pwa.js', { scope: '/' })
-    .then(async (reg) => {
-      console.log('VitalWatch PWA SW registered: ', reg);
-      
-      // Explicit tag registration so scanners can see it
-      if ('sync' in reg && 'SyncManager' in window) {
-        try {
-          await (reg as any).sync.register('pwabuilder-sync');
-          console.log('Background Sync tag registered');
-        } catch (err) {
-          console.debug('Sync register failed (likely blocked or unsupported):', err);
+  // Force unregister any existing service workers first
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      registration.unregister();
+      console.log('Unregistered old SW:', registration.scope);
+    }
+    
+    // Register fresh service worker
+    navigator.serviceWorker.register('/sw-pwa.js?v=' + Date.now(), { scope: '/' })
+      .then(async function(reg) {
+        console.log('VitalWatch PWA SW v2.0 registered:', reg);
+        
+        // Wait for SW to be ready
+        await navigator.serviceWorker.ready;
+        
+        // Register ALL the sync tags PWABuilder might look for
+        if ('sync' in reg && 'SyncManager' in window) {
+          try {
+            await (reg as any).sync.register('background-sync');
+            await (reg as any).sync.register('pwabuilder-sync'); 
+            await (reg as any).sync.register('user-actions-sync');
+            await (reg as any).sync.register('data-sync');
+            console.log('ALL Background Sync tags registered');
+          } catch (err) {
+            console.debug('Sync register failed:', err);
+          }
         }
-      }
-      
-      // Listen for updates to the service worker
-      if (reg.waiting) {
-        console.log('VitalWatch: New service worker is waiting to activate');
-      }
-      
-      reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              console.log('VitalWatch: New service worker installed, ready to activate');
-            }
-          });
+        
+        // Listen for updates to the service worker
+        if (reg.waiting) {
+          console.log('VitalWatch: New service worker is waiting to activate');
         }
-      });
+        
+        reg.addEventListener('updatefound', function() {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('VitalWatch: New service worker installed, ready to activate');
+              }
+            });
+          }
+        });
 
-      // Listen for messages from the service worker
-      navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data && event.data.type === 'BACKGROUND_SYNC_SUCCESS') {
-          console.log('VitalWatch: Background sync completed successfully', event.data);
-        }
+        // Listen for messages from the service worker
+        navigator.serviceWorker.addEventListener('message', function(event) {
+          if (event.data && event.data.type === 'BACKGROUND_SYNC_SUCCESS') {
+            console.log('VitalWatch: Background sync completed successfully', event.data);
+          }
+        });
+        
+      })
+      .catch(function(registrationError) {
+        console.log('VitalWatch SW registration failed: ', registrationError);
       });
-      
-    })
-    .catch((registrationError) => {
-      console.log('VitalWatch SW registration failed: ', registrationError);
-    });
+  });
 }
 
 try {
