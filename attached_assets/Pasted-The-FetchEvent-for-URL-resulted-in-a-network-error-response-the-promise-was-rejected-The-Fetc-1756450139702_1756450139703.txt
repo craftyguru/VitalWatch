@@ -1,0 +1,447 @@
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+The FetchEvent for "<URL>" resulted in a network error response: the promise was rejected.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-e5f359bbb487a8bd.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+VitalWatch:1 The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+VitalWatch:1 The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+VitalWatch:1 The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-e5f359bbb487a8bd.js:38 [LaunchDarkly] LaunchDarkly client initialized
+analytics.tiktok.com/i18n/pixel/events.js?sdkid=D004GE3C77U8PIVDSDJG&lib=ttq:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+web-client-content-script.js:2 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    at HTMLIFrameElement.<anonymous> (web-client-content-script.js:2:534973)
+www.googletagmanager.com/gtag/js?id=AW-11411994397:1  Failed to load resource: net::ERR_UNSAFE_REDIRECT
+www.google-analytics.com/analytics.js:1  Failed to load resource: net::ERR_UNSAFE_REDIRECT
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+[GroupMarkerNotSet(crbug.com/242999)!:A0305300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0905300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A080F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0B0F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A010F900BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+attached_assets/image_1756449081095.png:1  Failed to load resource: the server responded with a status of 404 ()
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+ Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'battery'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'layout-animations'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'navigation-override'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'oversized-images'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'publickey-credentials'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'speaker-selection'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'unoptimized-images'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'unsized-media'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Unrecognized feature: 'pointer-lock'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-eb1a6f382428a8f8.js:1
+ Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-eb1a6f382428a8f8.js:1
+web-client-content-script.js:2 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    at HTMLIFrameElement.<anonymous> (web-client-content-script.js:2:534973)
+VitalWatch:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A080F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0E0F800BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+VitalWatch:1 [GroupMarkerNotSet(crbug.com/242999)!:A0005300BC440000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'battery'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar2i5%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+client:536 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/?token=KvHS_6We3NJ9' failed: 
+setupWebSocket @ client:536
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+sw.js:25  Uncaught (in promise) TypeError: Failed to fetch
+    at sw.js:25:28
+7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev:24678/:1  Failed to load resource: net::ERR_FAILED
+main.tsx:5 VitalWatch main.tsx loading...
+main.tsx:12 Root element found, creating React root...
+main.tsx:14 React root created, rendering App...
+main.tsx:16 App rendered successfully!
+SeamlessInstallButton.tsx:24 PWA Install Check: Object
+VM19852:6 SW registered:  ServiceWorkerRegistration
+chunk-RPCDYKBN.js?v=202ea3ce:521 Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/components/ui/badge.tsx:35:18)
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:79:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=202ea3ce:56:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=202ea3ce:42:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1929:13
+    at https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:199:13
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at Popper (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TSMXHQXX.js?v=202ea3ce:1921:11)
+    at Tooltip (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:108:5)
+    at VersionBadge
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at header
+    at div
+    at div
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+    at Route (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:323:16)
+    at Switch (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=202ea3ce:379:17)
+    at Router (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/App.tsx:41:48)
+    at Provider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=202ea3ce:38:15)
+    at TooltipProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=202ea3ce:64:5)
+    at QueryClientProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=202ea3ce:2805:3)
+    at IncognitoProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/IncognitoContext.tsx:20:37)
+    at ThemeProvider (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/contexts/ThemeContext.tsx:25:3)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=202ea3ce:521
+VM19852:10 Checking PWA installability...
+VM19852:11 HTTPS: true
+VM19852:12 Manifest: true
+VM19852:13 Service Worker: true
+useWebSocket.ts:78 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: WebSocket is closed before the connection is established.
+disconnect @ useWebSocket.ts:78
+chunk-RPCDYKBN.js?v=202ea3ce:16670 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at useRealDeviceScanner.ts:333:32
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=202ea3ce:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=202ea3ce:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=202ea3ce:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=202ea3ce:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=202ea3ce:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=202ea3ce:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=202ea3ce:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=202ea3ce:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=202ea3ce:19416:13)
+chunk-RPCDYKBN.js?v=202ea3ce:14032 The above error occurred in the <UserDashboard> component:
+
+    at UserDashboard (https://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/src/pages/user-dashboard.tsx:93:20)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=202ea3ce:14032
+chunk-RPCDYKBN.js?v=202ea3ce:9129 Uncaught TypeError: navigator.geolocation?.clearWatch is not a function
+    at useRealDeviceScanner.ts:333:32
+    at safelyCallDestroy (chunk-RPCDYKBN.js?v=202ea3ce:16748:13)
+    at commitHookEffectListUnmount (chunk-RPCDYKBN.js?v=202ea3ce:16875:19)
+    at commitPassiveUnmountInsideDeletedTreeOnFiber (chunk-RPCDYKBN.js?v=202ea3ce:18283:17)
+    at commitPassiveUnmountEffectsInsideOfDeletedTree_begin (chunk-RPCDYKBN.js?v=202ea3ce:18245:13)
+    at commitPassiveUnmountEffects_begin (chunk-RPCDYKBN.js?v=202ea3ce:18181:19)
+    at commitPassiveUnmountEffects (chunk-RPCDYKBN.js?v=202ea3ce:18169:11)
+    at flushPassiveEffectsImpl (chunk-RPCDYKBN.js?v=202ea3ce:19489:11)
+    at flushPassiveEffects (chunk-RPCDYKBN.js?v=202ea3ce:19447:22)
+    at commitRootImpl (chunk-RPCDYKBN.js?v=202ea3ce:19416:13)
+useWebSocket.ts:63 WebSocket error: Event
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
+useWebSocket.ts:25 WebSocket connection to 'wss://7244e535-cab7-4ed7-a8f7-230f04288062-00-847xaz8t2wsl.picard.replit.dev/ws' failed: 
+connect @ useWebSocket.ts:25
+(anonymous) @ useWebSocket.ts:57
+useWebSocket.ts:63 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+wsRef.current.onerror @ useWebSocket.ts:63
+useWebSocket.ts:49 WebSocket disconnected
