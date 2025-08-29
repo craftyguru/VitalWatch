@@ -219,12 +219,12 @@ export default function ToolsComprehensive() {
                     <Activity className="h-7 w-7" />
                   </div>
                   <div className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-1">
-                    {Math.round((sensorData.accelerometer.active ? 25 : 0) + (sensorData.location.active ? 25 : 0) + (sensorData.battery.active ? 25 : 0) + (permissions.geolocation === 'granted' ? 25 : 0))}%
+                    {Math.round((realTimeData?.motion ? 25 : 0) + (realTimeData?.location ? 25 : 0) + (realTimeData?.battery ? 25 : 0) + (capabilities.filter(cap => cap.status === 'available').length > 0 ? 25 : 0))}%
                   </div>
                   <div className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">System Health</div>
-                  <div className="text-xs text-green-600 dark:text-green-400 font-medium">All systems operational</div>
+                  <div className="text-xs text-green-600 dark:text-green-400 font-medium">Real sensor data</div>
                   <Progress 
-                    value={Math.round((sensorData.accelerometer.active ? 25 : 0) + (sensorData.location.active ? 25 : 0) + (sensorData.battery.active ? 25 : 0) + (permissions.geolocation === 'granted' ? 25 : 0))} 
+                    value={Math.round((realTimeData?.motion ? 25 : 0) + (realTimeData?.location ? 25 : 0) + (realTimeData?.battery ? 25 : 0) + (capabilities.filter(cap => cap.status === 'available').length > 0 ? 25 : 0))} 
                     className="mt-2 h-1"
                   />
                 </CardContent>
@@ -277,7 +277,7 @@ export default function ToolsComprehensive() {
                     <Zap className="h-7 w-7" />
                   </div>
                   <div className="text-3xl font-bold text-orange-700 dark:text-orange-300 mb-1">
-                    {sensorData.location.active ? Math.round(sensorData.location.accuracy / 10) : responseTime}s
+                    {realTimeData?.location ? Math.round(realTimeData.location.accuracy / 10) : responseTime}s
                   </div>
                   <div className="text-sm font-medium text-orange-800 dark:text-orange-200 mb-1">Avg Response Time</div>
                   <div className="text-xs text-green-600 dark:text-green-400 font-medium">Excellent speed</div>
