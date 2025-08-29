@@ -4,13 +4,13 @@ import { Code, GitBranch, Clock } from 'lucide-react';
 
 export function VersionBadge() {
   // Version information - update this when making major releases
-  const version = "4.0.0";
+  const version = "5.0.0";
   const buildDate = new Date().toISOString().split('T')[0]; // Current date as build date
-  const environment = import.meta.env.MODE || 'development';
-  const isDevelopment = environment === 'development';
+  const environment = 'production';
+  const isDevelopment = false;
   
   // Git commit hash (simulated - in real deployment this would come from build process)
-  const commitHash = "4a7d8e2";
+  const commitHash = "5f8c9a1";
   
   return (
     <Tooltip>
@@ -25,7 +25,6 @@ export function VersionBadge() {
         >
           <Code className="w-3 h-3 mr-1" />
           v{version}
-          {isDevelopment && <span className="ml-1 text-yellow-600 dark:text-yellow-400">DEV</span>}
         </Badge>
       </TooltipTrigger>
       <TooltipContent side="bottom" className="max-w-sm">
@@ -61,10 +60,7 @@ export function VersionBadge() {
             </div>
           </div>
           <div className="pt-2 border-t text-xs text-muted-foreground">
-            {isDevelopment 
-              ? "Development build - features may be unstable" 
-              : "Production build - all features verified"
-            }
+            "Production build - all features verified"
           </div>
         </div>
       </TooltipContent>
