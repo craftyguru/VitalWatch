@@ -126,29 +126,33 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
 
   const getDeviceSensors = (deviceType: string) => {
     switch (deviceType) {
+      case 'phone':
+        return [
+          { name: 'GPS Location', icon: Navigation, value: realTimeData.location ? 'Active' : null, unit: '', color: 'text-green-500' },
+          { name: 'Motion Sensors', icon: Activity, value: realTimeData.motion ? 'Active' : null, unit: '', color: 'text-blue-500' },
+          { name: 'Battery Level', icon: Battery, value: realTimeData.battery?.level || null, unit: '%', color: 'text-green-500' },
+          { name: 'Network', icon: Wifi, value: realTimeData.network?.online ? 'Online' : null, unit: '', color: 'text-blue-500' },
+          { name: 'Ambient Light', icon: Eye, value: null, unit: 'lux', color: 'text-yellow-500' },
+        ];
       case 'smartwatch':
         return [
-          { name: 'Heart Rate', icon: Heart, value: realTimeData.heartRate?.bpm || null, unit: 'BPM', color: 'text-red-500' },
-          { name: 'Motion', icon: Activity, value: realTimeData.motion ? 'Active' : null, unit: '', color: 'text-blue-500' },
-          { name: 'GPS', icon: Navigation, value: realTimeData.location ? 'Tracking' : null, unit: '', color: 'text-green-500' },
-          { name: 'Temperature', icon: Thermometer, value: Math.floor(Math.random() * 5) + 96, unit: '°F', color: 'text-orange-500' },
-          { name: 'Steps', icon: Target, value: Math.floor(Math.random() * 2000) + 8000, unit: 'steps', color: 'text-purple-500' },
-          { name: 'Calories', icon: Zap, value: Math.floor(Math.random() * 500) + 200, unit: 'cal', color: 'text-yellow-500' },
+          { name: 'Heart Rate', icon: Heart, value: null, unit: 'BPM', color: 'text-red-500' },
+          { name: 'Motion', icon: Activity, value: null, unit: '', color: 'text-blue-500' },
+          { name: 'GPS', icon: Navigation, value: null, unit: '', color: 'text-green-500' },
+          { name: 'Temperature', icon: Thermometer, value: null, unit: '°F', color: 'text-orange-500' },
         ];
       case 'headphones':
         return [
-          { name: 'Audio Level', icon: Volume2, value: Math.floor(Math.random() * 30) + 40, unit: 'dB', color: 'text-blue-500' },
-          { name: 'Connection', icon: Signal, value: 'Strong', unit: '', color: 'text-green-500' },
-          { name: 'Noise Cancellation', icon: Waves, value: 'Active', unit: '', color: 'text-purple-500' },
-          { name: 'Ambient Sound', icon: Eye, value: Math.floor(Math.random() * 20) + 30, unit: 'dB', color: 'text-cyan-500' },
+          { name: 'Audio Level', icon: Volume2, value: null, unit: 'dB', color: 'text-blue-500' },
+          { name: 'Connection', icon: Signal, value: 'Connected', unit: '', color: 'text-green-500' },
+          { name: 'Noise Cancellation', icon: Waves, value: null, unit: '', color: 'text-purple-500' },
         ];
       case 'fitness':
         return [
-          { name: 'Heart Rate', icon: Heart, value: Math.floor(Math.random() * 40) + 60, unit: 'BPM', color: 'text-red-500' },
-          { name: 'Steps', icon: Target, value: Math.floor(Math.random() * 3000) + 5000, unit: 'steps', color: 'text-blue-500' },
-          { name: 'Calories', icon: Zap, value: Math.floor(Math.random() * 300) + 150, unit: 'cal', color: 'text-orange-500' },
-          { name: 'Sleep Quality', icon: Timer, value: Math.floor(Math.random() * 20) + 75, unit: '%', color: 'text-purple-500' },
-          { name: 'Activity Level', icon: Gauge, value: Math.floor(Math.random() * 30) + 60, unit: '%', color: 'text-green-500' },
+          { name: 'Heart Rate', icon: Heart, value: null, unit: 'BPM', color: 'text-red-500' },
+          { name: 'Steps', icon: Target, value: null, unit: 'steps', color: 'text-blue-500' },
+          { name: 'Calories', icon: Zap, value: null, unit: 'cal', color: 'text-orange-500' },
+          { name: 'Sleep Quality', icon: Timer, value: null, unit: '%', color: 'text-purple-500' },
         ];
       default:
         return [
@@ -157,41 +161,21 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
     }
   };
 
-  // Create some sample devices if no real devices are connected
-  const sampleDevices = connectedDevices.length === 0 ? [
-    {
-      id: 'sample-watch',
-      name: 'Apple Watch Series 9',
-      deviceType: 'smartwatch' as const,
-      connected: true,
-      battery: 82,
-      lastSeen: new Date(),
-      rssi: -45,
-      services: ['heart-rate', 'gps', 'motion']
-    },
-    {
-      id: 'sample-headphones',
-      name: 'AirPods Pro',
-      deviceType: 'headphones' as const,
-      connected: true,
-      battery: 67,
-      lastSeen: new Date(),
-      rssi: -38,
-      services: ['audio', 'noise-cancellation']
-    },
-    {
-      id: 'sample-fitness',
-      name: 'Fitbit Charge 6',
-      deviceType: 'fitness' as const,
-      connected: true,
-      battery: 91,
-      lastSeen: new Date(),
-      rssi: -52,
-      services: ['heart-rate', 'sleep', 'activity']
-    }
-  ] : [];
+  // Add the phone as a device
+  const phoneDevice = {
+    id: 'phone-device',
+    name: navigator.userAgent.includes('iPhone') ? 'iPhone' : 
+          navigator.userAgent.includes('Android') ? 'Android Phone' : 
+          'Phone',
+    deviceType: 'phone' as const,
+    connected: true,
+    battery: realTimeData.battery?.level || null,
+    lastSeen: new Date(),
+    rssi: null,
+    services: ['sensors', 'gps', 'battery', 'network']
+  };
 
-  const allDevices = [...connectedDevices, ...sampleDevices];
+  const allDevices = [phoneDevice, ...connectedDevices];
 
   return (
     <Card className="w-full">
@@ -204,38 +188,36 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       <CardContent className="space-y-6">
         {/* Real-time Status Overview */}
         <Card className={`${
-          allDevices.filter(device => device.connected).length >= 2
+          connectedDevices.length >= 1
             ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20'
-            : allDevices.filter(device => device.connected).length >= 1
-            ? 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'
-            : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20'
+            : 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'
         }`}>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-3">
-              {allDevices.filter(device => device.connected).length >= 2 ? (
+              {connectedDevices.length >= 1 ? (
                 <>
                   <CheckCircle className="h-5 w-5 text-green-600" />
-                  <h3 className="font-semibold text-green-800 dark:text-green-200">All Systems Normal</h3>
-                </>
-              ) : allDevices.filter(device => device.connected).length >= 1 ? (
-                <>
-                  <AlertCircle className="h-5 w-5 text-yellow-600" />
-                  <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Limited Device Access</h3>
+                  <h3 className="font-semibold text-green-800 dark:text-green-200">Devices Connected</h3>
                 </>
               ) : (
                 <>
-                  <AlertCircle className="h-5 w-5 text-red-600" />
-                  <h3 className="font-semibold text-red-800 dark:text-red-200">No Devices Connected</h3>
+                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                  <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Phone Only - Scan for More Devices</h3>
                 </>
               )}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-              {['Motion Sensors', 'Location Services', 'Battery Status', 'Bluetooth'].map((cap, index) => (
+              {[
+                { name: 'Motion Sensors', active: realTimeData.motion },
+                { name: 'Location Services', active: realTimeData.location },
+                { name: 'Battery Status', active: realTimeData.battery },
+                { name: 'Network Status', active: realTimeData.network }
+              ].map((cap, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
                   <div className={`h-2 w-2 rounded-full ${
-                    allDevices.some(d => d.connected) ? 'bg-green-500' : 'bg-red-500'
+                    cap.active ? 'bg-green-500' : 'bg-red-500'
                   }`}></div>
-                  <span className="capitalize">{cap}</span>
+                  <span className="capitalize">{cap.name}</span>
                 </div>
               ))}
             </div>
@@ -276,13 +258,13 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
             </div>
           </div>
           
-          {allDevices.length === 0 ? (
+          {connectedDevices.length === 0 ? (
             <Card className="border-dashed">
               <CardContent className="p-6 text-center">
                 <Bluetooth className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <h4 className="text-lg font-semibold mb-2">No Devices Connected</h4>
                 <p className="text-muted-foreground mb-4">
-                  Connect your smartwatch, headphones, fitness band, or other devices to monitor their sensors.
+                  Your phone is connected. Scan for Bluetooth devices like smartwatches, headphones, or fitness bands to add more sensors.
                 </p>
                 <Button onClick={handleBluetoothScan} disabled={bluetoothScanning}>
                   {bluetoothScanning ? 'Scanning...' : 'Scan for Devices'}
@@ -376,9 +358,9 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                             <Clock className="h-3 w-3" />
                             Last seen: {device.lastSeen.toLocaleTimeString()}
                           </span>
-                          {device.connected && device.id.startsWith('sample-') ? (
-                            <Badge variant="outline" className="text-xs">
-                              Demo Device
+                          {device.id === 'phone-device' ? (
+                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
+                              Built-in
                             </Badge>
                           ) : device.connected ? (
                             <Button 
@@ -409,86 +391,20 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
           )}
         </div>
 
-        {/* Phone Sensors Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5" />
-              Phone Sensors
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {realTimeData.location && (
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Navigation className="h-4 w-4 text-blue-500" />
-                    <p className="font-medium text-sm">GPS Location</p>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {realTimeData.location.latitude.toFixed(4)}, {realTimeData.location.longitude.toFixed(4)}
-                  </p>
-                  <p className="text-xs text-green-600">±{realTimeData.location.accuracy}m accuracy</p>
-                </div>
-              )}
-              {realTimeData.battery && (
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Battery className="h-4 w-4 text-green-500" />
-                    <p className="font-medium text-sm">Battery</p>
-                  </div>
-                  <p className="text-lg font-bold">{realTimeData.battery.level}%</p>
-                  <p className="text-xs text-muted-foreground">
-                    {realTimeData.battery.charging ? 'Charging' : 'Not charging'}
-                  </p>
-                </div>
-              )}
-              {realTimeData.motion && (
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Activity className="h-4 w-4 text-orange-500" />
-                    <p className="font-medium text-sm">Motion</p>
-                  </div>
-                  <p className="text-lg font-bold">
-                    {Math.abs(realTimeData.motion.acceleration.x + realTimeData.motion.acceleration.y + realTimeData.motion.acceleration.z).toFixed(1)} m/s²
-                  </p>
-                  <p className="text-xs text-muted-foreground">Acceleration</p>
-                </div>
-              )}
-              {realTimeData.network && (
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Wifi className="h-4 w-4 text-blue-500" />
-                    <p className="font-medium text-sm">Network</p>
-                  </div>
-                  <p className="text-sm font-medium">{realTimeData.network.connectionType || 'Connected'}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {realTimeData.network.online ? 'Online' : 'Offline'}
-                  </p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Status Summary */}
         <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-          {allDevices.filter(device => device.connected).length > 1 ? (
+          {connectedDevices.length > 0 ? (
             <>
               <CheckCircle className="h-5 w-5 text-green-500" />
               <span className="text-sm font-medium">
-                {allDevices.filter(device => device.connected).length} devices ready for VitalWatch monitoring
+                Phone + {connectedDevices.length} Bluetooth device{connectedDevices.length > 1 ? 's' : ''} ready for VitalWatch monitoring
               </span>
-            </>
-          ) : allDevices.filter(device => device.connected).length === 1 ? (
-            <>
-              <AlertCircle className="h-5 w-5 text-yellow-500" />
-              <span className="text-sm font-medium">1 device connected - consider adding more for comprehensive monitoring</span>
             </>
           ) : (
             <>
-              <AlertCircle className="h-5 w-5 text-red-500" />
-              <span className="text-sm font-medium">No devices connected - scan for devices to enable monitoring</span>
+              <Smartphone className="h-5 w-5 text-blue-500" />
+              <span className="text-sm font-medium">Phone sensors active - scan for Bluetooth devices to add more monitoring capabilities</span>
             </>
           )}
         </div>
