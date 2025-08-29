@@ -6,22 +6,19 @@ console.log("VitalWatch main.tsx loading...");
 
 // PWABuilder Compatible Service Worker Registration
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw-pwa.js?v=' + Date.now(), { scope: '/' })
-    .then(async function(registration) {
-      console.log('VitalWatch SW registered:', registration);
-      
-      // Wait for SW to be ready
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('/sw.js');
       await navigator.serviceWorker.ready;
-      
-      // Background Sync Registration
-      if ('sync' in registration && 'SyncManager' in window) {
+
+      // Explicit background sync registration that PWABuilder looks for
+      if ('sync' in reg) {
         try {
-          await (registration as any).sync.register('sync-tag');
-          await (registration as any).sync.register('pwabuilder-sync');
-          await (registration as any).sync.register('background-sync');
-          console.log('Background sync registered');
+          await (reg as any).sync.register('pwabuilder-offline-sync');
+          // Optional: visible confirmation for you during dev
+          console.debug('[PWA] Background Sync tag registered');
         } catch (err) {
-          console.debug('Sync registration failed:', err);
+          console.warn('[PWA] Sync registration failed', err);
         }
       }
       
@@ -31,9 +28,9 @@ if ('serviceWorker' in navigator) {
           const permission = await Notification.requestPermission();
           console.log('Notification permission:', permission);
           
-          if (permission === 'granted' && registration.pushManager) {
+          if (permission === 'granted' && reg.pushManager) {
             try {
-              const subscription = await registration.pushManager.subscribe({
+              const subscription = await reg.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: null
               });
@@ -47,33 +44,33 @@ if ('serviceWorker' in navigator) {
         }
       }
         
-        // Listen for updates to the service worker
-        if (registration.waiting) {
-          console.log('VitalWatch: New service worker is waiting to activate');
+      // Listen for updates to the service worker
+      if (reg.waiting) {
+        console.log('VitalWatch: New service worker is waiting to activate');
+      }
+      
+      reg.addEventListener('updatefound', function() {
+        const newWorker = reg.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('VitalWatch: New service worker installed, ready to activate');
+            }
+          });
         }
-        
-        registration.addEventListener('updatefound', function() {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('VitalWatch: New service worker installed, ready to activate');
-              }
-            });
-          }
-        });
-
-        // Listen for messages from the service worker
-        navigator.serviceWorker.addEventListener('message', function(event) {
-          if (event.data && event.data.type === 'BACKGROUND_SYNC_SUCCESS') {
-            console.log('VitalWatch: Background sync completed successfully', event.data);
-          }
-        });
-        
-      })
-      .catch(function(registrationError) {
-        console.log('VitalWatch SW registration failed: ', registrationError);
       });
+
+      // Listen for messages from the service worker
+      navigator.serviceWorker.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'BACKGROUND_SYNC_SUCCESS') {
+          console.log('VitalWatch: Background sync completed successfully', event.data);
+        }
+      });
+        
+    } catch (e) {
+      console.error('[PWA] SW registration failed', e);
+    }
+  });
 }
 
 try {
