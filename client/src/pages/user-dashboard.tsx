@@ -96,6 +96,8 @@ export default function UserDashboard() {
   const [audioRecording, setAudioRecording] = useState<MediaRecorder | null>(null);
   const [safetySubTab, setSafetySubTab] = useState("emergency");
   const [incognitoMode, setIncognitoMode] = useState(false);
+  const [cornerTapCount, setCornerTapCount] = useState(0);
+  const [tapTimeout, setTapTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -903,18 +905,45 @@ export default function UserDashboard() {
     <div className="min-h-screen bg-background">
       {/* Incognito Mode Overlay */}
       {incognitoMode && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-40 flex items-center justify-center">
-          <div className="text-center text-white p-8">
-            <Eye className="h-16 w-16 mx-auto mb-4 opacity-50" />
-            <h2 className="text-2xl font-semibold mb-2">VitalWatch Running</h2>
-            <p className="text-gray-300 mb-6">Monitoring in background mode</p>
-            <Button 
-              onClick={() => setIncognitoMode(false)}
-              className="bg-purple-600 hover:bg-purple-700"
-            >
-              Exit Hidden Mode
-            </Button>
-          </div>
+        <div 
+          className="fixed inset-0 bg-black z-50"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX;
+            const y = e.clientY;
+            const cornerSize = 100; // pixels from each corner
+            
+            // Check if tap is in any corner
+            const isInTopLeft = x < cornerSize && y < cornerSize;
+            const isInTopRight = x > rect.width - cornerSize && y < cornerSize;
+            const isInBottomLeft = x < cornerSize && y > rect.height - cornerSize;
+            const isInBottomRight = x > rect.width - cornerSize && y > rect.height - cornerSize;
+            
+            if (isInTopLeft || isInTopRight || isInBottomLeft || isInBottomRight) {
+              const newCount = cornerTapCount + 1;
+              setCornerTapCount(newCount);
+              
+              // Clear existing timeout
+              if (tapTimeout) {
+                clearTimeout(tapTimeout);
+              }
+              
+              // Reset counter after 2 seconds if not completed
+              const timeout = setTimeout(() => {
+                setCornerTapCount(0);
+              }, 2000);
+              setTapTimeout(timeout);
+              
+              // Exit incognito mode after 3 taps
+              if (newCount >= 3) {
+                setIncognitoMode(false);
+                setCornerTapCount(0);
+                if (tapTimeout) clearTimeout(tapTimeout);
+              }
+            }
+          }}
+        >
+          {/* Completely black screen - no content */}
         </div>
       )}
       
