@@ -845,6 +845,110 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Emergency Evidence Storage Routes
+  app.post('/api/upload-evidence', isAuthenticated, async (req: any, res) => {
+    try {
+      const { type, data, filename, evidenceId } = req.body;
+      const userId = req.user.id;
+      
+      if (!type || !data || !filename || !evidenceId) {
+        return res.status(400).json({ message: "Missing required fields: type, data, filename, evidenceId" });
+      }
+      
+      // Convert base64 to buffer
+      const base64Data = data.replace(/^data:[^;]+;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+      
+      // Upload to Supabase evidence bucket
+      const filePath = `evidence/${userId}/${evidenceId}/${filename}`;
+      const uploadResult = await storageService.uploadFile('emergency-evidence', filePath, buffer, type.includes('audio') ? 'audio/webm' : 'video/webm');
+      const signedUrl = await storageService.getSignedUrl('emergency-evidence', filePath);
+      
+      res.json({ 
+        message: "Evidence uploaded successfully",
+        url: signedUrl,
+        filePath
+      });
+    } catch (error: any) {
+      console.error("Error uploading evidence:", error);
+      res.status(500).json({ message: "Failed to upload evidence: " + error.message });
+    }
+  });
+
+  app.post('/api/evidence-packages', isAuthenticated, async (req: any, res) => {
+    try {
+      const evidencePackage = req.body;
+      const userId = req.user.id;
+      
+      // Store evidence package metadata in database
+      const packageData = {
+        id: evidencePackage.id,
+        userId,
+        timestamp: evidencePackage.timestamp,
+        location: JSON.stringify(evidencePackage.location),
+        recordings: JSON.stringify(evidencePackage.recordings),
+        screenshots: JSON.stringify(evidencePackage.screenshots),
+        deviceInfo: JSON.stringify(evidencePackage.deviceInfo),
+        sensorData: JSON.stringify(evidencePackage.sensorData),
+        contacts: JSON.stringify(evidencePackage.contacts),
+        notes: evidencePackage.notes,
+        uploaded: evidencePackage.uploaded
+      };
+      
+      // Store in our database using emergency incidents table with type 'evidence_package'
+      await db.insert(emergencyIncidents).values({
+        userId,
+        type: 'evidence_package',
+        location: evidencePackage.location ? `${evidencePackage.location.lat},${evidencePackage.location.lng}` : null,
+        severity: 'medium',
+        description: `Evidence Package: ${evidencePackage.notes}`,
+        status: evidencePackage.uploaded ? 'resolved' : 'active'
+      });
+      
+      res.json({ 
+        message: "Evidence package stored successfully",
+        id: evidencePackage.id
+      });
+    } catch (error: any) {
+      console.error("Error storing evidence package:", error);
+      res.status(500).json({ message: "Failed to store evidence package: " + error.message });
+    }
+  });
+
+  app.get('/api/evidence-packages', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      
+      // Get evidence packages from emergency incidents
+      const evidencePackages = await db.select()
+        .from(emergencyIncidents)
+        .where(and(
+          eq(emergencyIncidents.userId, userId),
+          eq(emergencyIncidents.type, 'evidence_package')
+        ))
+        .orderBy(desc(emergencyIncidents.createdAt));
+      
+      // Transform the data back to evidence package format
+      const packages = evidencePackages.map(pkg => ({
+        id: pkg.id.toString(),
+        timestamp: pkg.createdAt,
+        location: pkg.location && typeof pkg.location === 'string' ? pkg.location.split(',').map(Number) : null,
+        recordings: [],
+        screenshots: [],
+        deviceInfo: {},
+        sensorData: {},
+        contacts: [],
+        notes: pkg.description || '',
+        uploaded: pkg.status === 'resolved'
+      }));
+      
+      res.json(packages);
+    } catch (error: any) {
+      console.error("Error retrieving evidence packages:", error);
+      res.status(500).json({ message: "Failed to retrieve evidence packages: " + error.message });
+    }
+  });
+
   // Admin Analytics Routes
   app.get('/api/admin/analytics', isAdmin, async (req: any, res) => {
     try {

@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { AdvancedBreathingStudio } from "@/components/ui/advanced-breathing-studio";
 import CrisisChatSupport from "@/components/ui/crisis-chat-support";
+import { EmergencyToolsModal } from "@/components/ui/emergency-tools-modal";
 
 interface SystemMetrics {
   systemHealth: number;
@@ -55,6 +56,7 @@ export function EmergencyOverviewDashboard() {
   const [isChatActive, setIsChatActive] = useState(false);
   const [locationTracking, setLocationTracking] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [activeEmergencyTool, setActiveEmergencyTool] = useState<'audio' | 'video' | 'share' | 'call' | 'silent' | 'setup' | null>(null);
 
   // Fetch real data
   const { data: emergencyContacts = [] } = useQuery({
@@ -345,11 +347,7 @@ export function EmergencyOverviewDashboard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                navigator.mediaDevices?.getUserMedia({ audio: true })
-                  .then(() => toast({ title: "Audio Recording", description: "Emergency recording started" }))
-                  .catch(() => toast({ title: "Audio Failed", description: "Unable to access microphone", variant: "destructive" }));
-              }}
+              onClick={() => setActiveEmergencyTool('audio')}
             >
               <Mic className="h-4 w-4 mr-1" />
               Audio
@@ -357,11 +355,7 @@ export function EmergencyOverviewDashboard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                navigator.mediaDevices?.getUserMedia({ video: true })
-                  .then(() => toast({ title: "Video Recording", description: "Emergency recording started" }))
-                  .catch(() => toast({ title: "Video Failed", description: "Unable to access camera", variant: "destructive" }));
-              }}
+              onClick={() => setActiveEmergencyTool('video')}
             >
               <Camera className="h-4 w-4 mr-1" />
               Video
@@ -369,16 +363,7 @@ export function EmergencyOverviewDashboard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({ 
-                    title: 'Emergency Location', 
-                    text: currentLocation ? `Emergency at: ${currentLocation.lat}, ${currentLocation.lng}` : 'Emergency assistance needed' 
-                  });
-                } else {
-                  toast({ title: "Location Share", description: "Emergency location prepared for sharing" });
-                }
-              }}
+              onClick={() => setActiveEmergencyTool('share')}
             >
               <Navigation className="h-4 w-4 mr-1" />
               Share
@@ -386,14 +371,7 @@ export function EmergencyOverviewDashboard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                const contactCount = Array.isArray(emergencyContacts) ? emergencyContacts.length : 0;
-                if (contactCount > 0) {
-                  toast({ title: "Contacts Notified", description: `Alerting ${contactCount} emergency contacts` });
-                } else {
-                  toast({ title: "No Contacts", description: "Please add emergency contacts first", variant: "destructive" });
-                }
-              }}
+              onClick={() => setActiveEmergencyTool('call')}
             >
               <Phone className="h-4 w-4 mr-1" />
               Call
@@ -401,7 +379,7 @@ export function EmergencyOverviewDashboard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => toast({ title: "Silent Mode", description: "Emergency mode activated silently" })}
+              onClick={() => setActiveEmergencyTool('silent')}
             >
               <VolumeX className="h-4 w-4 mr-1" />
               Silent
@@ -409,10 +387,7 @@ export function EmergencyOverviewDashboard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                requestPermissions();
-                toast({ title: "Permissions", description: "Requesting all emergency permissions" });
-              }}
+              onClick={() => setActiveEmergencyTool('setup')}
             >
               <CheckCircle className="h-4 w-4 mr-1" />
               Setup
@@ -526,6 +501,15 @@ export function EmergencyOverviewDashboard() {
             <CrisisChatSupport />
           </CardContent>
         </Card>
+      )}
+
+      {activeEmergencyTool && (
+        <EmergencyToolsModal
+          tool={activeEmergencyTool}
+          isOpen={!!activeEmergencyTool}
+          onClose={() => setActiveEmergencyTool(null)}
+          emergencyLocation={currentLocation}
+        />
       )}
     </div>
   );

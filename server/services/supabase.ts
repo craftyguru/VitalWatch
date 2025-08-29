@@ -97,6 +97,22 @@ export class SupabaseStorageService {
     return filePath;
   }
 
+  // Generic file upload method for evidence storage
+  async uploadFile(bucket: string, filePath: string, file: Buffer, contentType?: string): Promise<string> {
+    const { data, error } = await this.admin.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        contentType: contentType || 'application/octet-stream',
+        upsert: true
+      });
+
+    if (error) {
+      throw new Error(`Failed to upload file to ${bucket}: ${error.message}`);
+    }
+
+    return filePath;
+  }
+
   // Get signed URL for private file access
   async getSignedUrl(bucket: string, filePath: string, expiresIn: number = 3600): Promise<string> {
     const { data, error } = await this.admin.storage
