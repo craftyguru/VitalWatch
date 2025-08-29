@@ -36,6 +36,8 @@ export default function AuthPage() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
+  const [hasReadTerms, setHasReadTerms] = useState(false);
+  const [hasReadPrivacy, setHasReadPrivacy] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -466,12 +468,13 @@ export default function AuthPage() {
                         <Checkbox
                           id="terms-checkbox"
                           checked={agreedToTerms}
-                          onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                          onCheckedChange={(checked) => hasReadTerms && setAgreedToTerms(checked as boolean)}
+                          disabled={!hasReadTerms}
                           className="mt-0.5 flex-shrink-0"
                           data-testid="checkbox-terms"
                         />
                         <div className="flex-1 min-w-0">
-                          <Label htmlFor="terms-checkbox" className="text-xs sm:text-sm text-gray-300 cursor-pointer leading-relaxed">
+                          <Label htmlFor="terms-checkbox" className={`text-xs sm:text-sm cursor-pointer leading-relaxed ${hasReadTerms ? 'text-gray-300' : 'text-gray-500'}`}>
                             I have read and agree to the{" "}
                             <button
                               type="button"
@@ -481,6 +484,11 @@ export default function AuthPage() {
                             >
                               Terms of Service
                             </button>
+                            {!hasReadTerms && (
+                              <span className="block text-xs text-gray-600 mt-1">
+                                Click to read and enable this option
+                              </span>
+                            )}
                           </Label>
                         </div>
                       </div>
@@ -489,12 +497,13 @@ export default function AuthPage() {
                         <Checkbox
                           id="privacy-checkbox"
                           checked={agreedToPrivacy}
-                          onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
+                          onCheckedChange={(checked) => hasReadPrivacy && setAgreedToPrivacy(checked as boolean)}
+                          disabled={!hasReadPrivacy}
                           className="mt-0.5 flex-shrink-0"
                           data-testid="checkbox-privacy"
                         />
                         <div className="flex-1 min-w-0">
-                          <Label htmlFor="privacy-checkbox" className="text-xs sm:text-sm text-gray-300 cursor-pointer leading-relaxed">
+                          <Label htmlFor="privacy-checkbox" className={`text-xs sm:text-sm cursor-pointer leading-relaxed ${hasReadPrivacy ? 'text-gray-300' : 'text-gray-500'}`}>
                             I have read and agree to the{" "}
                             <button
                               type="button"
@@ -504,6 +513,11 @@ export default function AuthPage() {
                             >
                               Privacy Policy
                             </button>
+                            {!hasReadPrivacy && (
+                              <span className="block text-xs text-gray-600 mt-1">
+                                Click to read and enable this option
+                              </span>
+                            )}
                           </Label>
                         </div>
                       </div>
@@ -558,14 +572,20 @@ export default function AuthPage() {
           type="terms"
           open={showTermsModal}
           onClose={() => setShowTermsModal(false)}
-          onAgree={() => setAgreedToTerms(true)}
+          onAgree={() => {
+            setHasReadTerms(true);
+            setAgreedToTerms(true);
+          }}
         />
         
         <LegalAgreementModal
           type="privacy"
           open={showPrivacyModal}
           onClose={() => setShowPrivacyModal(false)}
-          onAgree={() => setAgreedToPrivacy(true)}
+          onAgree={() => {
+            setHasReadPrivacy(true);
+            setAgreedToPrivacy(true);
+          }}
         />
       </div>
     </div>
