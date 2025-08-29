@@ -4,12 +4,22 @@ import "./index.css";
 
 console.log("VitalWatch main.tsx loading...");
 
-// Register Workbox Service Worker for comprehensive PWA functionality
+// Register Service Worker for comprehensive PWA functionality
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
       console.log('VitalWatch SW registered: ', registration);
+      
+      // Register background sync immediately for PWABuilder detection
+      if ('sync' in registration && 'SyncManager' in window) {
+        try {
+          await (registration as any).sync.register('pwabuilder-sync');
+          console.log('Background sync registered for PWABuilder detection');
+        } catch (syncError) {
+          console.log('Background sync registration failed:', syncError);
+        }
+      }
       
       // Listen for updates to the service worker
       if (registration.waiting) {
@@ -34,22 +44,6 @@ if ('serviceWorker' in navigator) {
         }
       });
 
-      // PWABuilder background sync detection
-      if ('serviceWorker' in navigator && 'SyncManager' in window) {
-        navigator.serviceWorker.ready
-          .then(reg => {
-            // Register PWABuilder detection tag
-            return (reg as any).sync.register('pwabuilder-sync');
-          })
-          .then(() => {
-            console.log('VitalWatch: PWABuilder sync detection registered successfully');
-          })
-          .catch(() => {
-            console.log('VitalWatch: PWABuilder sync detection failed (may not be supported)');
-          });
-      } else {
-        console.log('VitalWatch: Background sync not supported in this browser');
-      }
 
     } catch (registrationError) {
       console.log('VitalWatch SW registration failed: ', registrationError);
