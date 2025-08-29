@@ -351,6 +351,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Breadcrumb trail for continuous emergency updates
+  app.post('/api/breadcrumb-update', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { location, biometrics, audioBlob, timestamp } = req.body;
+
+      // Get primary emergency contact
+      const contacts = await db.select()
+        .from(emergencyContacts)
+        .where(eq(emergencyContacts.userId, userId))
+        .limit(1);
+
+      if (contacts.length === 0) {
+        return res.status(400).json({ message: "No emergency contacts found" });
+      }
+
+      const contact = contacts[0];
+
+      // Format update message with current status
+      const locationText = location 
+        ? `📍 Location: https://maps.google.com/maps?q=${location.lat},${location.lng}`
+        : '📍 Location: Not available';
+
+      const biometricText = biometrics 
+        ? `💓 Heart Rate: ${biometrics.heartRate || 'N/A'} BPM\n📊 Stress: ${biometrics.stress || 'N/A'}%\n🏃 Activity: ${biometrics.activity || 'N/A'}%`
+        : '💓 Biometrics: Not available';
+
+      const updateMessage = `🚨 Emergency Update - VitalWatch\n\n${locationText}\n\n${biometricText}\n\n⏰ Time: ${new Date(timestamp).toLocaleString()}\n\n📡 Continuous monitoring active - Next update in 30 seconds.`;
+
+      // Send SMS update
+      await sendSMS(contact.phone, updateMessage);
+
+      res.json({ 
+        success: true,
+        message: "Breadcrumb update sent successfully",
+        sentTo: contact.phone
+      });
+
+    } catch (error) {
+      console.error('Breadcrumb update error:', error);
+      res.status(500).json({ message: "Failed to send breadcrumb update" });
+    }
+  });
+
   // Coping tools routes
   app.get('/api/coping-tools-usage', isAuthenticated, async (req: any, res) => {
     try {

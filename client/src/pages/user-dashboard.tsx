@@ -85,6 +85,10 @@ export default function UserDashboard() {
   // Modal states for safety tools
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [modalContent, setModalContent] = useState<any>(null);
+  const [isPanicActive, setIsPanicActive] = useState(false);
+  const [emergencyTimer, setEmergencyTimer] = useState<number | null>(null);
+  const [breadcrumbActive, setBreadcrumbActive] = useState(false);
+  const [audioRecording, setAudioRecording] = useState<MediaRecorder | null>(null);
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -251,6 +255,195 @@ export default function UserDashboard() {
   const closeModal = () => {
     setActiveModal(null);
     setModalContent(null);
+  };
+
+  // Emergency Panic Button System
+  const startAudioRecording = async (): Promise<Blob | null> => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      const audioChunks: Blob[] = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      return new Promise((resolve) => {
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          stream.getTracks().forEach(track => track.stop());
+          resolve(audioBlob);
+        };
+
+        mediaRecorder.start();
+        setAudioRecording(mediaRecorder);
+
+        // Record for 30 seconds
+        setTimeout(() => {
+          if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+          }
+        }, 30000);
+      });
+    } catch (error) {
+      console.error('Error starting audio recording:', error);
+      return null;
+    }
+  };
+
+  const getCurrentLocation = (): Promise<{lat: number, lng: number} | null> => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            });
+          },
+          () => resolve(null),
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else {
+        resolve(null);
+      }
+    });
+  };
+
+  const getAISituationAnalysis = (biometrics: any, location: any) => {
+    const threatLevel = biometrics?.threatLevel || 'Unknown';
+    const activity = biometrics?.activity || 0;
+    const stress = biometrics?.stress || 0;
+    
+    let analysis = `Emergency Alert: User activated panic button. `;
+    
+    if (stress > 20) {
+      analysis += `High stress detected (${stress}%). `;
+    }
+    
+    if (activity > 50) {
+      analysis += `High movement detected. `;
+    } else {
+      analysis += `Low activity - user may be stationary. `;
+    }
+    
+    if (location) {
+      analysis += `Location: ${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}. `;
+    }
+    
+    analysis += `Threat level: ${threatLevel}. Immediate assistance recommended.`;
+    
+    return analysis;
+  };
+
+  const sendEmergencyAlert = async () => {
+    if (!emergencyContacts || emergencyContacts.length === 0) {
+      toast({
+        title: "No Emergency Contacts",
+        description: "Please add emergency contacts first.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsPanicActive(true);
+    
+    try {
+      // Get current location and biometrics
+      const currentLocation = await getCurrentLocation();
+      const currentBiometrics = useRealTimeMetrics(sensorData);
+      
+      // Start audio recording
+      const audioBlob = await startAudioRecording();
+      
+      // Generate AI analysis
+      const aiAnalysis = getAISituationAnalysis(currentBiometrics, currentLocation);
+      
+      // Send initial emergency alert using the existing API format
+      const emergencyData = {
+        type: 'panic_button',
+        severity: 'high',
+        location: currentLocation,
+        message: aiAnalysis
+      };
+
+      // Send to backend for SMS processing
+      const response = await fetch('/api/emergency-alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emergencyData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send emergency alert');
+      }
+
+      toast({
+        title: "Emergency Alert Sent!",
+        description: "Primary contact has been notified. Breadcrumb trail starting...",
+        variant: "default"
+      });
+
+      // Start breadcrumb trail
+      setBreadcrumbActive(true);
+      startBreadcrumbTrail();
+
+    } catch (error) {
+      console.error('Emergency alert failed:', error);
+      toast({
+        title: "Emergency Alert Failed",
+        description: "Could not send alert. Please call emergency services directly.",
+        variant: "destructive"
+      });
+      setIsPanicActive(false);
+    }
+  };
+
+  const startBreadcrumbTrail = () => {
+    const interval = setInterval(async () => {
+      if (!breadcrumbActive) {
+        clearInterval(interval);
+        return;
+      }
+
+      try {
+        const currentLocation = await getCurrentLocation();
+        const currentBiometrics = useRealTimeMetrics(sensorData);
+        const audioBlob = await startAudioRecording();
+        
+        const updateData = {
+          location: currentLocation,
+          biometrics: currentBiometrics,
+          audioBlob: audioBlob ? await audioBlob.arrayBuffer() : null,
+          timestamp: new Date().toISOString(),
+          contactId: emergencyContacts[0]?.id || null
+        };
+
+        await fetch('/api/breadcrumb-update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateData)
+        });
+
+      } catch (error) {
+        console.error('Breadcrumb update failed:', error);
+      }
+    }, 30000); // Every 30 seconds
+
+    setEmergencyTimer(interval as any);
+  };
+
+  const stopEmergencyMode = () => {
+    setIsPanicActive(false);
+    setBreadcrumbActive(false);
+    if (emergencyTimer) {
+      clearInterval(emergencyTimer);
+      setEmergencyTimer(null);
+    }
+    if (audioRecording) {
+      audioRecording.stop();
+      setAudioRecording(null);
+    }
   };
 
   // Safety tool content generators
@@ -1861,6 +2054,47 @@ export default function UserDashboard() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Floating Panic Button - Bottom Left */}
+      <div className="fixed bottom-4 left-4 z-50">
+        {isPanicActive ? (
+          <div className="space-y-2">
+            {/* Active Emergency Controls */}
+            <div className="bg-red-600 text-white rounded-full p-4 shadow-lg animate-pulse">
+              <div className="text-center">
+                <AlertTriangle className="h-8 w-8 mx-auto mb-2" />
+                <div className="text-xs font-bold">EMERGENCY</div>
+                <div className="text-xs">ACTIVE</div>
+              </div>
+            </div>
+            
+            {/* Stop Emergency Button */}
+            <Button
+              onClick={stopEmergencyMode}
+              className="w-full bg-gray-800 hover:bg-gray-900 text-white text-xs py-2"
+              size="sm"
+            >
+              Stop Emergency
+            </Button>
+            
+            {breadcrumbActive && (
+              <div className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-lg p-2 text-xs text-center">
+                Sending updates every 30s
+              </div>
+            )}
+          </div>
+        ) : (
+          <Button
+            onClick={sendEmergencyAlert}
+            className="w-16 h-16 sm:w-20 sm:h-20 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex flex-col items-center justify-center"
+            size="sm"
+            data-testid="panic-button"
+          >
+            <AlertTriangle className="h-6 w-6 sm:h-8 sm:w-8 mb-1" />
+            <span className="text-xs font-bold">PANIC</span>
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
