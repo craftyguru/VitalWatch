@@ -909,6 +909,66 @@ export default function UserDashboard() {
     </div>
   );
 
+  const generateAiLawyerContent = () => (
+    <div className="space-y-4">
+      <div className="bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-3">AI Legal Assistant</h3>
+        <p className="text-sm text-purple-700 dark:text-purple-300 mb-4">
+          Get instant legal guidance from our AI-powered legal assistant. Ask questions about your rights, legal procedures, or safety concerns.
+        </p>
+        <div className="space-y-3">
+          <div className="bg-white dark:bg-gray-900 p-3 rounded-lg border">
+            <div className="flex items-start space-x-3">
+              <Brain className="h-5 w-5 text-purple-600 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Legal Question</p>
+                <textarea 
+                  className="w-full mt-2 p-2 text-sm border rounded-md resize-none" 
+                  rows={3}
+                  placeholder="Ask your legal question here..."
+                />
+              </div>
+            </div>
+            <div className="flex justify-end mt-3">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Ask AI Lawyer
+              </Button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <Button className="h-16 bg-purple-600 hover:bg-purple-700 text-white flex flex-col">
+              <FileText className="h-5 w-5 mb-1" />
+              <span className="text-xs">Rights Guide</span>
+            </Button>
+            <Button className="h-16 bg-indigo-600 hover:bg-indigo-700 text-white flex flex-col">
+              <Shield className="h-5 w-5 mb-1" />
+              <span className="text-xs">Legal Templates</span>
+            </Button>
+            <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+              <AlertTriangle className="h-5 w-5 mb-1" />
+              <span className="text-xs">Emergency Legal</span>
+            </Button>
+            <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+              <CheckCircle className="h-5 w-5 mb-1" />
+              <span className="text-xs">Legal Checklist</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-yellow-50 dark:bg-yellow-950/20 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800">
+        <div className="flex items-start space-x-2">
+          <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-yellow-700 dark:text-yellow-300">
+            <strong>Disclaimer:</strong> This AI assistant provides general legal information only. For specific legal advice, consult with a qualified attorney.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       {/* Incognito Mode Overlay */}
@@ -2386,7 +2446,7 @@ export default function UserDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                         <Button variant="outline" className="h-16 flex flex-col justify-center border-gray-200" onClick={() => openModal("legal-documentation", generateLegalContent())}>
                           <FileText className="h-5 w-5 text-gray-600 mb-1" />
                           <span className="text-xs">Legal Docs</span>
@@ -2398,6 +2458,10 @@ export default function UserDashboard() {
                         <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("legal-hotline", generateLegalContent())}>
                           <Phone className="h-5 w-5 text-orange-600 mb-1" />
                           <span className="text-xs">Legal Hotline</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("ai-lawyer", generateAiLawyerContent())}>
+                          <Brain className="h-5 w-5 text-purple-600 mb-1" />
+                          <span className="text-xs">AI Lawyer</span>
                         </Button>
                       </div>
                     </CardContent>
