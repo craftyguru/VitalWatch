@@ -1032,9 +1032,16 @@ export default function UserDashboard() {
                   } else {
                     try {
                       await startMonitoring();
-                      toast({ title: "Background monitoring active", description: "VitalWatch will continue monitoring even when you use other apps" });
+                      toast({ 
+                        title: "Background monitoring active", 
+                        description: "VitalWatch will continue monitoring even when you use other apps. Enable notifications for emergency alerts." 
+                      });
                     } catch (error) {
-                      toast({ title: "Failed to start monitoring", description: "Please enable notifications for background monitoring", variant: "destructive" });
+                      toast({ 
+                        title: "Failed to start monitoring", 
+                        description: "Could not start background monitoring. Please try again.", 
+                        variant: "destructive" 
+                      });
                     }
                   }
                 }}

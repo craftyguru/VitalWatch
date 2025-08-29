@@ -39,13 +39,18 @@ export function useBackgroundMonitoring(): BackgroundMonitoringState {
       if (!isGranted) {
         const granted = await requestPermission();
         if (!granted) {
-          throw new Error('Notification permission required for background monitoring');
+          // Continue without notifications but still enable basic monitoring
+          console.warn('Notification permission denied, continuing with basic monitoring');
         }
       }
 
-      // Register for push notifications if not already registered
-      if (!isRegistered) {
-        await registerForPush();
+      // Register for push notifications if not already registered (only if permission granted)
+      if (!isRegistered && (isGranted || Notification.permission === 'granted')) {
+        try {
+          await registerForPush();
+        } catch (error) {
+          console.warn('Failed to register for push notifications, continuing with basic monitoring:', error);
+        }
       }
 
       // Register service worker for background tasks
