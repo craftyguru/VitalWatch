@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { HelpChatBubble } from "@/components/HelpChatBubble";
+import FloatingChatBubble from "@/components/ui/floating-chat-bubble";
 import { UpdateAvailableToast } from "@/components/UpdateAvailableToast";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -58,6 +59,7 @@ function App() {
           <Router />
 
           <HelpChatBubble />
+          <FloatingChatBubble />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>

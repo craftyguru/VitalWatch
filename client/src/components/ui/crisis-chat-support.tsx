@@ -243,59 +243,31 @@ export default function CrisisChatSupport({
   }, [messages]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 relative" data-testid="crisis-chat-support" style={{ scrollMarginTop: '2rem' }}>
-      <Card className="border-2 border-red-200 dark:border-red-800">
-        <CardHeader className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-2">
-            <Shield className="h-8 w-8 text-red-600" />
-            <CardTitle className="text-2xl font-bold text-red-700 dark:text-red-300">
-              Crisis Support Chat
-            </CardTitle>
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <Badge className={getUrgencyColor(crisisLevel)}>
-              Crisis Level: {crisisLevel.toUpperCase()}
-            </Badge>
-            {emergencyMode && (
-              <Badge variant="destructive" className="animate-pulse">
-                Emergency Mode Active
-              </Badge>
-            )}
-          </div>
-        </CardHeader>
-        
-        <CardContent>
-          <Tabs defaultValue="chat" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="chat" data-testid="tab-chat">Chat Support</TabsTrigger>
-              <TabsTrigger value="resources" data-testid="tab-resources">Crisis Resources</TabsTrigger>
-              <TabsTrigger value="settings" data-testid="tab-settings">Settings</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="chat" className="space-y-4" id="crisis-chat-content">
-              {!currentSession ? (
-                <div className="text-center space-y-4">
-                  <div className="p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
-                    <Heart className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">You're Not Alone</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
-                      Our AI crisis counselor is here to provide immediate support and guidance.
-                      This is a safe space where you can share your feelings.
-                    </p>
-                    <Button 
-                      onClick={initializeChat}
-                      disabled={createSessionMutation.isPending}
-                      size="lg"
-                      className="bg-blue-600 hover:bg-blue-700"
-                      data-testid="button-start-chat"
-                    >
-                      {createSessionMutation.isPending ? "Connecting..." : "Start Crisis Chat"}
-                    </Button>
-                  </div>
+    <div className="w-full h-full flex flex-col relative" data-testid="crisis-chat-support">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col p-4 overflow-hidden">
+          <div className="flex-1 flex flex-col" id="crisis-chat-content">
+            {!currentSession ? (
+              <div className="flex-1 flex items-center justify-center p-4">
+                <div className="text-center space-y-4 max-w-sm">
+                  <Heart className="h-12 w-12 text-blue-600 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold">You're Not Alone</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    AI crisis counselor ready to provide immediate support.
+                  </p>
+                  <Button 
+                    onClick={initializeChat}
+                    disabled={createSessionMutation.isPending}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    data-testid="button-start-chat"
+                  >
+                    {createSessionMutation.isPending ? "Connecting..." : "Start Chat"}
+                  </Button>
                 </div>
-              ) : (
-                <div className="space-y-4 sticky top-4">
-                  <ScrollArea className="h-96 w-full border rounded-lg p-4 relative overflow-hidden">
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col space-y-3">
+                <ScrollArea className="flex-1 w-full border rounded-lg p-3 relative overflow-hidden">
                     <div className="space-y-4">
                       {loadingMessages && (
                         <div className="text-center py-4">
@@ -347,7 +319,7 @@ export default function CrisisChatSupport({
                     </div>
                   </ScrollArea>
 
-                  <div className="flex gap-2 sticky bottom-0 bg-background pt-2">
+                <div className="flex gap-2 p-1 bg-background border-t">
                     <Input
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
@@ -392,90 +364,12 @@ export default function CrisisChatSupport({
                     >
                       <Send className="h-4 w-4" />
                     </Button>
-                  </div>
                 </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="resources" className="space-y-4">
-              <div className="grid gap-4">
-                {supportResources.map((resource, index) => (
-                  <Card 
-                    key={index} 
-                    className={`border-l-4 ${
-                      resource.urgency === 'critical' ? 'border-l-red-500' :
-                      resource.urgency === 'high' ? 'border-l-orange-500' :
-                      resource.urgency === 'medium' ? 'border-l-yellow-500' :
-                      'border-l-green-500'
-                    }`}
-                    data-testid={`resource-${index}`}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-3">
-                          <resource.icon className="h-5 w-5 mt-1 text-gray-600" />
-                          <div>
-                            <h3 className="font-semibold">{resource.title}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                              {resource.description}
-                            </p>
-                          </div>
-                        </div>
-                        <Badge className={getUrgencyColor(resource.urgency)}>
-                          {resource.urgency}
-                        </Badge>
-                      </div>
-                      <Button 
-                        className="mt-3 w-full" 
-                        variant="outline"
-                        data-testid={`button-resource-${index}`}
-                      >
-                        {resource.action}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
               </div>
-            </TabsContent>
-
-            <TabsContent value="settings" className="space-y-4">
-              <Card>
-                <CardContent className="p-4 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="audio-enabled">Audio Responses</Label>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        Enable audio responses from the AI counselor
-                      </p>
-                    </div>
-                    <Switch
-                      id="audio-enabled"
-                      checked={audioEnabled}
-                      onCheckedChange={setAudioEnabled}
-                      data-testid="switch-audio"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="voice-input">Voice Input</Label>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        Use voice to send messages
-                      </p>
-                    </div>
-                    <Switch
-                      id="voice-input"
-                      checked={voiceMode}
-                      onCheckedChange={setVoiceMode}
-                      data-testid="switch-voice"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
