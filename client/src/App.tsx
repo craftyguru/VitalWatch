@@ -14,7 +14,6 @@ import HomeEnhanced from "@/pages/home-enhanced";
 import UserDashboard from "@/pages/user-dashboard";
 import SafetyTools from "@/pages/safety-tools";
 import Mood from "@/pages/mood";
-import ToolsComprehensive from "@/pages/tools-comprehensive";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
 import BillingPage from "@/pages/billing";
@@ -39,7 +38,6 @@ function Router() {
           <Route path="/dashboard" component={UserDashboard} />
           <Route path="/safetytools" component={SafetyTools} />
           <Route path="/mood" component={Mood} />
-          <Route path="/tools" component={ToolsComprehensive} />
           <Route path="/contacts" component={ContactsEnhanced} />
           <Route path="/profile" component={ProfileEnhanced} />
           <Route path="/billing" component={BillingPage} />

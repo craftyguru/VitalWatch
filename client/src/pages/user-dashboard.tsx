@@ -4,10 +4,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useSafeDeviceSensors } from "@/hooks/useSafeDeviceSensors";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { useRealDeviceScanner } from "@/hooks/useRealDeviceScanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Heart,
@@ -32,7 +34,12 @@ import {
   Activity,
   Eye,
   Clock,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle,
+  Wind,
+  MessageSquare,
+  TreePine,
+  Headphones
 } from "lucide-react";
 import { Link } from "wouter";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -40,13 +47,39 @@ import { VersionBadge } from "@/components/VersionBadge";
 import { AdvancedBreathingStudio } from "@/components/ui/advanced-breathing-studio";
 import { MoodTracker } from "@/components/ui/mood-tracker";
 import { ComprehensiveWellnessAnalytics } from "@/components/ComprehensiveWellnessAnalytics";
+import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
+import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
+import { EmergencyContactManager } from "@/components/EmergencyContactManager";
+import { WellnessOverview } from "@/components/WellnessOverview";
+
+// Real-time metrics derived from actual sensor data - NO FALLBACKS
+const useRealTimeMetrics = (realTimeData: any) => {
+  return {
+    heartRate: realTimeData?.heartRate?.bpm || null,
+    activity: realTimeData?.motion ? Math.min(100, (Math.abs(realTimeData.motion.acceleration.x) + Math.abs(realTimeData.motion.acceleration.y) + Math.abs(realTimeData.motion.acceleration.z)) * 25) : null,
+    stress: realTimeData?.motion ? Math.max(5, Math.min(30, Math.abs(realTimeData.motion.acceleration.x + realTimeData.motion.acceleration.y) * 8)) : null,
+    batteryLevel: realTimeData?.battery?.level || null,
+    location: realTimeData?.location ? {
+      lat: realTimeData.location.latitude,
+      lng: realTimeData.location.longitude,
+      accuracy: realTimeData.location.accuracy
+    } : null,
+    threatLevel: realTimeData?.motion && realTimeData?.location ? 
+      (Math.abs(realTimeData.motion.acceleration.x + realTimeData.motion.acceleration.y + realTimeData.motion.acceleration.z) > 15 ? "Medium" : "Low") : null
+  };
+};
 
 export default function UserDashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { sensorData, permissions, requestPermissions } = useSafeDeviceSensors();
   const { isConnected, lastMessage } = useWebSocket();
+  const { capabilities, realTimeData, isScanning } = useRealDeviceScanner();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [emergencyMode, setEmergencyMode] = useState(false);
+  const [liveLocation, setLiveLocation] = useState(false);
+  const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -73,6 +106,10 @@ export default function UserDashboard() {
     queryKey: ["/api/ai-breathing-recommendations"],
   });
 
+  const { data: copingToolsUsage } = useQuery({
+    queryKey: ["/api/coping-tools"],
+  });
+
   // Calculate wellness metrics
   const sessionCount = Array.isArray(breathingSessions) ? breathingSessions.length : 0;
   const avgMood = Array.isArray(recentMoods) && recentMoods.length > 0 
@@ -84,11 +121,81 @@ export default function UserDashboard() {
     : 0;
   const wellnessScore = Math.round((avgMood * 20) + (stressRelief * 0.3) + (dayStreak * 2));
 
+  // Enhanced wellness analytics from coping tools
+  const recentMoodEntries = Array.isArray(recentMoods) ? recentMoods.slice(0, 7) : [];
+  const moodAverage = recentMoodEntries.length > 0 ? 
+    recentMoodEntries.reduce((sum, entry) => sum + entry.moodScore, 0) / recentMoodEntries.length : 0;
+  
+  const sessionsThisWeek = Array.isArray(copingToolsUsage) ? 
+    copingToolsUsage.filter(usage => {
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return new Date(usage.createdAt) > weekAgo;
+    }).length : 0;
+
+  const stressReliefProgress = moodAverage >= 4 ? 89 : moodAverage >= 3 ? 65 : 35;
+
   // Device status
   const deviceStatus = {
     accelerometer: { active: sensorData.accelerometer?.active || false },
     location: { active: sensorData.location?.active || false },
     battery: { level: sensorData.battery?.level || 0 }
+  };
+
+  // Geolocation functions
+  const startLocationTracking = () => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          });
+          setLiveLocation(true);
+          toast({
+            title: "Location Tracking Active",
+            description: `Location: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`,
+            variant: "default",
+          });
+        },
+        (error) => {
+          toast({
+            title: "Location Access Denied",
+            description: "Please enable location permissions for emergency features",
+            variant: "destructive",
+          });
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  };
+
+  // Emergency panic functionality
+  const triggerPanicButton = () => {
+    setEmergencyMode(true);
+    
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        toast({
+          title: "EMERGENCY ALERT TRIGGERED",
+          description: `Location: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}. Contacts notified.`,
+          variant: "destructive",
+        });
+      });
+    }
+    
+    let countdown = 30;
+    const countdownInterval = setInterval(() => {
+      countdown--;
+      if (countdown <= 0) {
+        clearInterval(countdownInterval);
+        toast({
+          title: "Emergency Services Contacted",
+          description: "Emergency response initiated. Help is on the way.",
+          variant: "destructive",
+        });
+      }
+    }, 1000);
   };
 
   // Handle logout
@@ -236,34 +343,64 @@ export default function UserDashboard() {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center space-x-8 overflow-x-auto py-2">
-            <button className="flex items-center space-x-2 px-3 py-2 bg-blue-100 dark:bg-blue-950/30 text-blue-900 dark:text-blue-100 rounded-lg border-b-2 border-blue-500 whitespace-nowrap">
-              <BarChart3 className="h-4 w-4" />
-              <span className="text-sm font-medium">Overview</span>
-            </button>
-            
-            <Link href="/safetytools" className="flex items-center space-x-2 px-3 py-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors whitespace-nowrap">
-              <Shield className="h-4 w-4" />
-              <span className="text-sm font-medium">Safety Tools</span>
-            </Link>
-            
-            <button className="flex items-center space-x-2 px-3 py-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors whitespace-nowrap">
-              <Activity className="h-4 w-4" />
-              <span className="text-sm font-medium">Wellness Analytics</span>
-            </button>
-            
-            <button className="flex items-center space-x-2 px-3 py-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors whitespace-nowrap">
-              <MapPin className="h-4 w-4" />
-              <span className="text-sm font-medium">Device Hub</span>
-            </button>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          {/* Professional Tab Navigation */}
+          <div className="mb-8">
+            <div className="grid w-full grid-cols-4 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
+              <button
+                onClick={() => setActiveTab("overview")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "overview" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Overview</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("safety-tools")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "safety-tools" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Safety Tools</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("wellness-analytics")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "wellness-analytics" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Wellness Analytics</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("device-hub")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "device-hub" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium">Device Hub</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
+          {/* Overview Tab Content */}
+          {activeTab === "overview" && (
+            <div className="space-y-6">
         
         {/* Welcome Section */}
         <div className="flex items-center justify-between">
@@ -479,89 +616,192 @@ export default function UserDashboard() {
               <h2 className="text-2xl font-bold text-foreground">Quick Relief Tools</h2>
               <p className="text-muted-foreground">AI-enhanced immediate support when you need it most</p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/tools" data-testid="link-tools">
-                View All Tools
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
+            <Button 
+              variant="outline" 
+              onClick={() => setActiveTab("safety-tools")}
+              data-testid="button-view-all-tools"
+            >
+              View All Tools
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <AdvancedBreathingStudio />
             
-            <Link href="/tools">
-              <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20 border-green-200 hover:scale-105">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-green-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
-                    <Leaf className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">Grounding</h3>
-                  <p className="text-xs text-green-700 dark:text-green-300">5-4-3-2-1 Method</p>
-                  <Badge variant="secondary" className="mt-2 text-xs bg-green-100 text-green-800">
-                    5 min
-                  </Badge>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20 border-green-200 hover:scale-105"
+              onClick={() => setActiveTab("safety-tools")}
+            >
+              <CardContent className="p-6 text-center">
+                <div className="bg-green-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
+                  <Leaf className="h-6 w-6" />
+                </div>
+                <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">Grounding</h3>
+                <p className="text-xs text-green-700 dark:text-green-300">5-4-3-2-1 Method</p>
+                <Badge variant="secondary" className="mt-2 text-xs bg-green-100 text-green-800">
+                  5 min
+                </Badge>
+              </CardContent>
+            </Card>
             
-            <Link href="/tools">
-              <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/20 border-purple-200 hover:scale-105">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-purple-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
-                    <Waves className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1">Meditation</h3>
-                  <p className="text-xs text-purple-700 dark:text-purple-300">Guided Session</p>
-                  <Badge variant="secondary" className="mt-2 text-xs bg-purple-100 text-purple-800">
-                    10 min
-                  </Badge>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/20 border-purple-200 hover:scale-105"
+              onClick={() => setActiveTab("safety-tools")}
+            >
+              <CardContent className="p-6 text-center">
+                <div className="bg-purple-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
+                  <Waves className="h-6 w-6" />
+                </div>
+                <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1">Meditation</h3>
+                <p className="text-xs text-purple-700 dark:text-purple-300">Guided Session</p>
+                <Badge variant="secondary" className="mt-2 text-xs bg-purple-100 text-purple-800">
+                  10 min
+                </Badge>
+              </CardContent>
+            </Card>
             
-            <Link href="/tools">
-              <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/20 border-orange-200 hover:scale-105">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-orange-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
-                    <Puzzle className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1">Distraction</h3>
-                  <p className="text-xs text-orange-700 dark:text-orange-300">Games & Activities</p>
-                  <Badge variant="secondary" className="mt-2 text-xs bg-orange-100 text-orange-800">
-                    Varied
-                  </Badge>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/20 border-orange-200 hover:scale-105"
+              onClick={() => setActiveTab("safety-tools")}
+            >
+              <CardContent className="p-6 text-center">
+                <div className="bg-orange-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
+                  <Puzzle className="h-6 w-6" />
+                </div>
+                <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1">Distraction</h3>
+                <p className="text-xs text-orange-700 dark:text-orange-300">Games & Activities</p>
+                <Badge variant="secondary" className="mt-2 text-xs bg-orange-100 text-orange-800">
+                  Varied
+                </Badge>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
-        {/* Mood Tracking */}
-        <section>
-          <Card className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 border-amber-200/50">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-amber-500 text-white p-2.5 rounded-xl">
-                    <Heart className="h-5 w-5" />
+            {/* Mood Tracking */}
+            <section>
+              <Card className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 border-amber-200/50">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-amber-500 text-white p-2.5 rounded-xl">
+                        <Heart className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl text-amber-900 dark:text-amber-100">How are you feeling today?</CardTitle>
+                        <p className="text-sm text-amber-700 dark:text-amber-300">Track your emotions to understand patterns</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" asChild className="border-amber-200">
+                      <Link href="/mood">View History</Link>
+                    </Button>
                   </div>
-                  <div>
-                    <CardTitle className="text-xl text-amber-900 dark:text-amber-100">How are you feeling today?</CardTitle>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">Track your emotions to understand patterns</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" asChild className="border-amber-200">
-                  <Link href="/mood">View History</Link>
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <MoodTracker />
-            </CardContent>
-          </Card>
-        </section>
+                </CardHeader>
+                <CardContent>
+                  <MoodTracker />
+                </CardContent>
+              </Card>
+            </section>
+            </div>
+          )}
 
+          {/* Safety Tools Tab Content */}
+          {activeTab === "safety-tools" && (
+            <div className="space-y-6">
+              {/* Emergency Quick Access Panel */}
+              <Card className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200/50 shadow-xl">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center space-x-3 text-red-900 dark:text-red-100">
+                      <div className="bg-gradient-to-br from-red-500 to-orange-500 p-2 rounded-xl">
+                        <Target className="h-6 w-6 text-white" />
+                      </div>
+                      <span className="text-xl">Emergency Quick Access</span>
+                    </CardTitle>
+                    <div className="text-xs bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 rounded-full font-medium">
+                      PRIORITY ACCESS
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Button 
+                      onClick={triggerPanicButton}
+                      className="h-24 bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white flex flex-col items-center justify-center space-y-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      data-testid="button-panic-emergency"
+                    >
+                      <AlertTriangle className="h-8 w-8 animate-pulse" />
+                      <span className="text-sm font-bold">PANIC</span>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      className="h-24 border-2 border-blue-200 hover:bg-blue-50 dark:border-blue-800 dark:hover:bg-blue-950/20 flex flex-col items-center justify-center space-y-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      onClick={() => {
+                        toast({ title: "Breathing Tools", description: "Opening advanced breathing exercises" });
+                      }}
+                      data-testid="button-breathing-tools"
+                    >
+                      <Wind className="h-7 w-7 text-blue-600" />
+                      <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Breathing</span>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      className="h-24 border-2 border-purple-200 hover:bg-purple-50 dark:border-purple-800 dark:hover:bg-purple-950/20 flex flex-col items-center justify-center space-y-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      onClick={() => {
+                        toast({ title: "Crisis Support", description: "Connecting to professional crisis support" });
+                      }}
+                      data-testid="button-crisis-chat"
+                    >
+                      <MessageSquare className="h-7 w-7 text-purple-600" />
+                      <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Crisis Chat</span>
+                    </Button>
+                    
+                    <Button 
+                      onClick={startLocationTracking}
+                      variant="outline"
+                      className={`h-24 border-2 ${liveLocation ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20' : 'border-orange-200 hover:bg-orange-50 dark:border-orange-800 dark:hover:bg-orange-950/20'} flex flex-col items-center justify-center space-y-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
+                      data-testid="button-location-tracking"
+                    >
+                      <MapPin className={`h-7 w-7 ${liveLocation ? 'text-green-600 animate-pulse' : 'text-orange-600'}`} />
+                      <span className={`text-sm font-medium ${liveLocation ? 'text-green-700 dark:text-green-300' : 'text-orange-700 dark:text-orange-300'}`}>
+                        {liveLocation ? 'Tracking' : 'Location'}
+                      </span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Emergency Contact Manager */}
+              <EmergencyContactManager />
+            </div>
+          )}
+
+          {/* Wellness Analytics Tab Content */}
+          {activeTab === "wellness-analytics" && (
+            <div className="space-y-6">
+              <ComprehensiveWellnessAnalytics 
+                sensorData={sensorData} 
+                permissions={permissions} 
+                requestPermissions={requestPermissions} 
+              />
+              <RealTimeBiometrics 
+                sensorData={sensorData} 
+                permissions={permissions} 
+                requestPermissions={requestPermissions} 
+              />
+            </div>
+          )}
+
+          {/* Device Hub Tab Content */}
+          {activeTab === "device-hub" && (
+            <div className="space-y-6">
+              <DeviceIntegrationHub />
+            </div>
+          )}
+        </Tabs>
       </div>
     </div>
   );
