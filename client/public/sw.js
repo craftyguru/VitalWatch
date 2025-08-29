@@ -31,8 +31,8 @@ self.addEventListener('install', event => {
     })
   );
   
-  // Force activation of new service worker
-  self.skipWaiting();
+  // Allow controlled activation instead of forcing immediate updates
+  // self.skipWaiting(); // Disabled to prevent constant updates
 });
 
 // Activate event - clean up old caches
@@ -52,8 +52,8 @@ self.addEventListener('activate', event => {
     })
   );
   
-  // Take control of all pages
-  self.clients.claim();
+  // Allow controlled client claim instead of immediate takeover
+  // self.clients.claim(); // Disabled to prevent constant updates
 });
 
 // Fetch event - minimal intervention for now

@@ -8,33 +8,10 @@ export function useAppVersion() {
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
   useEffect(() => {
-    // Check for service worker updates
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistration().then((reg) => {
-        if (reg) {
-          setRegistration(reg);
-          
-          // Check for updates
-          reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  setHasUpdate(true);
-                }
-              });
-            }
-          });
-        }
-      });
-    }
-
-    // Check version from localStorage
-    const storedVersion = localStorage.getItem('app-version');
-    if (storedVersion && storedVersion !== APP_VERSION) {
-      setHasUpdate(true);
-    }
+    // Temporarily disable update notifications to prevent popup spam
+    // This prevents the constant popup issue during development
     
+    // Still store version for future use
     localStorage.setItem('app-version', APP_VERSION);
   }, []);
 
