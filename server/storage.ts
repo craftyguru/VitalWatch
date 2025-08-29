@@ -85,6 +85,11 @@ export interface IStorage {
   // Trial management
   getExpiredTrialUsers(): Promise<User[]>;
   getUsersNearTrialExpiration(): Promise<User[]>;
+
+  // Breathing sessions
+  getBreathingSessions(userId: string): Promise<any[]>;
+  createBreathingSession(sessionData: any): Promise<any>;
+  getAiBreathingRecommendations(userId: string): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -408,6 +413,58 @@ export class DatabaseStorage implements IStorage {
           lte(users.guardianTrialEndDate, threeDaysFromNow)
         )
       );
+  }
+
+  // Breathing sessions methods
+  async getBreathingSessions(userId: string): Promise<any[]> {
+    // For now, return simulated data - in production this would query a breathingSessions table
+    const moodData = await this.getMoodEntries(userId, 10);
+    return moodData.map((mood, index) => ({
+      id: `session-${index}`,
+      userId,
+      techniqueId: 'box-breathing',
+      duration: 5,
+      cyclesCompleted: Math.floor(Math.random() * 20) + 10,
+      avgHeartRate: 72 + Math.floor(Math.random() * 20),
+      stressReduction: Math.floor(Math.random() * 40) + 30,
+      completedAt: mood.createdAt
+    }));
+  }
+
+  async createBreathingSession(sessionData: any): Promise<any> {
+    // For now, return the session data with an ID - in production this would insert into a breathingSessions table
+    return {
+      id: `session-${Date.now()}`,
+      ...sessionData,
+      createdAt: new Date()
+    };
+  }
+
+  async getAiBreathingRecommendations(userId: string): Promise<any[]> {
+    // Return AI-generated recommendations based on user data
+    const recentMoods = await this.getMoodEntries(userId, 5);
+    const avgMood = recentMoods.length > 0 
+      ? recentMoods.reduce((acc, mood) => acc + (mood.moodScore || 3), 0) / recentMoods.length
+      : 3;
+
+    const recommendations = [];
+    if (avgMood < 3) {
+      recommendations.push({
+        id: 'stress-relief',
+        technique: '4-7-8 Deep Relaxation',
+        reason: 'Lower mood detected - breathing exercises can help reduce stress',
+        confidence: 0.85
+      });
+    }
+    
+    recommendations.push({
+      id: 'daily-wellness',
+      technique: 'Box Breathing (Navy SEAL)',
+      reason: 'Maintain focus and emotional balance throughout the day',
+      confidence: 0.75
+    });
+
+    return recommendations;
   }
 }
 

@@ -1168,6 +1168,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Breathing sessions API
+  app.get("/api/breathing-sessions", async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    try {
+      const sessions = await storage.getBreathingSessions(req.user.id);
+      res.json(sessions);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching sessions: " + error.message });
+    }
+  });
+
+  app.post("/api/breathing-sessions", async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    try {
+      const sessionData = {
+        ...req.body,
+        userId: req.user.id,
+        createdAt: new Date().toISOString()
+      };
+      
+      const session = await storage.createBreathingSession(sessionData);
+      res.json(session);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error saving session: " + error.message });
+    }
+  });
+
+  // AI breathing recommendations API
+  app.get("/api/ai-breathing-recommendations", async (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    try {
+      const recommendations = await storage.getAiBreathingRecommendations(req.user.id);
+      res.json(recommendations);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching recommendations: " + error.message });
+    }
+  });
+
   // Config route for frontend environment variables
   app.get('/api/config', (req, res) => {
     res.json({

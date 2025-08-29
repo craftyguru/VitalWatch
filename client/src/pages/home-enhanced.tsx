@@ -13,6 +13,7 @@ import { MoodTracker } from "@/components/ui/mood-tracker";
 import { EmergencyOverlay } from "@/components/ui/emergency-overlay";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { EmergencyOverviewDashboard } from "@/components/EmergencyOverviewDashboard";
+import { AdvancedBreathingStudio } from "@/components/ui/advanced-breathing-studio";
 import { Link } from "wouter";
 import { 
   Settings, 
@@ -778,20 +779,7 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/tools">
-              <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 border-blue-200 hover:scale-105">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-blue-500 text-white p-3 rounded-2xl w-fit mx-auto mb-3">
-                    <Wind className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">Breathing</h3>
-                  <p className="text-xs text-blue-700 dark:text-blue-300">4-7-8 Technique</p>
-                  <Badge variant="secondary" className="mt-2 text-xs bg-blue-100 text-blue-800">
-                    3 min
-                  </Badge>
-                </CardContent>
-              </Card>
-            </Link>
+            <AdvancedBreathingStudio />
             
             <Link href="/tools">
               <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20 border-green-200 hover:scale-105">
