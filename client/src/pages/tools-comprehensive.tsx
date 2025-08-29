@@ -51,6 +51,7 @@ import { ComprehensiveWellnessAnalytics } from "@/components/ComprehensiveWellne
 import EnhancedGroundingExercise from "@/components/ui/enhanced-grounding-exercise";
 import CrisisChatSupport from "@/components/ui/crisis-chat-support";
 
+import AdvancedBreathingExercise from "@/components/ui/advanced-breathing-exercise";
 import AdvancedSafetyTools from "@/components/ui/advanced-safety-tools";
 import { EmergencyContactManager } from "@/components/EmergencyContactManager";
 import { WellnessOverview } from "@/components/WellnessOverview";
