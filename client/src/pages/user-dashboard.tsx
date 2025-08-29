@@ -59,6 +59,7 @@ import { EmergencyContactManager } from "@/components/EmergencyContactManager";
 import { WellnessOverview } from "@/components/WellnessOverview";
 import { useIncognito } from "@/contexts/IncognitoContext";
 import { useBackgroundMonitoring } from "@/hooks/useBackgroundMonitoring";
+import AIGuardian from "@/components/AIGuardian";
 
 // Real-time metrics derived from actual sensor data - NO FALLBACKS
 const useRealTimeMetrics = (realTimeData: any) => {
@@ -1152,6 +1153,19 @@ export default function UserDashboard() {
                 <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs sm:text-sm font-medium hidden sm:inline">Device Hub</span>
                 <span className="text-xs sm:text-sm font-medium sm:hidden">Devices</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("ai-guardian")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "ai-guardian" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">AI Guardian</span>
+                <span className="text-xs sm:text-sm font-medium sm:hidden">AI</span>
               </button>
             </div>
           </div>
@@ -2285,6 +2299,17 @@ export default function UserDashboard() {
           {activeTab === "device-hub" && (
             <div className="space-y-6">
               <DeviceIntegrationHub />
+            </div>
+          )}
+
+          {/* AI Guardian Tab Content */}
+          {activeTab === "ai-guardian" && (
+            <div className="space-y-6">
+              <AIGuardian 
+                sensorData={sensorData}
+                realTimeData={realTimeData}
+                onPanicTrigger={sendEmergencyAlert}
+              />
             </div>
           )}
         </Tabs>

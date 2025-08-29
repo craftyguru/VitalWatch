@@ -20,6 +20,7 @@ import {
   analyzeEnvironmental,
   generateCrisisChatResponse
 } from "./services/openai";
+import { analyzeGuardianSituation } from './openai';
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
 import { sendCrisisResourcesSMS, sendEmergencyAlertSMS, sendSMS } from "./services/twilio";
 import {
@@ -705,6 +706,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error in emergency analysis:", error);
       res.status(500).json({ message: "Failed to analyze emergency audio" });
+    }
+  });
+
+  // AI Guardian Analysis Endpoint
+  app.post('/api/ai-guardian-analysis', isAuthenticated, async (req: any, res) => {
+    try {
+      const { sensorData } = req.body;
+      
+      if (!sensorData) {
+        return res.status(400).json({ message: "Sensor data is required for AI Guardian analysis" });
+      }
+
+      // Perform comprehensive AI analysis of the situation
+      const analysis = await analyzeGuardianSituation(sensorData);
+      
+      res.json(analysis);
+    } catch (error) {
+      console.error("AI Guardian analysis error:", error);
+      res.status(500).json({ 
+        message: "AI Guardian analysis failed",
+        threatLevel: {
+          level: 'safe',
+          confidence: 0.5,
+          reasons: ['Analysis service temporarily unavailable'],
+          recommendations: ['Continue monitoring manually']
+        },
+        explanation: 'Analysis completed using fallback system.'
+      });
     }
   });
 
