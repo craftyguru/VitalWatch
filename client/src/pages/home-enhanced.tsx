@@ -297,14 +297,10 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
-              <div className="hidden lg:block">
-                <ThemeToggle />
-              </div>
-              
+            <div className="flex items-center space-x-1 flex-shrink-0">
               {user && (
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className="hidden xl:block text-right">
+                <div className="flex items-center space-x-1">
+                  <div className="hidden xl:block text-right mr-2">
                     <p className="text-sm font-semibold text-foreground">
                       Welcome back, {userName}
                     </p>
@@ -313,6 +309,7 @@ export default function Home() {
                       <span>You're doing great today</span>
                     </p>
                   </div>
+                  
                   <Avatar className="h-8 w-8 sm:h-10 sm:w-10 ring-2 ring-primary/20 shadow-md">
                     <AvatarImage src={(user as any).profileImageUrl} />
                     <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-primary-foreground font-bold text-xs sm:text-sm">
@@ -320,65 +317,81 @@ export default function Home() {
                     </AvatarFallback>
                   </Avatar>
                   
-                  {/* Mobile: Only show essential buttons */}
-                  <div className="flex sm:hidden">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 h-8 w-8" 
-                      asChild
-                    >
-                      <Link href="/tools" data-testid="link-tools-nav">
-                        <Zap className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-
-                  {/* Desktop: Show all buttons */}
-                  <div className="hidden sm:flex items-center space-x-1">
+                  {/* Navigation Buttons - Always show all essential buttons */}
+                  <div className="flex items-center space-x-0.5 sm:space-x-1">
                     {/* Tools Button */}
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400" 
-                      asChild
-                    >
-                      <Link href="/tools" data-testid="link-tools-nav">
-                        <Zap className="h-4 w-4" />
-                      </Link>
-                    </Button>
-
-                    {/* Admin Button - Only for Admin Users */}
-                    {(user as any)?.isAdmin && (
+                    <div className="relative group">
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400" 
+                        className="hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 h-8 w-8 sm:h-9 sm:w-9" 
                         asChild
                       >
-                        <Link href="/admin" data-testid="link-admin-nav">
-                          <Shield className="h-4 w-4" />
+                        <Link href="/tools" data-testid="link-tools-nav">
+                          <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Link>
                       </Button>
+                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        Tools
+                      </div>
+                    </div>
+
+                    {/* Admin Button - Only for Admin Users */}
+                    {(user as any)?.isAdmin && (
+                      <div className="relative group">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="hover:bg-purple-100 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400 h-8 w-8 sm:h-9 sm:w-9" 
+                          asChild
+                        >
+                          <Link href="/admin" data-testid="link-admin-nav">
+                            <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                          </Link>
+                        </Button>
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          Admin
+                        </div>
+                      </div>
                     )}
                     
-                    <Button variant="ghost" size="icon" className="hover:bg-primary/10" asChild>
-                      <Link href="/profile" data-testid="link-profile">
-                        <Settings className="h-4 w-4" />
-                      </Link>
-                    </Button>
+                    <div className="relative group">
+                      <Button variant="ghost" size="icon" className="hover:bg-primary/10 h-8 w-8 sm:h-9 sm:w-9" asChild>
+                        <Link href="/profile" data-testid="link-profile">
+                          <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        </Link>
+                      </Button>
+                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        Settings
+                      </div>
+                    </div>
                     
                     {/* Logout Button */}
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400" 
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
-                      data-testid="button-logout"
-                    >
-                      <LogOut className="h-4 w-4" />
-                    </Button>
+                    <div className="relative group">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 h-8 w-8 sm:h-9 sm:w-9" 
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        data-testid="button-logout"
+                      >
+                        <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      </Button>
+                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        Logout
+                      </div>
+                    </div>
+
+                    {/* Theme Toggle */}
+                    <div className="relative group">
+                      <div className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center">
+                        <ThemeToggle />
+                      </div>
+                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        Theme
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
