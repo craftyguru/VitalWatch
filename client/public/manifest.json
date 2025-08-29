@@ -1,36 +1,20 @@
 {
-  "id": "/",
   "name": "VitalWatch - Emergency Protection",
   "short_name": "VitalWatch",
+  "id": "/?v=7.0.0",
+  "start_url": "/?source=a2hs&v=7.0.0",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8b5cf6",
   "version": "7.0.0",
   "description": "AI-powered emergency monitoring and mental health support with real-time crisis detection",
-  "start_url": "/",
-  "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "prefer_related_applications": false,
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=app.vitalwatch.emergency",
-      "id": "app.vitalwatch.emergency"
-    }
-  ],
   "orientation": "portrait-primary",
-  "start_in_background": true,
-  "background_sync": ["emergency-alert-sync", "mood-sync", "health-data-sync"],
-  "iarc_rating_id": "e84b072d-71de-4e36-a92f-00f3cf8b1b7a",
-  "theme_color": "#8b5cf6",
-  "background_color": "#ffffff",
-  "scope": "/",
-  "scope_extensions": [
-    {
-      "origin": "https://vitalwatch.app"
-    }
-  ],
   "lang": "en",
   "dir": "ltr",
   "categories": ["health", "medical", "lifestyle", "safety"],
-  "offline_capable": true,
   "screenshots": [
     {
       "src": "/icons/screenshot-phone-1.png",
@@ -55,65 +39,21 @@
     }
   ],
   "icons": [
-    {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
+    { 
+      "src": "/icons/icon-192x192.png", 
+      "sizes": "192x192", 
+      "type": "image/png" 
     },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96", 
-      "type": "image/png",
-      "purpose": "any"
+    { 
+      "src": "/icons/icon-512x512.png", 
+      "sizes": "512x512", 
+      "type": "image/png" 
     },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
+    { 
+      "src": "/icons/icon-512x512-maskable.png", 
+      "sizes": "512x512", 
       "type": "image/png", 
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-152x152.png", 
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-192x192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512", 
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512x512-maskable.png",
-      "sizes": "512x512", 
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "maskable" 
     }
   ],
   "shortcuts": [

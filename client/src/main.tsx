@@ -8,7 +8,7 @@ console.log("VitalWatch main.tsx loading...");
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
-      const reg = await navigator.serviceWorker.register('/sw.js');
+      const reg = await navigator.serviceWorker.register('/sw.js?v=7.0.0');
       await navigator.serviceWorker.ready;
 
       // PWABuilder Background Sync registration (exact format expected)

@@ -17,206 +17,152 @@ interface SeamlessInstallButtonProps {
 
 export function SeamlessInstallButton({ showAutoPrompt = false }: SeamlessInstallButtonProps) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [autoPromptShown, setAutoPromptShown] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [nudged, setNudged] = useState(false);
 
   useEffect(() => {
     // Check if already installed
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                        (window.navigator as any).standalone ||
-                        document.referrer.includes('android-app://');
-    
-    console.log('PWA Install Check:', {
-      isStandalone,
-      displayMode: window.matchMedia('(display-mode: standalone)').matches,
-      standalone: (window.navigator as any).standalone,
-      referrer: document.referrer
-    });
-    
-    if (isStandalone) {
-      setIsInstalled(true);
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || 
+                      (window.navigator as any).standalone;
+    setIsStandalone(standalone);
+
+    // Detect platform
+    const userAgent = navigator.userAgent.toLowerCase();
+    setIsIOS(/iphone|ipad|ipod/i.test(userAgent));
+    setIsAndroid(/android/i.test(userAgent));
+
+    // Listen for beforeinstallprompt event
+    const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+      console.log('VitalWatch: beforeinstallprompt event fired');
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    // Listen for app installation
+    const handleAppInstalled = () => {
+      console.log('VitalWatch: App installed successfully');
+      setIsStandalone(true);
+      setDeferredPrompt(null);
+    };
+
+    // Check for display mode changes (when app gets installed)
+    const handleDisplayModeChange = () => {
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        setIsStandalone(true);
+      }
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+    window.addEventListener('appinstalled', handleAppInstalled);
+    document.addEventListener('visibilitychange', handleDisplayModeChange);
+
+    // Gentle nudge after first interaction (not auto on load)
+    if (showAutoPrompt && !nudged) {
+      const handleFirstClick = () => {
+        if (deferredPrompt && isAndroid && !isStandalone) {
+          setTimeout(() => {
+            console.log('VitalWatch: Showing gentle install suggestion');
+            // You could show a toast/banner here instead of auto-prompting
+          }, 1000);
+          setNudged(true);
+        }
+      };
+
+      window.addEventListener('click', handleFirstClick, { once: true });
+      
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+        window.removeEventListener('appinstalled', handleAppInstalled);
+        document.removeEventListener('visibilitychange', handleDisplayModeChange);
+        window.removeEventListener('click', handleFirstClick);
+      };
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+      window.removeEventListener('appinstalled', handleAppInstalled);  
+      document.removeEventListener('visibilitychange', handleDisplayModeChange);
+    };
+  }, [showAutoPrompt, nudged, deferredPrompt, isAndroid, isStandalone]);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      // Fallback instructions if event not available yet
+      if (isAndroid) {
+        alert('If you don\'t see a prompt, open Chrome menu → "Install app".');
+      }
       return;
     }
 
-    // Mobile device detection
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    
-    // Force a slight delay to ensure the browser has time to detect PWA criteria
-    const timer = setTimeout(() => {
-      console.log('Checking for install prompt after delay...');
-      
-      // Listen for the beforeinstallprompt event
-      const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
-        console.log('Before install prompt event fired!', e);
-        e.preventDefault();
-        setDeferredPrompt(e);
-        setIsVisible(true);
-        console.log('Install prompt available and stored');
-        
-        // Auto-trigger install prompt for mobile users after delay
-        if (showAutoPrompt && isMobile && !autoPromptShown) {
-          setTimeout(() => {
-            if (!isInstalled && !autoPromptShown) {
-              triggerAutoInstallPrompt(e);
-            }
-          }, 3000); // 3 second delay before auto-prompt
-        }
-      };
-
-      // Listen for successful installation
-      const handleAppInstalled = () => {
-        setIsInstalled(true);
-        setDeferredPrompt(null);
-        setIsVisible(false);
-        console.log('App installed successfully');
-      };
-
-      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-      window.addEventListener('appinstalled', handleAppInstalled);
-
-      // Force visibility for testing or if no native prompt available
-      if (isMobile) {
-        setIsVisible(true);
-      }
-      
-      // Manual trigger check for testing
-      if (window.location.search.includes('debug=install')) {
-        console.log('Debug mode: Forcing install button to show');
-        setIsVisible(true);
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-
-  const triggerAutoInstallPrompt = async (prompt: BeforeInstallPromptEvent) => {
-    if (autoPromptShown) return;
-    
-    setAutoPromptShown(true);
-    console.log('Auto-triggering install prompt for mobile user');
-    
     try {
-      await prompt.prompt();
-      const choiceResult = await prompt.userChoice;
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
       
-      console.log('Auto-prompt user choice:', choiceResult.outcome);
+      console.log('VitalWatch: Install outcome:', outcome);
       
-      if (choiceResult.outcome === 'accepted') {
-        setIsInstalled(true);
-        setIsVisible(false);
+      if (outcome === 'accepted') {
+        setIsStandalone(true);
       }
+      
+      setDeferredPrompt(null);
     } catch (error) {
-      console.error('Auto install prompt error:', error);
+      console.error('VitalWatch: Install error:', error);
     }
   };
 
-  const handleInstallClick = async () => {
-    console.log('Install button clicked');
-    console.log('Deferred prompt available:', !!deferredPrompt);
-    console.log('User agent:', navigator.userAgent);
-    console.log('Current URL:', window.location.href);
-    
-    if (deferredPrompt) {
-      try {
-        console.log('Triggering native install prompt');
-        await deferredPrompt.prompt();
-        const choiceResult = await deferredPrompt.userChoice;
-        
-        console.log('User choice:', choiceResult.outcome);
-        
-        if (choiceResult.outcome === 'accepted') {
-          setIsInstalled(true);
-          setIsVisible(false);
-        }
-        
-        setDeferredPrompt(null);
-      } catch (error) {
-        console.error('Install error:', error);
-      }
-    } else {
-      // Enhanced fallback for when native prompt isn't available
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      const isAndroid = /Android/.test(navigator.userAgent);
-      const isChrome = /Chrome/.test(navigator.userAgent);
-      const isSafari = /Safari/.test(navigator.userAgent) && !isChrome;
-      const isReplit = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('replit.app');
-      
-      console.log('Browser detection:', { isIOS, isAndroid, isChrome, isSafari, isReplit });
-      
-      if (isReplit) {
-        // For development/testing, show "Add to Home Screen" instructions
-        showAddToHomeScreenInstructions(isIOS, isAndroid, isSafari);
-      } else if (isIOS && isSafari) {
-        showAddToHomeScreenInstructions(true, false, true);
-      } else if (isAndroid && isChrome) {
-        // Fallback for Android Chrome if native prompt failed
-        showAddToHomeScreenInstructions(false, true, false);
-      } else {
-        // Try to trigger native install via manual method
-        triggerFallbackInstall();
-      }
-    }
-  };
-
-  const showAddToHomeScreenInstructions = (isIOS: boolean, isAndroid: boolean, isSafari: boolean) => {
-    let message = '';
-    
-    if (isIOS && isSafari) {
-      message = `To install VitalWatch:\n\n1. Tap the Share button (↗️) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to install VitalWatch`;
-    } else if (isAndroid) {
-      message = `To install VitalWatch:\n\n1. Tap the menu (⋮) in the top right\n2. Tap "Add to Home screen"\n3. Tap "Add" to install VitalWatch`;
-    } else {
-      message = `To install VitalWatch:\n\n1. Use the browser menu to "Add to Home Screen"\n2. This will install VitalWatch as a native app`;
-    }
-    
-    alert(message);
-  };
-
-  const triggerFallbackInstall = () => {
-    // Try to show browser menu or fallback instructions
-    console.log('Attempting fallback install method');
-    alert('To install VitalWatch, use your browser\'s menu to "Add to Home Screen" or "Install App"');
-  };
-
-  // Don't show if installed or not visible
-  if (isInstalled || !isVisible) {
+  // Hide button if already installed
+  if (isStandalone) {
     return null;
   }
 
-  // Check PWA installation criteria
-  const checkPWACriteria = () => {
-    const criteria = {
-      https: location.protocol === 'https:' || location.hostname === 'localhost',
-      manifest: !!document.querySelector('link[rel="manifest"]'),
-      serviceWorker: 'serviceWorker' in navigator,
-      icons: true, // We have icons in manifest
-      displayMode: true // We have display: standalone
-    };
-    
-    console.log('PWA Installation Criteria:', criteria);
-    return criteria;
-  };
-
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isDevelopment = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('replit.app');
+  const isDevelopment = window.location.hostname.includes('replit.dev') || 
+                       window.location.hostname.includes('replit.app');
 
   return (
-    <div className="flex flex-col items-center space-y-2">
-      <Button 
-        onClick={handleInstallClick}
-        className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
-        size="lg"
-      >
-        <Download className="w-5 h-5 mr-2" />
-        {deferredPrompt ? 'Install VitalWatch' : (isMobile ? 'Install App' : 'Add to Home Screen')}
-      </Button>
-      
+    <div className="flex flex-col items-center space-y-3">
+      {/* Android: Show install button when prompt is available */}
+      {isAndroid && deferredPrompt && (
+        <Button 
+          onClick={handleInstallClick}
+          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
+          size="lg"
+        >
+          <Download className="w-5 h-5 mr-2" />
+          Install VitalWatch
+        </Button>
+      )}
+
+      {/* Android: Show fallback button even when prompt isn't available yet */}
+      {isAndroid && !deferredPrompt && !isStandalone && (
+        <Button 
+          onClick={handleInstallClick}
+          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
+          size="lg"
+        >
+          <Download className="w-5 h-5 mr-2" />
+          Install App
+        </Button>
+      )}
+
+      {/* iOS: Show Add to Home Screen instructions */}
+      {isIOS && !isStandalone && (
+        <div className="text-center max-w-sm">
+          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-sm">
+            <div className="flex items-center justify-center text-blue-700 dark:text-blue-300 mb-1">
+              <Smartphone className="w-4 h-4 mr-1" />
+              <span className="font-medium">Add to Home Screen</span>
+            </div>
+            <p className="text-blue-600 dark:text-blue-400">
+              Tap the Share button (↗️) → "Add to Home Screen"
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Development mode notice */}
-      {isDevelopment && (
+      {isDevelopment && (isAndroid || isIOS) && (
         <div className="text-center max-w-sm">
           <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 text-xs">
             <div className="flex items-center justify-center text-amber-700 dark:text-amber-300 mb-1">
@@ -224,22 +170,10 @@ export function SeamlessInstallButton({ showAutoPrompt = false }: SeamlessInstal
               <span className="font-medium">Development Mode</span>
             </div>
             <p className="text-amber-600 dark:text-amber-400">
-              Mobile app installation requires deployment. For now, use "Add to Home Screen" for quick access.
+              Full PWA install available after deployment. Use "Add to Home Screen" for now.
             </p>
           </div>
         </div>
-      )}
-      
-      {/* Debug info for mobile */}
-      {window.location.search.includes('debug') && (
-        <Button 
-          onClick={checkPWACriteria}
-          variant="outline"
-          size="sm"
-          className="text-xs"
-        >
-          Check PWA Criteria
-        </Button>
       )}
     </div>
   );
