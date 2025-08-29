@@ -45,6 +45,7 @@ const useRealTimeMetrics = (realTimeData: any) => {
   };
 };
 import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
+import { ComprehensiveWellnessAnalytics } from "@/components/ComprehensiveWellnessAnalytics";
 
 // Import enhanced components
 import AdvancedBreathingExercise from "@/components/ui/advanced-breathing-exercise";
@@ -548,7 +549,7 @@ export default function ToolsComprehensive() {
 
           {/* Wellness Analytics Tab */}
           <TabsContent value="wellness-analytics" className="space-y-6">
-            <RealTimeBiometrics 
+            <ComprehensiveWellnessAnalytics 
               sensorData={realTimeData} 
               permissions={capabilities} 
               requestPermissions={() => {}} 
