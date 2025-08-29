@@ -121,7 +121,13 @@ export const useSafeDeviceSensors = () => {
     );
 
     return () => {
-      if (watchId) navigator.geolocation.clearWatch(watchId);
+      if (watchId && navigator.geolocation && typeof navigator.geolocation.clearWatch === 'function') {
+        try {
+          navigator.geolocation.clearWatch(watchId);
+        } catch (error) {
+          console.warn('Failed to clear geolocation watch in safe sensors:', error);
+        }
+      }
     };
   };
 

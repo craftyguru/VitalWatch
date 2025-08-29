@@ -354,8 +354,12 @@ export function useRealDeviceScanner() {
       window.removeEventListener('deviceorientation', handleOrientation);
       window.removeEventListener('online', handleNetworkChange);
       window.removeEventListener('offline', handleNetworkChange);
-      if (watchId !== undefined && navigator.geolocation) {
-        navigator.geolocation.clearWatch(watchId);
+      if (watchId !== undefined && navigator.geolocation && typeof navigator.geolocation.clearWatch === 'function') {
+        try {
+          navigator.geolocation.clearWatch(watchId);
+        } catch (error) {
+          console.warn('Failed to clear geolocation watch in device scanner:', error);
+        }
       }
     };
   }, []);

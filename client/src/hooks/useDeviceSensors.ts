@@ -166,7 +166,15 @@ export function useDeviceSensors() {
       { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
     );
 
-    return () => navigator.geolocation.clearWatch(watchId);
+    return () => {
+      if (navigator.geolocation && typeof navigator.geolocation.clearWatch === 'function') {
+        try {
+          navigator.geolocation.clearWatch(watchId);
+        } catch (error) {
+          console.warn('Failed to clear geolocation watch in device sensors:', error);
+        }
+      }
+    };
   }, [permissions.geolocation]);
 
   // Initialize battery monitoring
