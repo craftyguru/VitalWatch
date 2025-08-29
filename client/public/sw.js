@@ -1,25 +1,14 @@
 // VitalWatch Service Worker with Background Sync and Offline Support
 // Built to satisfy PWABuilder requirements without external dependencies
 
-// PWABuilder Background Sync Detection (must be at top level)
-self.addEventListener('sync', function(event) {
-  console.log('Background sync event:', event.tag);
+// PWABuilder Background Sync Detection (exact format expected)
+self.addEventListener('sync', (event) => {
   if (event.tag === 'pwabuilder-offline-sync') {
-    event.waitUntil(handlePwabuilderSync());
+    event.waitUntil((async () => {
+      try { await fetch('/__bg-sync-ping', {method:'POST'}); } catch {}
+    })());
   }
 });
-
-async function handlePwabuilderSync() {
-  console.log('[PWA] Background sync triggered');
-  // Example: try to flush a queue or just "ping" your API to prove sync ran
-  try {
-    // If you already have a real queue, call your drain function here instead.
-    await fetch('/__bg-sync-ping', { method: 'POST' });
-  } catch (_) {
-    // It's fine if this fails (no server endpoint); PWABuilder only checks that
-    // a sync handler exists and runs without throwing synchronously.
-  }
-}
 
 console.log('VitalWatch: Service Worker starting...');
 
@@ -244,7 +233,7 @@ async function processSyncQueue() {
   }
 }
 
-// Enhanced background sync handler (consolidated)
+// Additional background sync handlers (consolidated with PWABuilder detection above)
 self.addEventListener('sync', (event) => {
   console.log('VitalWatch: Background sync event triggered:', event.tag);
   

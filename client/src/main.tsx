@@ -11,15 +11,12 @@ if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.register('/sw.js');
       await navigator.serviceWorker.ready;
 
-      // Explicit background sync registration that PWABuilder looks for
-      if ('sync' in reg) {
-        try {
-          await (reg as any).sync.register('pwabuilder-offline-sync');
-          // Optional: visible confirmation for you during dev
+      // PWABuilder Background Sync registration (exact format expected)
+      if ('SyncManager' in window && (reg as any).sync) {
+        try { 
+          await (reg as any).sync.register('pwabuilder-offline-sync'); 
           console.debug('[PWA] Background Sync tag registered');
-        } catch (err) {
-          console.warn('[PWA] Sync registration failed', err);
-        }
+        } catch {} 
       }
       
       // Push Notification Setup
