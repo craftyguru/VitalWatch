@@ -61,6 +61,7 @@ import { WellnessOverview } from "@/components/WellnessOverview";
 import { useIncognito } from "@/contexts/IncognitoContext";
 import { useBackgroundMonitoring } from "@/hooks/useBackgroundMonitoring";
 import AIGuardian from "@/components/AIGuardian";
+import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 
 // Real-time metrics derived from actual sensor data - NO FALLBACKS
 const useRealTimeMetrics = (realTimeData: any) => {
@@ -1213,18 +1214,7 @@ export default function UserDashboard() {
 
                 {/* User Menu */}
                 <div className="flex items-center space-x-1">
-                  <div className="relative group">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 h-8 w-8 sm:h-9 sm:w-9" 
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
-                      data-testid="button-logout"
-                    >
-                      <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                    </Button>
-                  </div>
+                  <UserProfileDropdown onLogout={handleLogout} isLoggingOut={isLoggingOut} />
 
                   <div className="relative group">
                     <div className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center">

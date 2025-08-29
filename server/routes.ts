@@ -1657,5 +1657,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Stripe payment routes
+  app.post('/api/create-subscription', isAuthenticated, async (req, res) => {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return res.status(500).json({ message: 'Stripe not configured' });
+    }
+
+    try {
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: '2023-10-16',
+      });
+
+      const { plan } = req.body;
+      const user = req.user as any;
+
+      // Create Stripe customer if not exists
+      let customerId = user.stripeCustomerId;
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email: user.email,
+          name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username,
+        });
+        customerId = customer.id;
+        
+        // Update user with customer ID
+        await db.update(users).set({
+          stripeCustomerId: customerId
+        }).where(eq(users.id, user.id));
+      }
+
+      // Define price IDs (you would set these up in Stripe Dashboard)
+      const priceIds = {
+        guardian: process.env.STRIPE_GUARDIAN_PRICE_ID || 'price_guardian_monthly',
+        professional: process.env.STRIPE_PROFESSIONAL_PRICE_ID || 'price_professional_monthly'
+      };
+
+      const subscription = await stripe.subscriptions.create({
+        customer: customerId,
+        items: [{
+          price: priceIds[plan as keyof typeof priceIds],
+        }],
+        payment_behavior: 'default_incomplete',
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      const invoice = subscription.latest_invoice as any;
+      const paymentIntent = invoice.payment_intent;
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error: any) {
+      console.error('Stripe subscription error:', error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Stripe webhook for handling successful payments
+  app.post('/api/stripe/webhook', async (req, res) => {
+    if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+      return res.status(500).json({ message: 'Stripe not configured' });
+    }
+
+    try {
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: '2023-10-16',
+      });
+
+      const sig = req.headers['stripe-signature'];
+      let event;
+
+      try {
+        event = stripe.webhooks.constructEvent(req.body, sig!, process.env.STRIPE_WEBHOOK_SECRET);
+      } catch (err: any) {
+        console.log(`Webhook signature verification failed.`, err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+      }
+
+      // Handle the event
+      switch (event.type) {
+        case 'invoice.payment_succeeded':
+          const invoice = event.data.object as any;
+          const customerId = invoice.customer;
+          
+          // Find user by Stripe customer ID
+          const [user] = await db.select().from(users).where(eq(users.stripeCustomerId, customerId));
+          
+          if (user) {
+            // Update user subscription status
+            const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
+            const planName = subscription.items.data[0].price.nickname || 'guardian';
+            
+            await db.update(users).set({
+              subscriptionPlan: planName === 'professional' ? 'professional' : 'guardian',
+              subscriptionStatus: 'active',
+              stripeSubscriptionId: subscription.id
+            }).where(eq(users.id, user.id));
+          }
+          break;
+
+        case 'invoice.payment_failed':
+          // Handle failed payments
+          break;
+
+        default:
+          console.log(`Unhandled event type ${event.type}`);
+      }
+
+      res.json({received: true});
+    } catch (error: any) {
+      console.error('Webhook error:', error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   return httpServer;
 }
