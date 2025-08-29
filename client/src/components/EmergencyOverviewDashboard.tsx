@@ -281,6 +281,123 @@ export function EmergencyOverviewDashboard() {
         </Card>
       </div>
 
+      {/* Emergency Quick Access Dashboard */}
+      <Card className="border-red-200 dark:border-red-800 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-red-900 dark:text-red-100">
+            <Shield className="h-6 w-6 text-red-600" />
+            Emergency Quick Access Dashboard
+            <Badge variant="destructive" className="ml-auto">PRIORITY ACCESS</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* PANIC Button */}
+            <Button
+              size="lg"
+              className="h-20 bg-red-600 hover:bg-red-700 text-white font-bold text-lg"
+              onClick={triggerEmergencyAlert}
+            >
+              <div className="text-center">
+                <AlertTriangle className="h-6 w-6 mx-auto mb-1" />
+                PANIC
+              </div>
+            </Button>
+
+            {/* Breathing */}
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-20 border-blue-300 hover:bg-blue-50"
+              onClick={startBreathingExercise}
+            >
+              <div className="text-center">
+                <Wind className="h-6 w-6 mx-auto mb-1 text-blue-600" />
+                <div className="text-sm">Breathing</div>
+              </div>
+            </Button>
+
+            {/* Crisis Chat */}
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-20 border-purple-300 hover:bg-purple-50"
+              onClick={startCrisisChat}
+            >
+              <div className="text-center">
+                <MessageSquare className="h-6 w-6 mx-auto mb-1 text-purple-600" />
+                <div className="text-sm">Crisis Chat</div>
+              </div>
+            </Button>
+
+            {/* Location */}
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-20 border-green-300 hover:bg-green-50"
+              onClick={startLocationSharing}
+            >
+              <div className="text-center">
+                <MapPin className={`h-6 w-6 mx-auto mb-1 ${locationTracking ? 'text-green-600' : 'text-gray-600'}`} />
+                <div className="text-sm">Location</div>
+              </div>
+            </Button>
+          </div>
+
+          {/* Additional Emergency Tools Row */}
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveEmergencyTool('audio')}
+            >
+              <Mic className="h-4 w-4 mr-1" />
+              Audio
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveEmergencyTool('video')}
+            >
+              <Camera className="h-4 w-4 mr-1" />
+              Video
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveEmergencyTool('share')}
+            >
+              <Navigation className="h-4 w-4 mr-1" />
+              Share
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveEmergencyTool('call')}
+            >
+              <Phone className="h-4 w-4 mr-1" />
+              Call
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveEmergencyTool('silent')}
+            >
+              <VolumeX className="h-4 w-4 mr-1" />
+              Silent
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveEmergencyTool('setup')}
+            >
+              <CheckCircle className="h-4 w-4 mr-1" />
+              Setup
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Unified AI Insights Section */}
       <Card>
         <CardHeader>
