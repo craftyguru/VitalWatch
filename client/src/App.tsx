@@ -13,7 +13,6 @@ import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import HomeEnhanced from "@/pages/home-enhanced";
 import UserDashboard from "@/pages/user-dashboard";
-import SafetyTools from "@/pages/safety-tools";
 import Mood from "@/pages/mood";
 import ContactsEnhanced from "@/pages/contacts-enhanced";
 import ProfileEnhanced from "@/pages/profile-enhanced";
@@ -37,7 +36,6 @@ function Router() {
           <Route path="/" component={UserDashboard} />
           <Route path="/userdash" component={UserDashboard} />
           <Route path="/dashboard" component={UserDashboard} />
-          <Route path="/safetytools" component={SafetyTools} />
           <Route path="/mood" component={Mood} />
           <Route path="/contacts" component={ContactsEnhanced} />
           <Route path="/profile" component={ProfileEnhanced} />

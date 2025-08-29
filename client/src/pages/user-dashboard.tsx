@@ -1076,10 +1076,13 @@ export default function UserDashboard() {
                 
                 {/* Emergency Access Button */}
                 <div className="flex flex-col items-center">
-                  <Button variant="outline" size="sm" asChild className="h-8 w-8 p-0 border-red-200 text-red-700 hover:bg-red-50">
-                    <Link href="/safetytools">
-                      <Shield className="h-3 w-3" />
-                    </Link>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setActiveTab("safety-tools")}
+                    className="h-8 w-8 p-0 border-red-200 text-red-700 hover:bg-red-50"
+                  >
+                    <Shield className="h-3 w-3" />
                   </Button>
                   <span className="text-xs text-muted-foreground mt-0.5 leading-none">Safety</span>
                 </div>
@@ -1177,11 +1180,14 @@ export default function UserDashboard() {
                 </Button>
                 
                 {/* Emergency Access Button */}
-                <Button variant="outline" size="sm" asChild className="border-red-200 text-red-700 hover:bg-red-50">
-                  <Link href="/safetytools">
-                    <Shield className="h-4 w-4 mr-1" />
-                    Safety Tools
-                  </Link>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setActiveTab("safety-tools")}
+                  className="border-red-200 text-red-700 hover:bg-red-50"
+                >
+                  <Shield className="h-4 w-4 mr-1" />
+                  Safety Tools
                 </Button>
 
                 {/* Guardian Angel Toggle */}
