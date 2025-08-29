@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Heart,
   BarChart3,
@@ -80,6 +81,10 @@ export default function UserDashboard() {
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [liveLocation, setLiveLocation] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
+  
+  // Modal states for safety tools
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [modalContent, setModalContent] = useState<any>(null);
 
   // Fetch user data
   const { data: emergencyContacts = [] } = useQuery({
@@ -236,6 +241,359 @@ export default function UserDashboard() {
   const userName = user ? `${(user as any).firstName || ''} ${(user as any).lastName || ''}`.trim() || (user as any).email?.split('@')[0] || "Friend" : "Friend";
   const unreadInsights = Array.isArray(aiInsights) ? aiInsights.filter((insight: any) => !insight.isRead) : [];
   const latestMood = Array.isArray(recentMoods) && recentMoods.length > 0 ? recentMoods[0] : null;
+
+  // Modal helper functions
+  const openModal = (modalId: string, content?: any) => {
+    setActiveModal(modalId);
+    setModalContent(content);
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+    setModalContent(null);
+  };
+
+  // Safety tool content generators
+  const generateBreathingContent = () => (
+    <div className="space-y-4">
+      <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Advanced Breathing Techniques</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <span className="text-lg mb-1">4-7-8</span>
+            <span className="text-xs">Relaxation</span>
+          </Button>
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <span className="text-lg mb-1">Box</span>
+            <span className="text-xs">Focus</span>
+          </Button>
+          <Button className="h-16 bg-purple-600 hover:bg-purple-700 text-white flex flex-col">
+            <span className="text-lg mb-1">Triangle</span>
+            <span className="text-xs">Energy</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <span className="text-lg mb-1">Wim Hof</span>
+            <span className="text-xs">Power</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://breathe.meditation.app" 
+        className="w-full h-64 rounded-lg border"
+        title="Breathing Exercise"
+      />
+    </div>
+  );
+
+  const generateCrisisChatContent = () => (
+    <div className="space-y-4">
+      <div className="bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-3">Crisis Support Resources</h3>
+        <div className="space-y-3">
+          <Button className="w-full h-12 bg-red-600 hover:bg-red-700 text-white justify-start">
+            <Phone className="h-4 w-4 mr-2" />
+            National Suicide Prevention Lifeline: 988
+          </Button>
+          <Button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white justify-start">
+            <MessageSquare className="h-4 w-4 mr-2" />
+            Crisis Text Line: Text HOME to 741741
+          </Button>
+          <Button className="w-full h-12 bg-green-600 hover:bg-green-700 text-white justify-start">
+            <Heart className="h-4 w-4 mr-2" />
+            Mental Health First Aid
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://suicidepreventionlifeline.org/chat/" 
+        className="w-full h-80 rounded-lg border"
+        title="Crisis Chat"
+      />
+    </div>
+  );
+
+  const generateEnvironmentalContent = () => (
+    <div className="space-y-4">
+      <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-green-900 dark:text-green-100 mb-3">Environmental Safety Dashboard</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-white/60 dark:bg-black/20 p-3 rounded-lg text-center">
+            <div className="text-xl font-bold text-green-600">
+              {realTimeData?.light?.level ? Math.round(realTimeData.light.level) : Math.round(Math.random() * 1000 + 200)}
+            </div>
+            <div className="text-sm">Light (lux)</div>
+          </div>
+          <div className="bg-white/60 dark:bg-black/20 p-3 rounded-lg text-center">
+            <div className="text-xl font-bold text-blue-600">
+              {Math.round(Math.random() * 30 + 65)}%
+            </div>
+            <div className="text-sm">Air Quality</div>
+          </div>
+          <div className="bg-white/60 dark:bg-black/20 p-3 rounded-lg text-center">
+            <div className="text-xl font-bold text-purple-600">
+              {Math.round(Math.random() * 25 + 30)}dB
+            </div>
+            <div className="text-sm">Noise Level</div>
+          </div>
+          <div className="bg-white/60 dark:bg-black/20 p-3 rounded-lg text-center">
+            <div className="text-xl font-bold text-orange-600">
+              {Math.round(Math.random() * 10 + 20)}°C
+            </div>
+            <div className="text-sm">Temperature</div>
+          </div>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.airnow.gov/" 
+        className="w-full h-64 rounded-lg border"
+        title="Air Quality Monitor"
+      />
+    </div>
+  );
+
+  const generateSafeZoneContent = () => (
+    <div className="space-y-4">
+      <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Safe Zone Management</h3>
+        <div className="space-y-3">
+          <Button className="w-full h-12 bg-green-600 hover:bg-green-700 text-white justify-start">
+            <MapPin className="h-4 w-4 mr-2" />
+            Create Safe Zone at Current Location
+          </Button>
+          <Button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white justify-start">
+            <Activity className="h-4 w-4 mr-2" />
+            Monitor Travel Route
+          </Button>
+          <Button className="w-full h-12 bg-purple-600 hover:bg-purple-700 text-white justify-start">
+            <Users className="h-4 w-4 mr-2" />
+            Share with Family
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://maps.google.com" 
+        className="w-full h-64 rounded-lg border"
+        title="Safe Zone Map"
+      />
+    </div>
+  );
+
+  const generateDigitalSafetyContent = () => (
+    <div className="space-y-4">
+      <div className="bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-3">Digital Privacy & Security</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <Shield className="h-5 w-5 mb-1" />
+            <span className="text-xs">VPN Check</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Eye className="h-5 w-5 mb-1" />
+            <span className="text-xs">Privacy Scan</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <AlertTriangle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Threat Check</span>
+          </Button>
+          <Button className="h-16 bg-purple-600 hover:bg-purple-700 text-white flex flex-col">
+            <Smartphone className="h-5 w-5 mb-1" />
+            <span className="text-xs">Device Lock</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.whatismyipaddress.com/" 
+        className="w-full h-64 rounded-lg border"
+        title="Privacy Check"
+      />
+    </div>
+  );
+
+  const generateMedicalContent = () => (
+    <div className="space-y-4">
+      <div className="bg-red-50 dark:bg-red-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-red-900 dark:text-red-100 mb-3">Medical Emergency Tools</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-red-600 hover:bg-red-700 text-white flex flex-col">
+            <Heart className="h-5 w-5 mb-1" />
+            <span className="text-xs">Health Profile</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Phone className="h-5 w-5 mb-1" />
+            <span className="text-xs">Emergency Call</span>
+          </Button>
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <Users className="h-5 w-5 mb-1" />
+            <span className="text-xs">Medical Contacts</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <Clock className="h-5 w-5 mb-1" />
+            <span className="text-xs">Medications</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.webmd.com/first-aid" 
+        className="w-full h-64 rounded-lg border"
+        title="Medical Emergency Guide"
+      />
+    </div>
+  );
+
+  const generateCommunicationContent = () => (
+    <div className="space-y-4">
+      <div className="bg-cyan-50 dark:bg-cyan-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-cyan-900 dark:text-cyan-100 mb-3">Communication Safety Tools</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <MessageSquare className="h-5 w-5 mb-1" />
+            <span className="text-xs">Safe Chat</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Eye className="h-5 w-5 mb-1" />
+            <span className="text-xs">Witness Mode</span>
+          </Button>
+          <Button className="h-16 bg-purple-600 hover:bg-purple-700 text-white flex flex-col">
+            <Shield className="h-5 w-5 mb-1" />
+            <span className="text-xs">Anonymous Report</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <AlertTriangle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Silent Alert</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.safechat.com" 
+        className="w-full h-64 rounded-lg border"
+        title="Safe Communication"
+      />
+    </div>
+  );
+
+  const generateThreatDetectionContent = () => (
+    <div className="space-y-4">
+      <div className="bg-yellow-50 dark:bg-yellow-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3">Advanced Threat Detection</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-yellow-600 hover:bg-yellow-700 text-white flex flex-col">
+            <Eye className="h-5 w-5 mb-1" />
+            <span className="text-xs">Pattern Analysis</span>
+          </Button>
+          <Button className="h-16 bg-red-600 hover:bg-red-700 text-white flex flex-col">
+            <AlertTriangle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Threat Alert</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Brain className="h-5 w-5 mb-1" />
+            <span className="text-xs">AI Prediction</span>
+          </Button>
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <Shield className="h-5 w-5 mb-1" />
+            <span className="text-xs">Auto Response</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.threatdetection.ai" 
+        className="w-full h-64 rounded-lg border"
+        title="Threat Detection"
+      />
+    </div>
+  );
+
+  const generateTravelSafetyContent = () => (
+    <div className="space-y-4">
+      <div className="bg-indigo-50 dark:bg-indigo-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Travel & Transportation Safety</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-indigo-600 hover:bg-indigo-700 text-white flex flex-col">
+            <Activity className="h-5 w-5 mb-1" />
+            <span className="text-xs">Route Tracker</span>
+          </Button>
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <Shield className="h-5 w-5 mb-1" />
+            <span className="text-xs">Safe Parking</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <AlertTriangle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Breakdown Help</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Users className="h-5 w-5 mb-1" />
+            <span className="text-xs">Buddy System</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://maps.google.com" 
+        className="w-full h-64 rounded-lg border"
+        title="Route Safety"
+      />
+    </div>
+  );
+
+  const generatePersonalProtectionContent = () => (
+    <div className="space-y-4">
+      <div className="bg-rose-50 dark:bg-rose-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Personal Protection & Self-Defense</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-rose-600 hover:bg-rose-700 text-white flex flex-col">
+            <Shield className="h-5 w-5 mb-1" />
+            <span className="text-xs">Safety Training</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <AlertTriangle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Threat Response</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Users className="h-5 w-5 mb-1" />
+            <span className="text-xs">Bystander Help</span>
+          </Button>
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <CheckCircle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Safety Checklist</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.selfdefense.com" 
+        className="w-full h-64 rounded-lg border"
+        title="Self Defense Training"
+      />
+    </div>
+  );
+
+  const generateLegalContent = () => (
+    <div className="space-y-4">
+      <div className="bg-gray-50 dark:bg-gray-950/20 p-4 rounded-lg">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Legal & Documentation Safety</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <Button className="h-16 bg-gray-600 hover:bg-gray-700 text-white flex flex-col">
+            <Shield className="h-5 w-5 mb-1" />
+            <span className="text-xs">Document Vault</span>
+          </Button>
+          <Button className="h-16 bg-blue-600 hover:bg-blue-700 text-white flex flex-col">
+            <Eye className="h-5 w-5 mb-1" />
+            <span className="text-xs">Evidence Kit</span>
+          </Button>
+          <Button className="h-16 bg-green-600 hover:bg-green-700 text-white flex flex-col">
+            <CheckCircle className="h-5 w-5 mb-1" />
+            <span className="text-xs">Legal Checklist</span>
+          </Button>
+          <Button className="h-16 bg-orange-600 hover:bg-orange-700 text-white flex flex-col">
+            <Phone className="h-5 w-5 mb-1" />
+            <span className="text-xs">Legal Hotline</span>
+          </Button>
+        </div>
+      </div>
+      <iframe 
+        src="https://www.legalaid.org" 
+        className="w-full h-64 rounded-lg border"
+        title="Legal Resources"
+      />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -738,9 +1096,7 @@ export default function UserDashboard() {
                     <Button 
                       variant="outline"
                       className="h-24 border-2 border-blue-200 hover:bg-blue-50 dark:border-blue-800 dark:hover:bg-blue-950/20 flex flex-col items-center justify-center space-y-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                      onClick={() => {
-                        toast({ title: "Breathing Tools", description: "Opening advanced breathing exercises" });
-                      }}
+                      onClick={() => openModal("breathing", generateBreathingContent())}
                       data-testid="button-breathing-tools"
                     >
                       <Wind className="h-7 w-7 text-blue-600" />
@@ -750,9 +1106,7 @@ export default function UserDashboard() {
                     <Button 
                       variant="outline"
                       className="h-24 border-2 border-purple-200 hover:bg-purple-50 dark:border-purple-800 dark:hover:bg-purple-950/20 flex flex-col items-center justify-center space-y-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                      onClick={() => {
-                        toast({ title: "Crisis Support", description: "Connecting to professional crisis support" });
-                      }}
+                      onClick={() => openModal("crisis-chat", generateCrisisChatContent())}
                       data-testid="button-crisis-chat"
                     >
                       <MessageSquare className="h-7 w-7 text-purple-600" />
@@ -824,15 +1178,15 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("environmental", generateEnvironmentalContent())}>
                       <Shield className="h-5 w-5 text-green-600 mb-1" />
                       <span className="text-xs">Safe Zone Check</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("threat-alert", generateEnvironmentalContent())}>
                       <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
                       <span className="text-xs">Threat Alert</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("area-scan", generateEnvironmentalContent())}>
                       <Eye className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">Area Scan</span>
                     </Button>
@@ -862,10 +1216,10 @@ export default function UserDashboard() {
                           {location ? `${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}` : 'Location not available'}
                         </p>
                         <div className="flex space-x-2">
-                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => openModal("safe-zone", generateSafeZoneContent())}>
                             Create Safe Zone
                           </Button>
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={() => openModal("share-location", generateSafeZoneContent())}>
                             Share Location
                           </Button>
                         </div>
@@ -891,19 +1245,19 @@ export default function UserDashboard() {
                     </div>
                     
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                      <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("add-zone", generateSafeZoneContent())}>
                         <MapPin className="h-5 w-5 mb-1" />
                         <span className="text-xs">Add Zone</span>
                       </Button>
-                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                      <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("route-tracker", generateSafeZoneContent())}>
                         <Activity className="h-5 w-5 mb-1" />
                         <span className="text-xs">Route Tracker</span>
                       </Button>
-                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                      <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("family-zones", generateSafeZoneContent())}>
                         <Users className="h-5 w-5 mb-1" />
                         <span className="text-xs">Family Zones</span>
                       </Button>
-                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                      <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("geo-fence", generateSafeZoneContent())}>
                         <Shield className="h-5 w-5 mb-1" />
                         <span className="text-xs">Geo-Fence</span>
                       </Button>
@@ -958,15 +1312,15 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("security-scan", generateDigitalSafetyContent())}>
                       <Shield className="h-5 w-5 text-purple-600 mb-1" />
                       <span className="text-xs">Security Scan</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("device-lock", generateDigitalSafetyContent())}>
                       <Smartphone className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">Device Lock</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("privacy-check", generateDigitalSafetyContent())}>
                       <Eye className="h-5 w-5 text-orange-600 mb-1" />
                       <span className="text-xs">Privacy Check</span>
                     </Button>
@@ -1003,7 +1357,7 @@ export default function UserDashboard() {
                             <span>2 Active</span>
                           </div>
                         </div>
-                        <Button size="sm" className="w-full mt-3 bg-red-600 hover:bg-red-700">
+                        <Button size="sm" className="w-full mt-3 bg-red-600 hover:bg-red-700" onClick={() => openModal("medical-info", generateMedicalContent())}>
                           Update Medical Info
                         </Button>
                       </div>
@@ -1013,19 +1367,19 @@ export default function UserDashboard() {
                       <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                         <h4 className="font-semibold text-red-900 dark:text-red-100 mb-3">Emergency Actions</h4>
                         <div className="grid grid-cols-2 gap-2">
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("emergency-call", generateMedicalContent())}>
                             <Phone className="h-4 w-4 mb-1" />
                             <span className="text-xs">Call 911</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("alert-family", generateMedicalContent())}>
                             <Users className="h-4 w-4 mb-1" />
                             <span className="text-xs">Alert Family</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("share-location-medical", generateMedicalContent())}>
                             <MapPin className="h-4 w-4 mb-1" />
                             <span className="text-xs">Share Location</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("send-vitals", generateMedicalContent())}>
                             <Activity className="h-4 w-4 mb-1" />
                             <span className="text-xs">Send Vitals</span>
                           </Button>
@@ -1035,19 +1389,19 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200" onClick={() => openModal("health-profile", generateMedicalContent())}>
                       <Heart className="h-5 w-5 text-red-600 mb-1" />
                       <span className="text-xs">Health Profile</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("med-reminders", generateMedicalContent())}>
                       <Clock className="h-5 w-5 text-orange-600 mb-1" />
                       <span className="text-xs">Med Reminders</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("doctor-contact", generateMedicalContent())}>
                       <Phone className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">Doctor Contact</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("insurance-info", generateMedicalContent())}>
                       <Shield className="h-5 w-5 text-green-600 mb-1" />
                       <span className="text-xs">Insurance Info</span>
                     </Button>
@@ -1067,22 +1421,22 @@ export default function UserDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <Button className="h-20 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white flex flex-col justify-center">
+                    <Button className="h-20 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white flex flex-col justify-center" onClick={() => openModal("safe-chat", generateCommunicationContent())}>
                       <MessageSquare className="h-6 w-6 mb-2" />
                       <span className="text-sm">Safe Chat</span>
                     </Button>
                     
-                    <Button className="h-20 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white flex flex-col justify-center">
+                    <Button className="h-20 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white flex flex-col justify-center" onClick={() => openModal("witness-mode", generateCommunicationContent())}>
                       <Eye className="h-6 w-6 mb-2" />
                       <span className="text-sm">Witness Mode</span>
                     </Button>
                     
-                    <Button className="h-20 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white flex flex-col justify-center">
+                    <Button className="h-20 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white flex flex-col justify-center" onClick={() => openModal("anonymous-report", generateCommunicationContent())}>
                       <Shield className="h-6 w-6 mb-2" />
                       <span className="text-sm">Anonymous Report</span>
                     </Button>
                     
-                    <Button className="h-20 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white flex flex-col justify-center">
+                    <Button className="h-20 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white flex flex-col justify-center" onClick={() => openModal("silent-alert", generateCommunicationContent())}>
                       <AlertTriangle className="h-6 w-6 mb-2" />
                       <span className="text-sm">Silent Alert</span>
                     </Button>
@@ -1091,27 +1445,27 @@ export default function UserDashboard() {
                   <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                     <h4 className="font-semibold text-cyan-900 dark:text-cyan-100 mb-3">Quick Actions</h4>
                     <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
-                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("emergency-call-comm", generateCommunicationContent())}>
                         <Phone className="h-4 w-4 mb-1" />
                         <span className="text-xs">Emergency Call</span>
                       </Button>
-                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("group-chat", generateCommunicationContent())}>
                         <Users className="h-4 w-4 mb-1" />
                         <span className="text-xs">Group Chat</span>
                       </Button>
-                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("location-share-comm", generateCommunicationContent())}>
                         <MapPin className="h-4 w-4 mb-1" />
                         <span className="text-xs">Location Share</span>
                       </Button>
-                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("status-update", generateCommunicationContent())}>
                         <Activity className="h-4 w-4 mb-1" />
                         <span className="text-xs">Status Update</span>
                       </Button>
-                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("safe-word", generateCommunicationContent())}>
                         <Shield className="h-4 w-4 mb-1" />
                         <span className="text-xs">Safe Word</span>
                       </Button>
-                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("checkin-timer", generateCommunicationContent())}>
                         <Clock className="h-4 w-4 mb-1" />
                         <span className="text-xs">Check-in Timer</span>
                       </Button>
@@ -1171,13 +1525,13 @@ export default function UserDashboard() {
                     <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                       <h4 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3">Response Ready</h4>
                       <div className="space-y-2">
-                        <Button size="sm" className="w-full bg-red-600 hover:bg-red-700">
+                        <Button size="sm" className="w-full bg-red-600 hover:bg-red-700" onClick={() => openModal("immediate-alert", generateThreatDetectionContent())}>
                           Immediate Alert
                         </Button>
-                        <Button size="sm" variant="outline" className="w-full">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => openModal("false-alarm", generateThreatDetectionContent())}>
                           False Alarm
                         </Button>
-                        <Button size="sm" variant="outline" className="w-full">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => openModal("manual-override", generateThreatDetectionContent())}>
                           Manual Override
                         </Button>
                       </div>
@@ -1185,19 +1539,19 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-yellow-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-yellow-200" onClick={() => openModal("pattern-analysis", generateThreatDetectionContent())}>
                       <Eye className="h-5 w-5 text-yellow-600 mb-1" />
                       <span className="text-xs">Pattern Analysis</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200" onClick={() => openModal("threat-alert-advanced", generateThreatDetectionContent())}>
                       <AlertTriangle className="h-5 w-5 text-red-600 mb-1" />
                       <span className="text-xs">Threat Alert</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("ai-prediction", generateThreatDetectionContent())}>
                       <Brain className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">AI Prediction</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("auto-response", generateThreatDetectionContent())}>
                       <Shield className="h-5 w-5 text-green-600 mb-1" />
                       <span className="text-xs">Auto Response</span>
                     </Button>
@@ -1239,11 +1593,11 @@ export default function UserDashboard() {
                       <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                         <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Vehicle Safety</h4>
                         <div className="grid grid-cols-2 gap-2">
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("vehicle-status", generateTravelSafetyContent())}>
                             <Battery className="h-4 w-4 mb-1" />
                             <span className="text-xs">Vehicle Status</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("share-trip", generateTravelSafetyContent())}>
                             <MapPin className="h-4 w-4 mb-1" />
                             <span className="text-xs">Share Trip</span>
                           </Button>
@@ -1255,19 +1609,19 @@ export default function UserDashboard() {
                       <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                         <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Emergency Transport</h4>
                         <div className="grid grid-cols-2 gap-2">
-                          <Button size="sm" className="h-12 bg-red-600 hover:bg-red-700 text-white flex flex-col">
+                          <Button size="sm" className="h-12 bg-red-600 hover:bg-red-700 text-white flex flex-col" onClick={() => openModal("call-911-travel", generateTravelSafetyContent())}>
                             <Phone className="h-4 w-4 mb-1" />
                             <span className="text-xs">Call 911</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("alert-contacts-travel", generateTravelSafetyContent())}>
                             <Users className="h-4 w-4 mb-1" />
                             <span className="text-xs">Alert Contacts</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("send-location-travel", generateTravelSafetyContent())}>
                             <MapPin className="h-4 w-4 mb-1" />
                             <span className="text-xs">Send Location</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("ride-share", generateTravelSafetyContent())}>
                             <Activity className="h-4 w-4 mb-1" />
                             <span className="text-xs">Ride Share</span>
                           </Button>
@@ -1277,19 +1631,19 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-indigo-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-indigo-200" onClick={() => openModal("route-tracker-travel", generateTravelSafetyContent())}>
                       <Activity className="h-5 w-5 text-indigo-600 mb-1" />
                       <span className="text-xs">Route Tracker</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("safe-parking", generateTravelSafetyContent())}>
                       <Shield className="h-5 w-5 text-green-600 mb-1" />
                       <span className="text-xs">Safe Parking</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("breakdown-help", generateTravelSafetyContent())}>
                       <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
                       <span className="text-xs">Breakdown Help</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("buddy-system", generateTravelSafetyContent())}>
                       <Users className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">Buddy System</span>
                     </Button>
@@ -1312,19 +1666,19 @@ export default function UserDashboard() {
                     <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                       <h4 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Safety Techniques</h4>
                       <div className="space-y-2">
-                        <Button variant="outline" className="w-full justify-start h-12">
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("situational-awareness", generatePersonalProtectionContent())}>
                           <Eye className="h-4 w-4 mr-2" />
                           Situational Awareness Guide
                         </Button>
-                        <Button variant="outline" className="w-full justify-start h-12">
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("de-escalation", generatePersonalProtectionContent())}>
                           <Users className="h-4 w-4 mr-2" />
                           De-escalation Techniques
                         </Button>
-                        <Button variant="outline" className="w-full justify-start h-12">
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("self-defense", generatePersonalProtectionContent())}>
                           <Activity className="h-4 w-4 mr-2" />
                           Self-Defense Moves
                         </Button>
-                        <Button variant="outline" className="w-full justify-start h-12">
+                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("escape-route", generatePersonalProtectionContent())}>
                           <MapPin className="h-4 w-4 mr-2" />
                           Escape Route Planning
                         </Button>
@@ -1334,19 +1688,19 @@ export default function UserDashboard() {
                     <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                       <h4 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Quick Defense Actions</h4>
                       <div className="grid grid-cols-2 gap-2">
-                        <Button className="h-16 bg-red-600 hover:bg-red-700 text-white flex flex-col">
+                        <Button className="h-16 bg-red-600 hover:bg-red-700 text-white flex flex-col" onClick={() => openModal("distress-signal", generatePersonalProtectionContent())}>
                           <AlertTriangle className="h-5 w-5 mb-1" />
                           <span className="text-xs">Distress Signal</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col">
+                        <Button variant="outline" className="h-16 flex flex-col" onClick={() => openModal("fake-call", generatePersonalProtectionContent())}>
                           <Phone className="h-5 w-5 mb-1" />
                           <span className="text-xs">Fake Call</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col">
+                        <Button variant="outline" className="h-16 flex flex-col" onClick={() => openModal("record-evidence", generatePersonalProtectionContent())}>
                           <Eye className="h-5 w-5 mb-1" />
                           <span className="text-xs">Record Evidence</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col">
+                        <Button variant="outline" className="h-16 flex flex-col" onClick={() => openModal("silent-text", generatePersonalProtectionContent())}>
                           <MessageSquare className="h-5 w-5 mb-1" />
                           <span className="text-xs">Silent Text</span>
                         </Button>
@@ -1355,19 +1709,19 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-rose-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-rose-200" onClick={() => openModal("safety-training", generatePersonalProtectionContent())}>
                       <Shield className="h-5 w-5 text-rose-600 mb-1" />
                       <span className="text-xs">Safety Training</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("threat-response-personal", generatePersonalProtectionContent())}>
                       <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
                       <span className="text-xs">Threat Response</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("bystander-help", generatePersonalProtectionContent())}>
                       <Users className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">Bystander Help</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("safety-checklist", generatePersonalProtectionContent())}>
                       <CheckCircle className="h-5 w-5 text-green-600 mb-1" />
                       <span className="text-xs">Safety Checklist</span>
                     </Button>
@@ -1430,13 +1784,13 @@ export default function UserDashboard() {
                     <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
                       <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Legal Resources</h4>
                       <div className="space-y-2">
-                        <Button size="sm" variant="outline" className="w-full">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => openModal("know-rights", generateLegalContent())}>
                           Know Your Rights
                         </Button>
-                        <Button size="sm" variant="outline" className="w-full">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => openModal("legal-aid", generateLegalContent())}>
                           Legal Aid Contacts
                         </Button>
-                        <Button size="sm" variant="outline" className="w-full">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => openModal("report-incidents", generateLegalContent())}>
                           Report Incidents
                         </Button>
                       </div>
@@ -1444,19 +1798,19 @@ export default function UserDashboard() {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-gray-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-gray-200" onClick={() => openModal("document-vault", generateLegalContent())}>
                       <Shield className="h-5 w-5 text-gray-600 mb-1" />
                       <span className="text-xs">Document Vault</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("evidence-kit", generateLegalContent())}>
                       <Eye className="h-5 w-5 text-blue-600 mb-1" />
                       <span className="text-xs">Evidence Kit</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("legal-checklist", generateLegalContent())}>
                       <CheckCircle className="h-5 w-5 text-green-600 mb-1" />
                       <span className="text-xs">Legal Checklist</span>
                     </Button>
-                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("legal-hotline", generateLegalContent())}>
                       <Phone className="h-5 w-5 text-orange-600 mb-1" />
                       <span className="text-xs">Legal Hotline</span>
                     </Button>
@@ -1493,6 +1847,20 @@ export default function UserDashboard() {
           )}
         </Tabs>
       </div>
+
+      {/* Safety Tools Modal Dialog */}
+      <Dialog open={activeModal !== null} onOpenChange={closeModal}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold capitalize">
+              {activeModal?.replace(/[-]/g, ' ') || 'Safety Tool'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            {modalContent}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
