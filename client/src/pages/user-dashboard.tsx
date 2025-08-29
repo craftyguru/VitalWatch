@@ -2212,63 +2212,153 @@ export default function UserDashboard() {
               {/* Personal Safety Sub-Tab */}
               {safetySubTab === "personal" && (
                 <div className="space-y-6">
-                  {/* Medical Emergency Preparedness */}
-                  <Card className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200/50">
+                  {/* Medical Emergency Preparedness - Comprehensive Version */}
+                  <Card className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-950/30 dark:to-pink-950/30 border-red-200/50">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-3 text-red-900 dark:text-red-100">
-                        <div className="bg-gradient-to-br from-red-500 to-orange-500 p-2 rounded-xl">
+                        <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-xl">
                           <Heart className="h-6 w-6 text-white" />
                         </div>
                         <span className="text-xl">Medical Emergency Preparedness</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200" onClick={() => openModal("medical-emergency", generateMedicalEmergencyContent())}>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div className="space-y-4">
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <h4 className="font-semibold text-red-900 dark:text-red-100 mb-3">Medical ID</h4>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Blood Type:</span>
+                                <span>O+</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Allergies:</span>
+                                <span>None Listed</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Medications:</span>
+                                <span>2 Active</span>
+                              </div>
+                            </div>
+                            <Button size="sm" className="w-full mt-3 bg-red-600 hover:bg-red-700" onClick={() => openModal("medical-info", generateMedicalContent())}>
+                              Update Medical Info
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <h4 className="font-semibold text-red-900 dark:text-red-100 mb-3">Emergency Actions</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("emergency-call", generateMedicalContent())}>
+                                <Phone className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Call 911</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("alert-family", generateMedicalContent())}>
+                                <Users className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Alert Family</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("share-location-medical", generateMedicalContent())}>
+                                <MapPin className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Share Location</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("send-vitals", generateMedicalContent())}>
+                                <Activity className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Send Vitals</span>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200" onClick={() => openModal("health-profile", generateMedicalContent())}>
                           <Heart className="h-5 w-5 text-red-600 mb-1" />
-                          <span className="text-xs">Emergency Guide</span>
+                          <span className="text-xs">Health Profile</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("allergy-alert", generateMedicalEmergencyContent())}>
-                          <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
-                          <span className="text-xs">Allergy Alert</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("med-reminders", generateMedicalContent())}>
+                          <Clock className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Med Reminders</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("first-aid", generateMedicalEmergencyContent())}>
-                          <Shield className="h-5 w-5 text-blue-600 mb-1" />
-                          <span className="text-xs">First Aid</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("doctor-contact", generateMedicalContent())}>
+                          <Phone className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">Doctor Contact</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("insurance-info", generateMedicalContent())}>
+                          <Shield className="h-5 w-5 text-green-600 mb-1" />
+                          <span className="text-xs">Insurance Info</span>
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Communication Safety */}
-                  <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 border-cyan-200/50">
+                  {/* Communication Safety - Comprehensive Version */}
+                  <Card className="bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-cyan-950/30 dark:to-teal-950/30 border-cyan-200/50">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-3 text-cyan-900 dark:text-cyan-100">
-                        <div className="bg-gradient-to-br from-cyan-500 to-blue-500 p-2 rounded-xl">
+                        <div className="bg-gradient-to-br from-cyan-500 to-teal-500 p-2 rounded-xl">
                           <MessageSquare className="h-6 w-6 text-white" />
                         </div>
                         <span className="text-xl">Communication Safety</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-cyan-200" onClick={() => openModal("safe-communication", generateCommunicationSafetyContent())}>
-                          <MessageSquare className="h-5 w-5 text-cyan-600 mb-1" />
-                          <span className="text-xs">Safe Communication</span>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <Button className="h-20 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white flex flex-col justify-center" onClick={() => openModal("safe-chat", generateCommunicationContent())}>
+                          <MessageSquare className="h-6 w-6 mb-2" />
+                          <span className="text-sm">Safe Chat</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("crisis-chat", generateCommunicationSafetyContent())}>
-                          <Headphones className="h-5 w-5 text-purple-600 mb-1" />
-                          <span className="text-xs">Crisis Support</span>
+                        
+                        <Button className="h-20 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white flex flex-col justify-center" onClick={() => openModal("witness-mode", generateCommunicationContent())}>
+                          <Eye className="h-6 w-6 mb-2" />
+                          <span className="text-sm">Witness Mode</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("anonymous-reporting", generateCommunicationSafetyContent())}>
-                          <Shield className="h-5 w-5 text-green-600 mb-1" />
-                          <span className="text-xs">Anonymous Report</span>
+                        
+                        <Button className="h-20 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white flex flex-col justify-center" onClick={() => openModal("anonymous-report", generateCommunicationContent())}>
+                          <Shield className="h-6 w-6 mb-2" />
+                          <span className="text-sm">Anonymous Report</span>
                         </Button>
+                        
+                        <Button className="h-20 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white flex flex-col justify-center" onClick={() => openModal("silent-alert", generateCommunicationContent())}>
+                          <AlertTriangle className="h-6 w-6 mb-2" />
+                          <span className="text-sm">Silent Alert</span>
+                        </Button>
+                      </div>
+                      
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-cyan-900 dark:text-cyan-100 mb-3">Quick Actions</h4>
+                        <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("emergency-call-comm", generateCommunicationContent())}>
+                            <Phone className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Emergency Call</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("group-chat", generateCommunicationContent())}>
+                            <Users className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Group Chat</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("location-share-comm", generateCommunicationContent())}>
+                            <MapPin className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Location Share</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("status-update", generateCommunicationContent())}>
+                            <Activity className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Status Update</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("safe-word", generateCommunicationContent())}>
+                            <Shield className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Safe Word</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("checkin-timer", generateCommunicationContent())}>
+                            <Clock className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Check-in Timer</span>
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Personal Protection */}
+                  {/* Personal Protection - Comprehensive Version */}
                   <Card className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30 border-rose-200/50">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-3 text-rose-900 dark:text-rose-100">
@@ -2279,22 +2369,68 @@ export default function UserDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("situational-awareness", generatePersonalProtectionContent())}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          Situational Awareness
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                          <h4 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Safety Techniques</h4>
+                          <div className="space-y-2">
+                            <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("situational-awareness", generatePersonalProtectionContent())}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              Situational Awareness Guide
+                            </Button>
+                            <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("de-escalation", generatePersonalProtectionContent())}>
+                              <Users className="h-4 w-4 mr-2" />
+                              De-escalation Techniques
+                            </Button>
+                            <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("self-defense", generatePersonalProtectionContent())}>
+                              <Activity className="h-4 w-4 mr-2" />
+                              Self-Defense Moves
+                            </Button>
+                            <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("escape-route", generatePersonalProtectionContent())}>
+                              <MapPin className="h-4 w-4 mr-2" />
+                              Escape Route Planning
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                          <h4 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Quick Defense Actions</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            <Button className="h-16 bg-red-600 hover:bg-red-700 text-white flex flex-col" onClick={() => openModal("distress-signal", generatePersonalProtectionContent())}>
+                              <AlertTriangle className="h-5 w-5 mb-1" />
+                              <span className="text-xs">Distress Signal</span>
+                            </Button>
+                            <Button variant="outline" className="h-16 flex flex-col" onClick={() => openModal("fake-call", generatePersonalProtectionContent())}>
+                              <Phone className="h-5 w-5 mb-1" />
+                              <span className="text-xs">Fake Call</span>
+                            </Button>
+                            <Button variant="outline" className="h-16 flex flex-col" onClick={() => openModal("record-evidence", generatePersonalProtectionContent())}>
+                              <Eye className="h-5 w-5 mb-1" />
+                              <span className="text-xs">Record Evidence</span>
+                            </Button>
+                            <Button variant="outline" className="h-16 flex flex-col" onClick={() => openModal("silent-text", generatePersonalProtectionContent())}>
+                              <MessageSquare className="h-5 w-5 mb-1" />
+                              <span className="text-xs">Silent Text</span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-rose-200" onClick={() => openModal("safety-training", generatePersonalProtectionContent())}>
+                          <Shield className="h-5 w-5 text-rose-600 mb-1" />
+                          <span className="text-xs">Safety Training</span>
                         </Button>
-                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("de-escalation", generatePersonalProtectionContent())}>
-                          <MessageSquare className="h-4 w-4 mr-2" />
-                          De-escalation
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("threat-response-personal", generatePersonalProtectionContent())}>
+                          <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Threat Response</span>
                         </Button>
-                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("self-defense", generatePersonalProtectionContent())}>
-                          <Shield className="h-4 w-4 mr-2" />
-                          Self-Defense
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("bystander-help", generatePersonalProtectionContent())}>
+                          <Users className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">Bystander Help</span>
                         </Button>
-                        <Button variant="outline" className="w-full justify-start h-12" onClick={() => openModal("escape-route", generatePersonalProtectionContent())}>
-                          <MapPin className="h-4 w-4 mr-2" />
-                          Escape Routes
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("safety-checklist", generatePersonalProtectionContent())}>
+                          <CheckCircle className="h-5 w-5 text-green-600 mb-1" />
+                          <span className="text-xs">Safety Checklist</span>
                         </Button>
                       </div>
                     </CardContent>
@@ -2305,57 +2441,227 @@ export default function UserDashboard() {
               {/* Travel & Digital Sub-Tab */}
               {safetySubTab === "travel" && (
                 <div className="space-y-6">
-                  {/* Digital Privacy & Security */}
-                  <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border-purple-200/50">
+                  {/* Smart Safe Zone Management - Moved from Monitoring */}
+                  <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border-blue-200/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-blue-900 dark:text-blue-100">
+                        <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-2 rounded-xl">
+                          <MapPin className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xl">Smart Safe Zones</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <div className="flex items-center justify-between mb-3">
+                              <h4 className="font-semibold text-blue-900 dark:text-blue-100">Current Location</h4>
+                              <Badge className="bg-green-100 text-green-800">Safe</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {location ? `${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}` : 'Location not available'}
+                            </p>
+                            <div className="flex space-x-2">
+                              <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => openModal("safe-zone", generateSafeZoneContent())}>
+                                Create Safe Zone
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => openModal("share-location", generateSafeZoneContent())}>
+                                Share Location
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Zone Status</h4>
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Home Zone</span>
+                                <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Work Zone</span>
+                                <Badge className="bg-gray-100 text-gray-800">Inactive</Badge>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Travel Route</span>
+                                <Badge className="bg-blue-100 text-blue-800">Monitoring</Badge>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                          <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("add-zone", generateSafeZoneContent())}>
+                            <MapPin className="h-5 w-5 mb-1" />
+                            <span className="text-xs">Add Zone</span>
+                          </Button>
+                          <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("route-tracker", generateSafeZoneContent())}>
+                            <Activity className="h-5 w-5 mb-1" />
+                            <span className="text-xs">Route Tracker</span>
+                          </Button>
+                          <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("family-zones", generateSafeZoneContent())}>
+                            <Users className="h-5 w-5 mb-1" />
+                            <span className="text-xs">Family Zones</span>
+                          </Button>
+                          <Button variant="outline" className="h-16 flex flex-col justify-center" onClick={() => openModal("geo-fence", generateSafeZoneContent())}>
+                            <Shield className="h-5 w-5 mb-1" />
+                            <span className="text-xs">Geo-Fence</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Digital Privacy & Security - Comprehensive Version */}
+                  <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 border-purple-200/50">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-3 text-purple-900 dark:text-purple-100">
-                        <div className="bg-gradient-to-br from-purple-500 to-indigo-500 p-2 rounded-xl">
-                          <Lock className="h-6 w-6 text-white" />
+                        <div className="bg-gradient-to-br from-purple-500 to-violet-500 p-2 rounded-xl">
+                          <Shield className="h-6 w-6 text-white" />
                         </div>
                         <span className="text-xl">Digital Privacy & Security</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <CheckCircle className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Data Secure</div>
+                          <div className="text-xs text-muted-foreground">256-bit Encryption</div>
+                        </div>
+                        
+                        <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <Wifi className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Network Safe</div>
+                          <div className="text-xs text-muted-foreground">VPN Protected</div>
+                        </div>
+                        
+                        <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <Eye className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Privacy Mode</div>
+                          <div className="text-xs text-muted-foreground">Anonymous</div>
+                        </div>
+                        
+                        <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                          <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <AlertTriangle className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Threat Level</div>
+                          <div className="text-xs text-muted-foreground">Low</div>
+                        </div>
+                      </div>
+                      
                       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("digital-privacy", generateDigitalPrivacyContent())}>
-                          <Lock className="h-5 w-5 text-purple-600 mb-1" />
-                          <span className="text-xs">Privacy Tools</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200" onClick={() => openModal("security-scan", generateDigitalSafetyContent())}>
+                          <Shield className="h-5 w-5 text-purple-600 mb-1" />
+                          <span className="text-xs">Security Scan</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("secure-communication", generateDigitalPrivacyContent())}>
-                          <MessageSquare className="h-5 w-5 text-blue-600 mb-1" />
-                          <span className="text-xs">Secure Chat</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("device-lock", generateDigitalSafetyContent())}>
+                          <Smartphone className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">Device Lock</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("data-protection", generateDigitalPrivacyContent())}>
-                          <Shield className="h-5 w-5 text-green-600 mb-1" />
-                          <span className="text-xs">Data Protection</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("privacy-check", generateDigitalSafetyContent())}>
+                          <Eye className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Privacy Check</span>
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Travel & Transportation Safety */}
-                  <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 border-indigo-200/50">
+                  {/* Travel & Transportation Safety - Comprehensive Version */}
+                  <Card className="bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-indigo-950/30 dark:to-violet-950/30 border-indigo-200/50">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-3 text-indigo-900 dark:text-indigo-100">
-                        <div className="bg-gradient-to-br from-indigo-500 to-blue-500 p-2 rounded-xl">
-                          <MapPin className="h-6 w-6 text-white" />
+                        <div className="bg-gradient-to-br from-indigo-500 to-violet-500 p-2 rounded-xl">
+                          <Activity className="h-6 w-6 text-white" />
                         </div>
                         <span className="text-xl">Travel & Transportation Safety</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-indigo-200" onClick={() => openModal("travel-safety", generateTravelSafetyContent())}>
-                          <MapPin className="h-5 w-5 text-indigo-600 mb-1" />
-                          <span className="text-xs">Travel Safety</span>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div className="space-y-4">
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Route Monitoring</h4>
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span className="text-sm">Current Route:</span>
+                                <Badge className="bg-green-100 text-green-800">Safe</Badge>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm">ETA Deviation:</span>
+                                <span className="text-sm text-green-600">On Time</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm">Traffic Risk:</span>
+                                <Badge className="bg-yellow-100 text-yellow-800">Low</Badge>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Vehicle Safety</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("vehicle-status", generateTravelSafetyContent())}>
+                                <Battery className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Vehicle Status</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("share-trip", generateTravelSafetyContent())}>
+                                <MapPin className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Share Trip</span>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                            <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Emergency Transport</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button size="sm" className="h-12 bg-red-600 hover:bg-red-700 text-white flex flex-col" onClick={() => openModal("call-911-travel", generateTravelSafetyContent())}>
+                                <Phone className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Call 911</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("alert-contacts-travel", generateTravelSafetyContent())}>
+                                <Users className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Alert Contacts</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("send-location-travel", generateTravelSafetyContent())}>
+                                <MapPin className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Send Location</span>
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-12 flex flex-col" onClick={() => openModal("ride-share", generateTravelSafetyContent())}>
+                                <Activity className="h-4 w-4 mb-1" />
+                                <span className="text-xs">Ride Share</span>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-indigo-200" onClick={() => openModal("route-tracker-travel", generateTravelSafetyContent())}>
+                          <Activity className="h-5 w-5 text-indigo-600 mb-1" />
+                          <span className="text-xs">Route Tracker</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("safe-routes", generateTravelSafetyContent())}>
-                          <Activity className="h-5 w-5 text-green-600 mb-1" />
-                          <span className="text-xs">Safe Routes</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200" onClick={() => openModal("safe-parking", generateTravelSafetyContent())}>
+                          <Shield className="h-5 w-5 text-green-600 mb-1" />
+                          <span className="text-xs">Safe Parking</span>
                         </Button>
-                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("transportation", generateTravelSafetyContent())}>
-                          <Car className="h-5 w-5 text-orange-600 mb-1" />
-                          <span className="text-xs">Transportation</span>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200" onClick={() => openModal("breakdown-help", generateTravelSafetyContent())}>
+                          <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
+                          <span className="text-xs">Breakdown Help</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200" onClick={() => openModal("buddy-system", generateTravelSafetyContent())}>
+                          <Users className="h-5 w-5 text-blue-600 mb-1" />
+                          <span className="text-xs">Buddy System</span>
                         </Button>
                       </div>
                     </CardContent>
