@@ -6,45 +6,29 @@ const EMERGENCY_CACHE = 'vitalwatch-emergency-v1.0.0';
 
 // Critical resources that must be cached for emergency functionality
 const CRITICAL_RESOURCES = [
-  '/',
-  '/home',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/'
 ];
 
-// Emergency-specific resources
-const EMERGENCY_RESOURCES = [
-  '/home?action=emergency',
-  '/api/emergency-contacts',
-  '/api/send-emergency-alert'
-];
+// Emergency-specific resources (only cache non-API URLs)
+const EMERGENCY_RESOURCES = [];
 
-// Assets that can be cached opportunistically
-const CACHE_ASSETS = [
-  '/mood',
-  '/tools',
-  '/profile',
-  '/contacts'
-];
+// Assets that can be cached opportunistically  
+const CACHE_ASSETS = [];
 
 // Install event - cache critical resources
 self.addEventListener('install', event => {
   console.log('VitalWatch Service Worker installing...');
   
   event.waitUntil(
-    Promise.all([
-      // Cache critical app resources
-      caches.open(CACHE_NAME).then(cache => {
-        console.log('Caching critical resources');
-        return cache.addAll(CRITICAL_RESOURCES);
-      }),
-      // Cache emergency-specific resources
-      caches.open(EMERGENCY_CACHE).then(cache => {
-        console.log('Caching emergency resources');
-        return cache.addAll(EMERGENCY_RESOURCES.filter(url => !url.includes('/api/')));
-      })
-    ])
+    caches.open(CACHE_NAME).then(cache => {
+      console.log('Caching critical resources');
+      // Only try to cache resources that actually exist
+      return cache.addAll(CRITICAL_RESOURCES).catch(error => {
+        console.warn('Some resources could not be cached:', error);
+        // Continue without failing
+        return Promise.resolve();
+      });
+    })
   );
   
   // Force activation of new service worker
@@ -72,37 +56,27 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch event - serve from cache or network
+// Fetch event - minimal intervention for now
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
   
-  // Skip non-GET requests and Chrome extension requests
-  if (request.method !== 'GET' || url.protocol === 'chrome-extension:') {
+  // Skip non-GET requests, Chrome extension requests, and external requests
+  if (request.method !== 'GET' || 
+      url.protocol === 'chrome-extension:' ||
+      !url.origin.includes(self.location.origin)) {
     return;
   }
   
-  // Handle emergency API requests with special priority
+  // Only handle specific emergency API requests with high priority
   if (url.pathname.includes('/api/send-emergency-alert') || 
       url.pathname.includes('/api/emergency-contacts')) {
     event.respondWith(handleEmergencyRequest(request));
     return;
   }
   
-  // Handle other API requests
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(handleApiRequest(request));
-    return;
-  }
-  
-  // Handle navigation requests
-  if (request.mode === 'navigate') {
-    event.respondWith(handleNavigationRequest(request));
-    return;
-  }
-  
-  // Handle static assets
-  event.respondWith(handleAssetRequest(request));
+  // Let all other requests pass through normally
+  // This prevents the service worker from interfering with normal app operation
 });
 
 // Priority handling for emergency requests

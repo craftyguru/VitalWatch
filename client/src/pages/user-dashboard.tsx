@@ -89,11 +89,6 @@ export default function UserDashboard() {
   const { capabilities, realTimeData, isScanning } = useRealDeviceScanner();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
-  
-  // Debug activeTab changes
-  useEffect(() => {
-    console.log("activeTab changed to:", activeTab);
-  }, [activeTab]);
   const [emergencyMode, setEmergencyMode] = useState(false);
   const [liveLocation, setLiveLocation] = useState(false);
   const [location, setLocation] = useState<{lat: number, lon: number} | null>(null);
@@ -1084,10 +1079,7 @@ export default function UserDashboard() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    onClick={() => {
-                      console.log("Safety button clicked, switching to safety-tools tab");
-                      setActiveTab("safety-tools");
-                    }}
+                    onClick={() => setActiveTab("safety-tools")}
                     className="h-8 w-8 p-0 border-red-200 text-red-700 hover:bg-red-50"
                   >
                     <Shield className="h-3 w-3" />
@@ -1264,10 +1256,7 @@ export default function UserDashboard() {
               </button>
               
               <button
-                onClick={() => {
-                  console.log("Main Safety Tools tab clicked, current activeTab:", activeTab);
-                  setActiveTab("safety-tools");
-                }}
+                onClick={() => setActiveTab("safety-tools")}
                 className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
                   activeTab === "safety-tools" 
                     ? "bg-background shadow-lg text-foreground" 
