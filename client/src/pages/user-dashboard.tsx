@@ -1126,10 +1126,10 @@ export default function UserDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Professional Tab Navigation */}
           <div className="mb-8">
-            <div className="grid w-full grid-cols-4 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
+            <div className="grid w-full grid-cols-5 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
               <button
                 onClick={() => setActiveTab("overview")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
                   activeTab === "overview" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -1141,7 +1141,7 @@ export default function UserDashboard() {
               
               <button
                 onClick={() => setActiveTab("safety-tools")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
                   activeTab === "safety-tools" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -1154,7 +1154,7 @@ export default function UserDashboard() {
               
               <button
                 onClick={() => setActiveTab("wellness-analytics")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
                   activeTab === "wellness-analytics" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -1167,7 +1167,7 @@ export default function UserDashboard() {
               
               <button
                 onClick={() => setActiveTab("device-hub")}
-                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-3 sm:py-4 px-3 sm:px-6 rounded-xl transition-all ${
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
                   activeTab === "device-hub" 
                     ? "bg-background shadow-lg text-foreground" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -1176,6 +1176,19 @@ export default function UserDashboard() {
                 <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs sm:text-sm font-medium hidden sm:inline">Device Hub</span>
                 <span className="text-xs sm:text-sm font-medium sm:hidden">Devices</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("ai-guardian")}
+                className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
+                  activeTab === "ai-guardian" 
+                    ? "bg-background shadow-lg text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">AI Guardian</span>
+                <span className="text-xs sm:text-sm font-medium sm:hidden">AI</span>
               </button>
             </div>
           </div>
@@ -2308,10 +2321,17 @@ export default function UserDashboard() {
           {/* Device Hub Tab Content */}
           {activeTab === "device-hub" && (
             <div className="space-y-6">
-              <DeviceIntegrationHub 
+              <DeviceIntegrationHub />
+            </div>
+          )}
+
+          {/* AI Guardian Tab Content */}
+          {activeTab === "ai-guardian" && (
+            <div className="space-y-6">
+              <AIGuardian 
                 sensorData={sensorData}
-                permissions={permissions}
-                requestPermissions={requestPermissions}
+                realTimeData={realTimeData}
+                onPanicTrigger={sendEmergencyAlert}
               />
             </div>
           )}

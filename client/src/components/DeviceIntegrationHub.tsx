@@ -41,26 +41,14 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
     try {
       toast({
         title: "Scanning devices...",
-        description: "Detecting connected devices and updating sensor capabilities",
+        description: "Searching for real Bluetooth devices and updating sensor data",
       });
       
-      // Re-initialize capabilities to detect any new devices
       await initializeCapabilities();
-      
-      // Also attempt Bluetooth scan if available
-      if (capabilities.find(c => c.id === 'bluetooth')?.status === 'available') {
-        try {
-          await handleBluetoothScan();
-        } catch (btError) {
-          console.log('Bluetooth scan skipped:', btError);
-        }
-      }
-      
-      const availableCount = capabilities.filter(cap => cap.status === 'available' || cap.status === 'connected').length;
       
       toast({
         title: "Device scan complete",
-        description: `Found ${availableCount} available capabilities${bluetoothDevices.length > 0 ? ` and ${bluetoothDevices.length} Bluetooth device(s)` : ''}`,
+        description: `Found ${capabilities.filter(cap => cap.status === 'available').length} available capabilities`,
       });
     } catch (error: any) {
       toast({
@@ -236,25 +224,12 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
           </div>
         )}
 
-        {/* Device Ready Status */}
-        {capabilities.filter(cap => cap.status === 'available' || cap.status === 'connected').length >= 3 && (
-          <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
-                <CheckCircle className="h-5 w-5" />
-                <span className="font-medium">Device ready for VitalWatch monitoring</span>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Actions */}
         <div className="flex gap-3">
           <Button 
             onClick={handleScanDevices} 
             disabled={isScanning}
             className="flex-1"
-            data-testid="button-scan-devices"
           >
             {isScanning ? (
               <>
@@ -262,18 +237,14 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                 Scanning...
               </>
             ) : (
-              <>
-                <Activity className="h-4 w-4 mr-2" />
-                Scan Devices
-              </>
+              "Scan Devices"
             )}
           </Button>
           <Button 
             variant="outline" 
             onClick={handleBluetoothScan}
-            disabled={isScanning || !capabilities.find(c => c.id === 'bluetooth')?.status.includes('available')}
+            disabled={isScanning}
             className="flex-1"
-            data-testid="button-connect-bluetooth"
           >
             <Bluetooth className="h-4 w-4 mr-2" />
             Connect Bluetooth
