@@ -16,8 +16,10 @@ import {
   Globe,
   AlertTriangle,
   CheckCircle,
-  Info
+  Info,
+  Trash2
 } from "lucide-react";
+import { Link } from "wouter";
 
 interface SecuritySettingsProps {
   form: any;
@@ -209,6 +211,48 @@ export function SecuritySettings({ form, isLoading }: SecuritySettingsProps) {
                 </p>
               </div>
               <Switch />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Danger Zone */}
+      <Card className="border-red-200 dark:border-red-800">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2 text-red-600 dark:text-red-400">
+            <AlertTriangle className="h-5 w-5" />
+            <span>Danger Zone</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert className="border-red-200 bg-red-50 dark:bg-red-950/30 mb-4">
+            <AlertTriangle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800 dark:text-red-200">
+              <strong>Warning:</strong> VitalWatch protects you in emergencies. Deleting your account removes all safety features, 
+              emergency contacts, and monitoring capabilities. This action cannot be undone.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <Label className="text-red-700 dark:text-red-300">Delete Account</Label>
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  Permanently delete your VitalWatch account and all associated data. 
+                  Emergency records will be anonymized but retained for legal compliance.
+                </p>
+              </div>
+              <Link href="/delete-account" asChild>
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  className="shrink-0"
+                  data-testid="button-delete-account-navigate"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Account
+                </Button>
+              </Link>
             </div>
           </div>
         </CardContent>

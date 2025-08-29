@@ -21,6 +21,7 @@ import AuthPage from "@/pages/auth";
 import VerifyEmail from "@/pages/verify-email";
 import AdminDashboard from "@/pages/admin-dashboard";
 import PrivacyPolicy from "@/pages/privacy-policy";
+import DeleteAccount from "@/pages/delete-account";
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -44,6 +45,7 @@ function Router() {
           <Route path="/profile" component={ProfileEnhanced} />
           <Route path="/app-settings" component={ProfileEnhanced} />
           <Route path="/billing" component={BillingPage} />
+          <Route path="/delete-account" component={DeleteAccount} />
           <Route path="/landing" component={Landing} />
           {(user as any)?.isAdmin && <Route path="/admin" component={AdminDashboard} />}
         </>

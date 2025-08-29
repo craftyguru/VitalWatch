@@ -149,6 +149,56 @@ export class EmailService {
       return { success: false, message: 'Verification failed' };
     }
   }
+  // Send account deletion confirmation
+  async sendAccountDeletionConfirmation(email: string, firstName: string): Promise<boolean> {
+    if (!process.env.SENDGRID_API_KEY) {
+      console.log('❌ SendGrid not configured - would send deletion confirmation to:', email);
+      return false;
+    }
+
+    try {
+      const msg = {
+        to: email,
+        from: {
+          email: FROM_EMAIL,
+          name: FROM_NAME
+        },
+        subject: 'VitalWatch Account Deletion Confirmation',
+        text: `Hi ${firstName},\n\nYour VitalWatch account has been successfully deleted as requested.\n\nWhat was deleted:\n• Personal profile information\n• Mood tracking data\n• Emergency contacts\n• AI chat history\n• Device connections\n\nFor safety and legal compliance, anonymized emergency incident records have been retained.\n\nIf you need assistance or have questions, contact us at support@vitalwatch.app.\n\nThank you for using VitalWatch.\n\nThe VitalWatch Team`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #dc2626;">Account Deletion Confirmation</h2>
+            <p>Hi ${firstName},</p>
+            <p>Your VitalWatch account has been successfully deleted as requested.</p>
+            
+            <h3 style="color: #374151;">What was deleted:</h3>
+            <ul style="color: #6b7280;">
+              <li>Personal profile information</li>
+              <li>Mood tracking data</li>
+              <li>Emergency contacts</li>
+              <li>AI chat history</li>
+              <li>Device connections</li>
+            </ul>
+            
+            <div style="background: #fef3c7; padding: 16px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 0; color: #92400e;"><strong>Important:</strong> For safety and legal compliance, anonymized emergency incident records have been retained.</p>
+            </div>
+            
+            <p>If you need assistance or have questions, contact us at <a href="mailto:support@vitalwatch.app">support@vitalwatch.app</a>.</p>
+            <p>Thank you for using VitalWatch.</p>
+            <p style="margin-top: 30px;">The VitalWatch Team</p>
+          </div>
+        `,
+      };
+
+      await sgMail.send(msg);
+      console.log(`✅ Account deletion confirmation sent to ${email}`);
+      return true;
+    } catch (error) {
+      console.error('❌ Failed to send account deletion confirmation:', error);
+      return false;
+    }
+  }
 }
 
 export const emailService = new EmailService();

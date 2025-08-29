@@ -913,6 +913,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Account deletion route
+  app.delete('/api/user/delete-account', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // For health apps, we need to retain emergency incident data for legal compliance
+      // Delete personal data but keep anonymized emergency records
+      
+      // 1. Delete personal data
+      await db.delete(users).where(eq(users.id, userId));
+      
+      // 2. Delete or anonymize associated data (but keep emergency records)
+      // Delete mood entries
+      await db.delete(moodEntries).where(eq(moodEntries.userId, userId));
+      
+      // Delete emergency contacts
+      await db.delete(emergencyContacts).where(eq(emergencyContacts.userId, userId));
+      
+      // Delete chat messages and sessions
+      await db.delete(chatMessages).where(eq(chatMessages.userId, userId));
+      await db.delete(crisisChatSessions).where(eq(crisisChatSessions.userId, userId));
+      
+      // Delete AI insights
+      await db.delete(aiInsights).where(eq(aiInsights.userId, userId));
+      
+      // For emergency incidents - anonymize but don't delete (legal requirement)
+      // These records must be kept for safety audits and legal compliance
+      await db.update(emergencyIncidents)
+        .set({ 
+          userId: null,  // Remove user link but keep incident record
+          location: 'ANONYMIZED',
+          audioTranscription: 'USER_DATA_DELETED'
+        })
+        .where(eq(emergencyIncidents.userId, userId));
+
+      // Send confirmation email
+      const emailService = await import("./services/emailService");
+      try {
+        await emailService.emailService.sendAccountDeletionConfirmation(
+          user.email!,
+          `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User'
+        );
+      } catch (emailError) {
+        console.error("Failed to send deletion confirmation email:", emailError);
+        // Don't fail the deletion if email fails
+      }
+
+      // Clear the session
+      req.session.destroy((err: any) => {
+        if (err) {
+          console.error("Error destroying session:", err);
+        }
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Account successfully deleted. Emergency incident records have been anonymized and retained for legal compliance." 
+      });
+      
+    } catch (error) {
+      console.error("Error deleting user account:", error);
+      res.status(500).json({ message: "Failed to delete account. Please contact support." });
+    }
+  });
+
   // Crisis resources routes
   app.post('/api/send-crisis-resources', isAuthenticated, async (req: any, res) => {
     try {
