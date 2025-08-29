@@ -8,15 +8,29 @@
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=app.vitalwatch.emergency",
+      "id": "app.vitalwatch.emergency"
+    }
+  ],
   "orientation": "portrait-primary",
   "start_in_background": true,
-  "background_sync": ["emergency-alert-sync"],
+  "background_sync": ["emergency-alert-sync", "mood-sync", "health-data-sync"],
+  "iarc_rating_id": "e84b072d-71de-4e36-a92f-00f3cf8b1b7a",
   "theme_color": "#8b5cf6",
   "background_color": "#ffffff",
   "scope": "/",
+  "scope_extensions": [
+    {
+      "origin": "https://vitalwatch.app"
+    }
+  ],
   "lang": "en",
   "dir": "ltr",
   "categories": ["health", "medical", "lifestyle", "safety"],
+  "offline_capable": true,
   "screenshots": [
     {
       "src": "/icons/screenshot-phone-1.png",

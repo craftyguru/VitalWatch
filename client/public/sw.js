@@ -317,4 +317,60 @@ self.addEventListener('notificationclick', event => {
   }
 });
 
+// Background sync event handlers for offline data synchronization
+self.addEventListener('sync', event => {
+  console.log('Background sync triggered:', event.tag);
+  
+  switch(event.tag) {
+    case 'emergency-alert-sync':
+      event.waitUntil(syncEmergencyData());
+      break;
+    case 'mood-sync':
+      event.waitUntil(syncMoodData());
+      break;
+    case 'health-data-sync':
+      event.waitUntil(syncHealthData());
+      break;
+    default:
+      console.log('Unknown sync tag:', event.tag);
+  }
+});
+
+// Sync functions for background data synchronization
+async function syncEmergencyData() {
+  try {
+    // Sync any pending emergency data
+    console.log('Syncing emergency data in background');
+    // Implementation would sync with server when connection is restored
+    return Promise.resolve();
+  } catch (error) {
+    console.error('Emergency data sync failed:', error);
+    throw error;
+  }
+}
+
+async function syncMoodData() {
+  try {
+    // Sync any pending mood entries
+    console.log('Syncing mood data in background');
+    // Implementation would sync with server when connection is restored
+    return Promise.resolve();
+  } catch (error) {
+    console.error('Mood data sync failed:', error);
+    throw error;
+  }
+}
+
+async function syncHealthData() {
+  try {
+    // Sync any pending health/sensor data
+    console.log('Syncing health data in background');
+    // Implementation would sync with server when connection is restored
+    return Promise.resolve();
+  } catch (error) {
+    console.error('Health data sync failed:', error);
+    throw error;
+  }
+}
+
 console.log('VitalWatch Service Worker loaded successfully');
