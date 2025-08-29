@@ -41,6 +41,57 @@ interface DeviceIntegrationHubProps {
   requestPermissions?: () => void;
 }
 
+// Enhanced network type detection for 5G
+const getNetworkType = () => {
+  const connection = (navigator as any).connection;
+  if (!connection) return 'wifi';
+  
+  const effectiveType = connection.effectiveType;
+  const downlink = connection.downlink;
+  
+  // Enhanced detection for 5G based on speed and other indicators
+  if (downlink && downlink > 50) return '5g'; // 5G typically has >50Mbps
+  if (downlink && downlink > 10 && effectiveType === '4g') return '5g'; // Fast 4g might be 5g
+  if (effectiveType === '4g' && connection.saveData === false && downlink > 20) return '5g';
+  
+  return effectiveType || 'wifi';
+};
+
+// Scan for wearable devices and smartwatches
+const scanForWearableDevices = async () => {
+  try {
+    if ('bluetooth' in navigator) {
+      const device = await (navigator as any).bluetooth.requestDevice({
+        filters: [
+          { services: ['heart_rate'] },
+          { services: ['battery_service'] },
+          { services: ['device_information'] },
+          { namePrefix: 'Apple Watch' },
+          { namePrefix: 'Galaxy Watch' },
+          { namePrefix: 'Fitbit' },
+          { namePrefix: 'Garmin' },
+          { namePrefix: 'Wear OS' },
+          { namePrefix: 'Mi Band' },
+          { namePrefix: 'Amazfit' }
+        ],
+        optionalServices: [
+          'heart_rate',
+          'battery_service', 
+          'device_information',
+          'fitness_machine',
+          'cycling_power',
+          'running_speed_and_cadence',
+          'location_and_navigation'
+        ]
+      });
+      return device;
+    }
+  } catch (error) {
+    console.log('Wearable scan failed:', error);
+    return null;
+  }
+};
+
 export function DeviceIntegrationHub({ sensorData, permissions, requestPermissions }: DeviceIntegrationHubProps) {
   const { toast } = useToast();
   const { 
@@ -111,7 +162,7 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       } : { active: false },
       network: {
         online: navigator.onLine,
-        type: (navigator as any).connection?.effectiveType || 'wifi',
+        type: getNetworkType(),
         downlink: (navigator as any).connection?.downlink,
         rtt: (navigator as any).connection?.rtt,
         active: true
@@ -137,9 +188,14 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
 
   const enableAllSensors = async () => {
     try {
+      // Initialize capabilities from real device scanner
+      await initializeCapabilities();
+      
+      // Request permissions if available
       if (requestPermissions) {
         await requestPermissions();
       }
+      
       toast({
         title: "Sensors enabled",
         description: "All available phone sensors are now active.",
@@ -148,6 +204,42 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       toast({
         title: "Permission denied",
         description: "Some sensors require manual permission.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fullDeviceScan = async () => {
+    try {
+      toast({
+        title: "Scanning devices...",
+        description: "Looking for all connected devices including wearables.",
+      });
+
+      // Scan for regular Bluetooth devices
+      await scanForDevices();
+      
+      // Scan specifically for wearable devices  
+      const wearable = await scanForWearableDevices();
+      
+      // Re-initialize capabilities
+      await initializeCapabilities();
+      
+      if (wearable) {
+        toast({
+          title: "Device found",
+          description: `Connected to ${wearable.name}`,
+        });
+      } else {
+        toast({
+          title: "Scan complete",
+          description: "No new wearable devices found. Make sure devices are in pairing mode.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Scan failed",
+        description: "Unable to scan for devices. Check Bluetooth permissions.",
         variant: "destructive"
       });
     }
@@ -210,14 +302,27 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
               {/* Phone Real-time sensor data */}
               {device.type === 'phone' && (
                 <div className="space-y-3">
-                  {/* Enable All Sensors Button */}
-                  <div className="flex justify-center mb-4">
+                  {/* Control Buttons */}
+                  <div className="flex gap-2 justify-center mb-4 flex-wrap">
                     <Button 
                       onClick={enableAllSensors}
                       className="bg-blue-500 hover:bg-blue-600 text-white"
                     >
                       <Settings className="h-4 w-4 mr-2" />
                       Enable All Sensors
+                    </Button>
+                    <Button 
+                      onClick={fullDeviceScan}
+                      variant="outline"
+                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                      disabled={isScanning || bluetoothScanning}
+                    >
+                      {isScanning || bluetoothScanning ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Watch className="h-4 w-4 mr-2" />
+                      )}
+                      Scan All Devices
                     </Button>
                   </div>
 
@@ -286,9 +391,12 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                     </div>
                     <div className="text-xs space-y-1">
                       <div>Status: {device.sensors.network.online ? 'Online' : 'Offline'}</div>
-                      <div>Type: {device.sensors.network.type || 'wifi'}</div>
+                      <div>Type: {device.sensors.network.type?.toUpperCase() || 'WiFi'}</div>
                       {device.sensors.network.downlink && (
                         <div>Speed: {device.sensors.network.downlink}Mbps</div>
+                      )}
+                      {device.sensors.network.rtt && (
+                        <div>Latency: {device.sensors.network.rtt}ms</div>
                       )}
                     </div>
                   </div>
