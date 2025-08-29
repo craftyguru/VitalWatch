@@ -71,7 +71,7 @@ export function useGeolocation() {
   }, []);
 
   const startWatching = useCallback((highAccuracy: boolean = false) => {
-    if (!navigator.geolocation || isWatching) return;
+    if (!navigator.geolocation || isWatching || typeof navigator.geolocation.watchPosition !== 'function') return;
 
     const options: PositionOptions = {
       enableHighAccuracy: highAccuracy,
@@ -79,41 +79,54 @@ export function useGeolocation() {
       maximumAge: 60000, // 1 minute
     };
 
-    const id = navigator.geolocation.watchPosition(
-      async (position) => {
-        const locationData: GeolocationData = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-        };
+    try {
+      const id = navigator.geolocation.watchPosition(
+        async (position) => {
+          const locationData: GeolocationData = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+          };
 
-        try {
-          const address = await reverseGeocode(locationData.lat, locationData.lng);
-          locationData.address = address;
-        } catch (geocodeError) {
-          console.warn('Reverse geocoding failed:', geocodeError);
-        }
+          try {
+            const address = await reverseGeocode(locationData.lat, locationData.lng);
+            locationData.address = address;
+          } catch (geocodeError) {
+            console.warn('Reverse geocoding failed:', geocodeError);
+          }
 
-        setLocation(locationData);
-        setError(null);
-      },
-      (error) => {
-        const errorData = {
-          code: error.code,
-          message: getGeolocationErrorMessage(error.code),
-        };
-        setError(errorData);
-      },
-      options
-    );
+          setLocation(locationData);
+          setError(null);
+        },
+        (error) => {
+          const errorData = {
+            code: error.code,
+            message: getGeolocationErrorMessage(error.code),
+          };
+          setError(errorData);
+        },
+        options
+      );
 
-    setWatchId(id);
-    setIsWatching(true);
+      if (typeof id === 'number') {
+        setWatchId(id);
+        setIsWatching(true);
+      } else {
+        console.warn('Invalid watch ID returned from geolocation API');
+      }
+    } catch (error) {
+      console.warn('Failed to start geolocation watch:', error);
+      setError({ code: 0, message: 'Failed to start location tracking' });
+    }
   }, [isWatching]);
 
   const stopWatching = useCallback(() => {
-    if (watchId !== null && typeof navigator !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.clearWatch(watchId);
+    if (watchId !== null && typeof navigator !== 'undefined' && navigator.geolocation && typeof navigator.geolocation.clearWatch === 'function') {
+      try {
+        navigator.geolocation.clearWatch(watchId);
+      } catch (error) {
+        console.warn('Failed to clear geolocation watch:', error);
+      }
       setWatchId(null);
       setIsWatching(false);
     }
@@ -122,8 +135,12 @@ export function useGeolocation() {
   // Clean up watch on unmount
   useEffect(() => {
     return () => {
-      if (watchId !== null && typeof navigator !== 'undefined' && navigator.geolocation) {
-        navigator.geolocation.clearWatch(watchId);
+      if (watchId !== null && typeof navigator !== 'undefined' && navigator.geolocation && typeof navigator.geolocation.clearWatch === 'function') {
+        try {
+          navigator.geolocation.clearWatch(watchId);
+        } catch (error) {
+          console.warn('Failed to clear geolocation watch on unmount:', error);
+        }
       }
     };
   }, [watchId]);
