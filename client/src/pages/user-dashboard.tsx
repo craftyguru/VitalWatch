@@ -1103,7 +1103,7 @@ export default function UserDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Professional Tab Navigation */}
           <div className="mb-8">
-            <div className="grid w-full grid-cols-4 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
+            <div className="grid w-full grid-cols-5 h-auto p-1 sm:p-2 bg-card/50 backdrop-blur-lg rounded-2xl border border-border">
               <button
                 onClick={() => setActiveTab("overview")}
                 className={`flex flex-col items-center space-y-1 sm:space-y-2 py-2 sm:py-4 px-2 sm:px-6 rounded-xl transition-all ${
