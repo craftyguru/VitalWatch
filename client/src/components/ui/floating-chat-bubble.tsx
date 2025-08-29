@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, X, Minimize2 } from "lucide-react";
+import { MessageCircle, X, Minimize2, LifeBuoy, AlertTriangle, Heart } from "lucide-react";
 import CrisisChatSupport from "./crisis-chat-support";
 
 interface FloatingChatBubbleProps {
@@ -13,7 +14,17 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
+  const [activeTab, setActiveTab] = useState("help");
   const [currentCrisisLevel, setCurrentCrisisLevel] = useState<'low' | 'medium' | 'high' | 'critical'>('medium');
+  const [helpMessages, setHelpMessages] = useState<Array<{id: string, sender: 'user' | 'bot', content: string, timestamp: Date}>>([
+    {
+      id: '1',
+      sender: 'bot',
+      content: 'Hi! I\'m here to help you navigate VitalWatch. What would you like assistance with?',
+      timestamp: new Date()
+    }
+  ]);
+  const [helpInput, setHelpInput] = useState("");
 
   // Simulate notification for urgent situations (in real app, this would come from crisis detection)
   useEffect(() => {
@@ -30,6 +41,50 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
   const handleEmergencyTrigger = () => {
     setCurrentCrisisLevel('critical');
     setHasNotification(true);
+    setActiveTab('crisis');
+  };
+
+  const handleHelpSubmit = () => {
+    if (!helpInput.trim()) return;
+    
+    const userMessage = {
+      id: Date.now().toString(),
+      sender: 'user' as const,
+      content: helpInput.trim(),
+      timestamp: new Date()
+    };
+    
+    setHelpMessages(prev => [...prev, userMessage]);
+    setHelpInput("");
+    
+    // Simulate bot response
+    setTimeout(() => {
+      const botResponse = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot' as const,
+        content: getHelpResponse(helpInput),
+        timestamp: new Date()
+      };
+      setHelpMessages(prev => [...prev, botResponse]);
+    }, 1000);
+  };
+
+  const getHelpResponse = (userInput: string): string => {
+    const input = userInput.toLowerCase();
+    
+    if (input.includes('mood') || input.includes('feeling')) {
+      return 'You can track your mood by going to the Mood page from the navigation menu. There you can log daily moods and see AI insights about your mental health patterns.';
+    } else if (input.includes('emergency') || input.includes('contact')) {
+      return 'To set up emergency contacts, go to the Contacts page. You can add trusted people who will be notified during emergencies. We recommend adding at least 2-3 contacts.';
+    } else if (input.includes('tool') || input.includes('breathing') || input.includes('grounding')) {
+      return 'Visit the Tools page to access breathing exercises, grounding techniques, and other coping tools. You can also access crisis chat support for immediate help.';
+    } else if (input.includes('subscription') || input.includes('billing') || input.includes('upgrade')) {
+      return 'Check your subscription details and upgrade options in the Billing page. VitalWatch offers Pro features for enhanced monitoring and support.';
+    } else if (input.includes('profile') || input.includes('settings')) {
+      return 'Customize your experience in the Profile page where you can update personal information, notification preferences, and privacy settings.';
+    } else {
+      return 'I can help you with mood tracking, emergency contacts, coping tools, billing, and profile settings. What specific feature would you like to learn about?';
+    }
   };
 
   const getBubbleColor = () => {
@@ -74,6 +129,10 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
             onClick={() => {
               setIsOpen(true);
               setHasNotification(false);
+              // Auto-switch to crisis tab if there's a crisis notification
+              if (hasNotification && currentCrisisLevel === 'critical') {
+                setActiveTab('crisis');
+              }
             }}
             className={`w-16 h-16 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 ${getBubbleColor()}`}
             data-testid="chat-bubble-button"
@@ -99,17 +158,19 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-5 w-5 text-blue-600" />
-                <DialogTitle className="text-lg font-semibold">Crisis Support</DialogTitle>
+                <DialogTitle className="text-lg font-semibold">VitalWatch Support</DialogTitle>
               </div>
               <div className="flex items-center gap-2">
-                <Badge className={`text-xs ${
-                  currentCrisisLevel === 'critical' ? 'bg-red-100 text-red-800' :
-                  currentCrisisLevel === 'high' ? 'bg-orange-100 text-orange-800' :
-                  currentCrisisLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
-                  {currentCrisisLevel.toUpperCase()}
-                </Badge>
+                {activeTab === 'crisis' && (
+                  <Badge className={`text-xs ${
+                    currentCrisisLevel === 'critical' ? 'bg-red-100 text-red-800' :
+                    currentCrisisLevel === 'high' ? 'bg-orange-100 text-orange-800' :
+                    currentCrisisLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {currentCrisisLevel.toUpperCase()}
+                  </Badge>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -128,15 +189,79 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
                 </Button>
               </div>
             </div>
+            
+            {/* Tab Navigation */}
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="help" className="flex items-center gap-2">
+                  <LifeBuoy className="h-4 w-4" />
+                  Help & Support
+                </TabsTrigger>
+                <TabsTrigger value="crisis" className="flex items-center gap-2">
+                  <Heart className="h-4 w-4" />
+                  Crisis Support
+                  {hasNotification && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </DialogHeader>
 
           {/* Chat Content */}
           {!isMinimized && (
             <div className="flex-1 overflow-hidden">
-              <CrisisChatSupport 
-                crisisLevel={currentCrisisLevel}
-                onEmergencyTrigger={handleEmergencyTrigger}
-              />
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+                <TabsContent value="help" className="flex-1 flex flex-col m-0 p-4">
+                  <div className="flex-1 flex flex-col space-y-3">
+                    <div className="flex-1 border rounded-lg p-3 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                      <div className="space-y-3">
+                        {helpMessages.map((message) => (
+                          <div
+                            key={message.id}
+                            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                          >
+                            <div
+                              className={`max-w-[80%] p-2 rounded-lg text-sm ${
+                                message.sender === 'user'
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border'
+                              }`}
+                            >
+                              {message.content}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={helpInput}
+                        onChange={(e) => setHelpInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleHelpSubmit()}
+                        placeholder="Ask about VitalWatch features..."
+                        className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        data-testid="help-input"
+                      />
+                      <Button
+                        onClick={handleHelpSubmit}
+                        disabled={!helpInput.trim()}
+                        size="sm"
+                        data-testid="help-send"
+                      >
+                        Send
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="crisis" className="flex-1 m-0">
+                  <CrisisChatSupport 
+                    crisisLevel={currentCrisisLevel}
+                    onEmergencyTrigger={handleEmergencyTrigger}
+                  />
+                </TabsContent>
+              </Tabs>
             </div>
           )}
 
@@ -158,7 +283,7 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
           )}
 
           {/* Emergency Quick Actions Footer */}
-          {currentCrisisLevel === 'critical' && !isMinimized && (
+          {currentCrisisLevel === 'critical' && !isMinimized && activeTab === 'crisis' && (
             <div className="p-3 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800">
               <div className="flex gap-2 text-xs">
                 <Button 

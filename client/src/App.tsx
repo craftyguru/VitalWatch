@@ -4,7 +4,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { HelpChatBubble } from "@/components/HelpChatBubble";
 import FloatingChatBubble from "@/components/ui/floating-chat-bubble";
 import { UpdateAvailableToast } from "@/components/UpdateAvailableToast";
 
@@ -58,7 +57,6 @@ function App() {
           <UpdateAvailableToast />
           <Router />
 
-          <HelpChatBubble />
           <FloatingChatBubble />
         </TooltipProvider>
       </QueryClientProvider>
