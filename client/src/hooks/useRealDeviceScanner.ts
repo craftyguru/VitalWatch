@@ -208,7 +208,7 @@ export function useRealDeviceScanner() {
             newDevice.services = services.map(service => service.uuid);
             
             // Try to read some basic characteristics
-            for (const service of services) {
+            for (const service: any of services) {
               try {
                 const characteristics = await service.getCharacteristics();
                 for (const char of characteristics) {

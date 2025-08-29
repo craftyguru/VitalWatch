@@ -26,25 +26,22 @@ import {
   TreePine
 } from "lucide-react";
 import { DeviceIntegrationHub } from "@/components/DeviceIntegrationHub";
-import { useSafeDeviceSensors } from "@/hooks/useSafeDeviceSensors";
+import { useRealDeviceScanner } from "@/hooks/useRealDeviceScanner";
 
-// Real-time metrics derived from actual sensor data
-const useRealTimeMetrics = (sensorData: any) => {
+// Real-time metrics derived from actual sensor data - NO FALLBACKS
+const useRealTimeMetrics = (realTimeData: any) => {
   return {
-    heartRate: sensorData.heartRate.active ? sensorData.heartRate.bpm : 
-      (sensorData.accelerometer.active ? Math.round(65 + Math.abs(sensorData.accelerometer.x) * 15) : 72),
-    activity: sensorData.accelerometer.active ? 
-      Math.min(100, (Math.abs(sensorData.accelerometer.x) + Math.abs(sensorData.accelerometer.y) + Math.abs(sensorData.accelerometer.z)) * 25) : 78,
-    stress: sensorData.accelerometer.active ? 
-      Math.max(5, Math.min(30, Math.abs(sensorData.accelerometer.x + sensorData.accelerometer.y) * 8)) : 15,
-    batteryLevel: sensorData.battery.active ? sensorData.battery.level : 85,
-    location: {
-      lat: sensorData.location.active ? sensorData.location.lat : 38.8833333,
-      lng: sensorData.location.active ? sensorData.location.lng : -77.0000000,
-      accuracy: sensorData.location.active ? sensorData.location.accuracy : 10
-    },
-    threatLevel: sensorData.accelerometer.active && sensorData.location.active ? 
-      (Math.abs(sensorData.accelerometer.x + sensorData.accelerometer.y + sensorData.accelerometer.z) > 15 ? "Medium" : "Low") : "Monitoring"
+    heartRate: realTimeData?.heartRate?.bpm || null,
+    activity: realTimeData?.motion ? Math.min(100, (Math.abs(realTimeData.motion.acceleration.x) + Math.abs(realTimeData.motion.acceleration.y) + Math.abs(realTimeData.motion.acceleration.z)) * 25) : null,
+    stress: realTimeData?.motion ? Math.max(5, Math.min(30, Math.abs(realTimeData.motion.acceleration.x + realTimeData.motion.acceleration.y) * 8)) : null,
+    batteryLevel: realTimeData?.battery?.level || null,
+    location: realTimeData?.location ? {
+      lat: realTimeData.location.latitude,
+      lng: realTimeData.location.longitude,
+      accuracy: realTimeData.location.accuracy
+    } : null,
+    threatLevel: realTimeData?.motion && realTimeData?.location ? 
+      (Math.abs(realTimeData.motion.acceleration.x + realTimeData.motion.acceleration.y + realTimeData.motion.acceleration.z) > 15 ? "Medium" : "Low") : null
   };
 };
 import { RealTimeBiometrics } from "@/components/RealTimeBiometrics";
@@ -60,7 +57,7 @@ export default function ToolsComprehensive() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { sensorData, permissions, requestPermissions } = useSafeDeviceSensors();
+  const { capabilities, realTimeData, isScanning } = useRealDeviceScanner();
   const [activeTab, setActiveTab] = useState("overview");
   const [emergencyMode, setEmergencyMode] = useState(false);
 
@@ -552,9 +549,9 @@ export default function ToolsComprehensive() {
           {/* Wellness Analytics Tab */}
           <TabsContent value="wellness-analytics" className="space-y-6">
             <RealTimeBiometrics 
-              sensorData={sensorData} 
-              permissions={permissions} 
-              requestPermissions={requestPermissions} 
+              sensorData={realTimeData} 
+              permissions={capabilities} 
+              requestPermissions={() => {}} 
             />
           </TabsContent>
 

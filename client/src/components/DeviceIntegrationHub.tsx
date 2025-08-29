@@ -85,11 +85,31 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Real-time Status Overview */}
-        <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
+        <Card className={`${
+          capabilities.filter(cap => cap.status === 'available' || cap.status === 'connected').length >= 3
+            ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20'
+            : capabilities.filter(cap => cap.status === 'available' || cap.status === 'connected').length >= 1
+            ? 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'
+            : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20'
+        }`}>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-3">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <h3 className="font-semibold text-green-800 dark:text-green-200">All Systems Normal</h3>
+              {capabilities.filter(cap => cap.status === 'available' || cap.status === 'connected').length >= 3 ? (
+                <>
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <h3 className="font-semibold text-green-800 dark:text-green-200">All Systems Normal</h3>
+                </>
+              ) : capabilities.filter(cap => cap.status === 'available' || cap.status === 'connected').length >= 1 ? (
+                <>
+                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                  <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Limited Device Access</h3>
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="h-5 w-5 text-red-600" />
+                  <h3 className="font-semibold text-red-800 dark:text-red-200">No Device Access</h3>
+                </>
+              )}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
               {capabilities.map((cap) => (
