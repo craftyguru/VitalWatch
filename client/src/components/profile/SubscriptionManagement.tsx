@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "wouter";
+import { useSubscription } from "@/hooks/useSubscription";
 import { 
   Crown, 
   CreditCard, 
@@ -13,10 +14,43 @@ import {
   ArrowRight,
   Gift,
   Star,
-  Zap
+  Zap,
+  Loader2
 } from "lucide-react";
 
 export function SubscriptionManagement() {
+  const features = useSubscription();
+  
+  // Calculate actual trial progress
+  const calculateTrialProgress = () => {
+    if (!features.isInTrial) return { daysUsed: 0, totalDays: 14, percentage: 0 };
+    
+    const trialStartDate = new Date();
+    trialStartDate.setDate(trialStartDate.getDate() - (14 - features.trialDaysLeft));
+    const daysUsed = 14 - features.trialDaysLeft;
+    const percentage = (daysUsed / 14) * 100;
+    
+    return { daysUsed, totalDays: 14, percentage };
+  };
+  
+  // Calculate next billing date (trial end date for trial users)
+  const getNextBillingDate = () => {
+    if (features.isInTrial) {
+      const nextBilling = new Date();
+      nextBilling.setDate(nextBilling.getDate() + features.trialDaysLeft);
+      return nextBilling.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+    // For paid subscriptions, we'd get this from Stripe
+    return 'Not available';
+  };
+  
+  const trialProgress = calculateTrialProgress();
+  const nextBillingDate = getNextBillingDate();
+  
   return (
     <div className="space-y-6">
       {/* Current Plan */}
@@ -34,37 +68,48 @@ export function SubscriptionManagement() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-white/50 dark:bg-slate-900/50 rounded-lg">
               <Calendar className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Next Billing</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">Sep 15, 2025</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                {features.isProTrial ? 'Trial Ends' : 'Next Billing'}
+              </p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{nextBillingDate}</p>
             </div>
             
             <div className="text-center p-4 bg-white/50 dark:bg-slate-900/50 rounded-lg">
               <CreditCard className="h-8 w-8 text-green-500 mx-auto mb-2" />
               <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Monthly Cost</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">$9.99</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                {features.isProTrial ? 'Free Trial' : '$9.99'}
+              </p>
             </div>
             
             <div className="text-center p-4 bg-white/50 dark:bg-slate-900/50 rounded-lg">
               <Star className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Features</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">Unlimited</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Current Plan</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{features.planName}</p>
             </div>
           </div>
           
-          <Alert className="border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-950">
-            <Gift className="h-4 w-4 text-yellow-600" />
-            <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-              You're currently in your <strong>14-day free trial</strong>. Trial ends on September 1, 2025.
-            </AlertDescription>
-          </Alert>
+          {features.isProTrial && (
+            <Alert className="border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-950">
+              <Gift className="h-4 w-4 text-yellow-600" />
+              <AlertDescription className="text-yellow-700 dark:text-yellow-300">
+                You're currently in your <strong>14-day free trial</strong>. 
+                {features.trialDaysLeft > 0 
+                  ? `${features.trialDaysLeft} days remaining.` 
+                  : 'Trial has ended.'}
+              </AlertDescription>
+            </Alert>
+          )}
           
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span>Trial Progress</span>
-              <span>7 of 14 days used</span>
+          {features.isProTrial && (
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span>Trial Progress</span>
+                <span>{trialProgress.daysUsed} of {trialProgress.totalDays} days used</span>
+              </div>
+              <Progress value={trialProgress.percentage} className="w-full" />
             </div>
-            <Progress value={50} className="w-full" />
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -133,7 +178,9 @@ export function SubscriptionManagement() {
               <CreditCard className="h-5 w-5 text-slate-600 dark:text-slate-400" />
               <div>
                 <p className="font-medium">Payment Method</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">•••• •••• •••• 4242</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {features.isInTrial ? 'No payment required during trial' : 'No payment method on file'}
+                </p>
               </div>
             </div>
             <Button variant="outline" size="sm">Update</Button>
