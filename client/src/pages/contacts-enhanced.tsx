@@ -460,19 +460,20 @@ export default function ContactsEnhanced() {
       </div>
 
       {/* Add Contact Dialog */}
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <UserPlus className="h-5 w-5" />
-            <span>Add Emergency Contact</span>
-          </DialogTitle>
-          <DialogDescription>
-            Add a trusted contact who will be notified during emergencies. Ensure they are aware of their role as your emergency contact.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <Form {...addForm}>
-          <form onSubmit={addForm.handleSubmit(handleAddContact)} className="space-y-6">
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <UserPlus className="h-5 w-5" />
+              <span>Add Emergency Contact</span>
+            </DialogTitle>
+            <DialogDescription>
+              Add a trusted contact who will be notified during emergencies. Ensure they are aware of their role as your emergency contact.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...addForm}>
+            <form onSubmit={addForm.handleSubmit(handleAddContact)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={addForm.control}
@@ -603,6 +604,7 @@ export default function ContactsEnhanced() {
           </form>
         </Form>
       </DialogContent>
+      </Dialog>
     </div>
   );
 }

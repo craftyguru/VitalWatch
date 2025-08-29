@@ -1,0 +1,87 @@
+You’re hitting a Radix/shadcn structure error. In short: you’re rendering <DialogContent/> (which internally mounts a DialogPortal) without a matching parent <Dialog/> in the same render tree. When that happens, Radix throws:
+
+DialogPortal must be used within Dialog
+
+That crash stops React from committing updates, which is why your buttons feel “unclickable”.
+
+Fix pattern (shadcn / Radix Dialog)
+
+Every dialog must follow this exact nesting (same tree, no conditional gaps):
+
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter"; // you’re using wouter
+
+export function SafetyNetworkCard() {
+  const [, navigate] = useLocation();
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div className="rounded-2xl p-6">
+      {/* Manage button -> navigate to contacts page */}
+      <div className="flex justify-end">
+        <Button variant="outline" onClick={() => navigate("/contacts")}>
+          + Manage
+        </Button>
+      </div>
+
+      {/* Add First Contact -> opens dialog */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button size="lg" className="mt-6" data-testid="add-first-contact">
+            + Add Your First Contact
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="sm:max-w-[520px]">
+          <DialogHeader>
+            <DialogTitle>Add Emergency Contact</DialogTitle>
+            <DialogDescription>
+              This contact will be notified during emergencies.
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* your form fields here */}
+          {/* <ContactForm onSuccess={() => setOpen(false)} /> */}
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="submit" form="contact-form">Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+What to check in your code (likely in home-enhanced.tsx and contacts-enhanced.tsx)
+
+No orphaned content: Remove any <DialogContent/> (or components that re-export it) that are rendered outside a <Dialog/>.
+
+No duplicate <Dialog/> wrappers: Don’t nest a <Dialog/> inside another <Dialog/> for the same modal. Keep exactly one.
+
+Don’t conditionally separate pieces: If you do {open && <DialogContent/>}, make sure that content is still inside the same <Dialog open={open} ...>...</Dialog>.
+
+Consistent imports: Import all dialog parts from @/components/ui/dialog (your shadcn wrapper), not a mix of @radix-ui/react-dialog and shadcn.
+
+Controlled state or default: Use either open/onOpenChange (controlled) or just <Dialog><DialogTrigger/><DialogContent/></Dialog> (uncontrolled). Don’t mix with your own portal.
+
+Routes: Your “Manage” button should navigate with Wouter:
+
+const [, navigate] = useLocation();
+<Button onClick={() => navigate("/contacts")}>+ Manage</Button>
+
+Why your buttons didn’t work
+
+The thrown error stops React from completing the render/commit cycle, so click handlers never attach. Once the dialog tree is fixed, the buttons will work (and you won’t see the red stack trace).
