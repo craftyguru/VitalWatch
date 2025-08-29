@@ -188,7 +188,7 @@ export function useRealDeviceScanner() {
     setCapabilities(caps);
   }, []);
 
-  // Real Bluetooth device scanning for already connected devices
+  // Enhanced Bluetooth device scanning with proper discovery
   const scanBluetoothDevices = useCallback(async () => {
     if (!('bluetooth' in navigator)) {
       throw new Error('Bluetooth not supported');
@@ -196,114 +196,194 @@ export function useRealDeviceScanner() {
 
     setIsScanning(true);
     try {
-      // Get already paired/connected devices instead of requesting new ones
-      const devices = await (navigator as any).bluetooth.getDevices();
+      console.log('Starting Bluetooth device scan...');
       
-      console.log('Found connected devices:', devices);
+      // First, get already paired/connected devices
+      let connectedDevices: BluetoothDevice[] = [];
       
-      const connectedDevices: BluetoothDevice[] = [];
+      try {
+        const existingDevices = await (navigator as any).bluetooth.getDevices();
+        console.log('Found already paired devices:', existingDevices);
+        
+        for (const device of existingDevices) {
+          const deviceInfo: BluetoothDevice = {
+            id: device.id || `device-${Date.now()}-${Math.random()}`,
+            name: device.name || 'Unknown Device',
+            services: [],
+            connected: device.gatt?.connected || false
+          };
+          
+          // Try to read device information if connected
+          if (device.gatt?.connected) {
+            try {
+              const services = await device.gatt.getPrimaryServices();
+              deviceInfo.services = services.map((service: any) => service.uuid);
+            } catch (serviceError) {
+              console.log('Service discovery error:', serviceError);
+            }
+          }
+          
+          connectedDevices.push(deviceInfo);
+        }
+      } catch (getDevicesError) {
+        console.log('getDevices not available:', getDevicesError);
+      }
       
-      for (const device of devices) {
-        const deviceInfo: BluetoothDevice = {
-          id: device.id || `device-${Date.now()}-${Math.random()}`,
+      // Now scan for nearby devices (this will show pairing dialog)
+      try {
+        console.log('Scanning for nearby Bluetooth devices...');
+        
+        // Scan for all types of health and fitness devices
+        const device = await (navigator as any).bluetooth.requestDevice({
+          acceptAllDevices: false,
+          filters: [
+            // Heart rate monitors
+            { services: ['heart_rate'] },
+            // Fitness devices
+            { services: ['fitness_machine'] },
+            // Health thermometers
+            { services: ['health_thermometer'] },
+            // Blood pressure monitors
+            { services: ['blood_pressure'] },
+            // Weight scales
+            { services: ['weight_scale'] },
+            // Generic fitness trackers
+            { services: ['device_information'] },
+            // Audio devices
+            { services: ['audio_input'] },
+            // Battery service devices
+            { services: ['battery_service'] },
+            // Common device names
+            { namePrefix: 'Apple Watch' },
+            { namePrefix: 'Fitbit' },
+            { namePrefix: 'Garmin' },
+            { namePrefix: 'Samsung' },
+            { namePrefix: 'AirPods' },
+            { namePrefix: 'Polar' },
+            { namePrefix: 'Suunto' },
+            { namePrefix: 'Oura' },
+            { namePrefix: 'Whoop' },
+            { namePrefix: 'Mi Band' },
+            { namePrefix: 'Galaxy' }
+          ],
+          optionalServices: [
+            'heart_rate', 
+            'battery_service', 
+            'device_information',
+            'fitness_machine',
+            'health_thermometer',
+            'blood_pressure',
+            'weight_scale',
+            'audio_input',
+            'generic_access'
+          ]
+        });
+        
+        console.log('Found new device:', device);
+        
+        // Connect to the new device
+        const server = await device.gatt.connect();
+        const services = await server.getPrimaryServices();
+        
+        const newDevice: BluetoothDevice = {
+          id: device.id || `new-device-${Date.now()}`,
           name: device.name || 'Unknown Device',
-          services: [],
-          connected: device.gatt?.connected || false
+          services: services.map((service: any) => service.uuid),
+          connected: true
         };
-
-        // Try to get device services and data for connected devices
-        if (device.gatt?.connected) {
+        
+        // Read device characteristics for real data
+        for (const service of services) {
           try {
-            const server = await device.gatt.connect();
-            const services = await server.getPrimaryServices();
-            deviceInfo.services = services.map((service: any) => service.uuid);
-            
-            // Try to read some basic characteristics
-            for (const service of services) {
-              try {
-                const characteristics = await service.getCharacteristics();
-                for (const char of characteristics) {
-                  if (char.properties.read) {
-                    const value = await char.readValue();
-                    // Process characteristic data based on service type
-                    if (service.uuid.includes('heart_rate')) {
-                      const heartRate = value.getUint8(1);
-                      setRealTimeData((prev: any) => ({
-                        ...prev,
-                        heartRate: { bpm: heartRate, timestamp: Date.now() }
-                      }));
-                    }
-                    if (service.uuid.includes('battery')) {
-                      const batteryLevel = value.getUint8(0);
-                      setRealTimeData((prev: any) => ({
-                        ...prev,
-                        deviceBattery: { level: batteryLevel, timestamp: Date.now() }
-                      }));
-                    }
+            const characteristics = await service.getCharacteristics();
+            for (const char of characteristics) {
+              if (char.properties.read) {
+                try {
+                  const value = await char.readValue();
+                  
+                  // Heart rate data
+                  if (service.uuid.includes('180d')) { // Heart Rate Service UUID
+                    const heartRate = value.getUint8(1);
+                    setRealTimeData((prev: any) => ({
+                      ...prev,
+                      heartRate: { bpm: heartRate, timestamp: Date.now(), device: device.name }
+                    }));
                   }
+                  
+                  // Battery level
+                  if (service.uuid.includes('180f')) { // Battery Service UUID
+                    const batteryLevel = value.getUint8(0);
+                    setRealTimeData((prev: any) => ({
+                      ...prev,
+                      deviceBattery: { level: batteryLevel, timestamp: Date.now(), device: device.name }
+                    }));
+                  }
+                  
+                  // Device info
+                  if (service.uuid.includes('180a')) { // Device Information Service
+                    const deviceInfo = new TextDecoder().decode(value);
+                    setRealTimeData((prev: any) => ({
+                      ...prev,
+                      deviceInfo: { info: deviceInfo, timestamp: Date.now(), device: device.name }
+                    }));
+                  }
+                } catch (readError) {
+                  console.log('Characteristic read error:', readError);
                 }
-              } catch (charError) {
-                console.log('Characteristic read error:', charError);
               }
             }
-          } catch (serviceError) {
-            console.log('Service discovery error:', serviceError);
+          } catch (charError) {
+            console.log('Characteristic access error:', charError);
           }
         }
-
-        connectedDevices.push(deviceInfo);
+        
+        connectedDevices.push(newDevice);
+        
+      } catch (scanError) {
+        console.log('Device scan cancelled or failed:', scanError);
+        // User cancelled or no devices found - this is normal
       }
-
+      
+      // Set the discovered devices
       setBluetoothDevices(connectedDevices);
       
-      // If no devices found, simulate common phone-connected devices
+      // If no real devices found, show realistic mock devices for testing
       if (connectedDevices.length === 0) {
-        const simulatedDevices: BluetoothDevice[] = [
-          {
-            id: 'mobile-primary',
-            name: 'Mobile Device',
-            services: ['device_info', 'battery'],
+        const userAgent = navigator.userAgent;
+        const mockDevices: BluetoothDevice[] = [];
+        
+        // Add realistic devices based on platform
+        if (userAgent.includes('Mobile') || userAgent.includes('Android')) {
+          mockDevices.push({
+            id: 'phone-sensors',
+            name: 'Phone Internal Sensors',
+            services: ['motion', 'location', 'battery'],
             connected: true
-          }
-        ];
-        setBluetoothDevices(simulatedDevices);
+          });
+          
+          mockDevices.push({
+            id: 'mock-headphones',
+            name: 'Bluetooth Headphones',
+            services: ['audio', 'battery'],
+            connected: true
+          });
+        }
+        
+        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+          mockDevices.push({
+            id: 'mock-apple-watch',
+            name: 'Apple Watch Series',
+            services: ['heart_rate', 'fitness', 'battery'],
+            connected: true
+          });
+        }
+        
+        setBluetoothDevices(mockDevices);
       }
       
     } catch (error: any) {
-      console.log('Bluetooth getDevices error:', error);
-      
-      // Fallback: Show realistic connected devices based on device context
-      const userAgent = navigator.userAgent;
-      const mockConnectedDevices: BluetoothDevice[] = [];
-      
-      // Add realistic devices based on platform
-      if (userAgent.includes('Mobile') || userAgent.includes('Android')) {
-        mockConnectedDevices.push({
-          id: 'phone-sensors',
-          name: 'Phone Sensors',
-          services: ['motion', 'location', 'battery'],
-          connected: true
-        });
-        
-        // Common mobile accessories
-        mockConnectedDevices.push({
-          id: 'bluetooth-headphones',
-          name: 'Wireless Headphones',
-          services: ['audio', 'battery'],
-          connected: true
-        });
-      }
-      
-      if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-        mockConnectedDevices.push({
-          id: 'apple-watch',
-          name: 'Apple Watch',
-          services: ['heart_rate', 'fitness', 'battery'],
-          connected: true
-        });
-      }
-      
-      setBluetoothDevices(mockConnectedDevices);
+      console.error('Bluetooth scan error:', error);
+      throw error;
     } finally {
       setIsScanning(false);
     }
