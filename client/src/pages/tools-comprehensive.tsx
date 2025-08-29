@@ -53,6 +53,7 @@ import EnhancedGroundingExercise from "@/components/ui/enhanced-grounding-exerci
 import CrisisChatSupport from "@/components/ui/crisis-chat-support";
 
 import AdvancedSafetyTools from "@/components/ui/advanced-safety-tools";
+import { EmergencyContactManager } from "@/components/EmergencyContactManager";
 
 export default function ToolsComprehensive() {
   const { user } = useAuth();
@@ -109,6 +110,37 @@ export default function ToolsComprehensive() {
 
 
   // Real panic button functionality
+  // Request permissions for device sensors
+  const requestPermissions = async () => {
+    try {
+      // Request device motion permissions
+      if (typeof DeviceMotionEvent !== 'undefined' && typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+        await (DeviceMotionEvent as any).requestPermission();
+      }
+      
+      // Request device orientation permissions
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+        await (DeviceOrientationEvent as any).requestPermission();
+      }
+      
+      // Request notification permissions
+      if ('Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+      
+      toast({
+        title: "Permissions Granted",
+        description: "Device sensors and notifications enabled for enhanced safety monitoring",
+      });
+    } catch (error) {
+      toast({
+        title: "Permission Error",
+        description: "Some permissions were denied. Emergency features may be limited.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const triggerPanicButton = () => {
     setEmergencyMode(true);
     
@@ -552,7 +584,7 @@ export default function ToolsComprehensive() {
             <ComprehensiveWellnessAnalytics 
               sensorData={realTimeData} 
               permissions={capabilities} 
-              requestPermissions={() => {}} 
+              requestPermissions={requestPermissions} 
             />
           </TabsContent>
 
