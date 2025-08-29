@@ -17,7 +17,8 @@ import {
   analyzeThreatLevel,
   analyzeComprehensiveThreat,
   analyzeBiometrics,
-  analyzeEnvironmental
+  analyzeEnvironmental,
+  generateCrisisChatResponse
 } from "./services/openai";
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
 import { sendCrisisResourcesSMS, sendEmergencyAlertSMS, sendSMS } from "./services/twilio";
@@ -27,11 +28,14 @@ import {
   insertEmergencyIncidentSchema,
   insertCopingToolsUsageSchema,
   updateUserSettingsSchema,
+  insertChatMessageSchema,
   users,
   emergencyIncidents,
   aiInsights,
   moodEntries,
-  emergencyContacts
+  emergencyContacts,
+  crisisChatSessions,
+  chatMessages
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, lte, lt, sql } from "drizzle-orm";
@@ -438,6 +442,130 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating insight:", error);
       res.status(500).json({ message: "Failed to generate insight" });
+    }
+  });
+
+  // Crisis Chat API Endpoints
+  app.post('/api/crisis-chat/session', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const sessionId = crypto.randomUUID();
+      
+      const session = await storage.createCrisisChatSession(userId);
+      
+      // Initialize the session with a welcome message
+      const welcomeMessage = await storage.createChatMessage(userId, {
+        sessionId: session.sessionId,
+        sender: 'ai',
+        content: "Hello, I'm here to provide support and listen to whatever you're going through. You're not alone, and it takes courage to reach out. How are you feeling right now?",
+        messageType: 'text',
+        urgency: 'low',
+        metadata: { isWelcome: true }
+      });
+      
+      res.json({ session, welcomeMessage });
+    } catch (error) {
+      console.error('Error creating crisis chat session:', error);
+      res.status(500).json({ message: 'Failed to create chat session' });
+    }
+  });
+
+  app.get('/api/crisis-chat/messages/:sessionId', isAuthenticated, async (req: any, res) => {
+    try {
+      const { sessionId } = req.params;
+      const userId = req.user.id;
+      
+      // Verify user owns this session
+      const session = await storage.getCrisisChatSession(sessionId);
+      if (!session || session.userId !== userId) {
+        return res.status(403).json({ message: 'Access denied to chat session' });
+      }
+      
+      const messages = await storage.getChatMessages(sessionId);
+      res.json(messages);
+    } catch (error) {
+      console.error('Error fetching chat messages:', error);
+      res.status(500).json({ message: 'Failed to fetch chat messages' });
+    }
+  });
+
+  app.post('/api/crisis-chat/message', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const messageData = insertChatMessageSchema.parse(req.body);
+      
+      // Verify user owns this session
+      const session = await storage.getCrisisChatSession(messageData.sessionId);
+      if (!session || session.userId !== userId) {
+        return res.status(403).json({ message: 'Access denied to chat session' });
+      }
+      
+      // Save user message
+      const userMessage = await storage.createChatMessage(userId, messageData);
+      
+      // Get conversation history for context
+      const conversationHistory = await storage.getChatMessages(messageData.sessionId);
+      
+      // Get user context for better AI responses
+      const recentMoods = await storage.getMoodEntries(userId, 5);
+      const emergencyHistory = await storage.getEmergencyIncidents(userId);
+      
+      // Generate AI response
+      const aiResponse = await generateCrisisChatResponse(
+        messageData.content,
+        conversationHistory.slice(-10), // Last 10 messages for context
+        messageData.urgency || 'medium',
+        { recentMoods, emergencyHistory }
+      );
+      
+      // Save AI response
+      const aiMessage = await storage.createChatMessage(userId, {
+        sessionId: messageData.sessionId,
+        sender: 'ai',
+        content: aiResponse.response,
+        messageType: aiResponse.needsEscalation ? 'escalation' : 'text',
+        urgency: aiResponse.urgency,
+        metadata: { 
+          needsEscalation: aiResponse.needsEscalation,
+          resources: aiResponse.resources 
+        }
+      });
+      
+      // If escalation is needed, create AI insight
+      if (aiResponse.needsEscalation) {
+        await storage.createAIInsight(userId, {
+          type: 'crisis_escalation',
+          insight: `Crisis escalation recommended based on chat content: ${messageData.content.substring(0, 100)}...`,
+          confidence: '0.90',
+          isActionable: true,
+          isRead: false,
+          metadata: { sessionId: messageData.sessionId, urgency: aiResponse.urgency }
+        });
+      }
+      
+      res.json({ userMessage, aiMessage, needsEscalation: aiResponse.needsEscalation });
+    } catch (error) {
+      console.error('Error processing chat message:', error);
+      res.status(500).json({ message: 'Failed to process chat message' });
+    }
+  });
+
+  app.patch('/api/crisis-chat/session/:sessionId', isAuthenticated, async (req: any, res) => {
+    try {
+      const { sessionId } = req.params;
+      const userId = req.user.id;
+      
+      // Verify user owns this session
+      const session = await storage.getCrisisChatSession(sessionId);
+      if (!session || session.userId !== userId) {
+        return res.status(403).json({ message: 'Access denied to chat session' });
+      }
+      
+      const updatedSession = await storage.updateCrisisChatSession(sessionId, req.body);
+      res.json(updatedSession);
+    } catch (error) {
+      console.error('Error updating crisis chat session:', error);
+      res.status(500).json({ message: 'Failed to update chat session' });
     }
   });
 

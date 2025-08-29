@@ -6,6 +6,7 @@ import {
   copingToolsUsage,
   aiInsights,
   crisisChatSessions,
+  chatMessages,
   userSettings,
   type User,
   type UpsertUser,
@@ -19,6 +20,8 @@ import {
   type InsertCopingToolsUsage,
   type AIInsight,
   type CrisisChatSession,
+  type ChatMessage,
+  type InsertChatMessage,
   type UserSettings,
   type UpdateUserSettings,
 } from "@shared/schema";
@@ -70,6 +73,10 @@ export interface IStorage {
   createCrisisChatSession(userId: string): Promise<CrisisChatSession>;
   updateCrisisChatSession(sessionId: string, updates: Partial<CrisisChatSession>): Promise<CrisisChatSession>;
   getCrisisChatSession(sessionId: string): Promise<CrisisChatSession | undefined>;
+  
+  // Chat messages
+  getChatMessages(sessionId: string): Promise<ChatMessage[]>;
+  createChatMessage(userId: string, message: InsertChatMessage): Promise<ChatMessage>;
 
   // User settings
   getUserSettings(userId: string): Promise<UserSettings | undefined>;
@@ -330,6 +337,22 @@ export class DatabaseStorage implements IStorage {
       .from(crisisChatSessions)
       .where(eq(crisisChatSessions.sessionId, sessionId));
     return session;
+  }
+
+  async getChatMessages(sessionId: string): Promise<ChatMessage[]> {
+    return await db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages.sessionId, sessionId))
+      .orderBy(chatMessages.createdAt);
+  }
+
+  async createChatMessage(userId: string, message: InsertChatMessage): Promise<ChatMessage> {
+    const [newMessage] = await db
+      .insert(chatMessages)
+      .values({ ...message, userId })
+      .returning();
+    return newMessage;
   }
 
   async getUserSettings(userId: string): Promise<UserSettings | undefined> {

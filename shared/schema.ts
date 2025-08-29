@@ -129,6 +129,19 @@ export const crisisChatSessions = pgTable("crisis_chat_sessions", {
   endedAt: timestamp("ended_at"),
 });
 
+// Chat messages for crisis support
+export const chatMessages = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  sessionId: text("session_id").notNull().references(() => crisisChatSessions.sessionId, { onDelete: "cascade" }),
+  sender: text("sender").notNull(), // 'user' | 'ai' | 'system'
+  content: text("content").notNull(),
+  messageType: text("message_type").default("text"), // 'text' | 'suggestion' | 'resource' | 'escalation'
+  urgency: text("urgency"), // 'low' | 'medium' | 'high' | 'critical'
+  metadata: jsonb("metadata"), // Additional data like crisis level, resources, etc.
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // User preferences and settings
 export const userSettings = pgTable("user_settings", {
   id: serial("id").primaryKey(),
@@ -199,3 +212,15 @@ export type UserSettings = typeof userSettings.$inferSelect;
 
 export type AIInsight = typeof aiInsights.$inferSelect;
 export type CrisisChatSession = typeof crisisChatSessions.$inferSelect;
+export type ChatMessage = typeof chatMessages.$inferSelect;
+
+export const insertChatMessageSchema = createInsertSchema(chatMessages).pick({
+  sessionId: true,
+  sender: true,
+  content: true,
+  messageType: true,
+  urgency: true,
+  metadata: true,
+});
+
+export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;

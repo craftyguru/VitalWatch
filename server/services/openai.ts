@@ -385,6 +385,79 @@ function analyzeEnvironmental(environmental: any) {
   };
 }
 
+async function generateCrisisChatResponse(
+  userMessage: string,
+  conversationHistory: Array<{ sender: string; content: string; timestamp: Date }>,
+  crisisLevel: 'low' | 'medium' | 'high' | 'critical' = 'medium',
+  userContext?: { recentMoods?: any[], emergencyHistory?: any[] }
+): Promise<{ response: string; urgency: 'low' | 'medium' | 'high' | 'critical'; needsEscalation: boolean; resources?: any[] }> {
+  try {
+    const systemPrompt = `You are a compassionate AI crisis counselor trained in suicide prevention, mental health support, and crisis intervention. 
+    Your role is to provide immediate emotional support, assess risk levels, and guide users to appropriate resources.
+    
+    Guidelines:
+    - Always prioritize user safety and well-being
+    - Validate feelings and provide hope
+    - Use active listening techniques and empathetic responses
+    - Ask clarifying questions to understand the situation better
+    - If user mentions self-harm, suicidal thoughts, or harm to others, escalate immediately
+    - Provide concrete coping strategies and grounding techniques
+    - Encourage professional help when appropriate
+    - Never provide medical diagnoses or treatment advice
+    
+    Current crisis level: ${crisisLevel}
+    
+    Respond naturally and compassionately. Include urgency level (low/medium/high/critical) and indicate if professional escalation is needed.
+    
+    Response format: JSON {
+      "response": "your empathetic response",
+      "urgency": "low|medium|high|critical", 
+      "needsEscalation": boolean,
+      "resources": [optional array of crisis resources if needed]
+    }`;
+
+    const conversationContext = conversationHistory.length > 0 ? 
+      `Previous conversation:\n${conversationHistory.slice(-10).map(msg => 
+        `${msg.sender}: ${msg.content}`
+      ).join('\n')}\n\n` : '';
+
+    const userPrompt = `${conversationContext}User: ${userMessage}
+    
+    Please provide a supportive, personalized response that addresses their specific needs and emotional state.`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7, // Slightly higher for more natural responses
+    });
+
+    const aiResponse = JSON.parse(response.choices[0].message.content!);
+    
+    return {
+      response: aiResponse.response || "I'm here to support you. Can you tell me more about how you're feeling?",
+      urgency: aiResponse.urgency || crisisLevel,
+      needsEscalation: aiResponse.needsEscalation || false,
+      resources: aiResponse.resources || []
+    };
+  } catch (error) {
+    console.error("Crisis chat response failed:", error);
+    // Fallback response for safety
+    return {
+      response: "I'm here to listen and support you. If you're in immediate danger, please call 911 or the National Suicide Prevention Lifeline at 988.",
+      urgency: 'high',
+      needsEscalation: userMessage.toLowerCase().includes('suicide') || userMessage.toLowerCase().includes('kill') || userMessage.toLowerCase().includes('harm'),
+      resources: [
+        { type: "call", label: "Call 988", action: "988" },
+        { type: "emergency", label: "Emergency Services", action: "911" }
+      ]
+    };
+  }
+}
+
 export { 
   generatePersonalizedInsight, 
   analyzeMoodEntry, 
@@ -393,5 +466,6 @@ export {
   analyzeThreatLevel,
   analyzeComprehensiveThreat,
   analyzeBiometrics,
-  analyzeEnvironmental
+  analyzeEnvironmental,
+  generateCrisisChatResponse
 };

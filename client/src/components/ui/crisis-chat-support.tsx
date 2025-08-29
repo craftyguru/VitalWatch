@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,41 +12,36 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { 
   MessageCircle, 
-  Send, 
-  Bot, 
-  User, 
+  Phone, 
+  AlertTriangle, 
   Heart, 
-  AlertTriangle,
-  Clock,
-  Shield,
-  Zap,
-  Brain,
+  Shield, 
   Headphones,
-  Phone,
-  Video,
-  Settings,
-  TrendingUp,
-  Award,
-  Star,
-  CheckCircle2,
+  Send,
   Mic,
   MicOff,
   Volume2,
-  VolumeX
+  VolumeX,
+  Activity,
+  Clock,
+  TrendingUp,
+  Users,
+  CheckCircle
 } from "lucide-react";
+
+interface ChatMessage {
+  id: string;
+  sender: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+  messageType?: string;
+  urgency?: 'low' | 'medium' | 'high' | 'critical';
+  metadata?: any;
+}
 
 interface CrisisChatSupportProps {
   crisisLevel?: 'low' | 'medium' | 'high' | 'critical';
   onEmergencyTrigger?: () => void;
-}
-
-interface ChatMessage {
-  id: string;
-  sender: 'user' | 'ai' | 'system';
-  content: string;
-  timestamp: Date;
-  type: 'text' | 'suggestion' | 'resource' | 'escalation';
-  urgency?: 'low' | 'medium' | 'high' | 'critical';
 }
 
 interface SupportResource {
@@ -59,22 +56,86 @@ export default function CrisisChatSupport({
   crisisLevel = 'medium', 
   onEmergencyTrigger 
 }: CrisisChatSupportProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [currentSession, setCurrentSession] = useState<string | null>(null);
   const [voiceMode, setVoiceMode] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [emergencyMode, setEmergencyMode] = useState(false);
-  const [sessionStats, setSessionStats] = useState({
-    totalSessions: 23,
-    averageSessionLength: 12,
-    crisisDetections: 3,
-    successfulDeescalations: 18
-  });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Fetch chat messages for current session
+  const { data: messages = [], isLoading: loadingMessages } = useQuery({
+    queryKey: ['/api/crisis-chat/messages', currentSession],
+    enabled: !!currentSession,
+  });
+
+  // Create new chat session
+  const createSessionMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/crisis-chat/session');
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setCurrentSession(data.session.sessionId);
+      queryClient.invalidateQueries({ queryKey: ['/api/crisis-chat/messages'] });
+      toast({
+        title: "Crisis Support Connected",
+        description: "AI counselor is ready to help",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Connection Failed", 
+        description: "Unable to start chat session. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Send message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: async (messageData: { 
+      sessionId: string; 
+      sender: string; 
+      content: string; 
+      urgency?: string;
+      messageType?: string;
+    }) => {
+      const response = await apiRequest('POST', '/api/crisis-chat/message', messageData);
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/crisis-chat/messages', currentSession] });
+      
+      if (data.needsEscalation) {
+        setEmergencyMode(true);
+        toast({
+          title: "Crisis Alert",
+          description: "Escalation recommended. Professional help available.",
+          variant: "destructive",
+        });
+        
+        if (onEmergencyTrigger) {
+          onEmergencyTrigger();
+        }
+      }
+      
+      setInputMessage("");
+      setIsTyping(false);
+    },
+    onError: () => {
+      toast({
+        title: "Message Failed",
+        description: "Unable to send message. Please try again.",
+        variant: "destructive",
+      });
+      setIsTyping(false);
+    }
+  });
 
   const supportResources: SupportResource[] = [
     {
@@ -107,283 +168,150 @@ export default function CrisisChatSupport({
     }
   ];
 
-  const crisisResponses = {
-    greetings: [
-      "I'm here to support you through this difficult time. How are you feeling right now?",
-      "Thank you for reaching out. It takes courage to ask for help. What's on your mind?",
-      "I'm glad you're here. You're not alone in this. Can you tell me what's happening?",
-      "I'm here to listen and help. What would you like to talk about today?"
-    ],
-    high_risk: [
-      "I hear that you're in significant pain right now. Your feelings are valid, and I want to help you through this.",
-      "It sounds like you're going through something really difficult. Can you help me understand what's making things feel so overwhelming?",
-      "I'm concerned about what you're sharing. Have you been having thoughts of hurting yourself or others?",
-      "Right now, your safety is the most important thing. Are you somewhere safe? Is there someone who can be with you?"
-    ],
-    supportive: [
-      "You're being incredibly brave by sharing this with me. That shows real strength.",
-      "It's completely understandable to feel this way given what you're going through.",
-      "You've taken an important step by reaching out. That's something to be proud of.",
-      "These feelings are difficult, but they are temporary. We can work through this together."
-    ],
-    coping_suggestions: [
-      "Let's try a quick grounding technique together. Can you name 5 things you can see around you?",
-      "Would you like to try some breathing exercises with me? They can help calm your nervous system.",
-      "Sometimes it helps to focus on the present moment. What can you hear right now?",
-      "Have you tried any coping strategies that have helped you in the past?"
-    ]
-  };
-
   const initializeChat = () => {
-    const sessionId = Date.now().toString();
-    setCurrentSession(sessionId);
-    
-    const welcomeMessage: ChatMessage = {
-      id: Date.now().toString(),
-      sender: 'ai',
-      content: getResponseBasedOnCrisisLevel('greeting'),
-      timestamp: new Date(),
-      type: 'text',
-      urgency: 'low'
-    };
-    
-    setMessages([welcomeMessage]);
-  };
-
-  const getResponseBasedOnCrisisLevel = (context: string): string => {
-    switch (context) {
-      case 'greeting':
-        return crisisResponses.greetings[Math.floor(Math.random() * crisisResponses.greetings.length)];
-      case 'high_risk':
-        return crisisResponses.high_risk[Math.floor(Math.random() * crisisResponses.high_risk.length)];
-      case 'supportive':
-        return crisisResponses.supportive[Math.floor(Math.random() * crisisResponses.supportive.length)];
-      case 'coping':
-        return crisisResponses.coping_suggestions[Math.floor(Math.random() * crisisResponses.coping_suggestions.length)];
-      default:
-        return "I'm here to listen and support you. Please tell me more about how you're feeling.";
-    }
-  };
-
-  const analyzeMessageForRisk = (message: string): 'low' | 'medium' | 'high' | 'critical' => {
-    const highRiskWords = ['suicide', 'kill myself', 'end it all', 'not worth living', 'want to die'];
-    const mediumRiskWords = ['hopeless', 'worthless', 'can\'t go on', 'desperate', 'trapped'];
-    const lowRiskWords = ['sad', 'anxious', 'stressed', 'worried', 'upset'];
-    
-    const lowerMessage = message.toLowerCase();
-    
-    if (highRiskWords.some(word => lowerMessage.includes(word))) return 'critical';
-    if (mediumRiskWords.some(word => lowerMessage.includes(word))) return 'high';
-    if (lowRiskWords.some(word => lowerMessage.includes(word))) return 'medium';
-    
-    return 'low';
-  };
-
-  const generateAIResponse = async (userMessage: string): Promise<ChatMessage> => {
-    const riskLevel = analyzeMessageForRisk(userMessage);
-    
-    let responseContent = "";
-    let responseType: ChatMessage['type'] = 'text';
-    
-    if (riskLevel === 'critical') {
-      responseContent = getResponseBasedOnCrisisLevel('high_risk');
-      responseType = 'escalation';
-      setEmergencyMode(true);
-      
-      // Trigger emergency protocols
-      setTimeout(() => {
-        const emergencyMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          sender: 'system',
-          content: "🚨 High-risk situation detected. Emergency resources are being displayed. Please consider contacting emergency services immediately.",
-          timestamp: new Date(),
-          type: 'escalation',
-          urgency: 'critical'
-        };
-        setMessages(prev => [...prev, emergencyMessage]);
-      }, 1000);
-      
-    } else if (riskLevel === 'high') {
-      responseContent = getResponseBasedOnCrisisLevel('high_risk');
-      responseType = 'suggestion';
-    } else if (riskLevel === 'medium') {
-      responseContent = getResponseBasedOnCrisisLevel('supportive');
-    } else {
-      responseContent = getResponseBasedOnCrisisLevel('coping');
-    }
-    
-    return {
-      id: Date.now().toString(),
-      sender: 'ai',
-      content: responseContent,
-      timestamp: new Date(),
-      type: responseType,
-      urgency: riskLevel
-    };
+    createSessionMutation.mutate();
   };
 
   const sendMessage = async () => {
-    if (!inputMessage.trim()) return;
-    
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      sender: 'user',
-      content: inputMessage,
-      timestamp: new Date(),
-      type: 'text'
-    };
-    
-    setMessages(prev => [...prev, userMessage]);
-    setInputMessage("");
+    if (!inputMessage.trim() || !currentSession) return;
+
     setIsTyping(true);
     
-    // Simulate AI thinking time
-    setTimeout(async () => {
-      const aiResponse = await generateAIResponse(inputMessage);
-      setMessages(prev => [...prev, aiResponse]);
-      setIsTyping(false);
-    }, 1500 + Math.random() * 1000);
-  };
-
-  const handleEmergencyCall = (resource: SupportResource) => {
-    toast({
-      title: "Emergency Resource Activated",
-      description: `Connecting to ${resource.title}`,
-      variant: "default"
-    });
-    
-    if (onEmergencyTrigger) {
-      onEmergencyTrigger();
+    try {
+      await sendMessageMutation.mutateAsync({
+        sessionId: currentSession,
+        sender: 'user',
+        content: inputMessage.trim(),
+        urgency: crisisLevel,
+        messageType: 'text'
+      });
+    } catch (error) {
+      console.error('Failed to send message:', error);
     }
   };
 
-  // Auto-scroll to bottom
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const toggleVoiceMode = () => {
+    setVoiceMode(!voiceMode);
+    toast({
+      title: voiceMode ? "Voice Mode Disabled" : "Voice Mode Enabled",
+      description: voiceMode ? "Switched to text input" : "Voice input activated",
+    });
+  };
+
+  const formatMessageTime = (timestamp: Date | string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
+
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case 'critical': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case 'high': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      default: return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+    }
+  };
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Initialize chat on mount
-  useEffect(() => {
-    initializeChat();
-  }, []);
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
-  const getMessageStyle = (message: ChatMessage) => {
-    switch (message.urgency) {
-      case 'critical':
-        return 'bg-red-100 border-red-300 text-red-900';
-      case 'high':
-        return 'bg-orange-100 border-orange-300 text-orange-900';
-      case 'medium':
-        return 'bg-yellow-100 border-yellow-300 text-yellow-900';
-      default:
-        return message.sender === 'ai' ? 'bg-blue-100 border-blue-300 text-blue-900' : 'bg-gray-100 border-gray-300 text-gray-900';
-    }
-  };
-
   return (
-    <div className="w-full space-y-4">
-      {/* Compact Header */}
-      <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 p-4 rounded-lg border border-teal-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 min-w-0 flex-1">
-            <div className="p-2 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex-shrink-0">
-              <MessageCircle className="h-5 w-5 text-teal-600" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-semibold text-teal-900 dark:text-teal-100 truncate">
-                Crisis Chat Support
-              </h3>
-              <p className="text-sm text-teal-700 dark:text-teal-300 truncate">
-                AI-powered emotional support and guided crisis intervention available 24/7
-              </p>
-            </div>
+    <div className="w-full max-w-4xl mx-auto space-y-6" data-testid="crisis-chat-support">
+      <Card className="border-2 border-red-200 dark:border-red-800">
+        <CardHeader className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-2">
+            <Shield className="h-8 w-8 text-red-600" />
+            <CardTitle className="text-2xl font-bold text-red-700 dark:text-red-300">
+              Crisis Support Chat
+            </CardTitle>
           </div>
-          <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
-            <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300 text-xs">
-              <Star className="h-3 w-3 mr-1" />
-              4.9 Rating
+          <div className="flex items-center justify-center gap-4">
+            <Badge className={getUrgencyColor(crisisLevel)}>
+              Crisis Level: {crisisLevel.toUpperCase()}
             </Badge>
+            {emergencyMode && (
+              <Badge variant="destructive" className="animate-pulse">
+                Emergency Mode Active
+              </Badge>
+            )}
           </div>
-        </div>
-      </div>
+        </CardHeader>
+        
+        <CardContent>
+          <Tabs defaultValue="chat" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="chat" data-testid="tab-chat">Chat Support</TabsTrigger>
+              <TabsTrigger value="resources" data-testid="tab-resources">Crisis Resources</TabsTrigger>
+              <TabsTrigger value="settings" data-testid="tab-settings">Settings</TabsTrigger>
+            </TabsList>
 
-      <Tabs defaultValue="chat" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 h-9">
-          <TabsTrigger value="chat" className="text-xs">Live Chat</TabsTrigger>
-          <TabsTrigger value="resources" className="text-xs">Crisis Resources</TabsTrigger>
-          <TabsTrigger value="settings" className="text-xs">Settings</TabsTrigger>
-          <TabsTrigger value="analytics" className="text-xs">Analytics</TabsTrigger>
-        </TabsList>
-
-        {/* Chat Tab */}
-        <TabsContent value="chat" className="space-y-4">
-          {/* Main Chat Interface - Full Width */}
-          <Card className="h-[400px] flex flex-col">
-                <CardHeader className="pb-2 px-3 pt-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
-                      <span className="text-sm font-medium truncate">AI Crisis Counselor</span>
-                      <Badge variant="secondary" className="flex-shrink-0 text-xs">Online</Badge>
-                    </div>
-                    <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setVoiceMode(!voiceMode)}
-                        className="h-6 w-6 p-0"
-                      >
-                        {voiceMode ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setAudioEnabled(!audioEnabled)}
-                        className="h-6 w-6 p-0"
-                      >
-                        {audioEnabled ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
-                      </Button>
-                    </div>
+            <TabsContent value="chat" className="space-y-4">
+              {!currentSession ? (
+                <div className="text-center space-y-4">
+                  <div className="p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
+                    <Heart className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">You're Not Alone</h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      Our AI crisis counselor is here to provide immediate support and guidance.
+                      This is a safe space where you can share your feelings.
+                    </p>
+                    <Button 
+                      onClick={initializeChat}
+                      disabled={createSessionMutation.isPending}
+                      size="lg"
+                      className="bg-blue-600 hover:bg-blue-700"
+                      data-testid="button-start-chat"
+                    >
+                      {createSessionMutation.isPending ? "Connecting..." : "Start Crisis Chat"}
+                    </Button>
                   </div>
-                </CardHeader>
-                
-                <CardContent className="flex-1 flex flex-col p-0">
-                  {/* Messages Area */}
-                  <ScrollArea className="flex-1 p-3">
-                    <div className="space-y-3">
-                      {messages.map((message) => (
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <ScrollArea className="h-96 w-full border rounded-lg p-4">
+                    <div className="space-y-4">
+                      {loadingMessages && (
+                        <div className="text-center py-4">
+                          <div className="animate-spin w-6 h-6 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+                          <p className="text-sm text-gray-500 mt-2">Loading messages...</p>
+                        </div>
+                      )}
+                      
+                      {Array.isArray(messages) && messages.map((message) => (
                         <div
                           key={message.id}
                           className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                          data-testid={`message-${message.sender}-${message.id}`}
                         >
-                          <div className={`max-w-[85%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
-                            <div className={`flex items-start space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                              <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
-                                {message.sender === 'user' ? (
-                                  <User className="h-3 w-3" />
-                                ) : message.sender === 'ai' ? (
-                                  <Bot className="h-3 w-3" />
-                                ) : (
-                                  <Shield className="h-3 w-3" />
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className={`p-2 rounded-lg border ${getMessageStyle(message)}`}>
-                                  <p className="text-xs break-words leading-relaxed">{message.content}</p>
-                                  {message.type === 'escalation' && (
-                                    <div className="mt-1 pt-1 border-t border-current/20">
-                                      <p className="text-xs font-medium break-words">This message has been flagged for immediate attention.</p>
-                                    </div>
-                                  )}
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  {formatTime(message.timestamp)}
-                                </p>
-                              </div>
+                          <div
+                            className={`max-w-[80%] p-3 rounded-lg ${
+                              message.sender === 'user'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                            }`}
+                          >
+                            <p className="text-sm">{message.content}</p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="text-xs opacity-70">
+                                {formatMessageTime(message.timestamp)}
+                              </span>
+                              {message.urgency && message.urgency !== 'low' && (
+                                <Badge size="sm" className={getUrgencyColor(message.urgency)}>
+                                  {message.urgency}
+                                </Badge>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -391,16 +319,11 @@ export default function CrisisChatSupport({
                       
                       {isTyping && (
                         <div className="flex justify-start">
-                          <div className="flex items-start space-x-2">
-                            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center">
-                              <Bot className="h-3 w-3" />
-                            </div>
-                            <div className="bg-blue-100 border border-blue-300 p-2 rounded-lg">
-                              <div className="flex space-x-1">
-                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce"></div>
-                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                              </div>
+                          <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                            <div className="flex space-x-1">
+                              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                             </div>
                           </div>
                         </div>
@@ -408,237 +331,116 @@ export default function CrisisChatSupport({
                       <div ref={messagesEndRef} />
                     </div>
                   </ScrollArea>
-                  
-                  {/* Input Area */}
-                  <div className="p-3 border-t">
-                    <div className="flex space-x-2">
-                      <Input
-                        value={inputMessage}
-                        onChange={(e) => setInputMessage(e.target.value)}
-                        placeholder="Share what's on your mind... I'm here to listen."
-                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                        className="flex-1 text-sm"
-                      />
-                      <Button onClick={sendMessage} disabled={!inputMessage.trim()} size="sm">
-                        <Send className="h-3 w-3" />
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2 break-words">
-                      This AI provides support but is not a replacement for professional help. In emergencies, contact 911.
-                    </p>
+
+                  <div className="flex gap-2">
+                    <Input
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Share what's on your mind..."
+                      disabled={sendMessageMutation.isPending || isTyping}
+                      className="flex-1"
+                      data-testid="input-message"
+                    />
+                    <Button
+                      onClick={toggleVoiceMode}
+                      variant="outline"
+                      size="icon"
+                      data-testid="button-voice-toggle"
+                    >
+                      {voiceMode ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
+                    </Button>
+                    <Button
+                      onClick={sendMessage}
+                      disabled={!inputMessage.trim() || sendMessageMutation.isPending || isTyping}
+                      data-testid="button-send-message"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-
-          {/* Quick Actions and Session Info - Below Chat */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Quick Support */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Quick Support</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start text-left h-auto py-3 px-3"
-                  onClick={() => setInputMessage("I'm feeling overwhelmed and need help")}
-                >
-                  <Heart className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span className="text-sm break-words">I need immediate support</span>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start text-left h-auto py-3 px-3"
-                  onClick={() => setInputMessage("Can you guide me through a breathing exercise?")}
-                >
-                  <Brain className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span className="text-sm break-words">Breathing exercises</span>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start text-left h-auto py-3 px-3"
-                  onClick={() => setInputMessage("I'm having a panic attack")}
-                >
-                  <Zap className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span className="text-sm break-words">Panic attack help</span>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start text-left h-auto py-3 px-3"
-                  onClick={() => setInputMessage("I'm having thoughts of self-harm")}
-                >
-                  <AlertTriangle className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span className="text-sm break-words">Crisis intervention</span>
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Session Info */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Session Info</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span>Duration</span>
-                  <span className="font-medium">{currentSession ? Math.floor((Date.now() - parseInt(currentSession)) / 60000) : 0} min</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span>Messages</span>
-                  <span className="font-medium">{messages.length}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Crisis Level</span>
-                  <Badge variant="secondary" className="text-sm">{crisisLevel}</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+              )}
+            </TabsContent>
 
-        {/* Crisis Resources Tab */}
-        <TabsContent value="resources" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {supportResources.map((resource, index) => (
-              <Card 
-                key={index} 
-                className={`hover:shadow-lg transition-shadow cursor-pointer ${
-                  resource.urgency === 'critical' ? 'border-red-300 bg-red-50 dark:bg-red-950/20' : 
-                  resource.urgency === 'high' ? 'border-orange-300 bg-orange-50 dark:bg-orange-950/20' : 
-                  'border-blue-300 bg-blue-50 dark:bg-blue-950/20'
-                }`}
-                onClick={() => handleEmergencyCall(resource)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className={`p-3 rounded-lg ${
-                      resource.urgency === 'critical' ? 'bg-red-100 dark:bg-red-900/30' : 
-                      resource.urgency === 'high' ? 'bg-orange-100 dark:bg-orange-900/30' : 
-                      'bg-blue-100 dark:bg-blue-900/30'
-                    }`}>
-                      <resource.icon className={`h-6 w-6 ${
-                        resource.urgency === 'critical' ? 'text-red-600' : 
-                        resource.urgency === 'high' ? 'text-orange-600' : 
-                        'text-blue-600'
-                      }`} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold mb-2">{resource.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{resource.description}</p>
-                      <div className="flex items-center justify-between">
-                        <Badge variant={resource.urgency === 'critical' ? 'destructive' : 'secondary'}>
+            <TabsContent value="resources" className="space-y-4">
+              <div className="grid gap-4">
+                {supportResources.map((resource, index) => (
+                  <Card 
+                    key={index} 
+                    className={`border-l-4 ${
+                      resource.urgency === 'critical' ? 'border-l-red-500' :
+                      resource.urgency === 'high' ? 'border-l-orange-500' :
+                      resource.urgency === 'medium' ? 'border-l-yellow-500' :
+                      'border-l-green-500'
+                    }`}
+                    data-testid={`resource-${index}`}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3">
+                          <resource.icon className="h-5 w-5 mt-1 text-gray-600" />
+                          <div>
+                            <h3 className="font-semibold">{resource.title}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              {resource.description}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge className={getUrgencyColor(resource.urgency)}>
                           {resource.urgency}
                         </Badge>
-                        <span className="text-sm font-medium">{resource.action}</span>
                       </div>
+                      <Button 
+                        className="mt-3 w-full" 
+                        variant="outline"
+                        data-testid={`button-resource-${index}`}
+                      >
+                        {resource.action}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings" className="space-y-4">
+              <Card>
+                <CardContent className="p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="audio-enabled">Audio Responses</Label>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Enable audio responses from the AI counselor
+                      </p>
                     </div>
+                    <Switch
+                      id="audio-enabled"
+                      checked={audioEnabled}
+                      onCheckedChange={setAudioEnabled}
+                      data-testid="switch-audio"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="voice-input">Voice Input</Label>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Use voice to send messages
+                      </p>
+                    </div>
+                    <Switch
+                      id="voice-input"
+                      checked={voiceMode}
+                      onCheckedChange={setVoiceMode}
+                      data-testid="switch-voice"
+                    />
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Settings className="h-5 w-5" />
-                <span>Chat Preferences</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-sm font-medium">Voice Mode</Label>
-                      <p className="text-xs text-muted-foreground">Enable voice input and output</p>
-                    </div>
-                    <Switch checked={voiceMode} onCheckedChange={setVoiceMode} />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-sm font-medium">Audio Responses</Label>
-                      <p className="text-xs text-muted-foreground">AI speaks responses aloud</p>
-                    </div>
-                    <Switch checked={audioEnabled} onCheckedChange={setAudioEnabled} />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-sm font-medium">Emergency Mode</Label>
-                      <p className="text-xs text-muted-foreground">Enhanced crisis detection and response</p>
-                    </div>
-                    <Switch checked={emergencyMode} onCheckedChange={setEmergencyMode} />
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium">Crisis Detection Sensitivity</Label>
-                    <p className="text-xs text-muted-foreground mb-2">How quickly the AI escalates conversations</p>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">Low</Button>
-                      <Button variant="default" size="sm">Medium</Button>
-                      <Button variant="outline" size="sm">High</Button>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-sm font-medium">Response Style</Label>
-                    <p className="text-xs text-muted-foreground mb-2">AI conversation approach</p>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">Gentle</Button>
-                      <Button variant="default" size="sm">Balanced</Button>
-                      <Button variant="outline" size="sm">Direct</Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <MessageCircle className="h-6 w-6 mx-auto mb-2 text-blue-600" />
-                <div className="text-lg font-bold text-blue-600">{sessionStats.totalSessions}</div>
-                <div className="text-xs text-muted-foreground">Total Sessions</div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4 text-center">
-                <Clock className="h-6 w-6 mx-auto mb-2 text-green-600" />
-                <div className="text-lg font-bold text-green-600">{sessionStats.averageSessionLength}m</div>
-                <div className="text-xs text-muted-foreground">Avg Session Length</div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4 text-center">
-                <AlertTriangle className="h-6 w-6 mx-auto mb-2 text-orange-600" />
-                <div className="text-lg font-bold text-orange-600">{sessionStats.crisisDetections}</div>
-                <div className="text-xs text-muted-foreground">Crisis Detections</div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4 text-center">
-                <CheckCircle2 className="h-6 w-6 mx-auto mb-2 text-purple-600" />
-                <div className="text-lg font-bold text-purple-600">{sessionStats.successfulDeescalations}</div>
-                <div className="text-xs text-muted-foreground">Successful De-escalations</div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 }
