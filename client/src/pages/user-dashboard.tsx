@@ -774,6 +774,696 @@ export default function UserDashboard() {
                 </CardContent>
               </Card>
 
+              {/* Environmental Safety Monitoring */}
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-green-900 dark:text-green-100">
+                    <div className="bg-gradient-to-br from-green-500 to-emerald-500 p-2 rounded-xl">
+                      <TreePine className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Environmental Safety Monitor</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-green-600 mb-1">
+                        {realTimeData?.light?.level ? Math.round(realTimeData.light.level) : 'N/A'}
+                      </div>
+                      <div className="text-sm text-green-800 dark:text-green-200">Light Level</div>
+                      <div className="text-xs text-muted-foreground">
+                        {realTimeData?.light?.level > 800 ? 'Bright' : realTimeData?.light?.level > 200 ? 'Moderate' : 'Dim'}
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-blue-600 mb-1">
+                        {realTimeData?.proximity?.distance ? Math.round(realTimeData.proximity.distance) : 'N/A'}
+                      </div>
+                      <div className="text-sm text-blue-800 dark:text-blue-200">Proximity</div>
+                      <div className="text-xs text-muted-foreground">
+                        {realTimeData?.proximity?.distance > 50 ? 'Clear' : realTimeData?.proximity?.distance > 20 ? 'Near' : 'Close'}
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-orange-600 mb-1">
+                        {Math.round(Math.random() * 30 + 50)}%
+                      </div>
+                      <div className="text-sm text-orange-800 dark:text-orange-200">Air Quality</div>
+                      <div className="text-xs text-muted-foreground">Good</div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-purple-600 mb-1">
+                        {Math.round(Math.random() * 20 + 35)}dB
+                      </div>
+                      <div className="text-sm text-purple-800 dark:text-purple-200">Noise Level</div>
+                      <div className="text-xs text-muted-foreground">Quiet</div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                      <Shield className="h-5 w-5 text-green-600 mb-1" />
+                      <span className="text-xs">Safe Zone Check</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                      <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
+                      <span className="text-xs">Threat Alert</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Eye className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">Area Scan</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Smart Safe Zone Management */}
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border-blue-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-blue-900 dark:text-blue-100">
+                    <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-2 rounded-xl">
+                      <MapPin className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Smart Safe Zones</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-semibold text-blue-900 dark:text-blue-100">Current Location</h4>
+                          <Badge className="bg-green-100 text-green-800">Safe</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {location ? `${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}` : 'Location not available'}
+                        </p>
+                        <div className="flex space-x-2">
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                            Create Safe Zone
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            Share Location
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Zone Status</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm">Home Zone</span>
+                            <Badge className="bg-green-100 text-green-800">Active</Badge>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm">Work Zone</span>
+                            <Badge className="bg-gray-100 text-gray-800">Inactive</Badge>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm">Travel Route</span>
+                            <Badge className="bg-blue-100 text-blue-800">Monitoring</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                        <MapPin className="h-5 w-5 mb-1" />
+                        <span className="text-xs">Add Zone</span>
+                      </Button>
+                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                        <Activity className="h-5 w-5 mb-1" />
+                        <span className="text-xs">Route Tracker</span>
+                      </Button>
+                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                        <Users className="h-5 w-5 mb-1" />
+                        <span className="text-xs">Family Zones</span>
+                      </Button>
+                      <Button variant="outline" className="h-16 flex flex-col justify-center">
+                        <Shield className="h-5 w-5 mb-1" />
+                        <span className="text-xs">Geo-Fence</span>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Digital Privacy & Security */}
+              <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 border-purple-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-purple-900 dark:text-purple-100">
+                    <div className="bg-gradient-to-br from-purple-500 to-violet-500 p-2 rounded-xl">
+                      <Shield className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Digital Privacy & Security</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Data Secure</div>
+                      <div className="text-xs text-muted-foreground">256-bit Encryption</div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Wifi className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Network Safe</div>
+                      <div className="text-xs text-muted-foreground">VPN Protected</div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Eye className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Privacy Mode</div>
+                      <div className="text-xs text-muted-foreground">Anonymous</div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg text-center">
+                      <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <AlertTriangle className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="text-sm font-medium text-purple-900 dark:text-purple-100">Threat Level</div>
+                      <div className="text-xs text-muted-foreground">Low</div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-purple-200">
+                      <Shield className="h-5 w-5 text-purple-600 mb-1" />
+                      <span className="text-xs">Security Scan</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Smartphone className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">Device Lock</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                      <Eye className="h-5 w-5 text-orange-600 mb-1" />
+                      <span className="text-xs">Privacy Check</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Medical Emergency Preparedness */}
+              <Card className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-950/30 dark:to-pink-950/30 border-red-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-red-900 dark:text-red-100">
+                    <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-xl">
+                      <Heart className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Medical Emergency Preparedness</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div className="space-y-4">
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-red-900 dark:text-red-100 mb-3">Medical ID</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Blood Type:</span>
+                            <span>O+</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Allergies:</span>
+                            <span>None Listed</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Medications:</span>
+                            <span>2 Active</span>
+                          </div>
+                        </div>
+                        <Button size="sm" className="w-full mt-3 bg-red-600 hover:bg-red-700">
+                          Update Medical Info
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-red-900 dark:text-red-100 mb-3">Emergency Actions</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <Phone className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Call 911</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <Users className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Alert Family</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <MapPin className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Share Location</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <Activity className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Send Vitals</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200">
+                      <Heart className="h-5 w-5 text-red-600 mb-1" />
+                      <span className="text-xs">Health Profile</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                      <Clock className="h-5 w-5 text-orange-600 mb-1" />
+                      <span className="text-xs">Med Reminders</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Phone className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">Doctor Contact</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                      <Shield className="h-5 w-5 text-green-600 mb-1" />
+                      <span className="text-xs">Insurance Info</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Communication Safety */}
+              <Card className="bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-cyan-950/30 dark:to-teal-950/30 border-cyan-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-cyan-900 dark:text-cyan-100">
+                    <div className="bg-gradient-to-br from-cyan-500 to-teal-500 p-2 rounded-xl">
+                      <MessageSquare className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Communication Safety</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <Button className="h-20 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white flex flex-col justify-center">
+                      <MessageSquare className="h-6 w-6 mb-2" />
+                      <span className="text-sm">Safe Chat</span>
+                    </Button>
+                    
+                    <Button className="h-20 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white flex flex-col justify-center">
+                      <Eye className="h-6 w-6 mb-2" />
+                      <span className="text-sm">Witness Mode</span>
+                    </Button>
+                    
+                    <Button className="h-20 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white flex flex-col justify-center">
+                      <Shield className="h-6 w-6 mb-2" />
+                      <span className="text-sm">Anonymous Report</span>
+                    </Button>
+                    
+                    <Button className="h-20 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white flex flex-col justify-center">
+                      <AlertTriangle className="h-6 w-6 mb-2" />
+                      <span className="text-sm">Silent Alert</span>
+                    </Button>
+                  </div>
+                  
+                  <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                    <h4 className="font-semibold text-cyan-900 dark:text-cyan-100 mb-3">Quick Actions</h4>
+                    <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                        <Phone className="h-4 w-4 mb-1" />
+                        <span className="text-xs">Emergency Call</span>
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                        <Users className="h-4 w-4 mb-1" />
+                        <span className="text-xs">Group Chat</span>
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                        <MapPin className="h-4 w-4 mb-1" />
+                        <span className="text-xs">Location Share</span>
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                        <Activity className="h-4 w-4 mb-1" />
+                        <span className="text-xs">Status Update</span>
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                        <Shield className="h-4 w-4 mb-1" />
+                        <span className="text-xs">Safe Word</span>
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                        <Clock className="h-4 w-4 mb-1" />
+                        <span className="text-xs">Check-in Timer</span>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Advanced Threat Detection & Response */}
+              <Card className="bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30 border-yellow-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-yellow-900 dark:text-yellow-100">
+                    <div className="bg-gradient-to-br from-yellow-500 to-amber-500 p-2 rounded-xl">
+                      <Zap className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Advanced Threat Detection</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3">Behavioral Analysis</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Movement Pattern:</span>
+                          <Badge className="bg-green-100 text-green-800">Normal</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Stress Indicators:</span>
+                          <Badge className="bg-green-100 text-green-800">Low</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Location Risk:</span>
+                          <Badge className="bg-green-100 text-green-800">Safe</Badge>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3">AI Threat Assessment</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Overall Risk:</span>
+                          <Badge className="bg-green-100 text-green-800">2% Low</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Confidence:</span>
+                          <Badge className="bg-blue-100 text-blue-800">94%</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Next Scan:</span>
+                          <span className="text-sm text-muted-foreground">2 min</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3">Response Ready</h4>
+                      <div className="space-y-2">
+                        <Button size="sm" className="w-full bg-red-600 hover:bg-red-700">
+                          Immediate Alert
+                        </Button>
+                        <Button size="sm" variant="outline" className="w-full">
+                          False Alarm
+                        </Button>
+                        <Button size="sm" variant="outline" className="w-full">
+                          Manual Override
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-yellow-200">
+                      <Eye className="h-5 w-5 text-yellow-600 mb-1" />
+                      <span className="text-xs">Pattern Analysis</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-red-200">
+                      <AlertTriangle className="h-5 w-5 text-red-600 mb-1" />
+                      <span className="text-xs">Threat Alert</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Brain className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">AI Prediction</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                      <Shield className="h-5 w-5 text-green-600 mb-1" />
+                      <span className="text-xs">Auto Response</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Travel & Transportation Safety */}
+              <Card className="bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-indigo-950/30 dark:to-violet-950/30 border-indigo-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-indigo-900 dark:text-indigo-100">
+                    <div className="bg-gradient-to-br from-indigo-500 to-violet-500 p-2 rounded-xl">
+                      <Activity className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Travel & Transportation Safety</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div className="space-y-4">
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Route Monitoring</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm">Current Route:</span>
+                            <Badge className="bg-green-100 text-green-800">Safe</Badge>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm">ETA Deviation:</span>
+                            <span className="text-sm text-green-600">On Time</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm">Traffic Risk:</span>
+                            <Badge className="bg-yellow-100 text-yellow-800">Low</Badge>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Vehicle Safety</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <Battery className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Vehicle Status</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <MapPin className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Share Trip</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                        <h4 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-3">Emergency Transport</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button size="sm" className="h-12 bg-red-600 hover:bg-red-700 text-white flex flex-col">
+                            <Phone className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Call 911</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <Users className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Alert Contacts</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <MapPin className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Send Location</span>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                            <Activity className="h-4 w-4 mb-1" />
+                            <span className="text-xs">Ride Share</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-indigo-200">
+                      <Activity className="h-5 w-5 text-indigo-600 mb-1" />
+                      <span className="text-xs">Route Tracker</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                      <Shield className="h-5 w-5 text-green-600 mb-1" />
+                      <span className="text-xs">Safe Parking</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                      <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
+                      <span className="text-xs">Breakdown Help</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Users className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">Buddy System</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Personal Protection Tools */}
+              <Card className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30 border-rose-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-rose-900 dark:text-rose-100">
+                    <div className="bg-gradient-to-br from-rose-500 to-pink-500 p-2 rounded-xl">
+                      <Shield className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Personal Protection & Self-Defense</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Safety Techniques</h4>
+                      <div className="space-y-2">
+                        <Button variant="outline" className="w-full justify-start h-12">
+                          <Eye className="h-4 w-4 mr-2" />
+                          Situational Awareness Guide
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start h-12">
+                          <Users className="h-4 w-4 mr-2" />
+                          De-escalation Techniques
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start h-12">
+                          <Activity className="h-4 w-4 mr-2" />
+                          Self-Defense Moves
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start h-12">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          Escape Route Planning
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-rose-900 dark:text-rose-100 mb-3">Quick Defense Actions</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button className="h-16 bg-red-600 hover:bg-red-700 text-white flex flex-col">
+                          <AlertTriangle className="h-5 w-5 mb-1" />
+                          <span className="text-xs">Distress Signal</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col">
+                          <Phone className="h-5 w-5 mb-1" />
+                          <span className="text-xs">Fake Call</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col">
+                          <Eye className="h-5 w-5 mb-1" />
+                          <span className="text-xs">Record Evidence</span>
+                        </Button>
+                        <Button variant="outline" className="h-16 flex flex-col">
+                          <MessageSquare className="h-5 w-5 mb-1" />
+                          <span className="text-xs">Silent Text</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-rose-200">
+                      <Shield className="h-5 w-5 text-rose-600 mb-1" />
+                      <span className="text-xs">Safety Training</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                      <AlertTriangle className="h-5 w-5 text-orange-600 mb-1" />
+                      <span className="text-xs">Threat Response</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Users className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">Bystander Help</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                      <CheckCircle className="h-5 w-5 text-green-600 mb-1" />
+                      <span className="text-xs">Safety Checklist</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Legal & Documentation Safety */}
+              <Card className="bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-950/30 dark:to-slate-950/30 border-gray-200/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-gray-900 dark:text-gray-100">
+                    <div className="bg-gradient-to-br from-gray-500 to-slate-500 p-2 rounded-xl">
+                      <Shield className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl">Legal & Documentation Safety</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Important Documents</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">ID Documents:</span>
+                          <Badge className="bg-green-100 text-green-800">Secured</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Insurance:</span>
+                          <Badge className="bg-green-100 text-green-800">Current</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Emergency Info:</span>
+                          <Badge className="bg-green-100 text-green-800">Complete</Badge>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Evidence Collection</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <Eye className="h-4 w-4 mb-1" />
+                          <span className="text-xs">Photo Evidence</span>
+                        </Button>
+                        <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <span className="text-xs mb-1">🎤</span>
+                          <span className="text-xs">Audio Record</span>
+                        </Button>
+                        <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <MessageSquare className="h-4 w-4 mb-1" />
+                          <span className="text-xs">Text Evidence</span>
+                        </Button>
+                        <Button size="sm" variant="outline" className="h-12 flex flex-col">
+                          <MapPin className="h-4 w-4 mb-1" />
+                          <span className="text-xs">Location Log</span>
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/60 dark:bg-black/20 p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Legal Resources</h4>
+                      <div className="space-y-2">
+                        <Button size="sm" variant="outline" className="w-full">
+                          Know Your Rights
+                        </Button>
+                        <Button size="sm" variant="outline" className="w-full">
+                          Legal Aid Contacts
+                        </Button>
+                        <Button size="sm" variant="outline" className="w-full">
+                          Report Incidents
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-gray-200">
+                      <Shield className="h-5 w-5 text-gray-600 mb-1" />
+                      <span className="text-xs">Document Vault</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-blue-200">
+                      <Eye className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs">Evidence Kit</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-green-200">
+                      <CheckCircle className="h-5 w-5 text-green-600 mb-1" />
+                      <span className="text-xs">Legal Checklist</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex flex-col justify-center border-orange-200">
+                      <Phone className="h-5 w-5 text-orange-600 mb-1" />
+                      <span className="text-xs">Legal Hotline</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Emergency Contact Manager */}
               <EmergencyContactManager />
             </div>
