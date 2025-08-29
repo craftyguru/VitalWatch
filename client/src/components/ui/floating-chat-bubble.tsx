@@ -3,8 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, X, Minimize2, LifeBuoy, AlertTriangle, Heart } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { MessageCircle, X, Minimize2, LifeBuoy, AlertTriangle, Heart, BookOpen, Shield, Activity, Settings, Zap, Eye, EyeOff, HelpCircle, Home, Users, BarChart3, Bluetooth, Smartphone, Star, ArrowRight } from "lucide-react";
 import { useIncognito } from "@/contexts/IncognitoContext";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import CrisisChatSupport from "./crisis-chat-support";
 
 interface FloatingChatBubbleProps {
@@ -16,17 +21,79 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
-  const [activeTab, setActiveTab] = useState("help");
+  const [activeTab, setActiveTab] = useState("guided-tour");
+  const [currentTourStep, setCurrentTourStep] = useState(0);
   const [currentCrisisLevel, setCurrentCrisisLevel] = useState<'low' | 'medium' | 'high' | 'critical'>('medium');
-  const [helpMessages, setHelpMessages] = useState<Array<{id: string, sender: 'user' | 'bot', content: string, timestamp: Date}>>([
+  const [helpMessages, setHelpMessages] = useState<Array<{id: string, sender: 'user' | 'bot', content: string, timestamp: Date}>>([]);
+  const [helpInput, setHelpInput] = useState("");
+  const [isAiThinking, setIsAiThinking] = useState(false);
+  const { toast } = useToast();
+  
+  const tourSteps = [
+    {
+      title: "Welcome to VitalWatch",
+      icon: <Heart className="h-6 w-6" />,
+      content: "VitalWatch is your comprehensive mental health and safety companion. It provides 24/7 monitoring, crisis support, and wellness tools to keep you safe and healthy.",
+      features: ["AI-powered threat detection", "Emergency response system", "Mental health support", "Wellness tracking"]
+    },
+    {
+      title: "Dashboard Overview",
+      icon: <Home className="h-6 w-6" />,
+      content: "Your main dashboard shows real-time health status, mood trends, emergency contacts, and quick access to all safety features.",
+      features: ["Current mood status", "Emergency contact list", "Recent activities", "Quick action buttons"]
+    },
+    {
+      title: "Safety Tools",
+      icon: <Shield className="h-6 w-6" />,
+      content: "Comprehensive safety features including panic button, emergency alerts, location sharing, and crisis support tools.",
+      features: ["Instant panic button", "Emergency contacts alert", "Location sharing", "Crisis chat support", "Safe zone monitoring"]
+    },
+    {
+      title: "Wellness Analytics",
+      icon: <BarChart3 className="h-6 w-6" />,
+      content: "Track your mental health with mood analytics, breathing exercises, coping tools, and AI-powered insights.",
+      features: ["Mood tracking charts", "Breathing exercises", "Grounding techniques", "AI mood analysis", "Progress reports"]
+    },
+    {
+      title: "Device Hub",
+      icon: <Bluetooth className="h-6 w-6" />,
+      content: "Connect and monitor various devices including wearables, sensors, and smart home devices for comprehensive health tracking.",
+      features: ["Wearable integration", "Heart rate monitoring", "Activity tracking", "Environmental sensors", "Device synchronization"]
+    },
+    {
+      title: "AI Guardian",
+      icon: <Zap className="h-6 w-6" />,
+      content: "Professional-grade AI monitoring system that analyzes 15+ vital parameters, environmental conditions, and behavioral patterns for intelligent threat assessment.",
+      features: ["Real-time vitals monitoring", "Environmental hazard detection", "Behavioral pattern analysis", "Predictive analytics", "Automated emergency response"]
+    },
+    {
+      title: "Panic Button System",
+      icon: <AlertTriangle className="h-6 w-6" />,
+      content: "Multiple ways to trigger emergency alerts: floating panic button, voice commands, gesture detection, or automatic AI detection.",
+      features: ["3-second hold activation", "Countdown timer (customizable)", "Multiple contact alerts", "Location sharing", "Auto-dial emergency services"]
+    },
+    {
+      title: "Incognito Mode",
+      icon: <EyeOff className="h-6 w-6" />,
+      content: "Privacy mode that hides all VitalWatch interface elements while maintaining background monitoring and emergency features.",
+      features: ["Hidden interface", "Silent background monitoring", "Emergency access maintained", "Quick toggle on/off", "Privacy protection"]
+    },
+    {
+      title: "AI Chat Bubble",
+      icon: <MessageCircle className="h-6 w-6" />,
+      content: "This floating chat provides 24/7 support with guided tours, crisis counseling, feature help, and emergency escalation.",
+      features: ["Guided feature tours", "Crisis support chat", "AI counselor", "Emergency escalation", "Real-time help"]
+    }
+  ];
+  
+  const [initialMessages] = useState<Array<{id: string, sender: 'user' | 'bot', content: string, timestamp: Date}>>([
     {
       id: '1',
       sender: 'bot',
-      content: 'Hi! I\'m here to help you navigate VitalWatch. What would you like assistance with?',
+      content: 'Hi! I\'m your VitalWatch AI assistant. I can help you with feature tutorials, crisis support, or answer questions about the app. Would you like to start with the guided tour?',
       timestamp: new Date()
     }
   ]);
-  const [helpInput, setHelpInput] = useState("");
 
   // Simulate notification for urgent situations (in real app, this would come from crisis detection)
   useEffect(() => {
@@ -40,13 +107,20 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
     return () => clearInterval(interval);
   }, []);
 
+  // Load initial messages when help tab is accessed
+  useEffect(() => {
+    if (isOpen && activeTab === 'help' && helpMessages.length === 0) {
+      setHelpMessages(initialMessages);
+    }
+  }, [isOpen, activeTab, initialMessages, helpMessages.length]);
+
   const handleEmergencyTrigger = () => {
     setCurrentCrisisLevel('critical');
     setHasNotification(true);
     setActiveTab('crisis');
   };
 
-  const handleHelpSubmit = () => {
+  const handleHelpSubmit = async () => {
     if (!helpInput.trim()) return;
     
     const userMessage = {
@@ -57,35 +131,70 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
     };
     
     setHelpMessages(prev => [...prev, userMessage]);
+    const currentInput = helpInput.trim();
     setHelpInput("");
+    setIsAiThinking(true);
     
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponse = {
+    try {
+      const response = await apiRequest('POST', '/api/ai-help-chat', {
+        message: currentInput,
+        context: 'vitalwatch_help'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const botResponse = {
+          id: (Date.now() + 1).toString(),
+          sender: 'bot' as const,
+          content: data.response,
+          timestamp: new Date()
+        };
+        setHelpMessages(prev => [...prev, botResponse]);
+      } else {
+        throw new Error('AI response failed');
+      }
+    } catch (error) {
+      const fallbackResponse = {
         id: (Date.now() + 1).toString(),
         sender: 'bot' as const,
-        content: getHelpResponse(helpInput),
+        content: getFallbackHelpResponse(currentInput),
         timestamp: new Date()
       };
-      setHelpMessages(prev => [...prev, botResponse]);
-    }, 1000);
+      setHelpMessages(prev => [...prev, fallbackResponse]);
+      
+      toast({
+        title: "AI Temporarily Unavailable",
+        description: "Using basic help responses. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAiThinking(false);
+    }
   };
 
-  const getHelpResponse = (userInput: string): string => {
+  const getFallbackHelpResponse = (userInput: string): string => {
     const input = userInput.toLowerCase();
     
-    if (input.includes('mood') || input.includes('feeling')) {
-      return 'You can track your mood by going to the Mood page from the navigation menu. There you can log daily moods and see AI insights about your mental health patterns.';
+    if (input.includes('panic') || input.includes('emergency button')) {
+      return 'The panic button can be activated by: 1) Holding the red panic button for 3 seconds, 2) Voice command "VitalWatch Emergency", 3) Gesture detection (shake phone rapidly), or 4) Automatic AI detection. It alerts all emergency contacts and can auto-dial 911.';
+    } else if (input.includes('incognito') || input.includes('privacy') || input.includes('hidden')) {
+      return 'Incognito mode hides all VitalWatch interface elements for privacy while maintaining background monitoring. Toggle it from the main menu or quick settings. Emergency features remain active even in incognito mode.';
+    } else if (input.includes('ai guardian') || input.includes('monitoring')) {
+      return 'AI Guardian is our professional monitoring system that tracks 15+ vital parameters including heart rate, stress levels, environmental conditions, and behavioral patterns. It provides predictive analytics and automated emergency response.';
+    } else if (input.includes('mood') || input.includes('feeling')) {
+      return 'Track your mood in Wellness Analytics. The AI analyzes patterns, provides insights, and correlates mood with biometric data. You can log moods, see trends, and get personalized recommendations.';
     } else if (input.includes('emergency') || input.includes('contact')) {
-      return 'To set up emergency contacts, go to the Contacts page. You can add trusted people who will be notified during emergencies. We recommend adding at least 2-3 contacts.';
+      return 'Set up emergency contacts in Safety Tools. Add trusted people who will be notified during emergencies. Pro plans support unlimited contacts with family monitoring features.';
     } else if (input.includes('tool') || input.includes('breathing') || input.includes('grounding')) {
-      return 'Visit the Tools page to access breathing exercises, grounding techniques, and other coping tools. You can also access crisis chat support for immediate help.';
+      return 'Access coping tools in Wellness Analytics: breathing exercises (Box Breathing, 4-7-8), grounding techniques (5-4-3-2-1 method), guided meditation, and crisis chat support.';
+    } else if (input.includes('device') || input.includes('wearable') || input.includes('sensor')) {
+      return 'Connect devices in Device Hub: smartwatches, fitness trackers, environmental sensors, and smart home devices. Supports heart rate monitoring, activity tracking, and environmental data.';
+    } else if (input.includes('chat') || input.includes('support')) {
+      return 'This chat bubble provides: guided tours, crisis counseling, feature help, and emergency escalation. It adapts to your current situation and can connect you with professional support when needed.';
     } else if (input.includes('subscription') || input.includes('billing') || input.includes('upgrade')) {
-      return 'Check your subscription details and upgrade options in the Billing page. VitalWatch offers Pro features for enhanced monitoring and support.';
-    } else if (input.includes('profile') || input.includes('settings')) {
-      return 'Customize your experience in the Profile page where you can update personal information, notification preferences, and privacy settings.';
+      return 'VitalWatch offers Free, Guardian, and Professional plans. Guardian adds unlimited contacts and advanced AI. Professional includes family monitoring and enterprise features. Check Billing for details.';
     } else {
-      return 'I can help you with mood tracking, emergency contacts, coping tools, billing, and profile settings. What specific feature would you like to learn about?';
+      return 'I can help with: panic button usage, incognito mode, AI Guardian monitoring, mood tracking, emergency contacts, coping tools, device connections, and subscription features. What would you like to learn about?';
     }
   };
 
@@ -199,14 +308,18 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
             
             {/* Tab Navigation */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="help" className="flex items-center gap-2">
-                  <LifeBuoy className="h-4 w-4" />
-                  Help & Support
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="guided-tour" className="flex items-center gap-1 text-xs">
+                  <BookOpen className="h-3 w-3" />
+                  Tour
                 </TabsTrigger>
-                <TabsTrigger value="crisis" className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" />
-                  Crisis Support
+                <TabsTrigger value="help" className="flex items-center gap-1 text-xs">
+                  <LifeBuoy className="h-3 w-3" />
+                  Help
+                </TabsTrigger>
+                <TabsTrigger value="crisis" className="flex items-center gap-1 text-xs">
+                  <Heart className="h-3 w-3" />
+                  Crisis
                   {hasNotification && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>}
                 </TabsTrigger>
               </TabsList>
@@ -217,9 +330,128 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
           {!isMinimized && (
             <div className="flex-1 overflow-hidden">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+                <TabsContent value="guided-tour" className="flex-1 flex flex-col m-0 p-4">
+                  <ScrollArea className="flex-1">
+                    <div className="space-y-4">
+                      {/* Tour Progress */}
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-lg">VitalWatch Guided Tour</h3>
+                        <Badge variant="outline">
+                          {currentTourStep + 1} of {tourSteps.length}
+                        </Badge>
+                      </div>
+                      
+                      {/* Current Step */}
+                      <Card className="border-2 border-blue-200">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                              {tourSteps[currentTourStep].icon}
+                            </div>
+                            <CardTitle className="text-lg">{tourSteps[currentTourStep].title}</CardTitle>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-gray-700 dark:text-gray-300 mb-4">
+                            {tourSteps[currentTourStep].content}
+                          </p>
+                          
+                          <div className="space-y-2">
+                            <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200">Key Features:</h4>
+                            <ul className="space-y-1">
+                              {tourSteps[currentTourStep].features.map((feature, index) => (
+                                <li key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                  <Star className="h-3 w-3 text-yellow-500" />
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      {/* Navigation */}
+                      <div className="flex justify-between items-center pt-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => setCurrentTourStep(Math.max(0, currentTourStep - 1))}
+                          disabled={currentTourStep === 0}
+                        >
+                          Previous
+                        </Button>
+                        
+                        <div className="flex gap-1">
+                          {tourSteps.map((_, index) => (
+                            <div
+                              key={index}
+                              className={`w-2 h-2 rounded-full transition-colors ${
+                                index === currentTourStep ? 'bg-blue-600' : 
+                                index < currentTourStep ? 'bg-green-400' : 'bg-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        
+                        <Button
+                          onClick={() => {
+                            if (currentTourStep < tourSteps.length - 1) {
+                              setCurrentTourStep(currentTourStep + 1);
+                            } else {
+                              setActiveTab('help');
+                              setCurrentTourStep(0);
+                            }
+                          }}
+                        >
+                          {currentTourStep === tourSteps.length - 1 ? 'Finish Tour' : 'Next'}
+                          <ArrowRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </div>
+                      
+                      {/* Quick Access Features */}
+                      <Separator className="my-4" />
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-sm">Quick Feature Access:</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col gap-1">
+                            <AlertTriangle className="h-4 w-4 text-red-500" />
+                            <span className="text-xs">Test Panic Button</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col gap-1">
+                            <EyeOff className="h-4 w-4 text-purple-500" />
+                            <span className="text-xs">Toggle Incognito</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col gap-1">
+                            <Zap className="h-4 w-4 text-blue-500" />
+                            <span className="text-xs">AI Guardian</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col gap-1">
+                            <Users className="h-4 w-4 text-green-500" />
+                            <span className="text-xs">Add Contacts</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </TabsContent>
+                
                 <TabsContent value="help" className="flex-1 flex flex-col m-0 p-4">
                   <div className="flex-1 flex flex-col space-y-3">
-                    <div className="flex-1 border rounded-lg p-3 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-semibold">VitalWatch AI Assistant</h3>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => {
+                          setActiveTab('guided-tour');
+                          setCurrentTourStep(0);
+                        }}
+                      >
+                        <BookOpen className="h-4 w-4 mr-1" />
+                        Start Tour
+                      </Button>
+                    </div>
+                    
+                    <ScrollArea className="flex-1 border rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
                       <div className="space-y-3">
                         {helpMessages.map((message) => (
                           <div
@@ -227,7 +459,7 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
                             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                           >
                             <div
-                              className={`max-w-[80%] p-2 rounded-lg text-sm ${
+                              className={`max-w-[80%] p-3 rounded-lg text-sm ${
                                 message.sender === 'user'
                                   ? 'bg-blue-600 text-white'
                                   : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border'
@@ -237,26 +469,42 @@ export default function FloatingChatBubble({ className }: FloatingChatBubbleProp
                             </div>
                           </div>
                         ))}
+                        
+                        {isAiThinking && (
+                          <div className="flex justify-start">
+                            <div className="bg-white dark:bg-gray-800 border p-3 rounded-lg">
+                              <div className="flex items-center gap-2">
+                                <div className="flex space-x-1">
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                </div>
+                                <span className="text-xs text-gray-500">AI is thinking...</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
+                    </ScrollArea>
                     
                     <div className="flex gap-2">
                       <input
                         type="text"
                         value={helpInput}
                         onChange={(e) => setHelpInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleHelpSubmit()}
+                        onKeyPress={(e) => e.key === 'Enter' && !isAiThinking && handleHelpSubmit()}
                         placeholder="Ask about VitalWatch features..."
                         className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         data-testid="help-input"
+                        disabled={isAiThinking}
                       />
                       <Button
                         onClick={handleHelpSubmit}
-                        disabled={!helpInput.trim()}
+                        disabled={!helpInput.trim() || isAiThinking}
                         size="sm"
                         data-testid="help-send"
                       >
-                        Send
+                        {isAiThinking ? 'Thinking...' : 'Send'}
                       </Button>
                     </div>
                   </div>

@@ -20,6 +20,7 @@ import {
   analyzeEnvironmental,
   generateCrisisChatResponse
 } from "./services/openai";
+import { generateHelpResponse } from "./openai";
 import { analyzeGuardianSituation } from './openai';
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
 import { sendCrisisResourcesSMS, sendEmergencyAlertSMS, sendSMS } from "./services/twilio";
@@ -820,6 +821,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error sending crisis resources:", error);
       res.status(500).json({ message: "Failed to send crisis resources" });
+    }
+  });
+
+  // AI Help Chat route
+  app.post('/api/ai-help-chat', isAuthenticated, async (req: any, res) => {
+    try {
+      const { message, context } = req.body;
+      
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: 'Message is required' });
+      }
+
+      const response = await generateHelpResponse(message, context);
+      
+      res.json({ 
+        response,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error generating AI help response:", error);
+      res.status(500).json({ 
+        error: "Failed to generate AI response",
+        fallback: "I'm having trouble connecting to my AI systems right now. Please try asking your question in a different way, or contact support for immediate assistance."
+      });
     }
   });
 
