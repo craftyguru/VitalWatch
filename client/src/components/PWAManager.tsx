@@ -43,14 +43,13 @@ class APKDownloadManager {
   // APK Download method
   async downloadAPK(): Promise<boolean> {
     try {
-      // In production, this would point to your hosted APK file
-      // For now, we'll provide instructions
-      const apkUrl = '/downloads/vitalwatch-latest.apk';
+      // For now, download the instructions file
+      const instructionsUrl = '/downloads/README.txt';
       
-      // Try to download the APK
+      // Download the instructions
       const link = document.createElement('a');
-      link.href = apkUrl;
-      link.download = 'VitalWatch.apk';
+      link.href = instructionsUrl;
+      link.download = 'VitalWatch-Build-Instructions.txt';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -58,7 +57,7 @@ class APKDownloadManager {
       this.notifyListeners();
       return true;
     } catch (error) {
-      console.error('APK download failed:', error);
+      console.error('Instructions download failed:', error);
       return false;
     }
   }
@@ -118,13 +117,13 @@ export function APKDownloadButton() {
     const success = await downloadAPK();
     if (success) {
       toast({
-        title: "Download Started!",
-        description: "VitalWatch APK is downloading. Install it to access Health Connect integration.",
+        title: "Build Instructions Downloaded!",
+        description: "Follow the downloaded instructions to build the native VitalWatch APK with Health Connect support.",
       });
     } else {
       toast({
-        title: "Download Instructions",
-        description: "Use EAS Build to generate the APK: npx expo build:android",
+        title: "Build Instructions",
+        description: "To build the native APK: 1) Clone repo 2) cd mobile/ 3) npx eas build --platform android",
         variant: "default",
       });
     }
@@ -154,15 +153,18 @@ export function APKMobilePrompt() {
     const success = await downloadAPK();
     if (success) {
       toast({
-        title: "APK Download Started!",
-        description: "Install the VitalWatch APK to access Health Connect and device sensors.",
+        title: "Build Instructions Downloaded!",
+        description: "Follow the instructions to build the native VitalWatch APK with Health Connect access.",
       });
+      // Also open the build documentation
+      setTimeout(() => {
+        window.open('https://docs.expo.dev/build/setup/', '_blank');
+      }, 1000);
     } else {
       toast({
-        title: "Native App Required",
-        description: "For Health Connect integration, install the native Android app.",
+        title: "Build Instructions",
+        description: "Clone the repo and use: npx eas build --platform android --profile preview",
       });
-      // Open instructions or alternative download
       window.open('https://docs.expo.dev/build/setup/', '_blank');
     }
   };

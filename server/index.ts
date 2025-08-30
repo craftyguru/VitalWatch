@@ -67,7 +67,7 @@ async function start() {
   });
 
   // Initialize database and routes
-  await registerRoutes(app, server);
+  await registerRoutes(app);
 
   // Serve APK downloads
   const downloadsPath = path.resolve(__dirname, "public/downloads");
