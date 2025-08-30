@@ -303,12 +303,93 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
         </CardHeader>
       </Card>
 
+      {/* Health Connect Integration Section */}
+      <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200/50">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="bg-green-500 text-white p-2.5 rounded-xl">
+                <Heart className="h-5 w-5" />
+              </div>
+              <div>
+                <CardTitle className="text-lg text-green-900 dark:text-green-100">🏥 Health Connect Sources</CardTitle>
+                <p className="text-sm text-green-700 dark:text-green-300">Galaxy Watch, Fitbit, Samsung Health, Google Fit</p>
+              </div>
+            </div>
+            <Badge className="bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-200">
+              Mobile Only
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-green-200/50">
+            <div className="flex items-start space-x-3">
+              <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg">
+                <Watch className="h-5 w-5 text-green-600" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-medium text-green-900 dark:text-green-100 mb-1">Health Connect Integration</h4>
+                <p className="text-sm text-green-700 dark:text-green-300 mb-3">
+                  Access health data from all your connected smartwatches and fitness devices through Android's unified Health Connect platform.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Galaxy Watch → Samsung Health → Health Connect</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Fitbit → Google Fit → Health Connect</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Heart rate, steps, calories, sleep data</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50">
+            <div className="flex items-center space-x-2 mb-2">
+              <Smartphone className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Access via Mobile App</span>
+            </div>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mb-3">
+              Health Connect APIs are Android-specific and not available in web browsers. To connect your Galaxy Watch and other health devices:
+            </p>
+            <div className="space-y-2 text-xs text-blue-700 dark:text-blue-300">
+              <div className="flex items-center space-x-2">
+                <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                <span>Build and install the VitalWatch mobile app on Android</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                <span>Look for "🏥 Health Connect Sources" section at the top</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                <span>Tap "Connect Health Sources" for Galaxy Watch integration</span>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-blue-200/50">
+              <code className="text-xs bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded text-blue-800 dark:text-blue-200">
+                cd mobile/android && ./gradlew assembleDebug && adb install app/build/outputs/apk/debug/app-debug.apk
+              </code>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Connected Devices */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
           <Smartphone className="h-5 w-5" />
-          Connected Devices
+          Connected Devices (Web Browser)
         </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 -mt-2">
+          Direct device connections available in web browsers • For smartwatch data, use Health Connect in mobile app above
+        </p>
         
         {allDevices.map((device) => (
           <Card key={device.id} className={`${device.type === 'phone' ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border-gray-200/50'}`}>
