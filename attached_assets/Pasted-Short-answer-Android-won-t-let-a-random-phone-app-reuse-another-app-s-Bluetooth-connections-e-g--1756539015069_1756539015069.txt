@@ -1,0 +1,80 @@
+Short answer: Android won’t let a random phone app “reuse” another app’s Bluetooth connections (e.g., the Galaxy Wearable app’s link to your watch). Even if the status bar shows the watch is connected, your app still must:
+
+have the right permissions for your target Android version,
+
+know the device’s protocol (GATT services/characteristics or a vendor SDK), and
+
+in the case of watches, usually run a companion Wear app or use a health data bridge (Health Connect / Samsung Health).
+
+Here’s the usual gotchas that make it “feel” broken:
+
+1) Permissions by Android version
+
+Android 12+ (SDK 31+): need runtime permissions BLUETOOTH_SCAN, BLUETOOTH_CONNECT (and sometimes BLUETOOTH_ADVERTISE). Add usesPermissionFlags="neverForLocation" if you don’t need location, otherwise you must also request ACCESS_FINE_LOCATION on 10–11 for scans.
+
+You must actually request them at runtime (not just in the manifest), and handle the callback.
+
+Scanning in the background? You need a foreground service with an ongoing notification.
+
+<!-- AndroidManifest.xml -->
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+2) You can’t “piggyback” another app’s connection
+
+The system’s “connected” icon means some other app owns the link. Your app must:
+
+Discover the device (BLE scan) and connect on its own, or
+
+Use the vendor’s SDK / API that exposes data to third-party apps.
+
+Many wearables do not expose sensors over plain GATT. They encrypt data or keep it private to their companion app.
+
+3) Galaxy Watch specifics
+
+Galaxy Watch 4+ (Wear OS 3): sensors live on the watch. To stream them to your phone you typically:
+
+Build a Wear OS companion app that reads sensors on-watch (Health Services / SensorManager) and sends data over the Data Layer API to your phone app, or
+
+Use Health Connect: watch → Samsung Health / Health Services → Health Connect → your phone app (with user consent). This gives you steps, heart rate, etc., but not raw high-rate streams.
+
+Older Galaxy Watch (Tizen): you generally need the Samsung Accessory Protocol (SAP) / Samsung SDK. Raw sensors are not exposed over generic BLE to phone apps.
+
+4) Scanning/connecting pitfalls
+
+Already-connected devices often don’t show up in generic scans unless you set proper ScanSettings and filters.
+
+Use GATT only if you know the service/characteristic UUIDs your device actually exposes. Guessing won’t work.
+
+Some devices are Classic BT, not BLE. Your BLE code won’t find them.
+
+On Android 14+, throttling and background limits are stricter—run scans briefly and with a foreground service.
+
+5) What to do now (checklist)
+
+Target & permissions
+
+Set targetSdkVersion >= 33.
+
+Add and request BLUETOOTH_SCAN + BLUETOOTH_CONNECT (and ACCESS_FINE_LOCATION for 10–11). Confirm the runtime grant path actually runs.
+
+Decide the data path for the watch
+
+If you need live sensors (HR, accel): build a Wear OS companion app → send data via Data Layer.
+
+If periodic/summary data is fine: integrate Health Connect (ask user to allow Samsung Health to share with your app).
+
+If you’re talking to other BLE devices (not the watch)
+
+Get the vendor’s GATT spec (UUIDs). Without it, scanning will find a MAC but you won’t know how to read sensors.
+
+Implement: scan → connect → discover services → enable notifications on characteristics → parse payloads.
+
+Foreground service for long-running work
+
+Use a ForegroundService when scanning or streaming for more than a few seconds.
+
+Verify with logs
+
+Log: permission state → scan results → connect result → GATT discover → characteristic subscribe. Fail fast with clear errors.

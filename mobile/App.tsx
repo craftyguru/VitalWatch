@@ -231,12 +231,12 @@ export default function App() {
             console.warn('⚠️ DeviceHub: No devices were added to app state');
           }
           
-        } catch (nativeError) {
+        } catch (nativeError: any) {
           console.error('❌ DeviceHub: Native module error:', nativeError);
           console.error('❌ DeviceHub: Error details:', {
-            message: nativeError.message,
-            code: nativeError.code,
-            userInfo: nativeError.userInfo
+            message: nativeError?.message,
+            code: nativeError?.code,
+            userInfo: nativeError?.userInfo
           });
           addSimulatedDevice();
         }
