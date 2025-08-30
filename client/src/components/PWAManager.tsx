@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X, Smartphone } from 'lucide-react';
+import { Download, X, Smartphone, FileDown, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-// PWA Manager Singleton Class
-class PWAManager {
-  private deferredPrompt: any = null;
-  private isInstalled = false;
+// APK Download Manager Class
+class APKDownloadManager {
   private isDismissed = false;
   private listeners: Array<() => void> = [];
 
@@ -17,27 +15,8 @@ class PWAManager {
   }
 
   private init() {
-    // Listen for beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      this.deferredPrompt = e;
-      this.notifyListeners();
-    });
-
-    // Check if already installed
-    window.addEventListener('appinstalled', () => {
-      this.isInstalled = true;
-      this.deferredPrompt = null;
-      this.notifyListeners();
-    });
-
-    // Check if running as PWA
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      this.isInstalled = true;
-    }
-
     // Check session dismissal
-    if (sessionStorage.getItem('pwa-dismissed') === 'true') {
+    if (sessionStorage.getItem('apk-download-dismissed') === 'true') {
       this.isDismissed = true;
     }
   }
@@ -56,31 +35,30 @@ class PWAManager {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
-  // Check if installable
-  isInstallable(): boolean {
-    return !this.isInstalled && 
-           !this.isDismissed && 
-           this.deferredPrompt !== null &&
-           this.isProductionOrDev();
+  // Check if should show download prompt
+  shouldShowDownload(): boolean {
+    return !this.isDismissed && this.isProductionOrDev();
   }
 
-  // Installation method
-  async install(): Promise<boolean> {
-    if (!this.deferredPrompt) return false;
-    
+  // APK Download method
+  async downloadAPK(): Promise<boolean> {
     try {
-      await this.deferredPrompt.prompt();
-      const { outcome } = await this.deferredPrompt.userChoice;
+      // In production, this would point to your hosted APK file
+      // For now, we'll provide instructions
+      const apkUrl = '/downloads/vitalwatch-latest.apk';
       
-      if (outcome === 'accepted') {
-        this.isInstalled = true;
-        this.deferredPrompt = null;
-      }
+      // Try to download the APK
+      const link = document.createElement('a');
+      link.href = apkUrl;
+      link.download = 'VitalWatch.apk';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       
       this.notifyListeners();
-      return outcome === 'accepted';
+      return true;
     } catch (error) {
-      console.error('PWA installation failed:', error);
+      console.error('APK download failed:', error);
       return false;
     }
   }
@@ -88,7 +66,7 @@ class PWAManager {
   // Dismiss for session
   dismiss(): void {
     this.isDismissed = true;
-    sessionStorage.setItem('pwa-dismissed', 'true');
+    sessionStorage.setItem('apk-download-dismissed', 'true');
     this.notifyListeners();
   }
 
@@ -106,104 +84,117 @@ class PWAManager {
 }
 
 // Singleton instance
-const pwaManager = new PWAManager();
+const apkDownloadManager = new APKDownloadManager();
 
-// React Hook
-export function usePWAInstall() {
+// React Hook for APK Download
+export function useAPKDownload() {
   const [, forceUpdate] = useState({});
 
   useEffect(() => {
-    const unsubscribe = pwaManager.subscribe(() => {
+    const unsubscribe = apkDownloadManager.subscribe(() => {
       forceUpdate({});
     });
     return unsubscribe;
   }, []);
 
   return {
-    isInstallable: pwaManager.isInstallable(),
-    isMobile: pwaManager.isMobileDevice(),
-    isProductionOrDev: pwaManager.isProductionOrDev(),
-    install: () => pwaManager.install(),
-    dismiss: () => pwaManager.dismiss()
+    shouldShow: apkDownloadManager.shouldShowDownload(),
+    isMobile: apkDownloadManager.isMobileDevice(),
+    isProductionOrDev: apkDownloadManager.isProductionOrDev(),
+    downloadAPK: () => apkDownloadManager.downloadAPK(),
+    dismiss: () => apkDownloadManager.dismiss()
   };
 }
 
-// Desktop Install Button Component
-export function PWAInstallButton() {
-  const { isInstallable, isMobile, install } = usePWAInstall();
+// Desktop APK Download Button Component
+export function APKDownloadButton() {
+  const { shouldShow, isMobile, downloadAPK } = useAPKDownload();
   const { toast } = useToast();
 
-  // Only show on desktop when installable
-  if (isMobile || !isInstallable) return null;
+  // Only show on desktop when appropriate
+  if (isMobile || !shouldShow) return null;
 
-  const handleInstall = async () => {
-    const success = await install();
+  const handleDownload = async () => {
+    const success = await downloadAPK();
     if (success) {
       toast({
-        title: "App Installed!",
-        description: "VitalWatch has been installed and can be accessed from your desktop.",
+        title: "Download Started!",
+        description: "VitalWatch APK is downloading. Install it to access Health Connect integration.",
+      });
+    } else {
+      toast({
+        title: "Download Instructions",
+        description: "Use EAS Build to generate the APK: npx expo build:android",
+        variant: "default",
       });
     }
   };
 
   return (
     <Button 
-      onClick={handleInstall}
-      className="hidden md:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
-      data-testid="button-install-desktop"
+      onClick={handleDownload}
+      className="hidden md:flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+      data-testid="button-download-apk-desktop"
     >
-      <Download className="w-4 h-4" />
-      Install App
+      <FileDown className="w-4 h-4" />
+      Download Android App
     </Button>
   );
 }
 
-// Mobile Bottom Prompt Component
-export function PWAMobilePrompt() {
-  const { isInstallable, isMobile, isProductionOrDev, install, dismiss } = usePWAInstall();
+// Mobile APK Download Prompt Component
+export function APKMobilePrompt() {
+  const { shouldShow, isMobile, isProductionOrDev, downloadAPK, dismiss } = useAPKDownload();
   const { toast } = useToast();
 
-  // Only show on mobile when installable and correct domain
-  if (!isMobile || !isInstallable || !isProductionOrDev) return null;
+  // Only show on mobile when appropriate and correct domain
+  if (!isMobile || !shouldShow || !isProductionOrDev) return null;
 
-  const handleInstall = async () => {
-    const success = await install();
+  const handleDownload = async () => {
+    const success = await downloadAPK();
     if (success) {
       toast({
-        title: "VitalWatch Installed!",
-        description: "The app has been added to your home screen.",
+        title: "APK Download Started!",
+        description: "Install the VitalWatch APK to access Health Connect and device sensors.",
       });
+    } else {
+      toast({
+        title: "Native App Required",
+        description: "For Health Connect integration, install the native Android app.",
+      });
+      // Open instructions or alternative download
+      window.open('https://docs.expo.dev/build/setup/', '_blank');
     }
   };
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 mobile-safe-area">
-      <div className="bg-gradient-to-r from-blue-600 to-green-600 rounded-lg p-4 shadow-lg border border-white/20">
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-lg p-4 shadow-lg border border-white/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="bg-white/20 p-2 rounded-lg">
-              <Smartphone className="w-5 h-5 text-white" />
+              <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold text-sm">Install VitalWatch</h3>
-              <p className="text-white/90 text-xs">Add to home screen for quick access</p>
+              <h3 className="text-white font-semibold text-sm">Get Native VitalWatch</h3>
+              <p className="text-white/90 text-xs">Access Health Connect & full device sensors</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              onClick={handleInstall}
+              onClick={handleDownload}
               size="sm"
-              className="bg-white text-blue-600 hover:bg-gray-100 text-xs font-semibold min-h-[44px] min-w-[60px]"
-              data-testid="button-install-mobile"
+              className="bg-white text-green-600 hover:bg-gray-100 text-xs font-semibold min-h-[44px] min-w-[70px]"
+              data-testid="button-download-apk-mobile"
             >
-              Install
+              Download
             </Button>
             <Button
               onClick={dismiss}
               size="sm"
               variant="ghost"
               className="text-white hover:bg-white/20 p-2 min-h-[44px] min-w-[44px]"
-              data-testid="button-dismiss-mobile"
+              data-testid="button-dismiss-apk-mobile"
             >
               <X className="w-4 h-4" />
             </Button>
