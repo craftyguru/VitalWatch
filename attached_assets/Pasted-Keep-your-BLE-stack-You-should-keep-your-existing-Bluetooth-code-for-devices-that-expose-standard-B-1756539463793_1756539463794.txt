@@ -1,0 +1,84 @@
+Keep your BLE stack
+
+You should keep your existing Bluetooth code for devices that expose standard BLE GATT services (or that provide a public SDK). Your app can still scan, connect, subscribe to notifications, and read sensor data directly.
+
+Common standard profiles your app can use today:
+
+Heart Rate Service — 0x180D
+
+Blood Pressure — 0x1810
+
+Pulse Oximeter — 0x1822
+
+Weight Scale — 0x181D
+
+Health Thermometer — 0x1809
+
+Battery — 0x180F
+(Plus any vendor-specific services you support.)
+
+Add Health Connect (new path)
+
+Health Connect is the bridge for ecosystems that don’t expose raw BLE to third parties (Samsung Galaxy Watch, Fitbit, some Garmin flows). You read records (HR, steps, sleep, calories, etc.) that their companion apps write into Health Connect.
+
+So your app supports both:
+
+Direct BLE path (generic devices & vendors with open GATT/SDK)
+
+Health Connect path (Galaxy Watch & similar closed ecosystems)
+
+Important constraints (true for all Android)
+
+You cannot “pull sensor info from devices that are only connected to the phone via another app.” Your app must either:
+
+open its own connection to the device (BLE/SDK), or
+
+read records via Health Connect (when the vendor supports it).
+
+Decision tree (device by device)
+
+Is it a smartwatch/fitness band with its own companion app?
+→ Prefer Health Connect (broadest compatibility).
+→ If you need live/raw sensors, build a Wear OS companion (for Wear watches only).
+
+Is it a medical/home device that advertises standard GATT (BP cuff, pulse ox, thermometer, scale)?
+→ Use your Direct BLE stack (scan → connect → discover → subscribe).
+
+Is it a vendor that requires their SDK (e.g., Omron, Polar in some modes)?
+→ Integrate the vendor SDK. (You can still fall back to standard services if available.)
+
+How to structure your app (recommended)
+
+Create a pluggable “data source” layer:
+
+HealthConnectSource
+
+Permissions flow
+
+Readers for HeartRate, Steps, Sleep, Calories, Distance, etc.
+
+BleGattSource
+
+Scanner + connectors
+
+Handlers per profile (HeartRate, BP, SpO2, etc.)
+
+Optional vendor modules (e.g., Polar SDK module)
+
+Device Router
+
+Based on user choice/device type, route to HealthConnectSource or BleGattSource
+
+UI: “Connect Health Sources (Samsung/Google Fit/Fitbit)” and “Pair a Bluetooth Device”
+
+Concrete guidance for you
+
+Yes, keep your other Bluetooth connection code. It will continue to work for many non-watch devices.
+
+Add Health Connect specifically to cover Galaxy Watches (and it also unlocks Fitbit/Google Fit users).
+
+Do not rely on the phone’s status-bar connection; always connect yourself or use Health Connect.
+
+For long streams on Android 12+ use a foreground service.
+
+Make sure you request the new BT permissions (BLUETOOTH_SCAN, BLUETOOTH_CONNECT) and location on 10–11.

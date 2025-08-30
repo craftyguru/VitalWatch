@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Button, FlatList, StyleSheet, SafeAreaView, PermissionsAndroid, Platform, Alert, NativeModules} from 'react-native';
+import {Text, View, Button, FlatList, StyleSheet, SafeAreaView, PermissionsAndroid, Platform, Alert, NativeModules, ScrollView} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
+import {DeviceRouter, HealthData} from './src/services/DataSources';
 
 const manager = new BleManager();
-const {DeviceHub} = NativeModules;
+const {DeviceHub, HealthConnect} = NativeModules;
 
 interface EnhancedDevice {
   id: string;
@@ -58,6 +59,11 @@ export default function App() {
   const [scanning, setScanning] = useState(false);
   const [bleState, setBleState] = useState('Unknown');
   const [permissionsGranted, setPermissionsGranted] = useState(false);
+  
+  // Health data from multiple sources
+  const [healthData, setHealthData] = useState<HealthData[]>([]);
+  const [healthConnectAvailable, setHealthConnectAvailable] = useState(false);
+  const [deviceRouter] = useState(new DeviceRouter());
 
   useEffect(() => {
     initializeApp();
@@ -74,9 +80,58 @@ export default function App() {
     const hasPermissions = await ensureBlePermissions();
     setPermissionsGranted(hasPermissions);
     
+    // Check Health Connect availability
+    await checkHealthConnect();
+    
     // Load bonded/connected devices immediately
     if (hasPermissions) {
       await getAllPhoneDevices();
+    }
+    
+    // Load health data from all sources
+    await loadHealthData();
+  };
+
+  const checkHealthConnect = async () => {
+    try {
+      if (Platform.OS === 'android' && HealthConnect) {
+        console.log('🏥 Checking Health Connect availability...');
+        const result = await HealthConnect.isAvailable();
+        setHealthConnectAvailable(result.installed);
+        console.log(`🏥 Health Connect ${result.installed ? 'available' : 'not available'}`);
+      }
+    } catch (error) {
+      console.error('Health Connect check failed:', error);
+      setHealthConnectAvailable(false);
+    }
+  };
+
+  const loadHealthData = async () => {
+    try {
+      console.log('📊 Loading health data from all sources...');
+      const allData = await deviceRouter.getAllHealthData();
+      setHealthData(allData);
+      console.log(`📊 Loaded ${allData.length} health records`);
+    } catch (error) {
+      console.error('Failed to load health data:', error);
+    }
+  };
+
+  const connectHealthConnect = async () => {
+    try {
+      console.log('🏥 Connecting to Health Connect...');
+      if (Platform.OS === 'android' && HealthConnect) {
+        const permissionResult = await HealthConnect.requestPermissions();
+        if (permissionResult.granted) {
+          Alert.alert('Success', 'Health Connect connected! Your Galaxy Watch data is now available.');
+          await loadHealthData();
+        } else {
+          Alert.alert('Permissions Required', 'Health Connect permissions are needed to access your Galaxy Watch data.');
+        }
+      }
+    } catch (error) {
+      console.error('Health Connect connection failed:', error);
+      Alert.alert('Connection Failed', 'Could not connect to Health Connect. Make sure it\'s installed and try again.');
     }
   };
 
@@ -365,13 +420,71 @@ export default function App() {
           </Text>
         )}
         
+        {/* Health Connect Section */}
+        <View style={styles.deviceGroup}>
+          <Text style={styles.groupTitle}>🏥 Health Connect Sources</Text>
+          <Text style={styles.groupSubtitle}>Galaxy Watch, Fitbit, Samsung Health, Google Fit</Text>
+          
+          {healthConnectAvailable ? (
+            <View>
+              <View style={[styles.deviceItem, styles.healthConnectDevice]}>
+                <View style={styles.deviceHeader}>
+                  <Text style={styles.deviceName}>Health Connect</Text>
+                  <Text style={styles.availableBadge}>AVAILABLE</Text>
+                </View>
+                <Text style={styles.deviceId}>Access health data from all connected devices</Text>
+                <Text style={styles.deviceType}>Galaxy Watch, fitness trackers, health apps</Text>
+                <Button 
+                  title="Connect Health Sources" 
+                  onPress={connectHealthConnect}
+                />
+              </View>
+              
+              {/* Show health data if available */}
+              {healthData.length > 0 && (
+                <View style={styles.healthDataSection}>
+                  <Text style={styles.healthDataTitle}>📊 Latest Health Data</Text>
+                  {healthData.map((data, index) => (
+                    <View key={index} style={styles.healthDataItem}>
+                      <Text style={styles.healthDataSource}>{data.source}</Text>
+                      {data.heartRate && (
+                        <Text style={styles.healthDataValue}>❤️ {data.heartRate} BPM</Text>
+                      )}
+                      {data.steps && (
+                        <Text style={styles.healthDataValue}>👟 {data.steps.toLocaleString()} steps</Text>
+                      )}
+                      {data.calories && (
+                        <Text style={styles.healthDataValue}>🔥 {data.calories} calories</Text>
+                      )}
+                      {data.distance && (
+                        <Text style={styles.healthDataValue}>📏 {data.distance} km</Text>
+                      )}
+                      <Text style={styles.healthDataTime}>{data.timestamp.toLocaleTimeString()}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          ) : (
+            <View style={styles.deviceItem}>
+              <Text style={styles.deviceName}>Health Connect Not Available</Text>
+              <Text style={styles.deviceId}>Install Health Connect to access Galaxy Watch data</Text>
+              <Button 
+                title="Install Health Connect" 
+                onPress={() => Alert.alert('Install Health Connect', 'Please install Health Connect from the Google Play Store to access your Galaxy Watch data.')}
+              />
+            </View>
+          )}
+        </View>
+
         <Text style={styles.deviceCount}>
-          Total: {deviceList.length} devices | Watches: {watchDevices.length} | Connected: {connectedDevices.length} | Bonded: {bondedDevices.length} | Nearby: {nearbyDevices.length}
+          BLE Devices: {deviceList.length} | Watches: {watchDevices.length} | Connected: {connectedDevices.length} | Bonded: {bondedDevices.length} | Nearby: {nearbyDevices.length}
         </Text>
         
         {/* Connected Devices (by profile) */}
         <View style={styles.deviceGroup}>
-          <Text style={styles.groupTitle}>🟢 Connected (by profile) ({connectedDevices.length})</Text>
+          <Text style={styles.groupTitle}>🟢 Connected BLE Devices (by profile) ({connectedDevices.length})</Text>
+          <Text style={styles.groupSubtitle}>Heart rate monitors, blood pressure cuffs, thermometers</Text>
           {connectedDevices.map(device => (
             <View key={device.id} style={[
               styles.deviceItem, 
@@ -398,7 +511,8 @@ export default function App() {
 
         {/* Bonded (Paired) Devices */}
         <View style={styles.deviceGroup}>
-          <Text style={styles.groupTitle}>🔗 Bonded (paired) ({bondedDevices.length})</Text>
+          <Text style={styles.groupTitle}>🔗 Bonded BLE Devices (paired) ({bondedDevices.length})</Text>
+          <Text style={styles.groupSubtitle}>Devices paired to your phone but using standard Bluetooth</Text>
           {bondedDevices.map(device => (
             <View key={device.id} style={[
               styles.deviceItem, 
@@ -425,7 +539,8 @@ export default function App() {
 
         {/* Nearby BLE (advertising) */}
         <View style={styles.deviceGroup}>
-          <Text style={styles.groupTitle}>📡 Nearby BLE (advertising) ({nearbyDevices.length})</Text>
+          <Text style={styles.groupTitle}>📡 Nearby BLE Devices (advertising) ({nearbyDevices.length})</Text>
+          <Text style={styles.groupSubtitle}>Discoverable devices with standard GATT services</Text>
           {nearbyDevices.map(device => (
             <View key={device.id} style={[
               styles.deviceItem, 
@@ -584,6 +699,63 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#10b981',
     fontWeight: '600',
+    marginTop: 4,
+  },
+  groupSubtitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginBottom: 8,
+    fontStyle: 'italic',
+  },
+  healthConnectDevice: {
+    borderColor: '#059669',
+    borderWidth: 2,
+    backgroundColor: '#ecfdf5',
+  },
+  availableBadge: {
+    backgroundColor: '#059669',
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginLeft: 4,
+  },
+  healthDataSection: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#f8fafc',
+    borderRadius: 8,
+  },
+  healthDataTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#374151',
+  },
+  healthDataItem: {
+    backgroundColor: 'white',
+    padding: 12,
+    borderRadius: 6,
+    marginBottom: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#059669',
+  },
+  healthDataSource: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 4,
+  },
+  healthDataValue: {
+    fontSize: 13,
+    color: '#374151',
+    marginBottom: 2,
+  },
+  healthDataTime: {
+    fontSize: 11,
+    color: '#6b7280',
     marginTop: 4,
   },
   deviceId: {
