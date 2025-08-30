@@ -350,34 +350,52 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
             </div>
           </div>
           
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50">
-            <div className="flex items-center space-x-2 mb-2">
-              <Smartphone className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Access via Mobile App</span>
+          {/* Mobile Detection - Show Connect Button if on Mobile */}
+          {navigator.userAgent.includes('Mobile') || navigator.userAgent.includes('Android') ? (
+            <div className="flex flex-col gap-3">
+              <Button 
+                onClick={() => {
+                  toast({
+                    title: "Health Connect Required",
+                    description: "Please install Health Connect from Google Play Store, then return to connect your devices.",
+                  });
+                  // Open Health Connect in Play Store
+                  window.open('https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata', '_blank');
+                }}
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Connect Health Sources
+              </Button>
+              <p className="text-xs text-green-700 dark:text-green-300 text-center">
+                First install Health Connect, then return to access your Galaxy Watch and fitness data
+              </p>
             </div>
-            <p className="text-xs text-blue-700 dark:text-blue-300 mb-3">
-              Health Connect APIs are Android-specific and not available in web browsers. To connect your Galaxy Watch and other health devices:
-            </p>
-            <div className="space-y-2 text-xs text-blue-700 dark:text-blue-300">
-              <div className="flex items-center space-x-2">
-                <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
-                <span>Build and install the VitalWatch mobile app on Android</span>
+          ) : (
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50">
+              <div className="flex items-center space-x-2 mb-2">
+                <Smartphone className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Available on Mobile</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
-                <span>Look for "🏥 Health Connect Sources" section at the top</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
-                <span>Tap "Connect Health Sources" for Galaxy Watch integration</span>
+              <p className="text-xs text-blue-700 dark:text-blue-300 mb-3">
+                Health Connect integration is available in the VitalWatch mobile app for Android devices.
+              </p>
+              <div className="space-y-2 text-xs text-blue-700 dark:text-blue-300">
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                  <span>Install Health Connect from Google Play Store</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                  <span>Open VitalWatch mobile app</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                  <span>Tap "Connect Health Sources" for Galaxy Watch data</span>
+                </div>
               </div>
             </div>
-            <div className="mt-3 pt-3 border-t border-blue-200/50">
-              <code className="text-xs bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded text-blue-800 dark:text-blue-200">
-                cd mobile/android && ./gradlew assembleDebug && adb install app/build/outputs/apk/debug/app-debug.apk
-              </code>
-            </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
