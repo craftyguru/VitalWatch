@@ -204,3 +204,36 @@
     --ring: hsl(0, 0%, 10%);
   }
 }
+
+/* Mobile-First PWA Optimizations */
+@media (max-width: 768px) {
+  /* Touch targets for mobile */
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  input, select, textarea {
+    font-size: 16px;
+  }
+  
+  /* Mobile tap highlight */
+  button, a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Mobile safe area for PWA */
+.mobile-safe-area {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) 
+           env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* PWA viewport adjustments */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

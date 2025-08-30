@@ -1,0 +1,121 @@
+I'll examine exactly how this app implements app download on the landing page. Let me search for the PWA installation and download functionality:
+
+
+Searched for "PWAMobilePrompt PWAInstallButton landing page component import"
+
+Compiled app download details
+Here's the exact way JournOwl implements app download functionality for your other app:
+
+Core PWA Installation System
+1. PWA Manager Singleton Class (client/src/components/PWAManager.tsx)
+class PWAManager {
+  private deferredPrompt: BeforeInstallPromptEvent | null = null;
+  private isInstalled = false;
+  private isDismissed = false;
+  // Listens for beforeinstallprompt event
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    this.deferredPrompt = e;
+  });
+  // Domain whitelist check
+  isProductionOrDev(): boolean {
+    const hostname = window.location.hostname;
+    return hostname === 'journowl.app' || 
+           hostname === 'localhost' || 
+           hostname.includes('replit.dev');
+  }
+  // Mobile detection
+  isMobileDevice(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+  // Installation method
+  async install(): Promise<boolean> {
+    await this.deferredPrompt.prompt();
+    const { outcome } = await this.deferredPrompt.userChoice;
+    return outcome === 'accepted';
+  }
+}
+2. Two Install Components
+Desktop Install Button:
+
+export function PWAInstallButton() {
+  const { isInstallable, isMobile, install } = usePWAInstall();
+  
+  // Only show on desktop when installable
+  if (isMobile || !isInstallable) return null;
+  return (
+    <Button onClick={install} className="hidden md:flex">
+      <Download className="w-4 h-4" />
+      Install App
+    </Button>
+  );
+}
+Mobile Bottom Prompt:
+
+export function PWAMobilePrompt() {
+  const { isInstallable, isMobile, isProductionOrDev, install, dismiss } = usePWAInstall();
+  
+  // Only show on mobile when installable and correct domain
+  if (!isMobile || !isInstallable || !isProductionOrDev) return null;
+  return (
+    <div className="fixed bottom-4 left-4 right-4 z-50">
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-4">
+        <Button onClick={install}>Install</Button>
+        <Button onClick={dismiss}>Later</Button>
+      </div>
+    </div>
+  );
+}
+3. Key Implementation Details
+Session Storage Dismissal:
+
+// Prevents showing again in same session
+sessionStorage.setItem('pwa-dismissed', 'true');
+Installation Detection:
+
+// Checks if already installed as PWA
+window.matchMedia('(display-mode: standalone)').matches
+React Hook Integration:
+
+export function usePWAInstall() {
+  return {
+    isInstallable: manager.isInstallable(),
+    isMobile: manager.isMobileDevice(),
+    isProductionOrDev: manager.isProductionOrDev(),
+    install: () => manager.install(),
+    dismiss: () => manager.dismiss()
+  };
+}
+4. Mobile-First CSS Optimizations (client/src/index.css)
+/* Touch targets for mobile */
+button, a, input { min-height: 44px; min-width: 44px; }
+/* Prevent zoom on input focus (iOS) */
+input, select, textarea { font-size: 16px; }
+/* Mobile safe area */
+.mobile-safe-area {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) 
+           env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+5. Usage in App
+// Import and use in your main component
+import { PWAInstallButton, PWAMobilePrompt } from './PWAManager';
+function App() {
+  return (
+    <>
+      {/* Desktop install button in navbar */}
+      <PWAInstallButton />
+      
+      {/* Mobile install prompt at bottom */}
+      <PWAMobilePrompt />
+    </>
+  );
+}
+Critical Success Factors:
+Domain Whitelist - Only shows on production/dev domains
+Platform Detection - Different UI for mobile vs desktop
+Session Management - Respects user dismissal
+beforeinstallprompt - Properly captures and defers browser prompt
+Mobile Optimizations - Touch-friendly sizing and safe areas
+This system works perfectly because it's conditional, non-intrusive, and respects user choice while providing native-like installation prompts exactly when appropriate.
+
+Optimized Agent memory

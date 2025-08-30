@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { IncognitoProvider } from "@/contexts/IncognitoContext";
 import FloatingChatBubble from "@/components/ui/floating-chat-bubble";
 import { UpdateAvailableToast } from "@/components/UpdateAvailableToast";
+import { PWAInstallButton, PWAMobilePrompt } from "@/components/PWAManager";
 
 import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
@@ -66,6 +67,10 @@ function App() {
             <Router />
 
             <FloatingChatBubble />
+            
+            {/* PWA Install Components */}
+            <PWAInstallButton />
+            <PWAMobilePrompt />
           </TooltipProvider>
         </QueryClientProvider>
       </IncognitoProvider>
