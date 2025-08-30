@@ -67,11 +67,7 @@ async function start() {
   });
 
   // Initialize database and routes
-  await registerRoutes(app);
-
-  // Serve APK downloads
-  const downloadsPath = path.resolve(__dirname, "public/downloads");
-  app.use("/downloads", express.static(downloadsPath));
+  await registerRoutes(app, server);
 
   // Error middleware (do NOT rethrow)
   app.use((err: any, _req: any, res: any, _next: any) => {

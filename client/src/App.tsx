@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { IncognitoProvider } from "@/contexts/IncognitoContext";
 import FloatingChatBubble from "@/components/ui/floating-chat-bubble";
 import { UpdateAvailableToast } from "@/components/UpdateAvailableToast";
-import { APKDownloadButton, APKMobilePrompt } from "@/components/PWAManager";
+import { PWAInstallButton, PWAMobilePrompt } from "@/components/PWAManager";
 
 import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
@@ -68,9 +68,9 @@ function App() {
 
             <FloatingChatBubble />
             
-            {/* APK Download Components */}
-            <APKDownloadButton />
-            <APKMobilePrompt />
+            {/* PWA Install Components */}
+            <PWAInstallButton />
+            <PWAMobilePrompt />
           </TooltipProvider>
         </QueryClientProvider>
       </IncognitoProvider>
