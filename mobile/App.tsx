@@ -146,19 +146,36 @@ export default function App() {
 
   const getAllPhoneDevices = async () => {
     try {
-      console.log('Getting all phone devices via DeviceHub...');
+      console.log('🔍 DeviceHub: Starting comprehensive device scan...');
+      console.log('🔍 DeviceHub: Platform:', Platform.OS, 'DeviceHub available:', !!DeviceHub);
       
       if (Platform.OS === 'android' && DeviceHub) {
         try {
+          console.log('🔍 DeviceHub: Calling native getDevices()...');
           const devices = await DeviceHub.getDevices();
-          console.log('Found', devices.length, 'bonded/connected devices');
+          console.log('🔍 DeviceHub: Native module returned', devices.length, 'devices');
+          
+          if (devices.length === 0) {
+            console.warn('⚠️ DeviceHub: No devices returned from native module!');
+            console.warn('⚠️ DeviceHub: This might indicate:');
+            console.warn('   - No bonded devices found');
+            console.warn('   - Bluetooth permissions not granted');  
+            console.warn('   - Bluetooth is off');
+            console.warn('   - Native module error');
+          }
           
           // Deduplicate by address and process devices
           const deviceMap = new Map();
           
-          devices.forEach((device: any) => {
+          devices.forEach((device: any, index: number) => {
             const deviceName = device.name || 'Unknown Device';
             const address = device.address;
+            
+            console.log(`🔍 DeviceHub: [${index + 1}/${devices.length}] Processing: ${deviceName}`);
+            console.log(`   📍 Address: ${address}`);
+            console.log(`   🔗 State: ${device.state}, Kind: ${device.kind}, Type: ${device.type}`);
+            console.log(`   📱 Device Class: ${device.deviceClassInfo || 'Not available'}`);
+            console.log(`   ⌚ Is Wearable: ${device.isWearable ? 'YES' : 'NO'}`);
             
             // Check if it's a watch-like device
             const isWatchLike = deviceName.toLowerCase().includes('watch') ||
@@ -169,11 +186,14 @@ export default function App() {
                                deviceName.toLowerCase().includes('tracker') ||
                                device.isWearable;
             
-            console.log(`${device.state} device: ${deviceName} (${address}) Type: ${device.type} Kind: ${device.kind}${isWatchLike ? ' - WATCH DETECTED!' : ''}`);
+            if (isWatchLike) {
+              console.log(`🎉 DeviceHub: WATCH DETECTED! ${deviceName}`);
+            }
             
             let displayType: 'BLE' | 'Classic' | 'Paired' = 'Paired';
             if (device.type === 'LE') displayType = 'BLE';
             else if (device.type === 'CLASSIC') displayType = 'Classic';
+            else if (device.type === 'DUAL') displayType = 'Classic'; // Treat dual as classic
             
             const enhancedDevice: EnhancedDevice = {
               id: address,
@@ -182,34 +202,51 @@ export default function App() {
               type: displayType,
               isConnected: device.state === 'CONNECTED',
               isBonded: device.state === 'BONDED',
-              deviceClass: device.kind || 'Unknown',
+              deviceClass: device.deviceClassInfo || device.kind || 'Unknown',
               state: device.state,
               kind: device.kind,
-              isWearable: device.isWearable
+              isWearable: device.isWearable || isWatchLike
             };
             
             // Use address as unique key, but prefer connected over bonded
             if (!deviceMap.has(address) || device.state === 'CONNECTED') {
               deviceMap.set(address, enhancedDevice);
+              console.log(`✅ DeviceHub: Added ${deviceName} to device map`);
+            } else {
+              console.log(`⏭️ DeviceHub: Skipped ${deviceName} (already exists)`);
             }
           });
+          
+          console.log(`🔍 DeviceHub: Final device map has ${deviceMap.size} unique devices`);
           
           // Add to state
           deviceMap.forEach((device) => {
             setDevices(d => ({...d, [device.id]: device}));
+            console.log(`🔄 DeviceHub: Added to React state: ${device.name}`);
           });
           
+          if (deviceMap.size > 0) {
+            console.log('🎉 DeviceHub: Successfully loaded devices into app!');
+          } else {
+            console.warn('⚠️ DeviceHub: No devices were added to app state');
+          }
+          
         } catch (nativeError) {
-          console.error('DeviceHub error:', nativeError);
+          console.error('❌ DeviceHub: Native module error:', nativeError);
+          console.error('❌ DeviceHub: Error details:', {
+            message: nativeError.message,
+            code: nativeError.code,
+            userInfo: nativeError.userInfo
+          });
           addSimulatedDevice();
         }
       } else {
-        console.log('DeviceHub not available, adding simulated device');
+        console.warn('⚠️ DeviceHub: Not available (Platform:', Platform.OS, ', Module:', !!DeviceHub, ')');
         addSimulatedDevice();
       }
       
     } catch (error) {
-      console.error('Error getting bonded/connected devices:', error);
+      console.error('❌ DeviceHub: General error:', error);
       addSimulatedDevice();
     }
   };
