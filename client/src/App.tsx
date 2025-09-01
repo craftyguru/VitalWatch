@@ -23,6 +23,7 @@ import VerifyEmail from "@/pages/verify-email";
 import AdminDashboard from "@/pages/admin-dashboard";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import DeleteAccount from "@/pages/delete-account";
+import OptInPage from "@/pages/opt-in";
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -34,6 +35,7 @@ function Router() {
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/privacy" component={PrivacyPolicy} />
+      <Route path="/opt-in" component={OptInPage} />
       {isLoading || !isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
