@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import { registerRecordingRoutes } from "./routes/recordings";
 import { WebSocketServer, WebSocket } from "ws";
@@ -24,6 +25,7 @@ import { generateHelpResponse } from "./openai";
 import { analyzeGuardianSituation } from './openai';
 import { sendCrisisResourcesEmail } from "./services/sendgrid";
 import { sendCrisisResourcesSMS, sendEmergencyAlertSMS, sendSMS } from "./services/twilio";
+import twilio from 'twilio';
 import {
   insertEmergencyContactSchema,
   insertMoodEntrySchema,
@@ -2029,6 +2031,133 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: error.message });
     }
   });
+
+  // SMS Inbound Webhook - Handle incoming SMS messages
+  app.post('/sms/inbound', 
+    twilio.webhook({ validate: true }), 
+    async (req, res) => {
+      try {
+        const { From: senderPhone, Body: messageBody } = req.body;
+        
+        console.log(`📱 Incoming SMS from ${senderPhone}: "${messageBody}"`);
+        
+        // Normalize phone number format (remove +1, spaces, dashes, etc.)
+        const cleanPhone = senderPhone.replace(/\D/g, '').replace(/^1/, '');
+        
+        // Try different phone formats to find the user
+        let user = await storage.getUserByPhone(senderPhone); // Try original format first
+        if (!user && cleanPhone !== senderPhone) {
+          user = await storage.getUserByPhone(cleanPhone); // Try cleaned format
+        }
+        if (!user && !cleanPhone.startsWith('+1')) {
+          user = await storage.getUserByPhone(`+1${cleanPhone}`); // Try with +1 prefix
+        }
+        
+        let responseMessage = "Thank you for contacting VitalWatch. We've received your message.";
+        
+        if (user) {
+          const lowerBody = messageBody.toLowerCase().trim();
+          
+          // Handle specific responses
+          if (lowerBody === '1' || lowerBody === 'yes' || lowerBody === 'ok') {
+            // Positive emergency check-in response
+            responseMessage = `Thanks ${user.firstName || user.username}, glad you're safe! 💙 VitalWatch is here if you need support.`;
+            
+            // Log positive check-in
+            await db.insert(emergencyIncidents).values({
+              userId: user.id,
+              type: 'sms_checkin_positive',
+              status: 'resolved',
+              severity: 'low',
+              description: `User responded positively to check-in: "${messageBody}"`,
+              location: null,
+              createdAt: new Date()
+            });
+            
+          } else if (lowerBody === '2' || lowerBody === 'help' || lowerBody === 'crisis') {
+            // User requesting help
+            responseMessage = `🆘 Help is available 24/7:
+• Call/Text 988 (Suicide & Crisis Lifeline)
+• Text HOME to 741741 (Crisis Text Line)
+• Call 911 for emergencies
+You're not alone. VitalWatch team is here. 💙`;
+            
+            // Send additional crisis resources
+            await sendCrisisResourcesSMS(senderPhone, user.firstName || user.username);
+            
+            // Log crisis request
+            await db.insert(emergencyIncidents).values({
+              userId: user.id,
+              type: 'sms_crisis_request',
+              status: 'active',
+              severity: 'high',
+              description: `User requested help via SMS: "${messageBody}"`,
+              location: null,
+              createdAt: new Date()
+            });
+            
+          } else if (lowerBody === 'stop' || lowerBody === 'unsubscribe') {
+            // Handle opt-out (Twilio handles this automatically, but we can log it)
+            responseMessage = "You've been unsubscribed from VitalWatch SMS. Reply START to re-enable.";
+            
+          } else if (lowerBody === 'start' || lowerBody === 'subscribe') {
+            // Handle opt-in
+            responseMessage = `Welcome back to VitalWatch SMS alerts! You'll receive emergency notifications and check-ins. Reply HELP for resources or STOP to opt out.`;
+            
+          } else {
+            // General message - provide help options
+            responseMessage = `Hi ${user.firstName || user.username}! VitalWatch received: "${messageBody}"
+            
+Reply with:
+• HELP for crisis resources
+• 1 if you're safe  
+• 2 if you need help
+• STOP to unsubscribe 💙`;
+          }
+        } else {
+          // Unknown phone number
+          responseMessage = `Hello! This is VitalWatch emergency monitoring. For support, visit vitalwatch.app or call 988 for crisis help.`;
+        }
+        
+        // Respond with TwiML
+        const twimlResponse = `<Response><Message>${responseMessage}</Message></Response>`;
+        res.type('text/xml').send(twimlResponse);
+        
+      } catch (error) {
+        console.error('SMS webhook error:', error);
+        
+        // Send basic response even if there's an error
+        const errorResponse = '<Response><Message>VitalWatch received your message. For immediate help, call 988 or 911.</Message></Response>';
+        res.type('text/xml').send(errorResponse);
+      }
+    }
+  );
+
+  // SMS Status Callback - Handle delivery status updates
+  app.post('/sms/status', 
+    express.urlencoded({ extended: false }), 
+    async (req, res) => {
+      try {
+        const { MessageSid, MessageStatus, To, From, ErrorCode } = req.body;
+        
+        console.log(`📬 SMS Status Update - SID: ${MessageSid}, Status: ${MessageStatus}, To: ${To}`);
+        
+        // Log delivery status (you can expand this to update database records)
+        if (MessageStatus === 'failed' && ErrorCode) {
+          console.error(`❌ SMS delivery failed - SID: ${MessageSid}, Error: ${ErrorCode}`);
+        } else if (MessageStatus === 'delivered') {
+          console.log(`✅ SMS delivered successfully - SID: ${MessageSid}`);
+        }
+        
+        // Respond with 204 No Content (standard for webhooks)
+        res.sendStatus(204);
+        
+      } catch (error) {
+        console.error('SMS status callback error:', error);
+        res.sendStatus(204); // Still return 204 to prevent retries
+      }
+    }
+  );
 
   return httpServer;
 }

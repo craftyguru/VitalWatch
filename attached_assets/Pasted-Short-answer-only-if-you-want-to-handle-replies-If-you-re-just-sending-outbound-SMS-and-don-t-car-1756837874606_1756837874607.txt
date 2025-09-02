@@ -1,0 +1,62 @@
+Short answer: only if you want to handle replies.
+
+If you’re just sending outbound SMS and don’t care about user replies right now, set Incoming messages → “Receive the message” (no webhook), and you don’t need to add /sms/inbound.
+
+If you want two-way texting (e.g., your 1/2/YES check-ins, custom replies, saving messages), then yes—you need a public HTTPS endpoint (a webhook). It can be
+https://vitalwatch.app/sms/inbound or any URL (e.g., https://api.vitalwatch.app/sms/inbound, a Supabase Edge Function URL, etc.). It just has to be reachable.
+
+Quick options to create the webhook
+
+Pick whichever fits your stack:
+
+A) Node/Express (Railway/Render/Replit/etc.)
+
+import express from 'express';
+import twilio from 'twilio';
+const app = express();
+app.post('/sms/inbound', twilio.webhook({ validate: true }), (req, res) => {
+  const { From, Body } = req.body;
+  // your logic (store, branch on "1/2/YES", etc.)
+  res.type('text/xml').send(`<Response><Message>Got it: ${Body}</Message></Response>`);
+});
+app.post('/sms/status', express.urlencoded({ extended: false }), (req, res) => {
+  // delivery/failed callbacks
+  res.sendStatus(204);
+});
+
+
+B) Cloudflare Pages/Workers (serverless)
+
+export default {
+  async fetch(request) {
+    if (request.method !== 'POST') return new Response('OK');
+    const form = await request.formData();
+    const body = form.get('Body') || '';
+    return new Response(`<Response><Message>Got it: ${body}</Message></Response>`, {
+      headers: { 'Content-Type': 'text/xml' }
+    });
+  }
+};
+
+
+C) Supabase Edge Function
+
+Create a function (e.g., twilio-inbound) and paste similar logic; use its URL in Twilio.
+
+Twilio settings to pair with it
+
+Messaging Service → Integration:
+
+Incoming messages: Send a webhook
+
+URL: your endpoint (e.g., https://vitalwatch.app/sms/inbound)
+
+Method: POST
+
+(Optional) Delivery Status Callback: https://vitalwatch.app/sms/status
+
+Enable Advanced Opt-Out in the service (Twilio handles STOP/HELP automatically whether or not you have a webhook).
+
+One more thing
+
+The “restricted traffic” banner won’t disappear until your toll-free re-verification is approved (or you use a registered A2P 10DLC local number). The webhook doesn’t affect that.
