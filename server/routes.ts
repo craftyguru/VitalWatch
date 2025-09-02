@@ -2041,16 +2041,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`📱 Incoming SMS from ${senderPhone}: "${messageBody}"`);
         
-        // Normalize phone number format (remove +1, spaces, dashes, etc.)
-        const cleanPhone = senderPhone.replace(/\D/g, '').replace(/^1/, '');
+        // Normalize to E.164 format for consistent storage/lookup
+        let normalizedPhone = senderPhone;
+        if (!senderPhone.startsWith('+')) {
+          // Add +1 if no country code present
+          const digits = senderPhone.replace(/\D/g, '');
+          normalizedPhone = digits.startsWith('1') ? `+${digits}` : `+1${digits}`;
+        }
         
         // Try different phone formats to find the user
-        let user = await storage.getUserByPhone(senderPhone); // Try original format first
-        if (!user && cleanPhone !== senderPhone) {
-          user = await storage.getUserByPhone(cleanPhone); // Try cleaned format
+        let user = await storage.getUserByPhone(normalizedPhone); // E.164 format
+        if (!user) {
+          user = await storage.getUserByPhone(senderPhone); // Original format
         }
-        if (!user && !cleanPhone.startsWith('+1')) {
-          user = await storage.getUserByPhone(`+1${cleanPhone}`); // Try with +1 prefix
+        if (!user) {
+          const cleanDigits = senderPhone.replace(/\D/g, '').replace(/^1/, '');
+          user = await storage.getUserByPhone(cleanDigits); // Just digits
         }
         
         let responseMessage = "Thank you for contacting VitalWatch. We've received your message.";
@@ -2080,7 +2086,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 • Call/Text 988 (Suicide & Crisis Lifeline)
 • Text HOME to 741741 (Crisis Text Line)
 • Call 911 for emergencies
-You're not alone. VitalWatch team is here. 💙`;
+VitalWatch is not a substitute for emergency services. You're not alone. 💙`;
             
             // Send additional crisis resources
             await sendCrisisResourcesSMS(senderPhone, user.firstName || user.username);
@@ -2096,14 +2102,6 @@ You're not alone. VitalWatch team is here. 💙`;
               createdAt: new Date()
             });
             
-          } else if (lowerBody === 'stop' || lowerBody === 'unsubscribe') {
-            // Handle opt-out (Twilio handles this automatically, but we can log it)
-            responseMessage = "You've been unsubscribed from VitalWatch SMS. Reply START to re-enable.";
-            
-          } else if (lowerBody === 'start' || lowerBody === 'subscribe') {
-            // Handle opt-in
-            responseMessage = `Welcome back to VitalWatch SMS alerts! You'll receive emergency notifications and check-ins. Reply HELP for resources or STOP to opt out.`;
-            
           } else {
             // General message - provide help options
             responseMessage = `Hi ${user.firstName || user.username}! VitalWatch received: "${messageBody}"
@@ -2116,7 +2114,7 @@ Reply with:
           }
         } else {
           // Unknown phone number
-          responseMessage = `Hello! This is VitalWatch emergency monitoring. For support, visit vitalwatch.app or call 988 for crisis help.`;
+          responseMessage = `Hello! This is VitalWatch emergency monitoring. VitalWatch is not a substitute for emergency services. For support, visit vitalwatch.app or call 988 for crisis help.`;
         }
         
         // Respond with TwiML
