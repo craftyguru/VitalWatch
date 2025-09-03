@@ -311,7 +311,7 @@ export default function OptInPage() {
                       </Label>
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-start space-x-2">
                       <Checkbox
                         id="sms-notifications"
                         checked={preferences.smsNotifications}
@@ -320,10 +320,12 @@ export default function OptInPage() {
                         }
                         disabled={!phone}
                         data-testid="checkbox-sms-notifications"
+                        className="mt-1"
                       />
-                      <Label htmlFor="sms-notifications" className="text-sm">
+                      <Label htmlFor="sms-notifications" className="text-sm leading-relaxed">
                         <Phone className="w-4 h-4 inline mr-2 text-green-500" />
-                        SMS Notifications {!phone && "(Enter phone number)"}
+                        By providing your number, you agree to receive SMS notifications from VitalWatch about wellness check-ins, mood reminders, and account notifications. Message & data rates may apply. STOP to opt out, HELP for help.
+                        {!phone && <span className="block text-xs text-gray-500 mt-1">(Enter phone number)</span>}
                       </Label>
                     </div>
                   </div>
@@ -354,7 +356,8 @@ export default function OptInPage() {
                 {/* Privacy Notice */}
                 <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-4">
                   <p>
-                    By opting in, you agree to receive notifications from VitalWatch. You can unsubscribe at any time.
+                    Messages are account-related only: wellness check-ins, mood reminders, and account notifications. 
+                    Links direct only to vitalwatch.app domain. No third-party lists or promotional content.
                     <br />
                     <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline">
                       View Privacy Policy

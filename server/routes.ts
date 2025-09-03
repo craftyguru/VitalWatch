@@ -2064,57 +2064,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (user) {
           const lowerBody = messageBody.toLowerCase().trim();
           
-          // Handle specific responses
-          if (lowerBody === '1' || lowerBody === 'yes' || lowerBody === 'ok') {
-            // Positive emergency check-in response
-            responseMessage = `Thanks ${user.firstName || user.username}, glad you're safe! 💙 VitalWatch is here if you need support.`;
+          // Handle specific responses  
+          if (lowerBody === 'yes') {
+            // Double opt-in confirmation - activate SMS notifications
+            responseMessage = `Welcome to VitalWatch SMS notifications! You'll receive wellness check-ins, mood reminders, and account updates. Manage preferences at vitalwatch.app/settings`;
             
-            // Log positive check-in
-            await db.insert(emergencyIncidents).values({
-              userId: user.id,
-              type: 'sms_checkin_positive',
-              status: 'resolved',
-              severity: 'low',
-              description: `User responded positively to check-in: "${messageBody}"`,
-              location: null,
-              createdAt: new Date()
-            });
+            // Update user settings to confirm SMS opt-in
+            const userSettings = await db.select().from(userSettings).where(eq(userSettings.userId, user.id)).limit(1);
+            if (userSettings.length > 0) {
+              await db.update(userSettings).set({
+                notificationPreferences: {
+                  ...userSettings[0].notificationPreferences,
+                  smsOptInConfirmed: true,
+                  smsOptInDate: new Date().toISOString()
+                }
+              }).where(eq(userSettings.userId, user.id));
+            }
             
-          } else if (lowerBody === '2' || lowerBody === 'help' || lowerBody === 'crisis') {
-            // User requesting help
-            responseMessage = `🆘 Help is available 24/7:
-• Call/Text 988 (Suicide & Crisis Lifeline)
-• Text HOME to 741741 (Crisis Text Line)
-• Call 911 for emergencies
-VitalWatch is not a substitute for emergency services. You're not alone. 💙`;
+          } else if (lowerBody === 'help') {
+            // General help message
+            responseMessage = `VitalWatch Help:
+• Wellness check-ins and mood tracking
+• Account notifications and reminders  
+• Visit vitalwatch.app for full support
+• Reply STOP to unsubscribe`;
             
-            // Send additional crisis resources
-            await sendCrisisResourcesSMS(senderPhone, user.firstName || user.username);
+          } else if (lowerBody === 'mood' || lowerBody === 'check-in') {
+            // Account-related wellness check
+            responseMessage = `Hi ${user.firstName || user.username}! Time for your wellness check-in. How are you feeling today? Track your mood at vitalwatch.app/mood`;
             
-            // Log crisis request
-            await db.insert(emergencyIncidents).values({
-              userId: user.id,
-              type: 'sms_crisis_request',
-              status: 'active',
-              severity: 'high',
-              description: `User requested help via SMS: "${messageBody}"`,
-              location: null,
-              createdAt: new Date()
-            });
+          } else if (lowerBody === 'reminder' || lowerBody === '1') {
+            // Reminder response
+            responseMessage = `Thanks for the reminder response! Keep up your wellness journey. Visit vitalwatch.app to see your progress.`;
             
           } else {
-            // General message - provide help options
+            // General message - provide account-related options
             responseMessage = `Hi ${user.firstName || user.username}! VitalWatch received: "${messageBody}"
             
 Reply with:
-• HELP for crisis resources
-• 1 if you're safe  
-• 2 if you need help
-• STOP to unsubscribe 💙`;
+• HELP for assistance
+• MOOD for wellness check-in  
+• Visit vitalwatch.app for full features
+• STOP to unsubscribe`;
           }
         } else {
-          // Unknown phone number
-          responseMessage = `Hello! This is VitalWatch emergency monitoring. VitalWatch is not a substitute for emergency services. For support, visit vitalwatch.app or call 988 for crisis help.`;
+          // Unknown phone number - send double opt-in
+          responseMessage = `Hello! This is VitalWatch wellness monitoring. To confirm SMS notifications, reply YES. For account support, visit vitalwatch.app`;
         }
         
         // Respond with TwiML
@@ -2130,6 +2125,53 @@ Reply with:
       }
     }
   );
+
+  // Opt-in consent logging - Handle form submissions with compliance logging
+  app.post('/api/opt-in', async (req, res) => {
+    try {
+      const { phone, email, preferences } = req.body;
+      
+      // Get client IP for logging
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      
+      // Exact disclosure text for compliance
+      const smsDisclosureText = "By providing your number, you agree to receive SMS notifications from VitalWatch about wellness check-ins, mood reminders, and account notifications. Message & data rates may apply. STOP to opt out, HELP for help.";
+      
+      // Log consent with compliance requirements
+      const consentRecord = {
+        userId: req.user?.id || 'anonymous',
+        timestamp: new Date().toISOString(),
+        ipAddress: clientIP,
+        phoneNumber: phone,
+        emailAddress: email,
+        smsConsent: preferences.smsNotifications,
+        exactDisclosureText: smsDisclosureText,
+        preferences: preferences,
+        userAgent: req.headers['user-agent'] || 'unknown'
+      };
+      
+      console.log('📋 SMS Consent Logged:', consentRecord);
+      
+      // Send double opt-in SMS if SMS consent was given
+      if (preferences.smsNotifications && phone) {
+        const doubleOptInMessage = `VitalWatch: To confirm SMS notifications, reply YES. You'll receive wellness check-ins, mood reminders, and account updates. STOP to opt out.`;
+        
+        // Send confirmation SMS
+        await sendSMS(phone, doubleOptInMessage);
+        console.log(`📱 Double opt-in SMS sent to ${phone}`);
+      }
+      
+      res.json({ 
+        success: true, 
+        message: 'Preferences saved successfully',
+        requiresSMSConfirmation: preferences.smsNotifications && phone
+      });
+      
+    } catch (error) {
+      console.error('Opt-in submission error:', error);
+      res.status(500).json({ error: 'Failed to save preferences' });
+    }
+  });
 
   // SMS Status Callback - Handle delivery status updates
   app.post('/sms/status', 
