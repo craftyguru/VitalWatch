@@ -2067,7 +2067,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Handle specific responses  
           if (lowerBody === 'yes') {
             // Double opt-in confirmation - activate SMS notifications
-            responseMessage = `Welcome to VitalWatch SMS notifications! You'll receive wellness check-ins, mood reminders, and account updates. Manage preferences at vitalwatch.app/settings`;
+            responseMessage = `Welcome to VitalWatch SMS alerts! You'll receive emergency notifications, crisis check-ins, and safety monitoring. Manage preferences at vitalwatch.app/settings`;
             
             // Update user settings to confirm SMS opt-in
             const userSettings = await db.select().from(userSettings).where(eq(userSettings.userId, user.id)).limit(1);
@@ -2084,18 +2084,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
           } else if (lowerBody === 'help') {
             // General help message
             responseMessage = `VitalWatch Help:
-• Wellness check-ins and mood tracking
-• Account notifications and reminders  
+• Emergency monitoring and crisis support
+• Safety check-ins and mental health tracking
 • Visit vitalwatch.app for full support
 • Reply STOP to unsubscribe`;
             
-          } else if (lowerBody === 'mood' || lowerBody === 'check-in') {
-            // Account-related wellness check
-            responseMessage = `Hi ${user.firstName || user.username}! Time for your wellness check-in. How are you feeling today? Track your mood at vitalwatch.app/mood`;
+          } else if (lowerBody === 'safe' || lowerBody === 'ok' || lowerBody === '1') {
+            // Safety check-in response
+            responseMessage = `Thanks ${user.firstName || user.username}! Glad you're safe. VitalWatch is here for support anytime. Visit vitalwatch.app for resources.`;
             
-          } else if (lowerBody === 'reminder' || lowerBody === '1') {
-            // Reminder response
-            responseMessage = `Thanks for the reminder response! Keep up your wellness journey. Visit vitalwatch.app to see your progress.`;
+          } else if (lowerBody === 'crisis' || lowerBody === 'emergency' || lowerBody === '2') {
+            // Crisis/emergency request
+            responseMessage = `🚨 VitalWatch Crisis Support:
+• Call/Text 988 (Suicide & Crisis Lifeline) 
+• Text HOME to 741741 (Crisis Text Line)
+• Call 911 for emergencies
+You're not alone. Support is available 24/7.`;
             
           } else {
             // General message - provide account-related options
@@ -2103,13 +2107,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
 Reply with:
 • HELP for assistance
-• MOOD for wellness check-in  
+• 1 if you're safe
+• 2 for crisis support  
 • Visit vitalwatch.app for full features
 • STOP to unsubscribe`;
           }
         } else {
           // Unknown phone number - send double opt-in
-          responseMessage = `Hello! This is VitalWatch wellness monitoring. To confirm SMS notifications, reply YES. For account support, visit vitalwatch.app`;
+          responseMessage = `Hello! This is VitalWatch emergency monitoring. To confirm SMS alerts, reply YES. For crisis support, visit vitalwatch.app or call 988.`;
         }
         
         // Respond with TwiML
@@ -2135,7 +2140,7 @@ Reply with:
       const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
       
       // Exact disclosure text for compliance
-      const smsDisclosureText = "By providing your number, you agree to receive SMS notifications from VitalWatch about wellness check-ins, mood reminders, and account notifications. Message & data rates may apply. STOP to opt out, HELP for help.";
+      const smsDisclosureText = "By providing your number, you agree to receive SMS notifications from VitalWatch about emergency alerts, crisis check-ins, and safety monitoring. Message & data rates may apply. STOP to opt out, HELP for help.";
       
       // Log consent with compliance requirements
       const consentRecord = {
@@ -2154,7 +2159,7 @@ Reply with:
       
       // Send double opt-in SMS if SMS consent was given
       if (preferences.smsNotifications && phone) {
-        const doubleOptInMessage = `VitalWatch: To confirm SMS notifications, reply YES. You'll receive wellness check-ins, mood reminders, and account updates. STOP to opt out.`;
+        const doubleOptInMessage = `VitalWatch: To confirm SMS emergency alerts, reply YES. You'll receive crisis check-ins, safety monitoring, and emergency notifications. STOP to opt out.`;
         
         // Send confirmation SMS
         await sendSMS(phone, doubleOptInMessage);
