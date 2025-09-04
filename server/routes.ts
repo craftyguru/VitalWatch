@@ -2065,9 +2065,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const lowerBody = messageBody.toLowerCase().trim();
           
           // Handle specific responses  
-          if (lowerBody === 'yes') {
+          if (lowerBody === 'yes' || lowerBody === 'start') {
             // Double opt-in confirmation - activate SMS notifications
-            responseMessage = `Welcome to VitalWatch SMS alerts! You'll receive emergency notifications, crisis check-ins, and safety monitoring. Manage preferences at vitalwatch.app/settings`;
+            responseMessage = `VitalWatch: You are now opted in to receive account notifications and daily check-ins. For help, reply HELP. To unsubscribe, reply STOP at any time.`;
             
             // Update user settings to confirm SMS opt-in
             const userSettings = await db.select().from(userSettings).where(eq(userSettings.userId, user.id)).limit(1);
@@ -2089,32 +2089,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
 • Visit vitalwatch.app for full support
 • Reply STOP to unsubscribe`;
             
-          } else if (lowerBody === 'safe' || lowerBody === 'ok' || lowerBody === '1') {
-            // Safety check-in response
-            responseMessage = `Thanks ${user.firstName || user.username}! Glad you're safe. VitalWatch is here for support anytime. Visit vitalwatch.app for resources.`;
+          } else if (lowerBody === '1') {
+            // Safety check-in response "I'm safe"
+            responseMessage = `VitalWatch: You replied '1 = I'm safe.' Your next check-in is scheduled for 6pm. Reply STOP to unsubscribe, HELP for support.`;
             
-          } else if (lowerBody === 'crisis' || lowerBody === 'emergency' || lowerBody === '2') {
-            // Crisis/emergency request
-            responseMessage = `🚨 VitalWatch Crisis Support:
-• Call/Text 988 (Suicide & Crisis Lifeline) 
-• Text HOME to 741741 (Crisis Text Line)
-• Call 911 for emergencies
-You're not alone. Support is available 24/7.`;
+          } else if (lowerBody === '2') {
+            // Need assistance response
+            responseMessage = `VitalWatch: You replied '2 = I need assistance.' Please check your app for support resources. Reply STOP to unsubscribe, HELP for support.`;
             
           } else {
             // General message - provide account-related options
             responseMessage = `Hi ${user.firstName || user.username}! VitalWatch received: "${messageBody}"
             
 Reply with:
-• HELP for assistance
-• 1 if you're safe
-• 2 for crisis support  
-• Visit vitalwatch.app for full features
+• 1 = Safe
+• 2 = Need assistance  
+• HELP for support
 • STOP to unsubscribe`;
           }
         } else {
           // Unknown phone number - send double opt-in
-          responseMessage = `Hello! This is VitalWatch emergency monitoring. To confirm SMS alerts, reply YES. For crisis support, visit vitalwatch.app or call 988.`;
+          responseMessage = `VitalWatch: Thanks for signing up. Reply YES to confirm SMS alerts. Reply STOP to unsubscribe, HELP for support.`;
         }
         
         // Respond with TwiML
@@ -2140,7 +2135,7 @@ Reply with:
       const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
       
       // Exact disclosure text for compliance
-      const smsDisclosureText = "By providing your number, you agree to receive SMS notifications from VitalWatch about emergency alerts, crisis check-ins, and safety monitoring. Message & data rates may apply. STOP to opt out, HELP for help.";
+      const smsDisclosureText = "I agree to receive SMS notifications and daily check-ins from VitalWatch. Msg & Data rates may apply. Reply STOP to unsubscribe.";
       
       // Log consent with compliance requirements
       const consentRecord = {
@@ -2159,7 +2154,7 @@ Reply with:
       
       // Send double opt-in SMS if SMS consent was given
       if (preferences.smsNotifications && phone) {
-        const doubleOptInMessage = `VitalWatch: To confirm SMS emergency alerts, reply YES. You'll receive crisis check-ins, safety monitoring, and emergency notifications. STOP to opt out.`;
+        const doubleOptInMessage = `VitalWatch: Thanks for signing up. Reply YES to confirm SMS alerts. Reply STOP to unsubscribe, HELP for support.`;
         
         // Send confirmation SMS
         await sendSMS(phone, doubleOptInMessage);
