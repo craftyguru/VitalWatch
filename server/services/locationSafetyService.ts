@@ -323,7 +323,7 @@ export class LocationSafetyService {
 
     const userPhone = (user.settings as any)?.phone;
     if (userPhone) {
-      const message = `Hi ${user.firstName || user.username}! You've entered your safe zone: ${zoneName}. VitalWatch is here if you need support. 💙`;
+      const message = `VitalWatch: Hi ${user.firstName || user.username}! You've entered safe zone: ${zoneName}. We're here if you need support. Reply STOP to unsubscribe or HELP for support. 💙`;
       await sendSMS(userPhone, message);
     }
 
@@ -351,7 +351,7 @@ export class LocationSafetyService {
 
     const userPhone = (user.settings as any)?.phone;
     if (userPhone) {
-      const message = `You've left your safe zone: ${zoneName}. Remember, VitalWatch is always here. Text HELP if you need support. Stay safe! 💙`;
+      const message = `VitalWatch: You've left safe zone: ${zoneName}. We're always here if needed. Reply STOP to unsubscribe or HELP for support. Stay safe! 💙`;
       await sendSMS(userPhone, message);
     }
   }
@@ -365,11 +365,7 @@ export class LocationSafetyService {
 
     const userPhone = (user.settings as any)?.phone;
     if (userPhone) {
-      const message = `You're near ${zoneName}. Here are quick coping tools:
-• 4-7-8 breathing: Inhale 4s, hold 7s, exhale 8s
-• Text HELP for immediate support
-• Visit vitalwatch.app for guided exercises
-You've got this! 💪`;
+      const message = `VitalWatch: Near ${zoneName}. Quick coping: 4-7-8 breathing (inhale 4s, hold 7s, exhale 8s). Visit vitalwatch.app for exercises. You've got this! Reply STOP to unsubscribe or HELP for support. 💪`;
       await sendSMS(userPhone, message);
     }
 
@@ -396,11 +392,7 @@ You've got this! 💪`;
 
     const userPhone = (user.settings as any)?.phone;
     if (userPhone) {
-      const message = `Welcome to ${zoneName}! Perfect place for some self-care. Consider:
-• 5 minutes of mindfulness
-• Gentle stretching
-• Gratitude reflection
-Enjoy this wellness moment! 🌱`;
+      const message = `VitalWatch: Welcome to ${zoneName}! Perfect for self-care: 5 min mindfulness, gentle stretching, gratitude reflection. Enjoy this wellness moment! Reply STOP to unsubscribe or HELP for support. 🌱`;
       await sendSMS(userPhone, message);
     }
   }
@@ -483,7 +475,7 @@ Enjoy this wellness moment! 🌱`;
 
     const userPhone = (user.settings as any)?.phone;
     if (userPhone) {
-      const message = `That was a quick visit to ${zoneName}! Consider returning when you have more time for some wellness activities. Self-care is important! 🌱`;
+      const message = `VitalWatch: Quick visit to ${zoneName}! Consider returning for wellness activities when you have more time. Self-care matters! Reply STOP to unsubscribe or HELP for support. 🌱`;
       await sendSMS(userPhone, message);
     }
   }

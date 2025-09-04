@@ -146,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/auth/signup', async (req, res) => {
     try {
-      const { firstName, lastName, email, password, captchaToken } = req.body;
+      const { firstName, lastName, email, password, phone, smsConsent, captchaToken } = req.body;
 
       // Verify CAPTCHA if token is provided
       if (captchaToken && process.env.RECAPTCHA_SECRET_KEY) {
@@ -195,9 +195,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           emergencyMode: false,
           locationTracking: true,
           darkMode: false,
+          phone: phone || '',
           notifications: {
             email: true,
-            sms: false,
+            sms: smsConsent || false,
             push: true
           }
         }
@@ -207,6 +208,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Send welcome email
       await emailService.sendWelcomeEmail(user.id, user.email, user.firstName);
+      
+      // Send SMS opt-in confirmation if user consented and provided phone
+      if (smsConsent && phone) {
+        try {
+          const { sendWelcomeSMS } = await import('./services/twilio');
+          await sendWelcomeSMS(phone, firstName);
+          console.log(`SMS opt-in confirmation sent to ${phone} for ${firstName}`);
+        } catch (smsError) {
+          console.error('Failed to send SMS opt-in confirmation:', smsError);
+          // Don't fail signup if SMS fails
+        }
+      }
       
       // Auto login
       req.login(user, (err) => {
@@ -229,6 +242,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json({ message: 'Logged out successfully' });
     });
+  });
+
+  // SMS webhook for Twilio incoming messages (STOP, HELP, YES, START keywords)
+  app.post('/api/sms-webhook', async (req, res) => {
+    try {
+      const { From: phoneNumber, Body: messageBody } = req.body;
+      
+      if (!phoneNumber || !messageBody) {
+        return res.status(400).send('Invalid request');
+      }
+
+      // Find user by phone number
+      const users = await storage.getAllUsers();
+      const user = users.find(u => (u.settings as any)?.phone === phoneNumber);
+
+      const userName = user ? (user.firstName || user.username) : undefined;
+
+      // Handle the SMS keyword
+      const { handleSMSKeyword } = await import('./services/twilio');
+      await handleSMSKeyword(phoneNumber, messageBody, userName);
+
+      // Update user SMS consent based on keyword
+      if (user) {
+        const keyword = messageBody.toUpperCase().trim();
+        
+        if (['STOP', 'UNSUBSCRIBE', 'CANCEL', 'END', 'QUIT'].includes(keyword)) {
+          // Update user to opt-out of SMS
+          await storage.updateUser(user.id, {
+            settings: {
+              ...user.settings,
+              notifications: {
+                ...(user.settings as any)?.notifications,
+                sms: false
+              }
+            }
+          });
+          console.log(`User ${user.id} opted out of SMS notifications`);
+        } else if (['START', 'YES', 'SUBSCRIBE'].includes(keyword)) {
+          // Update user to opt-in to SMS
+          await storage.updateUser(user.id, {
+            settings: {
+              ...user.settings,
+              notifications: {
+                ...(user.settings as any)?.notifications,
+                sms: true
+              }
+            }
+          });
+          console.log(`User ${user.id} opted in to SMS notifications`);
+        }
+      }
+
+      // Twilio expects TwiML response
+      res.set('Content-Type', 'text/xml');
+      res.send('<Response></Response>');
+      
+    } catch (error) {
+      console.error('SMS webhook error:', error);
+      res.set('Content-Type', 'text/xml');
+      res.send('<Response></Response>');
+    }
   });
 
   // Auth routes

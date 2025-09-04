@@ -36,6 +36,7 @@ export default function AuthPage() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
+  const [agreedToSMSConsent, setAgreedToSMSConsent] = useState(false);
   const [hasReadTerms, setHasReadTerms] = useState(false);
   const [hasReadPrivacy, setHasReadPrivacy] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -62,7 +63,8 @@ export default function AuthPage() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    phone: ""
   });
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -164,6 +166,8 @@ export default function AuthPage() {
           lastName: signupData.lastName,
           email: signupData.email,
           password: signupData.password,
+          phone: signupData.phone,
+          smsConsent: agreedToSMSConsent,
           captchaToken
         }),
       });
@@ -397,6 +401,25 @@ export default function AuthPage() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="signup-phone" className="text-gray-200">Phone Number (Optional)</Label>
+                    <div className="relative">
+                      <Shield className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="signup-phone"
+                        type="tel"
+                        placeholder="+1 (555) 123-4567"
+                        value={signupData.phone}
+                        onChange={(e) => setSignupData({ ...signupData, phone: e.target.value })}
+                        className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+                        data-testid="input-signup-phone"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      Required for SMS wellness check-ins and emergency alerts
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="signup-password" className="text-gray-200">Password</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -518,6 +541,27 @@ export default function AuthPage() {
                                 Click to read and enable this option
                               </span>
                             )}
+                          </Label>
+                        </div>
+                      </div>
+
+                      {/* SMS Consent Checkbox */}
+                      <div className="flex items-start space-x-3 pt-2 border-t border-gray-700">
+                        <Checkbox
+                          id="sms-consent-checkbox"
+                          checked={agreedToSMSConsent}
+                          onCheckedChange={(checked) => setAgreedToSMSConsent(checked as boolean)}
+                          className="mt-0.5 flex-shrink-0"
+                          data-testid="checkbox-sms-consent"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <Label htmlFor="sms-consent-checkbox" className="text-xs sm:text-sm cursor-pointer leading-relaxed text-gray-300">
+                            <span className="font-medium text-blue-400">I agree to receive SMS notifications</span> related to account notifications and daily check-ins from VitalWatch.
+                            <span className="block text-xs text-gray-500 mt-1">
+                              • You can reply STOP to unsubscribe anytime<br/>
+                              • Reply HELP for support information<br/>
+                              • Standard message rates may apply
+                            </span>
                           </Label>
                         </div>
                       </div>

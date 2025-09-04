@@ -312,15 +312,15 @@ export class NotificationOrchestratorService {
 
     switch (alert.alertType) {
       case 'crisis_risk':
-        message = `Hi ${firstName}, VitalWatch AI detected you might need support. How are you feeling? Reply 1 = Safe, 2 = Need help. We're here for you. 💙`;
+        message = `VitalWatch: Hi ${firstName}, how are you feeling? Reply 1 = Safe, 2 = Need support. Reply STOP to unsubscribe or HELP for support. 💙`;
         break;
       
       case 'missed_checkin':
-        message = `${firstName}, we want to make sure you're okay. Please check in: Reply 1 = I'm safe, 2 = I need support. VitalWatch cares about you. 💙`;
+        message = `VitalWatch: ${firstName}, checking in - are you okay? Reply 1 = Safe, 2 = Need support. Reply STOP to unsubscribe or HELP for support. 💙`;
         break;
 
       case 'sensor_anomaly':
-        message = `${firstName}, your health data shows some changes. Consider taking a moment for self-care. Reply HELP for resources or visit vitalwatch.app. 💙`;
+        message = `VitalWatch: ${firstName}, your health data shows changes. Consider self-care. Reply STOP to unsubscribe or HELP for support. 💙`;
         break;
 
       case 'zone_trigger':
@@ -328,11 +328,11 @@ export class NotificationOrchestratorService {
         break;
 
       case 'buddy_concern':
-        message = `${firstName}, your buddy is concerned about you. Please reach out to them or reply HELP if you need support. 💙`;
+        message = `VitalWatch: ${firstName}, your buddy is concerned about you. Please reach out or reply HELP if needed. Reply STOP to unsubscribe. 💙`;
         break;
 
       case 'prediction_alert':
-        message = `${firstName}, your wellness forecast suggests today might be challenging. How are you feeling? Reply 1 = Good, 2 = Struggling. 💙`;
+        message = `VitalWatch: ${firstName}, today might be challenging. How are you feeling? Reply 1 = Good, 2 = Struggling. Reply STOP to unsubscribe or HELP for support. 💙`;
         break;
 
       default:

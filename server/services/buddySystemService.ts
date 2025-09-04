@@ -433,7 +433,7 @@ export class BuddySystemService {
 
     const toUserPhone = (toUser.settings as any)?.phone;
     if (toUserPhone) {
-      const message = `${fromUser.firstName || fromUser.username} wants to be your wellness buddy on VitalWatch! This means you'll check in on each other for support. Reply YES to accept or visit the app to respond.`;
+      const message = `VitalWatch: ${fromUser.firstName || fromUser.username} wants to be your wellness buddy! Check in on each other for support. Reply YES to accept. Reply STOP to unsubscribe or HELP for support.`;
       await sendSMS(toUserPhone, message);
     }
   }
@@ -447,14 +447,14 @@ export class BuddySystemService {
     // Notify the requester
     const requesterPhone = (requester.settings as any)?.phone;
     if (requesterPhone) {
-      const message = `Great news! ${accepter.firstName || accepter.username} accepted your buddy request. You can now support each other through VitalWatch. 🤝`;
+      const message = `VitalWatch: Great news! ${accepter.firstName || accepter.username} accepted your buddy request. You can now support each other. Reply STOP to unsubscribe or HELP for support. 🤝`;
       await sendSMS(requesterPhone, message);
     }
 
     // Notify the accepter
     const accepterPhone = (accepter.settings as any)?.phone;
     if (accepterPhone) {
-      const message = `You're now wellness buddies with ${requester.firstName || requester.username}! Check in with each other regularly for mutual support. 💙`;
+      const message = `VitalWatch: You're now wellness buddies with ${requester.firstName || requester.username}! Check in regularly for mutual support. Reply STOP to unsubscribe or HELP for support. 💙`;
       await sendSMS(accepterPhone, message);
     }
   }
@@ -471,7 +471,7 @@ export class BuddySystemService {
       if (request.urgencyLevel === 'high') urgencyEmoji = '⚠️ ';
       if (request.urgencyLevel === 'emergency') urgencyEmoji = '🚨 ';
 
-      const message = `${urgencyEmoji}Buddy check-in from ${fromUser.firstName || fromUser.username}: "${request.message}" Reply to let them know you're okay.`;
+      const message = `VitalWatch: ${urgencyEmoji}Buddy check-in from ${fromUser.firstName || fromUser.username}: "${request.message}" Reply to let them know you're okay. Reply STOP to unsubscribe or HELP for support.`;
       await sendSMS(toUserPhone, message);
     }
   }
@@ -484,7 +484,7 @@ export class BuddySystemService {
 
     const initiatorPhone = (initiator.settings as any)?.phone;
     if (initiatorPhone) {
-      const message = `${receiver.firstName || receiver.username} responded to your check-in: "${response}" Thanks for being a caring buddy! 💙`;
+      const message = `VitalWatch: ${receiver.firstName || receiver.username} responded: "${response}" Thanks for being a caring buddy! Reply STOP to unsubscribe or HELP for support. 💙`;
       await sendSMS(initiatorPhone, message);
     }
   }
