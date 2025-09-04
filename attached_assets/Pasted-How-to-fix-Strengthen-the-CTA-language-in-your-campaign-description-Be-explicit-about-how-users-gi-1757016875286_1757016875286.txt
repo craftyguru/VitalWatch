@@ -1,0 +1,46 @@
+How to fix
+
+Strengthen the CTA language in your campaign description. Be explicit about how users give consent.
+Example:
+
+"Users opt in by creating an account on the VitalWatch app or website and explicitly checking a box that says: I agree to receive SMS notifications related to activity reminders and safety check-ins from VitalWatch. Consent is required and recorded in our database before any SMS is sent."
+
+Show opt-in keywords clearly. In your registration form, list:
+
+YES or START = Opt-in
+
+STOP = Opt-out
+
+HELP = Support
+
+Provide screenshots or sample flow in your Twilio campaign registration:
+
+Screenshot of signup page showing the checkbox or consent text.
+
+Sample opt-in confirmation message (“You are now opted in to receive VitalWatch reminders and safety check-ins.”).
+
+Adjust message samples to align with opt-in. Add a confirmation SMS sample as the first message.
+Example:
+
+"VitalWatch: You are now opted in to receive account notifications and daily check-ins. Reply STOP to unsubscribe or HELP for support."
+
+Corrected campaign submission draft
+
+Description:
+This campaign sends account notifications and daily check-ins to VitalWatch users who have opted in through the VitalWatch app or website. Users opt in by explicitly checking a box during registration that states: I agree to receive SMS notifications related to activity reminders and safety check-ins from VitalWatch. Consent is logged and stored for compliance.
+
+Message Samples:
+
+VitalWatch: You are now opted in to receive account notifications and daily check-ins. Reply STOP to unsubscribe or HELP for support.
+
+VitalWatch: Thanks for signing up. Reply YES to confirm SMS alerts. Reply STOP to unsubscribe or HELP for support.
+
+VitalWatch check-in: Are you okay? Reply 1 = I’m safe, 2 = I need assistance. Reply STOP to unsubscribe, HELP for support.
+
+VitalWatch: You replied 1 = I’m safe. Your next check-in is scheduled for 6pm. Reply STOP to unsubscribe, HELP for support.
+
+VitalWatch: You replied 2 = I need assistance. Please check your app for support resources. Reply STOP to unsubscribe, HELP for support.
+
+Opt-in Keywords: YES, START
+Opt-out Keywords: STOP
+Help Keywords: HELP

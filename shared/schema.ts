@@ -224,3 +224,195 @@ export const insertChatMessageSchema = createInsertSchema(chatMessages).pick({
 });
 
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+
+// Sensor data for continuous health monitoring
+export const sensorData = pgTable("sensor_data", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  sensorType: text("sensor_type").notNull(), // heart_rate, steps, sleep, stress, activity
+  value: decimal("value", { precision: 10, scale: 2 }).notNull(),
+  unit: text("unit").notNull(), // bpm, steps, hours, percentage, etc.
+  deviceId: text("device_id"), // source device identifier
+  confidence: decimal("confidence", { precision: 3, scale: 2 }), // 0.00-1.00
+  metadata: jsonb("metadata"), // additional sensor context
+  recordedAt: timestamp("recorded_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Automated check-in scheduling and tracking
+export const dailyCheckIns = pgTable("daily_checkins", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  scheduledTime: text("scheduled_time").notNull(), // HH:MM format (e.g., "14:30")
+  timezone: text("timezone").notNull().default("UTC"),
+  isActive: boolean("is_active").notNull().default(true),
+  lastSent: timestamp("last_sent"),
+  lastResponse: timestamp("last_response"),
+  missedCount: integer("missed_count").notNull().default(0),
+  aiOptimized: boolean("ai_optimized").notNull().default(false), // AI has adjusted timing
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Check-in responses and escalation tracking
+export const checkInResponses = pgTable("checkin_responses", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  checkInId: integer("checkin_id").references(() => dailyCheckIns.id, { onDelete: "cascade" }),
+  responseType: text("response_type").notNull(), // sms, app, missed, emergency
+  response: text("response"), // actual response text
+  responseTime: timestamp("response_time"),
+  escalated: boolean("escalated").notNull().default(false),
+  escalationReason: text("escalation_reason"),
+  aiRiskScore: decimal("ai_risk_score", { precision: 3, scale: 2 }), // 0.00-1.00
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Buddy system for peer support
+export const buddyConnections = pgTable("buddy_connections", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  buddyUserId: varchar("buddy_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  status: text("status").notNull().default("pending"), // pending, active, paused, ended
+  connectionType: text("connection_type").notNull(), // mutual_support, crisis_buddy, accountability
+  lastInteraction: timestamp("last_interaction"),
+  mutualConsent: boolean("mutual_consent").notNull().default(false),
+  settings: jsonb("settings"), // privacy preferences, notification settings
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Buddy check-in accountability
+export const buddyCheckIns = pgTable("buddy_checkins", {
+  id: serial("id").primaryKey(),
+  connectionId: integer("connection_id").notNull().references(() => buddyConnections.id, { onDelete: "cascade" }),
+  initiatorUserId: varchar("initiator_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  receiverUserId: varchar("receiver_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  message: text("message"),
+  responseReceived: boolean("response_received").notNull().default(false),
+  responseMessage: text("response_message"),
+  responseTime: timestamp("response_time"),
+  urgencyLevel: text("urgency_level").notNull().default("normal"), // normal, high, emergency
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Location-based wellness zones
+export const wellnessZones = pgTable("wellness_zones", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }).notNull(),
+  longitude: decimal("longitude", { precision: 11, scale: 8 }).notNull(),
+  radius: integer("radius").notNull(), // meters
+  zoneType: text("zone_type").notNull(), // safe, trigger, neutral, wellness
+  triggers: jsonb("triggers").array(), // what happens when entering/leaving
+  isActive: boolean("is_active").notNull().default(true),
+  entryCount: integer("entry_count").notNull().default(0),
+  lastEntered: timestamp("last_entered"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Zone entry/exit tracking
+export const zoneEvents = pgTable("zone_events", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  zoneId: integer("zone_id").notNull().references(() => wellnessZones.id, { onDelete: "cascade" }),
+  eventType: text("event_type").notNull(), // entry, exit
+  triggeredActions: jsonb("triggered_actions").array(), // actions taken automatically
+  userLocation: jsonb("user_location"), // { lat, lng, accuracy }
+  duration: integer("duration"), // seconds spent in zone (for exit events)
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// AI predictive analytics and forecasting
+export const aiPredictions = pgTable("ai_predictions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  predictionType: text("prediction_type").notNull(), // weekly_mood, crisis_risk, wellness_trend
+  forecastDate: timestamp("forecast_date").notNull(), // what date this predicts
+  prediction: jsonb("prediction").notNull(), // detailed prediction data
+  confidence: decimal("confidence", { precision: 3, scale: 2 }).notNull(), // 0.00-1.00
+  basedOnData: jsonb("based_on_data"), // what data influenced this prediction
+  accuracy: decimal("accuracy", { precision: 3, scale: 2 }), // how accurate it was (after the fact)
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Automated notification scheduling
+export const scheduledNotifications = pgTable("scheduled_notifications", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  notificationType: text("notification_type").notNull(), // check_in, reminder, alert, wellness_tip
+  scheduledFor: timestamp("scheduled_for").notNull(),
+  content: jsonb("content").notNull(), // notification content and metadata
+  deliveryMethod: text("delivery_method").notNull(), // sms, push, email
+  status: text("status").notNull().default("pending"), // pending, sent, failed, cancelled
+  sentAt: timestamp("sent_at"),
+  aiGenerated: boolean("ai_generated").notNull().default(false),
+  parentPredictionId: integer("parent_prediction_id").references(() => aiPredictions.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Crisis prevention tracking
+export const crisisPreventions = pgTable("crisis_preventions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  triggerType: text("trigger_type").notNull(), // mood_pattern, sensor_alert, missed_checkin, buddy_concern
+  triggerData: jsonb("trigger_data").notNull(), // what caused the prevention trigger
+  interventionType: text("intervention_type").notNull(), // breathing_exercise, buddy_alert, emergency_contact, crisis_resources
+  interventionResult: text("intervention_result"), // completed, ignored, escalated
+  effectiveness: integer("effectiveness"), // 1-5 user rating
+  preventedCrisis: boolean("prevented_crisis").notNull().default(false),
+  followUpRequired: boolean("follow_up_required").notNull().default(false),
+  aiConfidence: decimal("ai_confidence", { precision: 3, scale: 2 }),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Schema types for new tables
+export const insertSensorDataSchema = createInsertSchema(sensorData).pick({
+  sensorType: true,
+  value: true,
+  unit: true,
+  deviceId: true,
+  confidence: true,
+  metadata: true,
+  recordedAt: true,
+});
+
+export const insertDailyCheckInSchema = createInsertSchema(dailyCheckIns).pick({
+  scheduledTime: true,
+  timezone: true,
+  isActive: true,
+});
+
+export const insertWellnessZoneSchema = createInsertSchema(wellnessZones).pick({
+  name: true,
+  latitude: true,
+  longitude: true,
+  radius: true,
+  zoneType: true,
+  triggers: true,
+});
+
+export const insertBuddyConnectionSchema = createInsertSchema(buddyConnections).pick({
+  buddyUserId: true,
+  connectionType: true,
+  settings: true,
+});
+
+export type InsertSensorData = z.infer<typeof insertSensorDataSchema>;
+export type SensorData = typeof sensorData.$inferSelect;
+
+export type InsertDailyCheckIn = z.infer<typeof insertDailyCheckInSchema>;
+export type DailyCheckIn = typeof dailyCheckIns.$inferSelect;
+
+export type InsertWellnessZone = z.infer<typeof insertWellnessZoneSchema>;
+export type WellnessZone = typeof wellnessZones.$inferSelect;
+
+export type InsertBuddyConnection = z.infer<typeof insertBuddyConnectionSchema>;
+export type BuddyConnection = typeof buddyConnections.$inferSelect;
+
+export type CheckInResponse = typeof checkInResponses.$inferSelect;
+export type BuddyCheckIn = typeof buddyCheckIns.$inferSelect;
+export type ZoneEvent = typeof zoneEvents.$inferSelect;
+export type AIPrediction = typeof aiPredictions.$inferSelect;
+export type ScheduledNotification = typeof scheduledNotifications.$inferSelect;
+export type CrisisPrevention = typeof crisisPreventions.$inferSelect;
