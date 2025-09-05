@@ -44,8 +44,8 @@
         "android.permission.health.READ_EXERCISE",
         "android.permission.health.WRITE_EXERCISE"
       ],
-      "package": "com.vitalwatch.app",
-      "versionCode": 8
+      "package": "app.vitalwatch.www.twa",
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/favicon.png"
