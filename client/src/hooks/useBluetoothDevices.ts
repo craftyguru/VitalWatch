@@ -39,10 +39,15 @@ export function useBluetoothDevices() {
     if (services.includes('0000180d-0000-1000-8000-00805f9b34fb')) return 'fitness'; // Heart Rate
     if (services.includes('00001812-0000-1000-8000-00805f9b34fb')) return 'smartwatch'; // HID
     
-    // Check device names
+    // Check device names - Enhanced Samsung Galaxy Watch detection
+    if (name.includes('gear s') || name.includes('galaxy watch') || name.includes('samsung watch')) return 'smartwatch';
+    if (name.includes('apple watch') || name.includes('watch')) return 'smartwatch';
+    if (name.includes('fitbit') || name.includes('versa') || name.includes('ionic')) return 'smartwatch';
+    if (name.includes('garmin') || name.includes('vivoactive') || name.includes('forerunner')) return 'smartwatch';
+    if (name.includes('amazfit') || name.includes('huawei watch') || name.includes('ticwatch')) return 'smartwatch';
+    if (name.includes('band') || name.includes('fit') || name.includes('tracker')) return 'fitness';
     if (name.includes('headphone') || name.includes('buds') || name.includes('airpods')) return 'headphones';
-    if (name.includes('watch') || name.includes('band') || name.includes('fit')) return 'smartwatch';
-    if (name.includes('speaker') || name.includes('sound')) return 'speaker';
+    if (name.includes('speaker') || name.includes('sound') || name.includes('jbl') || name.includes('ion')) return 'speaker';
     if (name.includes('phone') || name.includes('mobile')) return 'phone';
     
     return 'unknown';
@@ -118,23 +123,30 @@ export function useBluetoothDevices() {
     try {
       console.log('Requesting Bluetooth device access...');
       
-      // Request device with health and fitness service filters
+      // Request device with broad health and fitness filters - specifically includes Samsung Gear watches
       const device = await (navigator as any).bluetooth.requestDevice({
         filters: [
+          // Standard health services
           { services: ['heart_rate'] },
           { services: ['0000180d-0000-1000-8000-00805f9b34fb'] }, // Heart Rate Service
           { services: ['0000180f-0000-1000-8000-00805f9b34fb'] }, // Battery Service
           { services: ['fitness_machine'] },
-          { services: ['0000181a-0000-1000-8000-00805f9b34fb'] }, // Environmental Sensing
-          { services: ['0000181c-0000-1000-8000-00805f9b34fb'] }, // User Data
           { services: ['device_information'] },
-          { namePrefix: 'Watch' },
-          { namePrefix: 'Fit' },
-          { namePrefix: 'Band' },
-          { namePrefix: 'Galaxy' },
-          { namePrefix: 'Apple' },
-          { namePrefix: 'Garmin' },
-          { namePrefix: 'Fitbit' },
+          // Name-based filters for watch brands (Samsung Gear S3 should match these)
+          { namePrefix: 'Gear' },        // Samsung Gear watches
+          { namePrefix: 'Galaxy' },      // Samsung Galaxy watches
+          { namePrefix: 'Samsung' },     // Samsung branded devices
+          { namePrefix: 'Watch' },       // Generic watches
+          { namePrefix: 'Fit' },         // Fitness devices
+          { namePrefix: 'Band' },        // Fitness bands
+          { namePrefix: 'Apple' },       // Apple Watch
+          { namePrefix: 'Garmin' },      // Garmin devices
+          { namePrefix: 'Fitbit' },      // Fitbit devices
+          { namePrefix: 'Versa' },       // Fitbit Versa
+          { namePrefix: 'Ionic' },       // Fitbit Ionic
+          { namePrefix: 'Amazfit' },     // Amazfit watches
+          { namePrefix: 'Huawei' },      // Huawei watches
+          { namePrefix: 'TicWatch' },    // TicWatch devices
         ],
         optionalServices: [
           'heart_rate',
@@ -144,6 +156,9 @@ export function useBluetoothDevices() {
           '0000180d-0000-1000-8000-00805f9b34fb', // Heart Rate
           '0000180f-0000-1000-8000-00805f9b34fb', // Battery
           '0000181a-0000-1000-8000-00805f9b34fb', // Environmental Sensing
+          '0000181c-0000-1000-8000-00805f9b34fb', // User Data
+          'generic_access',                        // Generic Access
+          'generic_attribute',                     // Generic Attribute
         ]
       });
 

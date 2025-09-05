@@ -340,46 +340,46 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       </Card>
 
       {/* Health Connect Integration Section */}
-      <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200/50">
+      <Card className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border-orange-200/50">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-green-500 text-white p-2.5 rounded-xl">
-                <Heart className="h-5 w-5" />
+              <div className="bg-orange-500 text-white p-2.5 rounded-xl">
+                <AlertCircle className="h-5 w-5" />
               </div>
               <div>
-                <CardTitle className="text-lg text-green-900 dark:text-green-100">🏥 Health Connect Sources</CardTitle>
-                <p className="text-sm text-green-700 dark:text-green-300">Galaxy Watch, Fitbit, Samsung Health, Google Fit</p>
+                <CardTitle className="text-lg text-orange-900 dark:text-orange-100">❌ VitalWatch Not in Health Connect?</CardTitle>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Why you don't see VitalWatch in app permissions</p>
               </div>
             </div>
-            <Badge className="bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-200">
-              Mobile Only
+            <Badge className="bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-200">
+              Limitation Explained
             </Badge>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-green-200/50">
+          <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-orange-200/50">
             <div className="flex items-start space-x-3">
-              <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg">
-                <Watch className="h-5 w-5 text-green-600" />
+              <div className="bg-orange-100 dark:bg-orange-900/30 p-2 rounded-lg">
+                <AlertCircle className="h-5 w-5 text-orange-600" />
               </div>
               <div className="flex-1">
-                <h4 className="font-medium text-green-900 dark:text-green-100 mb-1">Health Connect Integration</h4>
-                <p className="text-sm text-green-700 dark:text-green-300 mb-3">
-                  Access health data from all your connected smartwatches and fitness devices through Android's unified Health Connect platform.
+                <h4 className="font-medium text-orange-900 dark:text-orange-100 mb-1">Web Apps Can't Access Health Connect</h4>
+                <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">
+                  You're correct! VitalWatch web version cannot appear in Health Connect permissions because Health Connect only works with installed Android apps (APK files), not web browsers.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Galaxy Watch → Samsung Health → Health Connect</span>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <span className="text-orange-700 dark:text-orange-300">❌ Web browsers: Cannot access Health Connect</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Fitbit → Google Fit → Health Connect</span>
+                    <span className="text-orange-700 dark:text-orange-300">✅ Installed mobile apps: Can access Health Connect</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Heart rate, steps, calories, sleep data</span>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-orange-700 dark:text-orange-300">🔄 Alternative: Use Web Bluetooth (below)</span>
                   </div>
                 </div>
               </div>
@@ -442,8 +442,26 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
           Connected Devices (Web Browser)
         </h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 -mt-2">
-          Direct device connections available in web browsers • For smartwatch data, use Health Connect in mobile app above
+          Direct device connections via Web Bluetooth API • Enhanced support for Samsung Gear watches
         </p>
+        
+        {/* Gear S3 Specific Help */}
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50">
+          <div className="flex items-start space-x-2">
+            <Watch className="h-4 w-4 text-blue-600 mt-0.5" />
+            <div className="text-sm">
+              <p className="text-blue-800 dark:text-blue-200 font-medium">Samsung Gear S3 Users:</p>
+              <p className="text-blue-700 dark:text-blue-300 mb-2">
+                Click "Connect New Device" below and look for "Gear S3 (F539)" in the device list. If not found:
+              </p>
+              <div className="space-y-1 text-xs text-blue-600 dark:text-blue-400">
+                <div>• Make sure your watch is nearby and awake</div>
+                <div>• Try using Chrome or Edge browser (best Bluetooth support)</div>
+                <div>• Your watch is connected to your phone but may need separate web permission</div>
+              </div>
+            </div>
+          </div>
+        </div>
         
         {allDevices.map((device) => (
           <Card key={device.id} className={`${device.type === 'phone' ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border-gray-200/50'}`}>
