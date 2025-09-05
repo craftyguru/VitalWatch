@@ -134,7 +134,9 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
   const {
     devices: connectedDevices,
     isScanning: bluetoothScanning,
+    bluetoothSupported,
     scanForDevices,
+    requestBluetoothPermission,
     connectToDevice,
     disconnectFromDevice
   } = useBluetoothDevices();
@@ -273,6 +275,40 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
       toast({
         title: "Scan failed",
         description: "Unable to scan for devices. Check Bluetooth permissions.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const connectNewDevice = async () => {
+    if (!bluetoothSupported) {
+      toast({
+        title: "Bluetooth not supported",
+        description: "Your browser doesn't support Web Bluetooth API. Try Chrome or Edge.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Requesting device access...",
+        description: "Please select your Bluetooth watch or device from the list.",
+      });
+
+      const device = await requestBluetoothPermission();
+      
+      toast({
+        title: "Device connected!",
+        description: `Successfully connected to ${device.name}. You can now use it with VitalWatch.`,
+      });
+      
+      // Refresh the device list
+      await scanForDevices();
+    } catch (error: any) {
+      toast({
+        title: "Connection failed",
+        description: error.message || "Unable to connect to device. Make sure it's in pairing mode.",
         variant: "destructive"
       });
     }
@@ -473,6 +509,15 @@ export function DeviceIntegrationHub({ sensorData, permissions, requestPermissio
                         <Watch className="h-4 w-4 mr-2" />
                       )}
                       Scan Connected Devices
+                    </Button>
+                    <Button 
+                      onClick={connectNewDevice}
+                      className="bg-green-500 hover:bg-green-600 text-white"
+                      disabled={!bluetoothSupported}
+                      data-testid="button-connect-new-device"
+                    >
+                      <Bluetooth className="h-4 w-4 mr-2" />
+                      Connect New Device
                     </Button>
                   </div>
 

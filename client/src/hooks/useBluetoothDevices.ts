@@ -52,90 +52,29 @@ export function useBluetoothDevices() {
     setIsScanning(true);
     
     try {
-      // Detect platform and show realistic connected devices
+      const discoveredDevices: BluetoothDevice[] = [];
+      
+      // First, add current device
       const userAgent = navigator.userAgent;
-      const platformDevices: BluetoothDevice[] = [];
-      
-      console.log('Detecting platform connected devices for:', userAgent);
-      
-      // Always show current device first
-      if (userAgent.includes('Mobile') || userAgent.includes('Android')) {
-        platformDevices.push({
-          id: 'phone-primary',
-          name: 'Mobile Device (This Phone)',
-          connected: true,
-          deviceType: 'phone',
-          battery: Math.floor(Math.random() * 40) + 60,
-          services: ['motion', 'location', 'battery', 'camera'],
-          lastSeen: new Date(),
-        });
+      discoveredDevices.push({
+        id: 'current-device',
+        name: userAgent.includes('Mobile') ? 'Mobile Device (This Phone)' : 'Current Device',
+        connected: true,
+        deviceType: 'phone',
+        battery: 85,
+        services: ['motion', 'location', 'battery', 'camera'],
+        lastSeen: new Date(),
+      });
 
-        // Android devices commonly have these connected
-        platformDevices.push({
-          id: 'android-watch',
-          name: 'Galaxy Watch',
-          connected: true,
-          deviceType: 'smartwatch',
-          battery: Math.floor(Math.random() * 30) + 70,
-          services: ['heart_rate', 'fitness', 'battery', 'notifications'],
-          lastSeen: new Date(),
-        });
-
-        platformDevices.push({
-          id: 'galaxy-buds',
-          name: 'Galaxy Buds',
-          connected: true,
-          deviceType: 'headphones',
-          battery: Math.floor(Math.random() * 40) + 50,
-          services: ['audio', 'battery', 'noise_control'],
-          lastSeen: new Date(),
-        });
-      }
-      
-      if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-        platformDevices.push({
-          id: 'iphone-primary',
-          name: 'iPhone',
-          connected: true,
-          deviceType: 'phone',
-          battery: Math.floor(Math.random() * 40) + 60,
-          services: ['motion', 'location', 'battery', 'camera'],
-          lastSeen: new Date(),
-        });
-
-        // iPhone users commonly have these
-        platformDevices.push({
-          id: 'apple-watch',
-          name: 'Apple Watch',
-          connected: true,
-          deviceType: 'smartwatch',
-          battery: Math.floor(Math.random() * 30) + 70,
-          services: ['heart_rate', 'fitness', 'battery', 'ecg', 'fall_detection'],
-          lastSeen: new Date(),
-        });
-
-        platformDevices.push({
-          id: 'airpods',
-          name: 'AirPods Pro',
-          connected: true,
-          deviceType: 'headphones',
-          battery: Math.floor(Math.random() * 40) + 50,
-          services: ['audio', 'battery', 'anc'],
-          lastSeen: new Date(),
-        });
-      }
-
-      // Try Web Bluetooth API as secondary method
+      // Get already paired/authorized devices
       if (bluetoothSupported) {
         try {
-          const webBluetoothDevices = await (navigator as any).bluetooth.getDevices();
+          const pairedDevices = await (navigator as any).bluetooth.getDevices();
           
-          for (const device of webBluetoothDevices) {
-            const existingDevice = platformDevices.find(d => d.name.toLowerCase().includes(device.name?.toLowerCase() || ''));
-            
-            if (!existingDevice && device.name) {
-              platformDevices.push({
-                id: device.id,
+          for (const device of pairedDevices) {
+            if (device.name) {
+              discoveredDevices.push({
+                id: device.id || `paired-${device.name.replace(/\s+/g, '-').toLowerCase()}`,
                 name: device.name,
                 connected: device.gatt?.connected || false,
                 services: [],
@@ -145,11 +84,11 @@ export function useBluetoothDevices() {
             }
           }
         } catch (error) {
-          console.log('Web Bluetooth getDevices not available:', error);
+          console.log('Could not get paired devices:', error);
         }
       }
 
-      setDevices(platformDevices);
+      setDevices(discoveredDevices);
       
     } catch (error: any) {
       console.log('Device detection error:', error);
@@ -170,6 +109,78 @@ export function useBluetoothDevices() {
       setIsScanning(false);
     }
   }, [bluetoothSupported]);
+
+  const requestBluetoothPermission = useCallback(async () => {
+    if (!bluetoothSupported) {
+      throw new Error('Web Bluetooth is not supported in this browser');
+    }
+
+    try {
+      console.log('Requesting Bluetooth device access...');
+      
+      // Request device with health and fitness service filters
+      const device = await (navigator as any).bluetooth.requestDevice({
+        filters: [
+          { services: ['heart_rate'] },
+          { services: ['0000180d-0000-1000-8000-00805f9b34fb'] }, // Heart Rate Service
+          { services: ['0000180f-0000-1000-8000-00805f9b34fb'] }, // Battery Service
+          { services: ['fitness_machine'] },
+          { services: ['0000181a-0000-1000-8000-00805f9b34fb'] }, // Environmental Sensing
+          { services: ['0000181c-0000-1000-8000-00805f9b34fb'] }, // User Data
+          { services: ['device_information'] },
+          { namePrefix: 'Watch' },
+          { namePrefix: 'Fit' },
+          { namePrefix: 'Band' },
+          { namePrefix: 'Galaxy' },
+          { namePrefix: 'Apple' },
+          { namePrefix: 'Garmin' },
+          { namePrefix: 'Fitbit' },
+        ],
+        optionalServices: [
+          'heart_rate',
+          'battery_service', 
+          'device_information',
+          'fitness_machine',
+          '0000180d-0000-1000-8000-00805f9b34fb', // Heart Rate
+          '0000180f-0000-1000-8000-00805f9b34fb', // Battery
+          '0000181a-0000-1000-8000-00805f9b34fb', // Environmental Sensing
+        ]
+      });
+
+      console.log('Bluetooth device selected:', device.name);
+      
+      // Add the selected device to our list
+      const newDevice: BluetoothDevice = {
+        id: device.id || `bt-${Date.now()}`,
+        name: device.name || 'Unknown Device',
+        connected: false,
+        services: [],
+        deviceType: determineDeviceType(device),
+        lastSeen: new Date(),
+      };
+
+      setDevices(prev => {
+        const existing = prev.find(d => d.id === newDevice.id);
+        if (existing) return prev;
+        return [...prev, newDevice];
+      });
+
+      return device;
+      
+    } catch (error: any) {
+      console.error('Bluetooth request failed:', error);
+      
+      if (error.name === 'NotFoundError') {
+        throw new Error('No Bluetooth device was selected or found');
+      } else if (error.name === 'SecurityError') {
+        throw new Error('Bluetooth access denied. Please allow Bluetooth permissions and try again');
+      } else if (error.name === 'NotSupportedError') {
+        throw new Error('Bluetooth is not supported on this device');
+      } else {
+        throw new Error(`Bluetooth error: ${error.message}`);
+      }
+    }
+  }, [bluetoothSupported, determineDeviceType]);
 
   const connectToDevice = useCallback(async (deviceId: string) => {
     const device = devices.find(d => d.id === deviceId);
@@ -214,6 +225,7 @@ export function useBluetoothDevices() {
     bluetoothSupported,
     bluetoothEnabled,
     scanForDevices,
+    requestBluetoothPermission,
     connectToDevice,
     disconnectFromDevice,
   };
