@@ -87,12 +87,12 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.vitalwatch.app'
+    namespace 'app.vitalwatch.www.twa'
     defaultConfig {
-        applicationId 'com.vitalwatch.app'
+        applicationId 'app.vitalwatch.www.twa'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 70000
+        versionCode 10
         versionName "7.0.0"
     }
     signingConfigs {

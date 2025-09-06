@@ -1,4 +1,4 @@
-package com.vitalwatch.app
+package app.vitalwatch.www.twa
 
 import android.os.Build
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.vitalwatch.app
+package app.vitalwatch.www.twa
 
 import android.app.Application
 import android.content.res.Configuration
@@ -25,8 +25,6 @@ class MainApplication : Application(), ReactApplication {
             val packages = PackageList(this).packages
             // Packages that cannot be autolinked yet can be added manually here, for example:
             // packages.add(MyReactNativePackage())
-            packages.add(DeviceHubPackage())
-            packages.add(HealthConnectPackage())
             return packages
           }
 
