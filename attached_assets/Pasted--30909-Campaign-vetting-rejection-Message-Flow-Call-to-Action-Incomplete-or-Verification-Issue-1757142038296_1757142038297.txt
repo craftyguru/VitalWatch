@@ -1,0 +1,32 @@
+
+30909: Campaign vetting rejection - Message Flow / Call to Action Incomplete or Verification Issue
+
+
+ERROR: 30909
+
+
+PROGRAMMABLE MESSAGING
+ERROR
+Description
+
+
+Twilio returns this error when an A2P 10DLC campaign registration is rejected due to issues verifying the Call to Action (CTA). The error page states the submission "was reviewed and rejected due to issues verifying the Call to Action (CTA) provided for the campaign," and notes that if opt‑in occurs outside a website, the information provided was incomplete or insufficiently detailed.
+
+In Twilio's A2P registration flow, the CTA is captured in the "Message Flow/Call to Action" text where you must describe how end users give consent. Twilio's guidance explains this section's purpose and required disclosures, including brand identification, message frequency (for recurring programs), links to terms and privacy policy, "message and data rates may apply," and opt‑out instructions.
+
+Possible Causes
+
+
+The CTA (Message Flow) does not clearly explain how users opt in, or lacks sufficient detail to verify off‑website consent flows (for example, in‑store, verbal, or paper).
+The Message Flow omits one or more required elements such as brand identification, frequency disclosure (if recurring), links to terms and privacy policy, the "message and data rates may apply" disclosure, or opt‑out instructions.
+Not all opt‑in methods used by the campaign are listed in the Message Flow (for example, web form plus keyword plus in‑person), preventing reviewers from validating consent.
+The opt‑in evidence is not publicly accessible (for example, behind a login) and no hosted screenshots or equivalent proof were provided, so reviewers can't verify the CTA.
+Possible Solutions
+
+
+Rewrite the Message Flow to fully describe every way consent is collected (web, keyword/text‑in, verbal script, paper form, QR, etc.), then resubmit the campaign. Twilio confirms you should include all consent methods when opt‑in isn't solely on a website.
+Ensure the Message Flow includes required disclosures: brand identification, message frequency (for recurring programs), links to terms and a compliant privacy policy, "message and data rates may apply," and opt‑out instructions.
+If the web opt‑in or other required info isn't publicly accessible, add a public URL with hosted screenshots of the relevant pages to allow verification.
+If your app primarily "replies" to inbound messages (conversational use), explicitly document in the Message Flow how users initiate contact and consent (for example, "customers text our support number to start a conversation"), and include required disclosures and opt‑out instructions.
+When using keyword/text‑in opt‑in, include the keyword(s) and provide the required help/opt‑out responses (or use Twilio's defaults). Align your message samples and campaign description with the Message Flow.
+After updating the CTA information, resubmit the campaign for review. This is the prescribed next step on the error page.
