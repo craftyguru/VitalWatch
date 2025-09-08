@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "app.vitalwatch.www.twa",
-      "versionCode": 11,
+      "versionCode": 12,
       "edgeToEdge": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
